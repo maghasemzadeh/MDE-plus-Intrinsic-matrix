@@ -3,3 +3,10 @@ opencv-python
 open3d
 torch
 torchvision
+tensorboard==2.20.0
+tensorboard-data-server==0.7.2
+tensorboard==2.20.0
+tensorboard-data-server==0.7.2
+tensorboard==2.20.0
+tensorboard-data-server==0.7.2
+dataset==1.6.2

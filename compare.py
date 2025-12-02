@@ -16,7 +16,8 @@ from datasets import (
     BaseDataset, DatasetConfig,
     CityscapesDataset,
     DrivingStereoDataset,
-    MiddleburyDataset
+    MiddleburyDataset,
+    VKITTIDataset
 )
 from collections import defaultdict
 from models import BaseDepthModelWrapper, DepthAnythingV2Wrapper
@@ -421,9 +422,11 @@ Examples:
             dataset = CityscapesDataset(dataset_config)
         elif dataset_name.lower() == 'drivingstereo':
             dataset = DrivingStereoDataset(dataset_config)
+        elif dataset_name.lower() == 'vkitti':
+            dataset = VKITTIDataset(dataset_config)
         else:
             print(f"Error: Unknown dataset: {dataset_name}")
-            print("Supported datasets: middlebury, cityscapes, drivingstereo")
+            print("Supported datasets: middlebury, cityscapes, drivingstereo, vkitti")
             sys.exit(1)
         
         items = dataset.find_items()

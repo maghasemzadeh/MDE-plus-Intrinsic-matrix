@@ -1,6 +1,7 @@
 import argparse
 import logging
 import os
+import sys
 import pprint
 import random
 
@@ -14,10 +15,19 @@ from torch.optim import AdamW
 import torch.nn.functional as F
 from torch.utils.tensorboard import SummaryWriter
 
+# Add metric_depth directory to path for imports
+_metric_depth_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                   'models', 'raw_models', 'DepthAnythingV2-revised', 'metric_depth')
+if _metric_depth_path not in sys.path:
+    sys.path.insert(0, _metric_depth_path)
+
 from dataset.hypersim import Hypersim
 from dataset.kitti import KITTI
 from dataset.vkitti2 import VKITTI2
-from dataset.generic_with_intrinsics import GenericDatasetWithIntrinsics
+try:
+    from dataset.generic_with_intrinsics import GenericDatasetWithIntrinsics
+except ImportError:
+    GenericDatasetWithIntrinsics = None
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss
@@ -35,8 +45,8 @@ parser.add_argument('--max-depth', default=20, type=float)
 parser.add_argument('--epochs', default=40, type=int)
 parser.add_argument('--bs', default=2, type=int)
 parser.add_argument('--lr', default=0.000005, type=float)
-parser.add_argument('--pretrained-from', type=str, help='Path to pretrained checkpoint (full model or just pretrained weights)')
-parser.add_argument('--save-path', type=str, required=True)
+parser.add_argument('--pretrained-from', type=str, help='Path to pretrained checkpoint (full model or just pretrained weights). Can be relative to project root or metric_depth/checkpoints')
+parser.add_argument('--save-path', type=str, required=True, help='Path to save checkpoints. Can be relative to project root')
 parser.add_argument('--local-rank', default=0, type=int)
 parser.add_argument('--port', default=None, type=int)
 parser.add_argument('--use-camera-intrinsics', action='store_true', help='Enable camera intrinsics support')
@@ -47,63 +57,122 @@ parser.add_argument('--teacher-checkpoint', type=str, help='Path to teacher mode
 parser.add_argument('--use-distillation', action='store_true', help='Enable teacher-student knowledge distillation')
 
 
+def get_device():
+    """Get the best available device (CUDA, MPS, or CPU)."""
+    if torch.cuda.is_available():
+        return torch.device('cuda')
+    elif hasattr(torch.backends, 'mps') and torch.backends.mps.is_available():
+        return torch.device('mps')
+    else:
+        return torch.device('cpu')
+
+
 def main():
     args = parser.parse_args()
     
-    warnings.simplefilter('ignore', np.RankWarning)
+    # Ignore numpy warnings (RankWarning was removed in newer numpy versions)
+    try:
+        warnings.simplefilter('ignore', np.RankWarning)
+    except AttributeError:
+        # RankWarning doesn't exist in newer numpy versions, ignore it
+        pass
     
     logger = init_log('global', logging.INFO)
     logger.propagate = 0
     
-    rank, world_size = setup_distributed(port=args.port)
+    # Get project root directory first (needed for path resolution)
+    project_root = os.path.dirname(os.path.abspath(__file__))
+    
+    # Determine device
+    device = get_device()
+    
+    # Only use distributed training if CUDA is available
+    if device.type == 'cuda':
+        rank, world_size = setup_distributed(port=args.port)
+    else:
+        rank, world_size = 0, 1
+        if rank == 0:
+            logger.info(f'Using device: {device} (distributed training disabled for non-CUDA devices)')
+    
+    # Resolve save path
+    if not os.path.isabs(args.save_path):
+        save_path = os.path.join(project_root, args.save_path)
+    else:
+        save_path = args.save_path
+    os.makedirs(save_path, exist_ok=True)
     
     if rank == 0:
-        all_args = {**vars(args), 'ngpus': world_size}
+        all_args = {**vars(args), 'ngpus': world_size, 'save_path': save_path}
         logger.info('{}\n'.format(pprint.pformat(all_args)))
-        writer = SummaryWriter(args.save_path)
+        writer = SummaryWriter(save_path)
+    else:
+        writer = None
     
     cudnn.enabled = True
     cudnn.benchmark = True
     
     size = (args.img_size, args.img_size)
+    
     if args.dataset == 'hypersim':
-        trainset = Hypersim('dataset/splits/hypersim/train.txt', 'train', size=size)
+        train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
+        trainset = Hypersim(train_file, 'train', size=size)
     elif args.dataset == 'vkitti':
         # Try multiple possible locations for VKITTI train.txt
-        train_file = 'dataset/splits/vkitti2/train.txt'
+        train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'train.txt')
         # Check if it exists in the default location, otherwise try in datasets/raw_data/vkitti/splits
         if not os.path.exists(train_file):
-            alt_train_file = os.path.join('..', '..', '..', '..', '..', 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
+            alt_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
             if os.path.exists(alt_train_file):
                 train_file = alt_train_file
         trainset = VKITTI2(train_file, 'train', size=size)
     else:
         # Try generic dataset with intrinsics support
-        train_filelist = f'dataset/splits/{args.dataset}/train.txt'
+        if GenericDatasetWithIntrinsics is None:
+            raise NotImplementedError(f"GenericDatasetWithIntrinsics not available. Use 'hypersim' or 'vkitti' dataset.")
+        train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', args.dataset, 'train.txt')
         if os.path.exists(train_filelist):
             trainset = GenericDatasetWithIntrinsics(train_filelist, 'train', size=size)
         else:
             raise NotImplementedError(f"Dataset '{args.dataset}' not found. Create {train_filelist} or use 'hypersim'/'vkitti'")
     
-    trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
-    trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=True, num_workers=4, drop_last=True, sampler=trainsampler)
+    # Use distributed sampler only if world_size > 1
+    # pin_memory only works with CUDA
+    pin_memory = (device.type == 'cuda')
+    if world_size > 1:
+        trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=4, drop_last=True, sampler=trainsampler)
+    else:
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=4, drop_last=True, shuffle=True)
     
     if args.dataset == 'hypersim':
-        valset = Hypersim('dataset/splits/hypersim/val.txt', 'val', size=size)
+        val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
+        valset = Hypersim(val_file, 'val', size=size)
     elif args.dataset == 'vkitti':
         # For VKITTI, use KITTI validation set (or create your own val.txt)
-        valset = KITTI('dataset/splits/kitti/val.txt', 'val', size=size)
+        val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
+        valset = KITTI(val_file, 'val', size=size)
     else:
         # Try generic dataset with intrinsics support
-        val_filelist = f'dataset/splits/{args.dataset}/val.txt'
+        if GenericDatasetWithIntrinsics is None:
+            raise NotImplementedError(f"GenericDatasetWithIntrinsics not available. Use 'hypersim' or 'vkitti' dataset.")
+        val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', args.dataset, 'val.txt')
         if os.path.exists(val_filelist):
             valset = GenericDatasetWithIntrinsics(val_filelist, 'val', size=size)
         else:
             raise NotImplementedError(f"Validation file list not found: {val_filelist}")
-    valsampler = torch.utils.data.distributed.DistributedSampler(valset)
-    valloader = DataLoader(valset, batch_size=1, pin_memory=True, num_workers=4, drop_last=True, sampler=valsampler)
+    # Use distributed sampler only if world_size > 1
+    # pin_memory only works with CUDA
+    pin_memory = (device.type == 'cuda')
+    if world_size > 1:
+        valsampler = torch.utils.data.distributed.DistributedSampler(valset)
+        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=4, drop_last=True, sampler=valsampler)
+    else:
+        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=4, drop_last=True)
     
-    local_rank = int(os.environ["LOCAL_RANK"])
+    local_rank = int(os.environ.get("LOCAL_RANK", "0")) if device.type == 'cuda' else 0
+    
+    if rank == 0:
+        logger.info(f'Using device: {device}')
     
     model_configs = {
         'vits': {'encoder': 'vits', 'features': 64, 'out_channels': [48, 96, 192, 384]},
@@ -119,7 +188,38 @@ def main():
     
     # Load checkpoint (handles both full checkpoints and pretrained-only)
     if args.pretrained_from:
-        checkpoint = torch.load(args.pretrained_from, map_location='cpu')
+        # Resolve checkpoint path
+        if not os.path.isabs(args.pretrained_from):
+            # Try relative to project root first
+            checkpoint_path = os.path.join(project_root, args.pretrained_from)
+            if not os.path.exists(checkpoint_path):
+                # Try relative to model root checkpoints (DepthAnythingV2-revised/checkpoints) - PRIMARY LOCATION
+                model_root = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised')
+                checkpoint_path = os.path.join(model_root, 'checkpoints', os.path.basename(args.pretrained_from))
+            if not os.path.exists(checkpoint_path):
+                # Try with just the filename in model root checkpoints
+                model_root = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised')
+                checkpoint_path = os.path.join(model_root, 'checkpoints', args.pretrained_from)
+            if not os.path.exists(checkpoint_path):
+                # Try relative to metric_depth/checkpoints (fallback)
+                checkpoint_path = os.path.join(_metric_depth_path, 'checkpoints', os.path.basename(args.pretrained_from))
+            if not os.path.exists(checkpoint_path):
+                checkpoint_path = args.pretrained_from
+        else:
+            checkpoint_path = args.pretrained_from
+        
+        if not os.path.exists(checkpoint_path):
+            if rank == 0:
+                logger.warning(f"Checkpoint not found: {checkpoint_path}")
+                logger.warning(f"Available checkpoints in {os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')}:")
+                checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
+                if os.path.exists(checkpoints_dir):
+                    for f in os.listdir(checkpoints_dir):
+                        if f.endswith('.pth'):
+                            logger.warning(f"  - {f}")
+                raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
+        
+        checkpoint = torch.load(checkpoint_path, map_location='cpu')
         
         # Handle different checkpoint formats
         if isinstance(checkpoint, dict) and 'model' in checkpoint:
@@ -132,17 +232,42 @@ def main():
             # Assume it's a state dict
             state_dict = checkpoint
         
-        # Filter out cam_encoder keys (don't exist in old checkpoints)
-        # and load everything else
-        filtered_dict = {k: v for k, v in state_dict.items() 
-                         if 'cam_encoder' not in k}
+        # Get model state dict to check shapes
+        model_state_dict = model.state_dict()
+        
+        # Filter out cam_encoder keys and keys with size mismatches
+        filtered_dict = {}
+        skipped_keys = []
+        for k, v in state_dict.items():
+            if 'cam_encoder' in k:
+                continue  # Skip cam_encoder keys
+            
+            # Check if key exists in model and if shapes match
+            if k in model_state_dict:
+                if v.shape == model_state_dict[k].shape:
+                    filtered_dict[k] = v
+                else:
+                    skipped_keys.append(f"{k} (checkpoint: {v.shape}, model: {model_state_dict[k].shape})")
+            else:
+                # Key doesn't exist in model, skip it
+                skipped_keys.append(f"{k} (not in model)")
         
         missing_keys, unexpected_keys = model.load_state_dict(filtered_dict, strict=False)
         
         if rank == 0:
-            logger.info(f'Loaded checkpoint from {args.pretrained_from}')
+            logger.info(f'Loaded checkpoint from {checkpoint_path}')
+            logger.info(f'Successfully loaded {len(filtered_dict)} parameters')
+            if skipped_keys:
+                logger.warning(f'Skipped {len(skipped_keys)} keys due to size mismatches or missing in model:')
+                for key in skipped_keys[:10]:  # Show first 10
+                    logger.warning(f'  - {key}')
+                if len(skipped_keys) > 10:
+                    logger.warning(f'  ... and {len(skipped_keys) - 10} more')
             if missing_keys:
-                logger.info(f'Missing keys (will use random init): {len(missing_keys)} keys (cam_encoder will be randomly initialized)')
+                logger.info(f'Missing keys (will use random init): {len(missing_keys)} keys')
+                if len(missing_keys) <= 20:
+                    for key in missing_keys:
+                        logger.info(f'  - {key}')
             if unexpected_keys:
                 logger.warning(f'Unexpected keys: {len(unexpected_keys)} keys')
     
@@ -158,10 +283,14 @@ def main():
         if rank == 0:
             logger.info('DINOv2 backbone is trainable')
     
-    model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
-    model.cuda(local_rank)
-    model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], broadcast_buffers=False,
-                                                      output_device=local_rank, find_unused_parameters=True)
+    # Only use SyncBatchNorm and DDP in distributed mode with CUDA
+    if world_size > 1 and device.type == 'cuda':
+        model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
+        model = model.to(device)
+        model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], broadcast_buffers=False,
+                                                          output_device=local_rank, find_unused_parameters=True)
+    else:
+        model = model.to(device)
     
     # Setup teacher model for knowledge distillation
     teacher_model = None
@@ -180,28 +309,61 @@ def main():
         )
         
         # Load teacher checkpoint
-        teacher_checkpoint = torch.load(args.teacher_checkpoint, map_location='cpu')
+        if not os.path.isabs(args.teacher_checkpoint):
+            teacher_checkpoint_path = os.path.join(project_root, args.teacher_checkpoint)
+            if not os.path.exists(teacher_checkpoint_path):
+                # Try relative to model root checkpoints
+                model_root = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised')
+                teacher_checkpoint_path = os.path.join(model_root, 'checkpoints', os.path.basename(args.teacher_checkpoint))
+            if not os.path.exists(teacher_checkpoint_path):
+                teacher_checkpoint_path = os.path.join(_metric_depth_path, 'checkpoints', os.path.basename(args.teacher_checkpoint))
+            if not os.path.exists(teacher_checkpoint_path):
+                teacher_checkpoint_path = args.teacher_checkpoint
+        else:
+            teacher_checkpoint_path = args.teacher_checkpoint
+        
+        teacher_checkpoint = torch.load(teacher_checkpoint_path, map_location='cpu')
         if isinstance(teacher_checkpoint, dict) and 'model' in teacher_checkpoint:
             teacher_state_dict = teacher_checkpoint['model']
         else:
             teacher_state_dict = teacher_checkpoint
         
-        # Filter out cam_encoder keys if present
-        teacher_state_dict = {k: v for k, v in teacher_state_dict.items() 
-                             if 'cam_encoder' not in k}
-        teacher_model.load_state_dict(teacher_state_dict, strict=False)
+        # Get teacher model state dict to check shapes
+        teacher_model_state_dict = teacher_model.state_dict()
+        
+        # Filter out cam_encoder keys and keys with size mismatches
+        teacher_filtered_dict = {}
+        teacher_skipped_keys = []
+        for k, v in teacher_state_dict.items():
+            if 'cam_encoder' in k:
+                continue  # Skip cam_encoder keys
+            
+            # Check if key exists in model and if shapes match
+            if k in teacher_model_state_dict:
+                if v.shape == teacher_model_state_dict[k].shape:
+                    teacher_filtered_dict[k] = v
+                else:
+                    teacher_skipped_keys.append(f"{k} (checkpoint: {v.shape}, model: {teacher_model_state_dict[k].shape})")
+            else:
+                # Key doesn't exist in model, skip it
+                teacher_skipped_keys.append(f"{k} (not in model)")
+        
+        teacher_model.load_state_dict(teacher_filtered_dict, strict=False)
+        
+        if rank == 0 and teacher_skipped_keys:
+            logger.warning(f'Teacher model: Skipped {len(teacher_skipped_keys)} keys due to size mismatches')
         
         # Freeze teacher model completely
         for param in teacher_model.parameters():
             param.requires_grad = False
         teacher_model.eval()
-        teacher_model.cuda(local_rank)
+        teacher_model = teacher_model.to(device)
         
         if rank == 0:
-            logger.info('Teacher model loaded and frozen')
+            logger.info(f'Teacher model loaded from {teacher_checkpoint_path} and frozen')
     
     # Setup loss function (DepthAnythingV2 handles distillation internally)
-    criterion = SiLogLoss().cuda(local_rank)
+    criterion = SiLogLoss().to(device)
     if rank == 0:
         if args.use_distillation:
             logger.info('Using SiLog loss with teacher-student knowledge distillation')
@@ -247,7 +409,8 @@ def main():
                             epoch, args.epochs, previous_best['abs_rel'], previous_best['sq_rel'], previous_best['rmse'], 
                             previous_best['rmse_log'], previous_best['log10'], previous_best['silog']))
         
-        trainloader.sampler.set_epoch(epoch + 1)
+        if world_size > 1 and hasattr(trainloader, 'sampler') and hasattr(trainloader.sampler, 'set_epoch'):
+            trainloader.sampler.set_epoch(epoch + 1)
         
         model.train()
         total_loss = 0
@@ -255,7 +418,7 @@ def main():
         for i, sample in enumerate(trainloader):
             optimizer.zero_grad()
             
-            img, depth, valid_mask = sample['image'].cuda(), sample['depth'].cuda(), sample['valid_mask'].cuda()
+            img, depth, valid_mask = sample['image'].to(device), sample['depth'].to(device), sample['valid_mask'].to(device)
             
             if random.random() < 0.5:
                 img = img.flip(-1)
@@ -265,7 +428,7 @@ def main():
             # Get intrinsics if available in sample
             intrinsics = sample.get('intrinsics', None)
             if intrinsics is not None:
-                intrinsics = intrinsics.cuda()
+                intrinsics = intrinsics.to(device)
             
             # Teacher prediction (without intrinsics) for knowledge distillation
             # DepthAnythingV2 handles knowledge distillation internally
@@ -302,7 +465,7 @@ def main():
                 optimizer.param_groups[0]["lr"] = lr
                 optimizer.param_groups[1]["lr"] = lr * 10.0
             
-            if rank == 0:
+            if rank == 0 and writer is not None:
                 writer.add_scalar('train/loss', loss.item(), iters)
             
             if rank == 0 and i % 100 == 0:
@@ -310,19 +473,19 @@ def main():
         
         model.eval()
         
-        results = {'d1': torch.tensor([0.0]).cuda(), 'd2': torch.tensor([0.0]).cuda(), 'd3': torch.tensor([0.0]).cuda(), 
-                   'abs_rel': torch.tensor([0.0]).cuda(), 'sq_rel': torch.tensor([0.0]).cuda(), 'rmse': torch.tensor([0.0]).cuda(), 
-                   'rmse_log': torch.tensor([0.0]).cuda(), 'log10': torch.tensor([0.0]).cuda(), 'silog': torch.tensor([0.0]).cuda()}
-        nsamples = torch.tensor([0.0]).cuda()
+        results = {'d1': torch.tensor([0.0]).to(device), 'd2': torch.tensor([0.0]).to(device), 'd3': torch.tensor([0.0]).to(device), 
+                   'abs_rel': torch.tensor([0.0]).to(device), 'sq_rel': torch.tensor([0.0]).to(device), 'rmse': torch.tensor([0.0]).to(device), 
+                   'rmse_log': torch.tensor([0.0]).to(device), 'log10': torch.tensor([0.0]).to(device), 'silog': torch.tensor([0.0]).to(device)}
+        nsamples = torch.tensor([0.0]).to(device)
         
         for i, sample in enumerate(valloader):
             
-            img, depth, valid_mask = sample['image'].cuda().float(), sample['depth'].cuda()[0], sample['valid_mask'].cuda()[0]
+            img, depth, valid_mask = sample['image'].to(device).float(), sample['depth'].to(device)[0], sample['valid_mask'].to(device)[0]
             
             # Get intrinsics if available in sample
             intrinsics = sample.get('intrinsics', None)
             if intrinsics is not None:
-                intrinsics = intrinsics.cuda()
+                intrinsics = intrinsics.to(device)
             
             with torch.no_grad():
                 pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
@@ -339,11 +502,11 @@ def main():
                 results[k] += cur_results[k]
             nsamples += 1
         
-        torch.distributed.barrier()
-        
-        for k in results.keys():
-            dist.reduce(results[k], dst=0)
-        dist.reduce(nsamples, dst=0)
+        if world_size > 1 and device.type == 'cuda':
+            torch.distributed.barrier()
+            for k in results.keys():
+                dist.reduce(results[k], dst=0)
+            dist.reduce(nsamples, dst=0)
         
         if rank == 0:
             logger.info('==========================================================================================')
@@ -352,8 +515,9 @@ def main():
             logger.info('==========================================================================================')
             print()
             
-            for name, metric in results.items():
-                writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
+            if writer is not None:
+                for name, metric in results.items():
+                    writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
         
         for k in results.keys():
             if k in ['d1', 'd2', 'd3']:
@@ -362,13 +526,19 @@ def main():
                 previous_best[k] = min(previous_best[k], (results[k] / nsamples).item())
         
         if rank == 0:
+            # Extract model state dict (handle DDP wrapper)
+            if hasattr(model, 'module'):
+                model_state_dict = model.module.state_dict()
+            else:
+                model_state_dict = model.state_dict()
+            
             checkpoint = {
-                'model': model.state_dict(),
+                'model': model_state_dict,
                 'optimizer': optimizer.state_dict(),
                 'epoch': epoch,
                 'previous_best': previous_best,
             }
-            torch.save(checkpoint, os.path.join(args.save_path, 'latest.pth'))
+            torch.save(checkpoint, os.path.join(save_path, 'latest.pth'))
 
 
 if __name__ == '__main__':

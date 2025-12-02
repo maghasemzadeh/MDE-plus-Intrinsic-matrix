@@ -6,6 +6,7 @@ from .base import BaseDataset, DatasetItem, DatasetConfig
 from .cityscapes import CityscapesDataset
 from .drivingstereo import DrivingStereoDataset
 from .middlebury import MiddleburyDataset
+from .vkitti import VKITTIDataset
 
 __all__ = [
     'BaseDataset',
@@ -14,5 +15,6 @@ __all__ = [
     'CityscapesDataset',
     'DrivingStereoDataset',
     'MiddleburyDataset',
+    'VKITTIDataset',
 ]
 

@@ -3,6 +3,6 @@
 datasets/raw_data/
 models/raw_models/**/checkpoints/** 
 results
-venv
+**/venv/**
 .DS_Store
 

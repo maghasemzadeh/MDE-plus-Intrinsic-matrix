@@ -215,13 +215,25 @@ class DepthAnythingV2(nn.Module):
                 image_size = (x.shape[-2], x.shape[-1])
             cam_token = self.cam_encoder(intrinsics, image_size)  # (B, 1, embed_dim)
         
-        features = self.pretrained.get_intermediate_layers(
-            x, 
-            self.intermediate_layer_idx[self.encoder], 
-            return_class_token=True,
-            cam_token=cam_token,
-            cam_token_inject_layer=self.cam_token_inject_layer,
-        )
+        # Call get_intermediate_layers with cam_token only if it's not None and the method supports it
+        # This handles cases where the pretrained model might be from a different version
+        call_kwargs = {
+            'x': x,
+            'n': self.intermediate_layer_idx[self.encoder],
+            'return_class_token': True,
+        }
+        
+        # Only add cam_token parameters if cam_token is provided and use_camera_intrinsics is enabled
+        if self.use_camera_intrinsics and cam_token is not None:
+            # Check if the method accepts cam_token by inspecting its signature
+            import inspect
+            sig = inspect.signature(self.pretrained.get_intermediate_layers)
+            if 'cam_token' in sig.parameters:
+                call_kwargs['cam_token'] = cam_token
+                if 'cam_token_inject_layer' in sig.parameters:
+                    call_kwargs['cam_token_inject_layer'] = self.cam_token_inject_layer
+        
+        features = self.pretrained.get_intermediate_layers(**call_kwargs)
         
         depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
         

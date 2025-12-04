@@ -82,8 +82,32 @@ class DepthAnythingV2BasicModel(BaseDepthModel):
                 f"Please download the basic Depth Anything V2 checkpoint."
             )
         
-        state_dict = torch.load(checkpoint_path, map_location='cpu')
-        self.model.load_state_dict(state_dict)
+        checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        
+        # Handle different checkpoint formats
+        if isinstance(checkpoint, dict) and 'model' in checkpoint:
+            # Trained checkpoint format (from train.py)
+            state_dict = checkpoint['model']
+        elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
+            # Full model state dict
+            state_dict = checkpoint
+        else:
+            # Assume it's a state dict
+            state_dict = checkpoint
+        
+        # Filter out cam_encoder keys if they don't exist in model (for backward compatibility)
+        model_state_dict = self.model.state_dict()
+        filtered_dict = {}
+        for k, v in state_dict.items():
+            if k in model_state_dict:
+                if v.shape == model_state_dict[k].shape:
+                    filtered_dict[k] = v
+        
+        missing_keys, unexpected_keys = self.model.load_state_dict(filtered_dict, strict=False)
+        if missing_keys:
+            print(f"Warning: {len(missing_keys)} keys missing from checkpoint (will use random init)")
+        if unexpected_keys:
+            print(f"Warning: {len(unexpected_keys)} unexpected keys in checkpoint")
     
     def forward(self, x):
         """Forward pass through the model."""

@@ -10,9 +10,16 @@ import numpy as np
 from .base import BaseDepthModelWrapper
 
 # Add raw_models to path to import depth_anything_v2
-# models/depth_anything_v2.py -> models/ -> models/raw_models/DepthAnythingV2
+# Prefer DepthAnythingV2-revised (supports camera intrinsics and trained checkpoints)
+# models/depth_anything_v2.py -> models/ -> models/raw_models/DepthAnythingV2-revised
+_raw_models_path_revised = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                                       'raw_models', 'DepthAnythingV2-revised')
 _raw_models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                 'raw_models', 'DepthAnythingV2')
+
+# Try v2-revised first, fallback to v2
+if _raw_models_path_revised not in sys.path:
+    sys.path.insert(0, _raw_models_path_revised)
 if _raw_models_path not in sys.path:
     sys.path.insert(0, _raw_models_path)
 

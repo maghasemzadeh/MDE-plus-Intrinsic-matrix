@@ -9,12 +9,25 @@ python compare.py \
     --max-items 2000
 ```
 
-# prepare vkitti2 dataset
+```bash
+python compare.py \
+    --dataset cityscapes,drivingstereo \
+    --encoder vitl \
+    --model-type basic \
+    --max-depth 120 \
+    --max-items 2000
+```
+
+# prepare vkitti2 dataset on revised model
  ```bash 
-  python prepare_data_example.py \
-    datasets/raw_data/vkitti \
-    splits/train.txt \
-    splits/intrinsics
+  python compare.py \
+    --dataset cityscapes,drivingstereo \
+    --model-type metric \
+    --encoder vitl \
+    --max-depth 80.0 \
+    --model-checkpoint checkpoints/vkitti_training/best.pth \
+    --max-items 100 \
+    --output-path results/cityscapes_drivingstereo_comparison
 ```
 
 # train on the vkitti2 dataset

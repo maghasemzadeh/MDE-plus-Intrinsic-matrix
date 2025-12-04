@@ -492,9 +492,20 @@ def main():
             
             if rank == 0 and writer is not None:
                 writer.add_scalar('train/loss', loss.item(), iters)
+                # Log learning rate
+                if freeze_dinov2:
+                    writer.add_scalar('train/learning_rate', optimizer.param_groups[0]['lr'], iters)
+                else:
+                    writer.add_scalar('train/learning_rate_pretrained', optimizer.param_groups[0]['lr'], iters)
+                    writer.add_scalar('train/learning_rate_others', optimizer.param_groups[1]['lr'], iters)
             
             if rank == 0 and i % 100 == 0:
                 logger.info('Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}'.format(i, len(trainloader), optimizer.param_groups[0]['lr'], loss.item()))
+        
+        # Log average training loss per epoch
+        if rank == 0 and writer is not None:
+            avg_train_loss = total_loss / len(trainloader)
+            writer.add_scalar('train/avg_loss_per_epoch', avg_train_loss, epoch)
         
         model.eval()
         
@@ -502,6 +513,10 @@ def main():
                    'abs_rel': torch.tensor([0.0]).to(device), 'sq_rel': torch.tensor([0.0]).to(device), 'rmse': torch.tensor([0.0]).to(device), 
                    'rmse_log': torch.tensor([0.0]).to(device), 'log10': torch.tensor([0.0]).to(device), 'silog': torch.tensor([0.0]).to(device)}
         nsamples = torch.tensor([0.0]).to(device)
+        
+        # Store first validation sample for visualization
+        first_val_sample = None
+        first_val_pred = None
         
         for i, sample in enumerate(valloader):
             
@@ -520,6 +535,16 @@ def main():
             
             if valid_mask.sum() < 10:
                 continue
+            
+            # Store first validation sample for visualization
+            if first_val_sample is None and rank == 0:
+                first_val_sample = {
+                    'image': img[0].cpu(),
+                    'depth': depth.cpu(),
+                    'pred': pred.cpu(),
+                    'valid_mask': valid_mask.cpu()
+                }
+                first_val_pred = pred.cpu()
             
             cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
             
@@ -543,12 +568,79 @@ def main():
             if writer is not None:
                 for name, metric in results.items():
                     writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
+                
+                # Log sample depth predictions as images (every 5 epochs to save space)
+                if first_val_sample is not None and epoch % 5 == 0:
+                    import matplotlib.pyplot as plt
+                    import matplotlib
+                    matplotlib.use('Agg')  # Non-interactive backend
+                    
+                    # Normalize images for visualization
+                    img_viz = first_val_sample['image']
+                    depth_gt_viz = first_val_sample['depth']
+                    depth_pred_viz = first_val_sample['pred']
+                    valid_mask_viz = first_val_sample['valid_mask']
+                    
+                    # Convert to numpy and normalize
+                    img_np = img_viz.permute(1, 2, 0).numpy()
+                    img_np = (img_np - img_np.min()) / (img_np.max() - img_np.min() + 1e-8)
+                    
+                    depth_gt_np = depth_gt_viz.numpy()
+                    depth_pred_np = depth_pred_viz.numpy()
+                    valid_mask_np = valid_mask_viz.numpy()
+                    
+                    # Normalize depth maps for visualization (only using valid pixels)
+                    if valid_mask_np.sum() > 0:
+                        depth_gt_valid = depth_gt_np[valid_mask_np]
+                        depth_pred_valid = depth_pred_np[valid_mask_np]
+                        depth_gt_min, depth_gt_max = depth_gt_valid.min(), depth_gt_valid.max()
+                        depth_pred_min, depth_pred_max = depth_pred_valid.min(), depth_pred_valid.max()
+                        
+                        depth_gt_norm = (depth_gt_np - depth_gt_min) / (depth_gt_max - depth_gt_min + 1e-8)
+                        depth_pred_norm = (depth_pred_np - depth_pred_min) / (depth_pred_max - depth_pred_min + 1e-8)
+                    else:
+                        # Fallback if no valid pixels
+                        depth_gt_norm = depth_gt_np / (depth_gt_np.max() + 1e-8)
+                        depth_pred_norm = depth_pred_np / (depth_pred_np.max() + 1e-8)
+                    
+                    # Create figure with subplots
+                    fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+                    axes[0].imshow(img_np)
+                    axes[0].set_title('Input Image')
+                    axes[0].axis('off')
+                    
+                    axes[1].imshow(depth_gt_norm, cmap='jet')
+                    axes[1].set_title('Ground Truth Depth')
+                    axes[1].axis('off')
+                    
+                    axes[2].imshow(depth_pred_norm, cmap='jet')
+                    axes[2].set_title('Predicted Depth')
+                    axes[2].axis('off')
+                    
+                    plt.tight_layout()
+                    
+                    # Convert figure to image tensor for TensorBoard
+                    fig.canvas.draw()
+                    buf = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
+                    buf = buf.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                    plt.close(fig)
+                    
+                    # Convert to tensor and add to TensorBoard
+                    img_tensor = torch.from_numpy(buf).permute(2, 0, 1).float() / 255.0
+                    writer.add_image('eval/sample_prediction', img_tensor, epoch)
         
+        # Track if this epoch improved any metric
+        improved = False
         for k in results.keys():
+            current_value = (results[k] / nsamples).item()
             if k in ['d1', 'd2', 'd3']:
-                previous_best[k] = max(previous_best[k], (results[k] / nsamples).item())
+                if current_value > previous_best[k]:
+                    improved = True
+                    previous_best[k] = current_value
             else:
-                previous_best[k] = min(previous_best[k], (results[k] / nsamples).item())
+                if current_value < previous_best[k]:
+                    improved = True
+                    previous_best[k] = current_value
         
         if rank == 0:
             # Extract model state dict (handle DDP wrapper)
@@ -563,7 +655,14 @@ def main():
                 'epoch': epoch,
                 'previous_best': previous_best,
             }
+            
+            # Always save latest checkpoint
             torch.save(checkpoint, os.path.join(save_path, 'latest.pth'))
+            
+            # Save best checkpoint if metrics improved
+            if improved:
+                torch.save(checkpoint, os.path.join(save_path, 'best.pth'))
+                logger.info(f'New best checkpoint saved! Metrics: {previous_best}')
 
 
 if __name__ == '__main__':

@@ -73,6 +73,7 @@ def parse_model_config(model_str: str) -> Dict:
 def find_checkpoint(checkpoint_path: Optional[str], model_type: str, encoder: str, max_depth: float) -> Optional[str]:
     """
     Find checkpoint path, searching in multiple locations.
+    If best.pth is not found, falls back to latest.pth with a warning.
     
     Args:
         checkpoint_path: Explicit checkpoint path (if provided)
@@ -95,6 +96,15 @@ def find_checkpoint(checkpoint_path: Optional[str], model_type: str, encoder: st
             full_path = os.path.join(project_root, checkpoint_path)
             if os.path.exists(full_path):
                 return full_path
+            # If explicit path doesn't exist, try to find best/latest in that directory
+            if os.path.isdir(full_path):
+                best_path = os.path.join(full_path, 'best.pth')
+                latest_path = os.path.join(full_path, 'latest.pth')
+                if os.path.exists(best_path):
+                    return best_path
+                elif os.path.exists(latest_path):
+                    print(f"⚠️  Warning: best.pth not found in {full_path}, using latest.pth instead")
+                    return latest_path
     
     # Search in project checkpoints directory (trained models)
     project_checkpoints_dir = os.path.join(project_root, 'checkpoints')
@@ -102,10 +112,14 @@ def find_checkpoint(checkpoint_path: Optional[str], model_type: str, encoder: st
         for subdir in os.listdir(project_checkpoints_dir):
             subdir_path = os.path.join(project_checkpoints_dir, subdir)
             if os.path.isdir(subdir_path):
-                for ckpt_name in ['best.pth', 'latest.pth']:
-                    ckpt_path = os.path.join(subdir_path, ckpt_name)
-                    if os.path.exists(ckpt_path):
-                        return ckpt_path
+                # Try best.pth first
+                best_path = os.path.join(subdir_path, 'best.pth')
+                latest_path = os.path.join(subdir_path, 'latest.pth')
+                if os.path.exists(best_path):
+                    return best_path
+                elif os.path.exists(latest_path):
+                    print(f"⚠️  Warning: best.pth not found in {subdir_path}, using latest.pth instead")
+                    return latest_path
     
     # Search in v2-revised checkpoints
     v2_revised_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
@@ -417,14 +431,23 @@ Examples:
     )
     
     if model1_checkpoint is None:
-        print(f"Error: Could not find checkpoint for model1: {model1_config}")
+        print(f"❌ Error: Could not find checkpoint for model1: {model1_config}")
         print("Please specify checkpoint path explicitly or ensure checkpoints are in standard locations.")
         sys.exit(1)
     
     if model2_checkpoint is None:
-        print(f"Error: Could not find checkpoint for model2: {model2_config}")
+        print(f"❌ Error: Could not find checkpoint for model2: {model2_config}")
         print("Please specify checkpoint path explicitly or ensure checkpoints are in standard locations.")
         sys.exit(1)
+    
+    # Check if we're using latest.pth instead of best.pth and warn
+    if 'latest.pth' in model1_checkpoint and 'best.pth' not in model1_checkpoint:
+        print(f"⚠️  Warning: Using latest.pth for model1 instead of best.pth")
+        print(f"   This may not represent the best performing checkpoint.")
+    
+    if 'latest.pth' in model2_checkpoint and 'best.pth' not in model2_checkpoint:
+        print(f"⚠️  Warning: Using latest.pth for model2 instead of best.pth")
+        print(f"   This may not represent the best performing checkpoint.")
     
     print(f"Model 1: {model1_config['model_type']} ({model1_config['encoder']})")
     print(f"  Checkpoint: {model1_checkpoint}")

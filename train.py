@@ -28,7 +28,7 @@ from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingData
 from dataset.hypersim import Hypersim
 try:
     from dataset.generic_with_intrinsics import GenericDatasetWithIntrinsics
-except ImportError:
+except ImportError | ModuleNotFoundError:
     GenericDatasetWithIntrinsics = None
 
 # Import DepthAnythingV2 and force reload to avoid cached version issues

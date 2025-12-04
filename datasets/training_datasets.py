@@ -5,6 +5,7 @@ These datasets read from split files in datasets/raw_data/ and use transforms fr
 
 import os
 import re
+import shlex
 import cv2
 import numpy as np
 import torch
@@ -425,26 +426,42 @@ class KITTITrainingDataset(Dataset):
         with open(filelist_path, 'r') as f:
             raw_filelist = f.read().splitlines()
         
-        # Filter out empty lines and invalid entries
-        # Don't check file existence during init - handle at runtime for better performance
+        # Pre-validate paths and filter out invalid entries
         self.filelist = []
+        skipped_count = 0
         for line in raw_filelist:
             line = line.strip()
             if not line:
                 continue
             
-            parts = line.split()
+            # Use shlex.split to handle spaces in paths
+            parts = shlex.split(line)
             if len(parts) < 2:
                 continue
             
-            # Keep the line - we'll resolve and check paths at runtime in __getitem__
-            self.filelist.append(line)
+            img_path_orig = parts[0]
+            depth_path_orig = parts[1]
+            
+            # Resolve paths
+            img_path_resolved = self._resolve_path(img_path_orig)
+            depth_path_resolved = self._resolve_path(depth_path_orig)
+            
+            # Only keep entries where both files exist
+            if os.path.exists(img_path_resolved) and os.path.exists(depth_path_resolved):
+                # Reconstruct the line with resolved paths for consistency
+                resolved_line_parts = [img_path_resolved, depth_path_resolved]
+                self.filelist.append(" ".join(resolved_line_parts))
+            else:
+                skipped_count += 1
         
         if len(self.filelist) == 0:
             raise ValueError(f"No valid entries found in filelist: {filelist_path}. "
-                           f"File should contain lines with at least 2 space-separated paths.")
+                           f"Original filelist had {len(raw_filelist)} entries, but none resolved to existing files. "
+                           f"Please check that the paths in the filelist are correct and the dataset is properly organized.")
         
-        print(f"Loaded {len(self.filelist)} entries from {filelist_path}")
+        if skipped_count > 0:
+            print(f"Warning: Skipped {skipped_count} entries with missing files (after path resolution)")
+        print(f"Loaded {len(self.filelist)} valid entries from {filelist_path}")
         
         # Setup transforms
         net_w, net_h = size
@@ -465,6 +482,8 @@ class KITTITrainingDataset(Dataset):
     def _resolve_path(self, path):
         """
         Resolve a path that might be absolute from another system or relative.
+        Maps paths from other systems (e.g., /mnt/bn/liheyang/Kitti/...)
+        to local project structure (datasets/raw_data/kitti/...).
         Returns the resolved path if it exists, otherwise returns the original path.
         """
         # Normalize the path first (handles things like .., ., etc.)
@@ -474,8 +493,41 @@ class KITTITrainingDataset(Dataset):
         if os.path.exists(path):
             return path
         
-        # If it's already absolute but doesn't exist, try to resolve symlinks
+        # If it's an absolute path from another system, try to map it to local structure
         if os.path.isabs(path):
+            path_lower = path.lower()
+            
+            # Check if this is a KITTI path from another system
+            if 'kitti' in path_lower and ('raw_data' in path_lower or 'data_depth_annotated' in path_lower):
+                # Extract the relative part after Kitti or kitti
+                parts = [p for p in path.split('/') if p]
+                
+                # Find the index of Kitti or kitti
+                kitti_idx = None
+                for i, part in enumerate(parts):
+                    if 'kitti' in part.lower():
+                        kitti_idx = i
+                        break
+                
+                if kitti_idx is not None:
+                    # Get the relative path after Kitti/kitti
+                    relative_parts = parts[kitti_idx + 1:]
+                    
+                    # Construct local path: datasets/raw_data/kitti/{relative_parts}
+                    if len(relative_parts) > 0:
+                        local_path = os.path.join(self.project_root, 'datasets', 'raw_data', 'kitti', *relative_parts)
+                        local_path = os.path.normpath(local_path)
+                        
+                        if os.path.exists(local_path):
+                            return local_path
+                        
+                        # Try alternative casing (Kitti vs kitti)
+                        local_path_alt = os.path.join(self.project_root, 'datasets', 'raw_data', 'Kitti', *relative_parts)
+                        local_path_alt = os.path.normpath(local_path_alt)
+                        if os.path.exists(local_path_alt):
+                            return local_path_alt
+            
+            # Try to resolve symlinks for absolute paths
             try:
                 resolved = os.path.realpath(path)
                 if os.path.exists(resolved):
@@ -494,11 +546,12 @@ class KITTITrainingDataset(Dataset):
         return path
     
     def __getitem__(self, item):
-        parts = self.filelist[item].split()
+        # Use shlex.split to handle spaces in paths
+        parts = shlex.split(self.filelist[item])
         img_path = parts[0]
         depth_path = parts[1]
         
-        # Resolve and normalize paths
+        # Paths should already be resolved during initialization, but double-check
         img_path = self._resolve_path(img_path)
         depth_path = self._resolve_path(depth_path)
         

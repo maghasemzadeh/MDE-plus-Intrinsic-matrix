@@ -1,7 +1,7 @@
 .idea
 **/__pycache__/**
 datasets/raw_data/
-models/raw_models/**/checkpoints/** 
+**/checkpoints/**
 results
 **/venv/**
 .DS_Store

@@ -129,8 +129,10 @@ def main():
         # Use split file from datasets/raw_data/vkitti/splits/
         train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
         if not os.path.exists(train_file):
-            # Fallback to metric_depth location
-            train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'train.txt')
+            raise FileNotFoundError(
+                f"VKITTI training file not found: {train_file}\n"
+                f"Please ensure the train.txt file exists in datasets/raw_data/vkitti/splits/"
+            )
         trainset = VKITTI2TrainingDataset(train_file, 'train', size=size)
     else:
         # Try generic dataset with intrinsics support
@@ -155,7 +157,7 @@ def main():
         val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
         valset = Hypersim(val_file, 'val', size=size)
     elif args.dataset == 'vkitti':
-        # Try to use VKITTI validation set first from datasets/raw_data/vkitti/splits/
+        # Try to use VKITTI validation set from datasets/raw_data/vkitti/splits/
         vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
         
         if os.path.exists(vkitti_val_file):
@@ -163,28 +165,21 @@ def main():
             if rank == 0:
                 logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
         else:
-            # Try metric_depth location
-            alt_vkitti_val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'val.txt')
-            if os.path.exists(alt_vkitti_val_file):
-                valset = VKITTI2TrainingDataset(alt_vkitti_val_file, 'val', size=size)
+            # Fall back to KITTI validation set (with filtered missing files)
+            val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
+            if os.path.exists(val_file):
+                valset = KITTITrainingDataset(val_file, 'val', size=size)
                 if rank == 0:
-                    logger.info(f'Using VKITTI validation set: {alt_vkitti_val_file}')
+                    logger.warning(f'VKITTI validation set not found at {vkitti_val_file}. Using KITTI validation set: {val_file}')
+                    logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
+                    logger.warning(f'To use VKITTI validation, create datasets/raw_data/vkitti/splits/val.txt')
             else:
-                # Fall back to KITTI validation set (with filtered missing files)
-                val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
-                if os.path.exists(val_file):
-                    valset = KITTITrainingDataset(val_file, 'val', size=size)
-                    if rank == 0:
-                        logger.warning(f'VKITTI validation set not found. Using KITTI validation set: {val_file}')
-                        logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
-                else:
-                    raise FileNotFoundError(
-                        f"Validation set not found. Tried:\n"
-                        f"  - {vkitti_val_file}\n"
-                        f"  - {alt_vkitti_val_file}\n"
-                        f"  - {val_file}\n"
-                        f"Please create a validation file list for VKITTI or ensure KITTI validation set is available."
-                    )
+                raise FileNotFoundError(
+                    f"Validation set not found. Tried:\n"
+                    f"  - {vkitti_val_file}\n"
+                    f"  - {val_file}\n"
+                    f"Please create a validation file list for VKITTI at {vkitti_val_file} or ensure KITTI validation set is available."
+                )
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:

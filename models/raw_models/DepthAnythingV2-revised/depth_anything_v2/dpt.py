@@ -158,6 +158,7 @@ class DepthAnythingV2(nn.Module):
         out_channels=[256, 512, 1024, 1024], 
         use_bn=False, 
         use_clstoken=False,
+        max_depth=20.0,
         use_camera_intrinsics=False,  # Enable camera intrinsics support
         cam_token_inject_layer=None,  # Layer to inject camera token (None = first layer)
     ):
@@ -173,6 +174,7 @@ class DepthAnythingV2(nn.Module):
         self.encoder = encoder
         self.pretrained = DINOv2(model_name=encoder)
         
+        self.max_depth = max_depth
         self.use_camera_intrinsics = use_camera_intrinsics
         self.cam_token_inject_layer = cam_token_inject_layer
         

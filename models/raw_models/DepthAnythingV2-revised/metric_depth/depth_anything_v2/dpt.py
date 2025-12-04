@@ -170,11 +170,10 @@ class DepthAnythingV2(nn.Module):
             'vitg': [9, 19, 29, 39]
         }
         
-        self.max_depth = max_depth
-        
         self.encoder = encoder
         self.pretrained = DINOv2(model_name=encoder)
         
+        self.max_depth = max_depth
         self.use_camera_intrinsics = use_camera_intrinsics
         self.cam_token_inject_layer = cam_token_inject_layer
         

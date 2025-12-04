@@ -21,13 +21,22 @@ _metric_depth_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 if _metric_depth_path not in sys.path:
     sys.path.insert(0, _metric_depth_path)
 
+# Import training datasets from datasets folder
+from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset
+
+# Import other datasets from metric_depth (for hypersim, etc.)
 from dataset.hypersim import Hypersim
-from dataset.kitti import KITTI
-from dataset.vkitti2 import VKITTI2
 try:
     from dataset.generic_with_intrinsics import GenericDatasetWithIntrinsics
 except ImportError:
     GenericDatasetWithIntrinsics = None
+
+# Import DepthAnythingV2 and force reload to avoid cached version issues
+import importlib
+if 'depth_anything_v2' in sys.modules:
+    importlib.reload(sys.modules['depth_anything_v2'])
+if 'depth_anything_v2.dpt' in sys.modules:
+    importlib.reload(sys.modules['depth_anything_v2.dpt'])
 from depth_anything_v2.dpt import DepthAnythingV2
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss
@@ -117,14 +126,12 @@ def main():
         train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
         trainset = Hypersim(train_file, 'train', size=size)
     elif args.dataset == 'vkitti':
-        # Try multiple possible locations for VKITTI train.txt
-        train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'train.txt')
-        # Check if it exists in the default location, otherwise try in datasets/raw_data/vkitti/splits
+        # Use split file from datasets/raw_data/vkitti/splits/
+        train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
         if not os.path.exists(train_file):
-            alt_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
-            if os.path.exists(alt_train_file):
-                train_file = alt_train_file
-        trainset = VKITTI2(train_file, 'train', size=size)
+            # Fallback to metric_depth location
+            train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'train.txt')
+        trainset = VKITTI2TrainingDataset(train_file, 'train', size=size)
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:
@@ -148,34 +155,36 @@ def main():
         val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
         valset = Hypersim(val_file, 'val', size=size)
     elif args.dataset == 'vkitti':
-        # Try to use VKITTI validation set first, fall back to KITTI if not available
-        vkitti_val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'val.txt')
-        alt_vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
+        # Try to use VKITTI validation set first from datasets/raw_data/vkitti/splits/
+        vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
         
         if os.path.exists(vkitti_val_file):
-            valset = VKITTI2(vkitti_val_file, 'val', size=size)
+            valset = VKITTI2TrainingDataset(vkitti_val_file, 'val', size=size)
             if rank == 0:
                 logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
-        elif os.path.exists(alt_vkitti_val_file):
-            valset = VKITTI2(alt_vkitti_val_file, 'val', size=size)
-            if rank == 0:
-                logger.info(f'Using VKITTI validation set: {alt_vkitti_val_file}')
         else:
-            # Fall back to KITTI validation set (with filtered missing files)
-            val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
-            if os.path.exists(val_file):
-                valset = KITTI(val_file, 'val', size=size)
+            # Try metric_depth location
+            alt_vkitti_val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'val.txt')
+            if os.path.exists(alt_vkitti_val_file):
+                valset = VKITTI2TrainingDataset(alt_vkitti_val_file, 'val', size=size)
                 if rank == 0:
-                    logger.warning(f'VKITTI validation set not found. Using KITTI validation set: {val_file}')
-                    logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
+                    logger.info(f'Using VKITTI validation set: {alt_vkitti_val_file}')
             else:
-                raise FileNotFoundError(
-                    f"Validation set not found. Tried:\n"
-                    f"  - {vkitti_val_file}\n"
-                    f"  - {alt_vkitti_val_file}\n"
-                    f"  - {val_file}\n"
-                    f"Please create a validation file list for VKITTI or ensure KITTI validation set is available."
-                )
+                # Fall back to KITTI validation set (with filtered missing files)
+                val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
+                if os.path.exists(val_file):
+                    valset = KITTITrainingDataset(val_file, 'val', size=size)
+                    if rank == 0:
+                        logger.warning(f'VKITTI validation set not found. Using KITTI validation set: {val_file}')
+                        logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
+                else:
+                    raise FileNotFoundError(
+                        f"Validation set not found. Tried:\n"
+                        f"  - {vkitti_val_file}\n"
+                        f"  - {alt_vkitti_val_file}\n"
+                        f"  - {val_file}\n"
+                        f"Please create a validation file list for VKITTI or ensure KITTI validation set is available."
+                    )
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:
@@ -205,11 +214,11 @@ def main():
         'vitl': {'encoder': 'vitl', 'features': 256, 'out_channels': [256, 512, 1024, 1024]},
         'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
     }
-    model = DepthAnythingV2(
-        **{**model_configs[args.encoder], 'max_depth': args.max_depth},
-        use_camera_intrinsics=args.use_camera_intrinsics,
-        cam_token_inject_layer=args.cam_token_inject_layer
-    )
+    # max_depth has default value of 20.0, so we don't need to pass it unless different
+    model_kwargs = {**model_configs[args.encoder], 'use_camera_intrinsics': args.use_camera_intrinsics, 'cam_token_inject_layer': args.cam_token_inject_layer}
+    if args.max_depth != 20.0:
+        model_kwargs['max_depth'] = args.max_depth
+    model = DepthAnythingV2(**model_kwargs)
     
     # Load checkpoint (handles both full checkpoints and pretrained-only)
     if args.pretrained_from:
@@ -327,11 +336,10 @@ def main():
             logger.info('Setting up teacher model for knowledge distillation...')
         
         # Create teacher model (without camera intrinsics)
-        teacher_model = DepthAnythingV2(
-            **{**model_configs[args.encoder], 'max_depth': args.max_depth},
-            use_camera_intrinsics=False,  # Teacher doesn't use intrinsics
-            cam_token_inject_layer=None
-        )
+        teacher_kwargs = {**model_configs[args.encoder], 'use_camera_intrinsics': False, 'cam_token_inject_layer': None}
+        if args.max_depth != 20.0:
+            teacher_kwargs['max_depth'] = args.max_depth
+        teacher_model = DepthAnythingV2(**teacher_kwargs)
         
         # Load teacher checkpoint
         if not os.path.isabs(args.teacher_checkpoint):

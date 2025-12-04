@@ -148,9 +148,34 @@ def main():
         val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
         valset = Hypersim(val_file, 'val', size=size)
     elif args.dataset == 'vkitti':
-        # For VKITTI, use KITTI validation set (or create your own val.txt)
-        val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
-        valset = KITTI(val_file, 'val', size=size)
+        # Try to use VKITTI validation set first, fall back to KITTI if not available
+        vkitti_val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'vkitti2', 'val.txt')
+        alt_vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
+        
+        if os.path.exists(vkitti_val_file):
+            valset = VKITTI2(vkitti_val_file, 'val', size=size)
+            if rank == 0:
+                logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
+        elif os.path.exists(alt_vkitti_val_file):
+            valset = VKITTI2(alt_vkitti_val_file, 'val', size=size)
+            if rank == 0:
+                logger.info(f'Using VKITTI validation set: {alt_vkitti_val_file}')
+        else:
+            # Fall back to KITTI validation set (with filtered missing files)
+            val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
+            if os.path.exists(val_file):
+                valset = KITTI(val_file, 'val', size=size)
+                if rank == 0:
+                    logger.warning(f'VKITTI validation set not found. Using KITTI validation set: {val_file}')
+                    logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
+            else:
+                raise FileNotFoundError(
+                    f"Validation set not found. Tried:\n"
+                    f"  - {vkitti_val_file}\n"
+                    f"  - {alt_vkitti_val_file}\n"
+                    f"  - {val_file}\n"
+                    f"Please create a validation file list for VKITTI or ensure KITTI validation set is available."
+                )
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:

@@ -1,3 +1,4 @@
+10import os
 import cv2
 import torch
 from torch.utils.data import Dataset
@@ -15,7 +16,26 @@ class KITTI(Dataset):
         self.size = size
         
         with open(filelist_path, 'r') as f:
-            self.filelist = f.read().splitlines()
+            raw_filelist = f.read().splitlines()
+        
+        # Filter out entries where files don't exist
+        self.filelist = []
+        for line in raw_filelist:
+            parts = line.split(' ')
+            if len(parts) >= 2:
+                img_path = parts[0]
+                depth_path = parts[1]
+                if os.path.exists(img_path) and os.path.exists(depth_path):
+                    self.filelist.append(line)
+        
+        if len(self.filelist) == 0:
+            raise ValueError(f"No valid files found in filelist: {filelist_path}. "
+                           f"Original filelist had {len(raw_filelist)} entries, but none of the files exist. "
+                           f"Please check that the paths in the filelist are correct.")
+        
+        if len(self.filelist) < len(raw_filelist):
+            print(f"Warning: Filtered out {len(raw_filelist) - len(self.filelist)} entries with missing files "
+                  f"from {filelist_path}. Using {len(self.filelist)} valid entries.")
         
         net_w, net_h = size
         self.transform = Compose([
@@ -37,9 +57,15 @@ class KITTI(Dataset):
         depth_path = self.filelist[item].split(' ')[1]
         
         image = cv2.imread(img_path)
+        if image is None:
+            raise ValueError(f"Failed to load image: {img_path}. File may be corrupted or path is incorrect.")
+        
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         
-        depth = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED).astype('float32')
+        depth = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED)
+        if depth is None:
+            raise ValueError(f"Failed to load depth: {depth_path}. File may be corrupted or path is incorrect.")
+        depth = depth.astype('float32')
         
         sample = self.transform({'image': image, 'depth': depth})
 

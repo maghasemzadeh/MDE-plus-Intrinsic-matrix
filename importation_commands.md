@@ -1,11 +1,11 @@
 
 # compare cityscapes and drivingstereo:
 ```bash
-python compare.py 
-    --dataset cityscapes,drivingstereo 
-    --encoder vitl 
-    --model-type basic 
-    --max-depth 120 
+python compare.py \
+    --dataset cityscapes,drivingstereo \
+    --encoder vitl \
+    --model-type basic \
+    --max-depth 120 \
     --max-items 2000
 ```
 

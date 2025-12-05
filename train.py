@@ -86,19 +86,38 @@ def main():
     logger = init_log('global', logging.INFO)
     logger.propagate = 0
     
+    # Print initial message immediately
+    print("Starting training script...")
+    sys.stdout.flush()
+    
     # Get project root directory first (needed for path resolution)
     project_root = os.path.dirname(os.path.abspath(__file__))
     
     # Determine device
     device = get_device()
+    print(f"Detected device: {device}")
+    sys.stdout.flush()
+    logger.info(f'Detected device: {device}')
     
-    # Only use distributed training if CUDA is available
+    # Only use distributed training if CUDA is available and RANK/WORLD_SIZE are set
     if device.type == 'cuda':
-        rank, world_size = setup_distributed(port=args.port)
+        # Check if distributed training environment variables are set
+        if 'RANK' in os.environ and 'WORLD_SIZE' in os.environ:
+            print("Initializing distributed training...")
+            sys.stdout.flush()
+            logger.info('Initializing distributed training...')
+            rank, world_size = setup_distributed(port=args.port)
+        else:
+            # Not in distributed mode, use single GPU
+            rank, world_size = 0, 1
+            print(f"Using single GPU: {device}")
+            sys.stdout.flush()
+            logger.info(f'Using device: {device} (single GPU, distributed training not initialized)')
     else:
         rank, world_size = 0, 1
-        if rank == 0:
-            logger.info(f'Using device: {device} (distributed training disabled for non-CUDA devices)')
+        print(f"Using device: {device} (CPU/MPS mode)")
+        sys.stdout.flush()
+        logger.info(f'Using device: {device} (distributed training disabled for non-CUDA devices)')
     
     # Resolve save path
     if not os.path.isabs(args.save_path):
@@ -119,6 +138,11 @@ def main():
     
     size = (args.img_size, args.img_size)
     
+    if rank == 0:
+        print(f"Loading training dataset: {args.dataset}...")
+        sys.stdout.flush()
+        logger.info(f'Loading training dataset: {args.dataset}')
+    
     if args.dataset == 'hypersim':
         train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
         trainset = Hypersim(train_file, 'train', size=size)
@@ -130,7 +154,14 @@ def main():
                 f"VKITTI training file not found: {train_file}\n"
                 f"Please ensure the train.txt file exists in datasets/raw_data/vkitti/splits/"
             )
+        if rank == 0:
+            print(f"Initializing VKITTI training dataset (this may take a while if validating many files)...")
+            sys.stdout.flush()
         trainset = VKITTI2TrainingDataset(train_file, 'train', size=size)
+        if rank == 0:
+            print(f"Training dataset loaded: {len(trainset)} samples")
+            sys.stdout.flush()
+            logger.info(f'Training dataset loaded: {len(trainset)} samples')
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:
@@ -143,12 +174,25 @@ def main():
     
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
+    # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
     pin_memory = (device.type == 'cuda')
+    num_workers = 0 if sys.platform == 'darwin' else 4
+    
+    if rank == 0:
+        print(f"Creating training DataLoader (num_workers={num_workers})...")
+        sys.stdout.flush()
+        logger.info(f'Creating training DataLoader with num_workers={num_workers}')
+    
     if world_size > 1:
         trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
-        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=4, drop_last=True, sampler=trainsampler)
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, sampler=trainsampler)
     else:
-        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=4, drop_last=True, shuffle=True)
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, shuffle=True)
+    
+    if rank == 0:
+        print(f"Loading validation dataset: {args.dataset}...")
+        sys.stdout.flush()
+        logger.info(f'Loading validation dataset: {args.dataset}')
     
     if args.dataset == 'hypersim':
         val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
@@ -159,15 +203,27 @@ def main():
         vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
         
         if os.path.exists(vkitti_val_file):
+            if rank == 0:
+                print(f"Initializing VKITTI validation dataset (this may take a while if validating many files)...")
+                sys.stdout.flush()
             valset = VKITTI2TrainingDataset(vkitti_val_file, 'val', size=size)
             if rank == 0:
+                print(f"Validation dataset loaded: {len(valset)} samples")
+                sys.stdout.flush()
                 logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
+                logger.info(f'Validation dataset loaded: {len(valset)} samples')
         elif os.path.exists(vkitti_train_file):
             # Fall back to using train.txt for validation if val.txt doesn't exist
+            if rank == 0:
+                print(f"Initializing VKITTI validation dataset from train.txt (this may take a while if validating many files)...")
+                sys.stdout.flush()
             valset = VKITTI2TrainingDataset(vkitti_train_file, 'val', size=size)
             if rank == 0:
+                print(f"Validation dataset loaded: {len(valset)} samples")
+                sys.stdout.flush()
                 logger.warning(f'VKITTI validation set not found at {vkitti_val_file}. Using train.txt for validation: {vkitti_train_file}')
                 logger.warning(f'To use a separate validation set, create datasets/raw_data/vkitti/splits/val.txt')
+                logger.info(f'Validation dataset loaded: {len(valset)} samples')
         else:
             raise FileNotFoundError(
                 f"VKITTI validation file not found. Tried:\n"
@@ -186,12 +242,20 @@ def main():
             raise NotImplementedError(f"Validation file list not found: {val_filelist}")
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
+    # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
     pin_memory = (device.type == 'cuda')
+    num_workers = 0 if sys.platform == 'darwin' else 4
+    
+    if rank == 0:
+        print(f"Creating validation DataLoader (num_workers={num_workers})...")
+        sys.stdout.flush()
+        logger.info(f'Creating validation DataLoader with num_workers={num_workers}')
+    
     if world_size > 1:
         valsampler = torch.utils.data.distributed.DistributedSampler(valset)
-        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=4, drop_last=True, sampler=valsampler)
+        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, sampler=valsampler)
     else:
-        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=4, drop_last=True)
+        valloader = DataLoader(valset, batch_size=1, pin_memory=pin_memory, num_workers=num_workers, drop_last=True)
     
     local_rank = int(os.environ.get("LOCAL_RANK", "0")) if device.type == 'cuda' else 0
     
@@ -208,10 +272,26 @@ def main():
     model_kwargs = {**model_configs[args.encoder], 'use_camera_intrinsics': args.use_camera_intrinsics, 'cam_token_inject_layer': args.cam_token_inject_layer}
     if args.max_depth != 20.0:
         model_kwargs['max_depth'] = args.max_depth
+    
+    if rank == 0:
+        print(f"Initializing model (encoder: {args.encoder})...")
+        sys.stdout.flush()
+        logger.info(f'Initializing model with encoder: {args.encoder}')
+    
     model = DepthAnythingV2(**model_kwargs)
+    
+    if rank == 0:
+        print("Model initialized successfully")
+        sys.stdout.flush()
+        logger.info('Model initialized successfully')
     
     # Load checkpoint (handles both full checkpoints and pretrained-only)
     if args.pretrained_from:
+        if rank == 0:
+            print(f"Loading checkpoint from: {args.pretrained_from}...")
+            sys.stdout.flush()
+            logger.info(f'Loading checkpoint from: {args.pretrained_from}')
+        
         # Resolve checkpoint path
         if not os.path.isabs(args.pretrained_from):
             # Try relative to project root first
@@ -243,7 +323,15 @@ def main():
                             logger.warning(f"  - {f}")
                 raise FileNotFoundError(f"Checkpoint not found: {checkpoint_path}")
         
+        if rank == 0:
+            print(f"Loading checkpoint file (this may take a while for large checkpoints)...")
+            sys.stdout.flush()
+        
         checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        
+        if rank == 0:
+            print("Checkpoint loaded, processing state dict...")
+            sys.stdout.flush()
         
         # Handle different checkpoint formats
         if isinstance(checkpoint, dict) and 'model' in checkpoint:
@@ -276,9 +364,15 @@ def main():
                 # Key doesn't exist in model, skip it
                 skipped_keys.append(f"{k} (not in model)")
         
+        if rank == 0:
+            print(f"Loading {len(filtered_dict)} parameters into model...")
+            sys.stdout.flush()
+        
         missing_keys, unexpected_keys = model.load_state_dict(filtered_dict, strict=False)
         
         if rank == 0:
+            print("Checkpoint loaded successfully")
+            sys.stdout.flush()
             logger.info(f'Loaded checkpoint from {checkpoint_path}')
             logger.info(f'Successfully loaded {len(filtered_dict)} parameters')
             if skipped_keys:
@@ -308,13 +402,24 @@ def main():
             logger.info('DINOv2 backbone is trainable')
     
     # Only use SyncBatchNorm and DDP in distributed mode with CUDA
+    if rank == 0:
+        print(f"Moving model to device: {device}...")
+        sys.stdout.flush()
+        logger.info(f'Moving model to device: {device}')
+    
     if world_size > 1 and device.type == 'cuda':
         model = torch.nn.SyncBatchNorm.convert_sync_batchnorm(model)
         model = model.to(device)
         model = torch.nn.parallel.DistributedDataParallel(model, device_ids=[local_rank], broadcast_buffers=False,
                                                           output_device=local_rank, find_unused_parameters=True)
+        if rank == 0:
+            print("Model wrapped with DistributedDataParallel")
+            sys.stdout.flush()
     else:
         model = model.to(device)
+        if rank == 0:
+            print("Model moved to device successfully")
+            sys.stdout.flush()
     
     # Setup teacher model for knowledge distillation
     teacher_model = None
@@ -392,6 +497,9 @@ def main():
             logger.info('Using SiLog loss with teacher-student knowledge distillation')
         else:
             logger.info('Using standard SiLog loss')
+        print("Starting training...")
+        print("=" * 80)
+        sys.stdout.flush()
     
     # Setup optimizer with different learning rates
     # Only include parameters that require gradients

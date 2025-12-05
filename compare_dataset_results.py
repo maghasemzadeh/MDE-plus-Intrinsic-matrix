@@ -329,8 +329,9 @@ def compare_datasets(
         'encoder': encoder
     }
     
-    # Generate filename with format: {dataset1}_{dataset2}_{datetime}.json
-    filename = f"{dataset1_name.lower()}_{dataset2_name.lower()}_{datetime_str}.json"
+    # Generate filename with format: model_dataset1_dataset2_datetime.json
+    model_name_safe = model_name.lower().replace(' ', '_').replace('-', '_')
+    filename = f"{model_name_safe}_{dataset1_name.lower()}_{dataset2_name.lower()}_{datetime_str}.json"
     results_file = os.path.join(output_dir, filename)
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2)
@@ -583,25 +584,56 @@ Examples:
         
         wrapped_dataset = DatasetWrapper(dataset)
         
-        # Create pipeline and process with unified progress bar
-        pipeline = ProcessingPipeline(
-            dataset=wrapped_dataset,
-            model=model,
-            output_base_dir=output_base_dir,
-            input_size=args.input_size,
-            scale_factor=args.scale_factor,
-            max_depth=resolved_max_depth
-        )
+        # Helper function to check if dataset evaluation already exists
+        def check_dataset_evaluation_exists(output_base_dir: str, wrapped_dataset: DatasetWrapper) -> bool:
+            """Check if dataset evaluation already exists by checking for any item output directories."""
+            items = wrapped_dataset.find_items()
+            if len(items) == 0:
+                return False
+            
+            # Check if at least one item has been processed
+            sample_item = items[0]
+            item_output_dir = wrapped_dataset.get_item_output_dir(output_base_dir, sample_item)
+            return os.path.exists(item_output_dir) and os.path.isdir(item_output_dir)
         
-        try:
-            metrics = pipeline.process_dataset(progress_bar=unified_pbar)
+        # Check if evaluation already exists
+        dataset_exists = check_dataset_evaluation_exists(output_base_dir, wrapped_dataset)
+        
+        if dataset_exists:
+            tqdm.write(f"   ⏭️  Skipping {dataset_name} evaluation - results already exist", file=sys.stdout)
+            tqdm.write(f"      Output directory: {output_base_dir}", file=sys.stdout)
+            # Load existing metrics
+            pipeline = ProcessingPipeline(
+                dataset=wrapped_dataset,
+                model=model,
+                output_base_dir=output_base_dir,
+                input_size=args.input_size,
+                scale_factor=args.scale_factor,
+                max_depth=resolved_max_depth
+            )
+            metrics = pipeline.process_dataset(progress_bar=None)
             all_metrics.append(metrics)
-            tqdm.write(f"   ✅ Completed {dataset_name}: {len(metrics)} items processed", file=sys.stdout)
-        except Exception as e:
-            tqdm.write(f"   ❌ Error processing {dataset_name}: {e}", file=sys.stdout)
-            import traceback
-            tqdm.write(traceback.format_exc(), file=sys.stdout)
-            all_metrics.append([])  # Append empty list to maintain alignment
+            tqdm.write(f"   ✅ Loaded {dataset_name}: {len(metrics)} items from existing results", file=sys.stdout)
+        else:
+            # Create pipeline and process with unified progress bar
+            pipeline = ProcessingPipeline(
+                dataset=wrapped_dataset,
+                model=model,
+                output_base_dir=output_base_dir,
+                input_size=args.input_size,
+                scale_factor=args.scale_factor,
+                max_depth=resolved_max_depth
+            )
+            
+            try:
+                metrics = pipeline.process_dataset(progress_bar=unified_pbar)
+                all_metrics.append(metrics)
+                tqdm.write(f"   ✅ Completed {dataset_name}: {len(metrics)} items processed", file=sys.stdout)
+            except Exception as e:
+                tqdm.write(f"   ❌ Error processing {dataset_name}: {e}", file=sys.stdout)
+                import traceback
+                tqdm.write(traceback.format_exc(), file=sys.stdout)
+                all_metrics.append([])  # Append empty list to maintain alignment
     
     # Close the unified progress bar
     unified_pbar.close()

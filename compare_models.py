@@ -418,8 +418,8 @@ def compare_model_metrics(
         'model2_name': model2_name
     }
     
-    # Generate filename
-    filename = f"{model1_name.lower().replace(' ', '_')}_vs_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{datetime_str}.json"
+    # Generate filename: model1_model2_dataset_datetime.json
+    filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{datetime_str}.json"
     results_file = os.path.join(output_dir, filename)
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2)
@@ -590,7 +590,8 @@ Examples:
     # Create the desired structure: results/{dataset}/{model}/
     output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name)
     output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name)
-    comparison_output_dir = os.path.join(args.output_path, dataset_output_subdir, f"comparison_{model1_name}_vs_{model2_name}")
+    # Comparison JSON will be saved in results folder (not in a subdirectory)
+    comparison_output_dir = args.output_path
     
     # Create a wrapper dataset that modifies get_item_output_dir to not add dataset_subdir again
     # since we've already included it in the base_dir
@@ -610,6 +611,18 @@ Examples:
     wrapped_dataset1 = DatasetWrapper(dataset)
     wrapped_dataset2 = DatasetWrapper(dataset)
     
+    # Helper function to check if dataset evaluation already exists
+    def check_dataset_evaluation_exists(output_base_dir: str, wrapped_dataset: DatasetWrapper) -> bool:
+        """Check if dataset evaluation already exists by checking for any item output directories."""
+        items = wrapped_dataset.find_items()
+        if len(items) == 0:
+            return False
+        
+        # Check if at least one item has been processed
+        sample_item = items[0]
+        item_output_dir = wrapped_dataset.get_item_output_dir(output_base_dir, sample_item)
+        return os.path.exists(item_output_dir) and os.path.isdir(item_output_dir)
+    
     # Count items for progress bar
     items = dataset.find_items()
     total_items = len(items)
@@ -622,56 +635,96 @@ Examples:
             items_by_scene[item.item_id].append(item)
         total_items = len(items_by_scene)
     
-    # Process with both models
-    print(f"\n{'='*80}")
-    print(f"Evaluating {model1_name} on {args.dataset}...")
-    print(f"{'='*80}")
+    # Check if evaluations already exist (skip if they do)
+    model1_exists = check_dataset_evaluation_exists(output_base_dir1, wrapped_dataset1)
+    model2_exists = check_dataset_evaluation_exists(output_base_dir2, wrapped_dataset2)
     
-    # Create unified progress bar for model1
-    pbar1 = tqdm(
-        total=total_items,
-        desc=f"🚀 {model1_name} on {args.dataset}",
-        unit="item",
-        ncols=120,
-        dynamic_ncols=False,
-        file=sys.stderr
-    )
+    if model1_exists:
+        print(f"\n⏭️  Skipping {model1_name} evaluation on {args.dataset} - results already exist")
+        print(f"   Output directory: {output_base_dir1}")
+    if model2_exists:
+        print(f"\n⏭️  Skipping {model2_name} evaluation on {args.dataset} - results already exist")
+        print(f"   Output directory: {output_base_dir2}")
     
-    pipeline1 = ProcessingPipeline(
-        dataset=wrapped_dataset1,
-        model=model1,
-        output_base_dir=output_base_dir1,
-        input_size=args.input_size,
-        max_depth=model1_config['max_depth']
-    )
+    # Process with both models (skip if already exists)
+    metrics1 = []
+    metrics2 = []
     
-    metrics1 = pipeline1.process_dataset(progress_bar=pbar1)
-    pbar1.close()
+    if not model1_exists:
+        print(f"\n{'='*80}")
+        print(f"Evaluating {model1_name} on {args.dataset}...")
+        print(f"{'='*80}")
+        
+        # Create unified progress bar for model1
+        pbar1 = tqdm(
+            total=total_items,
+            desc=f"🚀 {model1_name} on {args.dataset}",
+            unit="item",
+            ncols=120,
+            dynamic_ncols=False,
+            file=sys.stderr
+        )
+        
+        pipeline1 = ProcessingPipeline(
+            dataset=wrapped_dataset1,
+            model=model1,
+            output_base_dir=output_base_dir1,
+            input_size=args.input_size,
+            max_depth=model1_config['max_depth']
+        )
+        
+        metrics1 = pipeline1.process_dataset(progress_bar=pbar1)
+        pbar1.close()
+    else:
+        # Load existing metrics
+        print(f"\n📂 Loading existing results for {model1_name} on {args.dataset}...")
+        pipeline1 = ProcessingPipeline(
+            dataset=wrapped_dataset1,
+            model=model1,
+            output_base_dir=output_base_dir1,
+            input_size=args.input_size,
+            max_depth=model1_config['max_depth']
+        )
+        metrics1 = pipeline1.process_dataset(progress_bar=None)
+        print(f"   Loaded {len(metrics1)} items")
     
-    print(f"\n{'='*80}")
-    print(f"Evaluating {model2_name} on {args.dataset}...")
-    print(f"{'='*80}")
-    
-    # Create unified progress bar for model2
-    pbar2 = tqdm(
-        total=total_items,
-        desc=f"🚀 {model2_name} on {args.dataset}",
-        unit="item",
-        ncols=120,
-        dynamic_ncols=False,
-        file=sys.stderr
-    )
-    
-    pipeline2 = ProcessingPipeline(
-        dataset=wrapped_dataset2,
-        model=model2,
-        output_base_dir=output_base_dir2,
-        input_size=args.input_size,
-        max_depth=model2_config['max_depth']
-    )
-    
-    metrics2 = pipeline2.process_dataset(progress_bar=pbar2)
-    pbar2.close()
+    if not model2_exists:
+        print(f"\n{'='*80}")
+        print(f"Evaluating {model2_name} on {args.dataset}...")
+        print(f"{'='*80}")
+        
+        # Create unified progress bar for model2
+        pbar2 = tqdm(
+            total=total_items,
+            desc=f"🚀 {model2_name} on {args.dataset}",
+            unit="item",
+            ncols=120,
+            dynamic_ncols=False,
+            file=sys.stderr
+        )
+        
+        pipeline2 = ProcessingPipeline(
+            dataset=wrapped_dataset2,
+            model=model2,
+            output_base_dir=output_base_dir2,
+            input_size=args.input_size,
+            max_depth=model2_config['max_depth']
+        )
+        
+        metrics2 = pipeline2.process_dataset(progress_bar=pbar2)
+        pbar2.close()
+    else:
+        # Load existing metrics
+        print(f"\n📂 Loading existing results for {model2_name} on {args.dataset}...")
+        pipeline2 = ProcessingPipeline(
+            dataset=wrapped_dataset2,
+            model=model2,
+            output_base_dir=output_base_dir2,
+            input_size=args.input_size,
+            max_depth=model2_config['max_depth']
+        )
+        metrics2 = pipeline2.process_dataset(progress_bar=None)
+        print(f"   Loaded {len(metrics2)} items")
     
     # Compare results
     if len(metrics1) > 0 and len(metrics2) > 0:

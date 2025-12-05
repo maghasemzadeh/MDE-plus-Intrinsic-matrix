@@ -20,39 +20,91 @@ _original_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 if _original_path in sys.path:
     sys.path.remove(_original_path)
 
-# Ensure revised path is first and only one
+# Use importlib to explicitly load from file paths, bypassing Python's import resolution
+# This ensures we always get the modules from DepthAnythingV2-revised
+import importlib.util
+
+# Clear ALL cached depth_anything_v2 modules to ensure clean import
+_modules_to_clear = [mod_name for mod_name in list(sys.modules.keys()) 
+                     if mod_name.startswith('depth_anything_v2')]
+for mod_name in _modules_to_clear:
+    del sys.modules[mod_name]
+
+# Ensure revised path is first and original is removed
+if _original_path in sys.path:
+    sys.path.remove(_original_path)
 if _raw_models_path in sys.path:
     sys.path.remove(_raw_models_path)
 sys.path.insert(0, _raw_models_path)
 
-# Clear any cached imports of depth_anything_v2 modules to force reload from correct path
-_modules_to_clear = [
-    'depth_anything_v2',
-    'depth_anything_v2.model_loader',
-    'depth_anything_v2.config',
-    'depth_anything_v2.models',
-]
-for mod_name in _modules_to_clear:
-    if mod_name in sys.modules:
-        # Only clear if it's from the wrong path
-        mod = sys.modules[mod_name]
-        mod_file = getattr(mod, '__file__', '')
-        if mod_file and 'DepthAnythingV2-revised' not in mod_file and 'DepthAnythingV2' in mod_file:
-            del sys.modules[mod_name]
+# CRITICAL: Pre-load modules in dependency order so sub-imports resolve correctly
+# 1. Load config first (needed by models)
+_config_path = os.path.join(_raw_models_path, 'depth_anything_v2', 'config.py')
+_config_spec = importlib.util.spec_from_file_location("depth_anything_v2.config", _config_path)
+_config_module = importlib.util.module_from_spec(_config_spec)
+sys.modules['depth_anything_v2.config'] = _config_module
+_config_spec.loader.exec_module(_config_module)
+get_device = _config_module.get_device
 
-# Import with explicit path verification
-from depth_anything_v2.model_loader import load_model
-from depth_anything_v2.config import get_device
+# 2. Pre-load the actual model classes before models/__init__.py registers them
+# This ensures they're from the revised path
+_models_dir = os.path.join(_raw_models_path, 'depth_anything_v2', 'models')
+_base_model_path = os.path.join(_models_dir, 'base.py')
+_basic_model_path = os.path.join(_models_dir, 'depth_anything_v2_basic.py')
+_metric_model_path = os.path.join(_models_dir, 'depth_anything_v2_metric.py')
+_registry_path = os.path.join(_models_dir, 'registry.py')
 
-# Verify we're using the correct module by checking __file__
-import depth_anything_v2.model_loader as _ml_module
-_ml_file = getattr(_ml_module, '__file__', '')
-if _ml_file and 'DepthAnythingV2-revised' not in _ml_file:
-    raise ImportError(
-        f"Wrong model_loader module loaded! Expected DepthAnythingV2-revised, "
-        f"but got: {_ml_file}. This indicates a path conflict. "
-        f"Please ensure DepthAnythingV2-revised is imported before DepthAnythingV2."
-    )
+# Load base and registry first (dependencies)
+_base_spec = importlib.util.spec_from_file_location("depth_anything_v2.models.base", _base_model_path)
+_base_module = importlib.util.module_from_spec(_base_spec)
+sys.modules['depth_anything_v2.models.base'] = _base_module
+_base_spec.loader.exec_module(_base_module)
+
+_registry_spec = importlib.util.spec_from_file_location("depth_anything_v2.models.registry", _registry_path)
+_registry_module = importlib.util.module_from_spec(_registry_spec)
+sys.modules['depth_anything_v2.models.registry'] = _registry_module
+_registry_spec.loader.exec_module(_registry_module)
+
+# Load model implementations
+_basic_spec = importlib.util.spec_from_file_location("depth_anything_v2.models.depth_anything_v2_basic", _basic_model_path)
+_basic_module = importlib.util.module_from_spec(_basic_spec)
+sys.modules['depth_anything_v2.models.depth_anything_v2_basic'] = _basic_module
+_basic_spec.loader.exec_module(_basic_module)
+
+_metric_spec = importlib.util.spec_from_file_location("depth_anything_v2.models.depth_anything_v2_metric", _metric_model_path)
+_metric_module = importlib.util.module_from_spec(_metric_spec)
+sys.modules['depth_anything_v2.models.depth_anything_v2_metric'] = _metric_module
+_metric_spec.loader.exec_module(_metric_module)
+
+# 3. Now load models/__init__.py (it will import the already-loaded model classes)
+_models_init_path = os.path.join(_models_dir, '__init__.py')
+_models_init_spec = importlib.util.spec_from_file_location("depth_anything_v2.models", _models_init_path)
+_models_init_module = importlib.util.module_from_spec(_models_init_spec)
+sys.modules['depth_anything_v2.models'] = _models_init_module
+_models_init_spec.loader.exec_module(_models_init_module)
+
+# 4. Now load model_loader (it will import models, which is already loaded from revised path)
+_model_loader_path = os.path.join(_raw_models_path, 'depth_anything_v2', 'model_loader.py')
+_loader_spec = importlib.util.spec_from_file_location("depth_anything_v2.model_loader", _model_loader_path)
+_model_loader_module = importlib.util.module_from_spec(_loader_spec)
+sys.modules['depth_anything_v2.model_loader'] = _model_loader_module
+_loader_spec.loader.exec_module(_model_loader_module)
+load_model = _model_loader_module.load_model
+
+# Verify all critical modules loaded from correct path
+_ml_file = getattr(_model_loader_module, '__file__', '')
+_models_file = getattr(_models_init_module, '__file__', '')
+_metric_file = getattr(_metric_module, '__file__', '')
+_config_file = getattr(_config_module, '__file__', '')
+
+if not _ml_file or 'DepthAnythingV2-revised' not in _ml_file:
+    raise ImportError(f"model_loader loaded from wrong path! Got: {_ml_file}")
+if not _models_file or 'DepthAnythingV2-revised' not in _models_file:
+    raise ImportError(f"models module loaded from wrong path! Got: {_models_file}")
+if not _metric_file or 'DepthAnythingV2-revised' not in _metric_file:
+    raise ImportError(f"metric model loaded from wrong path! Got: {_metric_file}")
+if not _config_file or 'DepthAnythingV2-revised' not in _config_file:
+    raise ImportError(f"config module loaded from wrong path! Got: {_config_file}")
 
 
 def find_checkpoint(
@@ -249,6 +301,15 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
         
         device = get_device(self.device)
         
+        # Before loading, verify models module is correct
+        import depth_anything_v2.models as _models_check
+        _models_file = getattr(_models_check, '__file__', '')
+        if _models_file and 'DepthAnythingV2-revised' not in _models_file:
+            raise ImportError(
+                f"Cannot load model: models module is from wrong path! "
+                f"Expected DepthAnythingV2-revised, but got: {_models_file}"
+            )
+        
         self._model = load_model(
             model_name=self.model_type,
             encoder=self.encoder,
@@ -258,6 +319,22 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
             use_camera_intrinsics=self.use_camera_intrinsics,
             cam_token_inject_layer=self.cam_token_inject_layer
         )
+        
+        # Verify the loaded model class is from the correct path
+        model_class_file = getattr(self._model.__class__, '__module__', '')
+        if hasattr(self._model.__class__, '__module__'):
+            # Check if the module file is from the correct path
+            import importlib
+            try:
+                model_module = importlib.import_module(self._model.__class__.__module__)
+                model_module_file = getattr(model_module, '__file__', '')
+                if model_module_file and 'DepthAnythingV2-revised' not in model_module_file:
+                    raise ImportError(
+                        f"Loaded model class is from wrong path! "
+                        f"Expected DepthAnythingV2-revised, but got: {model_module_file}"
+                    )
+            except Exception:
+                pass  # If we can't verify, continue anyway
         
         # Store model metadata
         self._model._is_metric = self._is_metric

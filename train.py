@@ -763,11 +763,18 @@ def main():
             }
             
             # Always save latest checkpoint
-            torch.save(checkpoint, os.path.join(save_path, 'latest.pth'))
+            latest_path = os.path.join(save_path, 'latest.pth')
+            # Use atomic write to prevent corruption: write to temp file then rename
+            temp_path = latest_path + '.tmp'
+            torch.save(checkpoint, temp_path)
+            os.replace(temp_path, latest_path)
             
             # Save best checkpoint if metrics improved
             if improved:
-                torch.save(checkpoint, os.path.join(save_path, 'best.pth'))
+                best_path = os.path.join(save_path, 'best.pth')
+                temp_path = best_path + '.tmp'
+                torch.save(checkpoint, temp_path)
+                os.replace(temp_path, best_path)
                 logger.info(f'New best checkpoint saved! Metrics: {previous_best}')
 
 

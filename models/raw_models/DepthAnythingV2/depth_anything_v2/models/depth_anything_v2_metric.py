@@ -84,8 +84,20 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
                 f"Please download the metric depth checkpoint."
             )
         
-        state_dict = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
-        self.model.load_state_dict(state_dict)
+        checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+        
+        # Handle different checkpoint formats
+        if isinstance(checkpoint, dict) and 'model' in checkpoint:
+            # Trained checkpoint format (from train.py)
+            state_dict = checkpoint['model']
+        elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
+            # Full model state dict
+            state_dict = checkpoint
+        else:
+            # Assume it's a state dict
+            state_dict = checkpoint
+        
+        self.model.load_state_dict(state_dict, strict=False)
     
     def forward(self, x):
         """Forward pass through the model."""

@@ -20,7 +20,12 @@ from datasets import (
     VKITTIDataset
 )
 from collections import defaultdict
-from models import BaseDepthModelWrapper, DepthAnythingV2Wrapper
+from models import (
+    BaseDepthModelWrapper,
+    DepthAnythingV2Wrapper,
+    DepthAnythingV2RevisedWrapper,
+    create_model_wrapper
+)
 from src import ProcessingPipeline, compute_depth_metrics
 
 # Import Middlebury-specific comparison functions
@@ -28,152 +33,6 @@ from datasets.middlebury import (
     evaluate_per_image_metrics,
     print_evaluation_results
 )
-
-
-def _auto_select_checkpoint_and_encoder(
-    model_type: str,
-    encoder: str,
-    max_depth: float
-) -> tuple:
-    """
-    Auto-detect a suitable checkpoint and encoder from local checkpoint directories.
-    Checks both:
-    1. Project checkpoints directory (where training saves checkpoints)
-    2. Model checkpoints directory (pretrained models)
-
-    Returns: (resolved_model_type, resolved_encoder, checkpoint_path_or_none, resolved_max_depth)
-    """
-    project_root = os.path.dirname(os.path.abspath(__file__))
-    
-    # Check project checkpoints directory first (where training saves checkpoints)
-    project_checkpoints_dir = os.path.join(project_root, 'checkpoints')
-    
-    # Also check model checkpoints directory (pretrained models)
-    model_checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2', 'checkpoints')
-    v2_revised_checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
-    
-    resolved_model_type = model_type
-    resolved_encoder = encoder
-    resolved_max_depth = max_depth
-    checkpoint_path = None
-    
-    def exists_in_dir(directory: str, name: str) -> Optional[str]:
-        """Check if checkpoint exists in given directory."""
-        if not os.path.isdir(directory):
-            return None
-        p = os.path.join(directory, name)
-        return p if os.path.exists(p) else None
-    
-    def find_checkpoint_in_dirs(name: str) -> Optional[str]:
-        """Search for checkpoint in all directories."""
-        # First check project checkpoints (trained models)
-        result = exists_in_dir(project_checkpoints_dir, name)
-        if result:
-            return result
-        # Then check v2-revised checkpoints
-        result = exists_in_dir(v2_revised_checkpoints_dir, name)
-        if result:
-            return result
-        # Finally check original v2 checkpoints
-        result = exists_in_dir(model_checkpoints_dir, name)
-        if result:
-            return result
-        return None
-    
-    def exists(name: str) -> Optional[str]:
-        """Legacy function for backward compatibility."""
-        return find_checkpoint_in_dirs(name)
-    
-    if model_type == 'metric':
-        # First, check for trained checkpoints in project checkpoints directory
-        # Look for best.pth or latest.pth in subdirectories
-        if os.path.isdir(project_checkpoints_dir):
-            for subdir in os.listdir(project_checkpoints_dir):
-                subdir_path = os.path.join(project_checkpoints_dir, subdir)
-                if os.path.isdir(subdir_path):
-                    # Check for best.pth first, then latest.pth
-                    best_ckpt = os.path.join(subdir_path, 'best.pth')
-                    latest_ckpt = os.path.join(subdir_path, 'latest.pth')
-                    if os.path.exists(best_ckpt):
-                        # Try to determine encoder from checkpoint if possible
-                        try:
-                            import torch
-                            ckpt = torch.load(best_ckpt, map_location='cpu')
-                            checkpoint_path = best_ckpt
-                            resolved_max_depth = max_depth if max_depth is not None else 20.0
-                            print(f"Found trained checkpoint: {checkpoint_path}")
-                            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-                        except:
-                            pass
-                    elif os.path.exists(latest_ckpt):
-                        try:
-                            import torch
-                            ckpt = torch.load(latest_ckpt, map_location='cpu')
-                            checkpoint_path = latest_ckpt
-                            resolved_max_depth = max_depth if max_depth is not None else 20.0
-                            print(f"Found trained checkpoint: {checkpoint_path}")
-                            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-                        except:
-                            pass
-        
-        # exact encoder first (pretrained models)
-        ck_h = find_checkpoint_in_dirs(f'depth_anything_v2_metric_hypersim_{encoder}.pth')
-        ck_v = find_checkpoint_in_dirs(f'depth_anything_v2_metric_vkitti_{encoder}.pth')
-        if ck_h:
-            checkpoint_path = ck_h
-            resolved_max_depth = 20.0 if max_depth is None else max_depth
-            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        if ck_v:
-            checkpoint_path = ck_v
-            resolved_max_depth = 80.0
-            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        
-        # try any encoder
-        candidates = []
-        for enc in ['vits', 'vitb', 'vitl', 'vitg']:
-            ck_v_any = find_checkpoint_in_dirs(f'depth_anything_v2_metric_vkitti_{enc}.pth')
-            ck_h_any = find_checkpoint_in_dirs(f'depth_anything_v2_metric_hypersim_{enc}.pth')
-            if ck_v_any:
-                candidates.append(('vkitti', enc, ck_v_any))
-            if ck_h_any:
-                candidates.append(('hypersim', enc, ck_h_any))
-        if candidates:
-            # prefer vkitti then hypersim
-            pref = None
-            for c in candidates:
-                if c[0] == 'vkitti':
-                    pref = c
-                    break
-            if pref is None:
-                pref = candidates[0]
-            domain, enc, path = pref
-            resolved_encoder = enc
-            checkpoint_path = path
-            resolved_max_depth = 80.0 if domain == 'vkitti' else 20.0
-            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        
-        # fallback to basic if no metric checkpoint
-        for enc in ['vits', 'vitb', 'vitl', 'vitg']:
-            ck_b = find_checkpoint_in_dirs(f'depth_anything_v2_{enc}.pth')
-            if ck_b:
-                resolved_model_type = 'basic'
-                resolved_encoder = enc
-                checkpoint_path = ck_b
-                return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-    else:
-        # basic
-        ck_b = find_checkpoint_in_dirs(f'depth_anything_v2_{encoder}.pth')
-        if ck_b:
-            checkpoint_path = ck_b
-            return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        for enc in ['vits', 'vitb', 'vitl', 'vitg']:
-            ck = find_checkpoint_in_dirs(f'depth_anything_v2_{enc}.pth')
-            if ck:
-                resolved_encoder = enc
-                checkpoint_path = ck
-                return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
-        return resolved_model_type, resolved_encoder, checkpoint_path, resolved_max_depth
 
 
 def compare_datasets(
@@ -185,7 +44,8 @@ def compare_datasets(
     output_dir: str,
     model_name: str,
     model_type: str,
-    encoder: str
+    encoder: str,
+    model_checkpoint: Optional[str] = None
 ) -> Dict:
     """
     Compare two datasets using t-test and other statistics.
@@ -326,7 +186,8 @@ def compare_datasets(
         'is_metric_model': is_metric_model,
         'model_name': model_name,
         'model_type': model_type,
-        'encoder': encoder
+        'encoder': encoder,
+        'model_checkpoint': model_checkpoint
     }
     
     # Generate filename with format: model_dataset1_dataset2_datetime.json
@@ -437,31 +298,31 @@ Examples:
     else:
         dataset_paths = [None] * len(dataset_names)  # Will use default paths
     
-    # Resolve checkpoint/encoder
-    resolved_model_type, resolved_encoder, resolved_checkpoint, resolved_max_depth = \
-        _auto_select_checkpoint_and_encoder(
-            model_type=args.model_type,
-            encoder=args.encoder,
-            max_depth=args.max_depth
-        )
+    # Determine which model to use (default to da2-revised for metric, da2 for basic)
+    model_name = 'da2-revised' if args.model_type == 'metric' else 'da2'
     
-    # If user supplied a checkpoint, prefer it
-    if args.model_checkpoint is not None and os.path.exists(args.model_checkpoint):
-        resolved_checkpoint = args.model_checkpoint
-        resolved_model_type = args.model_type
-        resolved_encoder = args.encoder
-        resolved_max_depth = args.max_depth
-    
-    # Create model
-    print(f"Loading Depth Anything V2 {resolved_model_type} model (encoder={resolved_encoder})...")
+    # Create model config
     model_config = {
-        'model_type': resolved_model_type,
-        'encoder': resolved_encoder,
-        'checkpoint_path': resolved_checkpoint,
-        'max_depth': resolved_max_depth,
+        'model_type': args.model_type,
+        'encoder': args.encoder,
+        'checkpoint_path': args.model_checkpoint,
+        'max_depth': args.max_depth,
         'device': args.device
     }
-    model = DepthAnythingV2Wrapper(model_config)
+    
+    # Create model wrapper
+    print(f"Loading {model_name} {args.model_type} model (encoder={args.encoder})...")
+    try:
+        model = create_model_wrapper(model_name, model_config)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n❌ Error: {e}")
+        sys.exit(1)
+    
+    # Get resolved values from model
+    resolved_checkpoint = model.get_checkpoint_path()
+    resolved_model_type = args.model_type
+    resolved_encoder = args.encoder
+    resolved_max_depth = getattr(model, 'max_depth', args.max_depth)
     
     # Determine model name from checkpoint path for folder structure
     # Try to identify if it's da2, da2-revised, or da3
@@ -685,7 +546,8 @@ Examples:
                 args.output_path,
                 model.get_model_name(),
                 resolved_model_type,
-                resolved_encoder
+                resolved_encoder,
+                model_checkpoint=resolved_checkpoint
             )
         else:
             print("\n" + "="*80)

@@ -23,11 +23,10 @@ python prepare_vkitti.py \
 
 # compare two models
  ```bash 
-  python compare_models.py \                                                                                                                                                                      130 ↵ ──(Fri,Dec05)─┘
-    --dataset cityscapes \
-    --model1 "metric:vitl:checkpoints/vkitti_training/checkpoints/vkitti_training/events.out.tfevents.1764855234.Ubuntu.388503.0" \
-    --model2 "metric:vitl:models/raw_modles/DepthAnythingV2/checkpoints/depth_anything_v2_vitl.pth" \
-    --output-path results/comparison
+  python compare_models.py \
+    --dataset CityScapes \
+    --model1 da2 \
+    --model2 da2-revised \
 ```
 
 # train on the vkitti2 dataset

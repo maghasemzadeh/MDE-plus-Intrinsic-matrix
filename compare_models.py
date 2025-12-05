@@ -23,11 +23,17 @@ from datasets import (
     MiddleburyDataset,
     VKITTIDataset
 )
-from models import BaseDepthModelWrapper, DepthAnythingV2Wrapper
+from models import (
+    BaseDepthModelWrapper,
+    create_model_wrapper,
+    DepthAnythingV2Wrapper,
+    DepthAnythingV2RevisedWrapper,
+    DepthAnything3Wrapper
+)
 from src import ProcessingPipeline, compute_depth_metrics
 
 
-def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
+def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None) -> Tuple[BaseDepthModelWrapper, str]:
     """
     Identify model configuration from checkpoint file.
     
@@ -112,9 +118,9 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     }
 
 
-def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None) -> Tuple[str, Dict]:
+def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None, device: Optional[str] = None) -> Tuple[BaseDepthModelWrapper, str]:
     """
-    Find checkpoint for a standard model by name.
+    Create model wrapper by name.
     
     Supported model names:
     - da2: DepthAnythingV2 (original)
@@ -124,125 +130,36 @@ def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = Non
     Args:
         model_name: Model name ('da2', 'da3', 'da2-revised')
         explicit_checkpoint: Optional explicit checkpoint path override
+        device: Optional device to use
     
     Returns:
-        Tuple of (checkpoint_path, model_config_dict)
+        Tuple of (model_wrapper, checkpoint_path)
     """
-    project_root = os.path.dirname(os.path.abspath(__file__))
-    
-    # If explicit checkpoint provided, use it
-    if explicit_checkpoint:
-        if os.path.isabs(explicit_checkpoint):
-            checkpoint_path = explicit_checkpoint
-        else:
-            checkpoint_path = os.path.join(project_root, explicit_checkpoint)
-        
-        if os.path.exists(checkpoint_path):
-            config = identify_model_from_checkpoint(checkpoint_path)
-            return checkpoint_path, config
-        else:
-            raise FileNotFoundError(f"Explicit checkpoint not found: {explicit_checkpoint}")
-    
-    # Map model names to their checkpoint directories
     model_name_lower = model_name.lower()
     
+    # Create model config - the wrapper will auto-find checkpoints
+    model_config = {
+        'checkpoint_path': explicit_checkpoint,
+        'device': device
+    }
+    
+    # Create the appropriate wrapper
     if model_name_lower == 'da2':
-        # DepthAnythingV2 - check in original v2 checkpoints
-        checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2', 'checkpoints')
-        # Try to find any available checkpoint (prefer metric, then basic)
-        for encoder in ['vitl', 'vitb', 'vits', 'vitg']:
-            for ckpt_name in [
-                f'depth_anything_v2_metric_hypersim_{encoder}.pth',
-                f'depth_anything_v2_metric_vkitti_{encoder}.pth',
-                f'depth_anything_v2_{encoder}.pth'
-            ]:
-                checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
-                if os.path.exists(checkpoint_path):
-                    config = identify_model_from_checkpoint(checkpoint_path)
-                    return checkpoint_path, config
-    
+        wrapper = DepthAnythingV2Wrapper(model_config)
     elif model_name_lower == 'da2-revised':
-        # DepthAnythingV2-revised - check in revised v2 checkpoints
-        # First priority: models/raw_models/DepthAnythingV2-revised/checkpoints/revised/
-        revised_checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints', 'revised')
-        
-        if os.path.isdir(revised_checkpoints_dir):
-            # Check for best.pth or latest.pth first (trained models)
-            best_path = os.path.join(revised_checkpoints_dir, 'best.pth')
-            latest_path = os.path.join(revised_checkpoints_dir, 'latest.pth')
-            if os.path.exists(best_path):
-                config = identify_model_from_checkpoint(best_path)
-                return best_path, config
-            elif os.path.exists(latest_path):
-                print(f"⚠️  Warning: best.pth not found in revised checkpoints, using latest.pth instead")
-                config = identify_model_from_checkpoint(latest_path)
-                return latest_path, config
-            
-            # Check for any .pth files in revised directory
-            for file in os.listdir(revised_checkpoints_dir):
-                if file.endswith('.pth'):
-                    checkpoint_path = os.path.join(revised_checkpoints_dir, file)
-                    config = identify_model_from_checkpoint(checkpoint_path)
-                    return checkpoint_path, config
-        
-        # Second priority: models/raw_models/DepthAnythingV2-revised/checkpoints/ (root of checkpoints)
-        checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
-        if os.path.isdir(checkpoints_dir):
-            # Try to find any available checkpoint (prefer metric, then basic)
-            for encoder in ['vitl', 'vitb', 'vits', 'vitg']:
-                for ckpt_name in [
-                    f'depth_anything_v2_metric_hypersim_{encoder}.pth',
-                    f'depth_anything_v2_metric_vkitti_{encoder}.pth',
-                    f'depth_anything_v2_{encoder}.pth'
-                ]:
-                    checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
-                    if os.path.exists(checkpoint_path):
-                        config = identify_model_from_checkpoint(checkpoint_path)
-                        return checkpoint_path, config
-        
-        # Third priority: check for trained checkpoints in project checkpoints directory
-        project_checkpoints_dir = os.path.join(project_root, 'checkpoints')
-        if os.path.isdir(project_checkpoints_dir):
-            for subdir in os.listdir(project_checkpoints_dir):
-                subdir_path = os.path.join(project_checkpoints_dir, subdir)
-                if os.path.isdir(subdir_path):
-                    best_path = os.path.join(subdir_path, 'best.pth')
-                    latest_path = os.path.join(subdir_path, 'latest.pth')
-                    if os.path.exists(best_path):
-                        config = identify_model_from_checkpoint(best_path)
-                        print(f"Found trained da2-revised model in {subdir}")
-                        return best_path, config
-                    elif os.path.exists(latest_path):
-                        print(f"⚠️  Warning: best.pth not found for da2-revised (found in {subdir}), using latest.pth instead")
-                        config = identify_model_from_checkpoint(latest_path)
-                        return latest_path, config
-    
+        wrapper = DepthAnythingV2RevisedWrapper(model_config)
     elif model_name_lower == 'da3':
-        # Depth-Anything-3 - check in DA3 checkpoints
-        checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'Depth-Anything-3', 'checkpoints')
-        # DA3 might have different checkpoint naming, search for any .pth files
-        if os.path.isdir(checkpoints_dir):
-            for file in os.listdir(checkpoints_dir):
-                if file.endswith('.pth'):
-                    checkpoint_path = os.path.join(checkpoints_dir, file)
-                    config = identify_model_from_checkpoint(checkpoint_path)
-                    return checkpoint_path, config
-    
+        wrapper = DepthAnything3Wrapper(model_config)
     else:
         raise ValueError(
             f"Unknown model name: '{model_name}'. "
             f"Supported models: 'da2', 'da2-revised', 'da3'"
         )
     
-    # If we get here, no checkpoint was found
-    raise FileNotFoundError(
-        f"Could not find checkpoint for model '{model_name}'.\n"
-        f"Please ensure the model checkpoints are available in the standard locations:\n"
-        f"  - da2: models/raw_models/DepthAnythingV2/checkpoints/\n"
-        f"  - da2-revised: models/raw_models/DepthAnythingV2-revised/checkpoints/revised/ (priority) or checkpoints/\n"
-        f"  - da3: models/raw_models/Depth-Anything-3/checkpoints/\n"
-        f"\nOr specify --model1-checkpoint/--model2-checkpoint to provide explicit paths."
-    )
+    # Get checkpoint path from wrapper
+    checkpoint_path = wrapper.get_checkpoint_path()
+    
+    return wrapper, checkpoint_path
 
 
 def compare_model_metrics(
@@ -251,7 +168,9 @@ def compare_model_metrics(
     model1_name: str,
     model2_name: str,
     dataset_name: str,
-    output_dir: str
+    output_dir: str,
+    model1_checkpoint: Optional[str] = None,
+    model2_checkpoint: Optional[str] = None
 ) -> Dict:
     """
     Compare metrics from two models using statistical tests.
@@ -415,7 +334,9 @@ def compare_model_metrics(
         'datetime': datetime_str,
         'dataset_name': dataset_name,
         'model1_name': model1_name,
-        'model2_name': model2_name
+        'model2_name': model2_name,
+        'model1_checkpoint': model1_checkpoint,
+        'model2_checkpoint': model2_checkpoint
     }
     
     # Generate filename: model1_model2_dataset_datetime.json
@@ -511,48 +432,30 @@ Examples:
     # Find models and their configurations
     print(f"\n🔍 Finding models and checkpoints...")
     try:
-        model1_checkpoint, model1_config = find_model_by_name(args.model1, args.model1_checkpoint)
-        model2_checkpoint, model2_config = find_model_by_name(args.model2, args.model2_checkpoint)
-    except FileNotFoundError as e:
+        model1, model1_checkpoint = find_model_by_name(args.model1, args.model1_checkpoint, args.device)
+        model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
+    except (FileNotFoundError, ValueError) as e:
         print(f"\n❌ Error: {e}")
         sys.exit(1)
     
     # Check if we're using latest.pth instead of best.pth and warn
-    if 'latest.pth' in model1_checkpoint and 'best.pth' not in model1_checkpoint:
+    if model1_checkpoint and 'latest.pth' in model1_checkpoint and 'best.pth' not in model1_checkpoint:
         print(f"⚠️  Warning: Using latest.pth for model1 instead of best.pth")
         print(f"   This may not represent the best performing checkpoint.")
     
-    if 'latest.pth' in model2_checkpoint and 'best.pth' not in model2_checkpoint:
+    if model2_checkpoint and 'latest.pth' in model2_checkpoint and 'best.pth' not in model2_checkpoint:
         print(f"⚠️  Warning: Using latest.pth for model2 instead of best.pth")
         print(f"   This may not represent the best performing checkpoint.")
     
-    print(f"\n✅ Model 1: {args.model1}")
-    print(f"   Checkpoint: {model1_checkpoint}")
-    print(f"   Type: {model1_config['model_type']}, Encoder: {model1_config['encoder']}, Max depth: {model1_config['max_depth']}")
-    print(f"\n✅ Model 2: {args.model2}")
-    print(f"   Checkpoint: {model2_checkpoint}")
-    print(f"   Type: {model2_config['model_type']}, Encoder: {model2_config['encoder']}, Max depth: {model2_config['max_depth']}")
-    
-    # Create models
     model1_name = f"{args.model1}"
     model2_name = f"{args.model2}"
     
-    print(f"\nLoading models...")
-    model1 = DepthAnythingV2Wrapper({
-        'model_type': model1_config['model_type'],
-        'encoder': model1_config['encoder'],
-        'checkpoint_path': model1_checkpoint,
-        'max_depth': model1_config['max_depth'],
-        'device': args.device
-    })
-    
-    model2 = DepthAnythingV2Wrapper({
-        'model_type': model2_config['model_type'],
-        'encoder': model2_config['encoder'],
-        'checkpoint_path': model2_checkpoint,
-        'max_depth': model2_config['max_depth'],
-        'device': args.device
-    })
+    print(f"\n✅ Model 1: {model1_name}")
+    print(f"   Checkpoint: {model1_checkpoint}")
+    print(f"   Model: {model1.get_model_name()}")
+    print(f"\n✅ Model 2: {model2_name}")
+    print(f"   Checkpoint: {model2_checkpoint}")
+    print(f"   Model: {model2.get_model_name()}")
     
     # Create dataset
     dataset_config = DatasetConfig(
@@ -586,6 +489,10 @@ Examples:
     # 
     # Solution: Create a wrapper that overrides get_item_output_dir to skip adding dataset_subdir
     dataset_output_subdir = dataset.get_output_subdir()  # e.g., 'cityscapes', 'drivingstereo', etc.
+    
+    # Get max_depth from model wrappers
+    model1_max_depth = getattr(model1, 'max_depth', 80.0)
+    model2_max_depth = getattr(model2, 'max_depth', 80.0)
     
     # Create the desired structure: results/{dataset}/{model}/
     output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name)
@@ -670,7 +577,7 @@ Examples:
             model=model1,
             output_base_dir=output_base_dir1,
             input_size=args.input_size,
-            max_depth=model1_config['max_depth']
+            max_depth=model1_max_depth
         )
         
         metrics1 = pipeline1.process_dataset(progress_bar=pbar1)
@@ -683,7 +590,7 @@ Examples:
             model=model1,
             output_base_dir=output_base_dir1,
             input_size=args.input_size,
-            max_depth=model1_config['max_depth']
+            max_depth=model1_max_depth
         )
         metrics1 = pipeline1.process_dataset(progress_bar=None)
         print(f"   Loaded {len(metrics1)} items")
@@ -708,7 +615,7 @@ Examples:
             model=model2,
             output_base_dir=output_base_dir2,
             input_size=args.input_size,
-            max_depth=model2_config['max_depth']
+            max_depth=model2_max_depth
         )
         
         metrics2 = pipeline2.process_dataset(progress_bar=pbar2)
@@ -721,7 +628,7 @@ Examples:
             model=model2,
             output_base_dir=output_base_dir2,
             input_size=args.input_size,
-            max_depth=model2_config['max_depth']
+            max_depth=model2_max_depth
         )
         metrics2 = pipeline2.process_dataset(progress_bar=None)
         print(f"   Loaded {len(metrics2)} items")
@@ -734,7 +641,9 @@ Examples:
             model1_name,
             model2_name,
             args.dataset,
-            comparison_output_dir
+            comparison_output_dir,
+            model1_checkpoint=model1_checkpoint,
+            model2_checkpoint=model2_checkpoint
         )
     else:
         print("\n" + "="*80)

@@ -82,7 +82,7 @@ class DepthAnythingV2BasicModel(BaseDepthModel):
                 f"Please download the basic Depth Anything V2 checkpoint."
             )
         
-        checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
         
         # Handle different checkpoint formats
         if isinstance(checkpoint, dict) and 'model' in checkpoint:

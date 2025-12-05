@@ -72,7 +72,7 @@ class DepthAnythingV2BasicModel(BaseDepthModel):
                 f"Please download the basic Depth Anything V2 checkpoint."
             )
         
-        state_dict = torch.load(checkpoint_path, map_location='cpu')
+        state_dict = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
         self.model.load_state_dict(state_dict)
     
     def forward(self, x):

@@ -19,7 +19,7 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     """
     # Try to load checkpoint to get info
     try:
-        checkpoint = torch.load(checkpoint_path, map_location='cpu')
+        checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
         
         # Extract state dict
         if isinstance(checkpoint, dict) and 'model' in checkpoint:

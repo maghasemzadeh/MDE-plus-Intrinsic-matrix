@@ -163,20 +163,44 @@ def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = Non
     
     elif model_name_lower == 'da2-revised':
         # DepthAnythingV2-revised - check in revised v2 checkpoints
-        checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
-        # Try to find any available checkpoint (prefer metric, then basic)
-        for encoder in ['vitl', 'vitb', 'vits', 'vitg']:
-            for ckpt_name in [
-                f'depth_anything_v2_metric_hypersim_{encoder}.pth',
-                f'depth_anything_v2_metric_vkitti_{encoder}.pth',
-                f'depth_anything_v2_{encoder}.pth'
-            ]:
-                checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
-                if os.path.exists(checkpoint_path):
+        # First priority: models/raw_models/DepthAnythingV2-revised/checkpoints/revised/
+        revised_checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints', 'revised')
+        
+        if os.path.isdir(revised_checkpoints_dir):
+            # Check for best.pth or latest.pth first (trained models)
+            best_path = os.path.join(revised_checkpoints_dir, 'best.pth')
+            latest_path = os.path.join(revised_checkpoints_dir, 'latest.pth')
+            if os.path.exists(best_path):
+                config = identify_model_from_checkpoint(best_path)
+                return best_path, config
+            elif os.path.exists(latest_path):
+                print(f"⚠️  Warning: best.pth not found in revised checkpoints, using latest.pth instead")
+                config = identify_model_from_checkpoint(latest_path)
+                return latest_path, config
+            
+            # Check for any .pth files in revised directory
+            for file in os.listdir(revised_checkpoints_dir):
+                if file.endswith('.pth'):
+                    checkpoint_path = os.path.join(revised_checkpoints_dir, file)
                     config = identify_model_from_checkpoint(checkpoint_path)
                     return checkpoint_path, config
         
-        # Also check in project checkpoints for trained models
+        # Second priority: models/raw_models/DepthAnythingV2-revised/checkpoints/ (root of checkpoints)
+        checkpoints_dir = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints')
+        if os.path.isdir(checkpoints_dir):
+            # Try to find any available checkpoint (prefer metric, then basic)
+            for encoder in ['vitl', 'vitb', 'vits', 'vitg']:
+                for ckpt_name in [
+                    f'depth_anything_v2_metric_hypersim_{encoder}.pth',
+                    f'depth_anything_v2_metric_vkitti_{encoder}.pth',
+                    f'depth_anything_v2_{encoder}.pth'
+                ]:
+                    checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
+                    if os.path.exists(checkpoint_path):
+                        config = identify_model_from_checkpoint(checkpoint_path)
+                        return checkpoint_path, config
+        
+        # Third priority: check for trained checkpoints in project checkpoints directory
         project_checkpoints_dir = os.path.join(project_root, 'checkpoints')
         if os.path.isdir(project_checkpoints_dir):
             for subdir in os.listdir(project_checkpoints_dir):
@@ -215,7 +239,7 @@ def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = Non
         f"Could not find checkpoint for model '{model_name}'.\n"
         f"Please ensure the model checkpoints are available in the standard locations:\n"
         f"  - da2: models/raw_models/DepthAnythingV2/checkpoints/\n"
-        f"  - da2-revised: models/raw_models/DepthAnythingV2-revised/checkpoints/ or checkpoints/\n"
+        f"  - da2-revised: models/raw_models/DepthAnythingV2-revised/checkpoints/revised/ (priority) or checkpoints/\n"
         f"  - da3: models/raw_models/Depth-Anything-3/checkpoints/\n"
         f"\nOr specify --model1-checkpoint/--model2-checkpoint to provide explicit paths."
     )

@@ -154,29 +154,27 @@ def main():
         val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
         valset = Hypersim(val_file, 'val', size=size)
     elif args.dataset == 'vkitti':
-        # Try to use VKITTI validation set from datasets/raw_data/vkitti/splits/
+        # Use VKITTI validation set from datasets/raw_data/vkitti/splits/
         vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
+        vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
         
         if os.path.exists(vkitti_val_file):
             valset = VKITTI2TrainingDataset(vkitti_val_file, 'val', size=size)
             if rank == 0:
                 logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
+        elif os.path.exists(vkitti_train_file):
+            # Fall back to using train.txt for validation if val.txt doesn't exist
+            valset = VKITTI2TrainingDataset(vkitti_train_file, 'val', size=size)
+            if rank == 0:
+                logger.warning(f'VKITTI validation set not found at {vkitti_val_file}. Using train.txt for validation: {vkitti_train_file}')
+                logger.warning(f'To use a separate validation set, create datasets/raw_data/vkitti/splits/val.txt')
         else:
-            # Fall back to KITTI validation set (with filtered missing files)
-            val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'kitti', 'val.txt')
-            if os.path.exists(val_file):
-                valset = KITTITrainingDataset(val_file, 'val', size=size)
-                if rank == 0:
-                    logger.warning(f'VKITTI validation set not found at {vkitti_val_file}. Using KITTI validation set: {val_file}')
-                    logger.warning(f'Note: KITTI validation set may have missing files which will be filtered out.')
-                    logger.warning(f'To use VKITTI validation, create datasets/raw_data/vkitti/splits/val.txt')
-            else:
-                raise FileNotFoundError(
-                    f"Validation set not found. Tried:\n"
-                    f"  - {vkitti_val_file}\n"
-                    f"  - {val_file}\n"
-                    f"Please create a validation file list for VKITTI at {vkitti_val_file} or ensure KITTI validation set is available."
-                )
+            raise FileNotFoundError(
+                f"VKITTI validation file not found. Tried:\n"
+                f"  - {vkitti_val_file}\n"
+                f"  - {vkitti_train_file}\n"
+                f"Please ensure at least train.txt exists in datasets/raw_data/vkitti/splits/"
+            )
     else:
         # Try generic dataset with intrinsics support
         if GenericDatasetWithIntrinsics is None:

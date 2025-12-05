@@ -462,6 +462,33 @@ Examples:
     }
     model = DepthAnythingV2Wrapper(model_config)
     
+    # Determine model name from checkpoint path for folder structure
+    # Try to identify if it's da2, da2-revised, or da3
+    model_name = "unknown"
+    if resolved_checkpoint:
+        checkpoint_lower = resolved_checkpoint.lower()
+        # Check for DA3 first (most specific)
+        if 'depth-anything-3' in checkpoint_lower or '/depth-anything-3/' in checkpoint_lower:
+            model_name = 'da3'
+        # Check for DA2-revised
+        elif 'depthanythingv2-revised' in checkpoint_lower or '/depthanythingv2-revised/' in checkpoint_lower or 'v2-revised' in checkpoint_lower:
+            model_name = 'da2-revised'
+        # Check for DA2 (original)
+        elif 'depthanythingv2' in checkpoint_lower and 'revised' not in checkpoint_lower and '/depthanythingv2/' in checkpoint_lower:
+            model_name = 'da2'
+        # Check directory structure
+        elif '/depth-anything-3/' in resolved_checkpoint:
+            model_name = 'da3'
+        elif '/depthanythingv2-revised/' in resolved_checkpoint:
+            model_name = 'da2-revised'
+        elif '/depthanythingv2/' in resolved_checkpoint and '/depthanythingv2-revised/' not in resolved_checkpoint:
+            model_name = 'da2'
+    
+    # If we couldn't determine, use a default based on model type and encoder
+    if model_name == "unknown":
+        model_name = f"{resolved_model_type}-{resolved_encoder}"
+        print(f"⚠️  Warning: Could not determine model name from checkpoint, using: {model_name}")
+    
     # First, count all items across all datasets to create unified progress bar
     print("\nCounting items across all datasets...")
     total_items = 0
@@ -534,11 +561,33 @@ Examples:
         tqdm.write(f"\n📂 Processing dataset {idx+1}/{len(dataset_names)}: {dataset_name}", file=sys.stdout)
         tqdm.write(f"   Dataset path: {dataset.dataset_path}", file=sys.stdout)
         
+        # Create output directory structure: results/{dataset}/{model}/
+        # The ProcessingPipeline uses output_base_dir, and dataset.get_item_output_dir() 
+        # creates: {output_base_dir}/{dataset_subdir}/{item_id}/
+        # We want: {output_path}/{dataset_subdir}/{model}/{item_id}/
+        dataset_output_subdir = dataset.get_output_subdir()
+        output_base_dir = os.path.join(args.output_path, dataset_output_subdir, model_name)
+        
+        # Create a wrapper dataset that modifies get_item_output_dir to not add dataset_subdir again
+        class DatasetWrapper:
+            """Wrapper to fix output directory structure for model-specific folders."""
+            def __init__(self, dataset):
+                self.dataset = dataset
+            
+            def __getattr__(self, name):
+                return getattr(self.dataset, name)
+            
+            def get_item_output_dir(self, base_output_dir, item):
+                # Override: base_output_dir already includes dataset_subdir/model, so just add item_id
+                return os.path.join(base_output_dir, item.item_id)
+        
+        wrapped_dataset = DatasetWrapper(dataset)
+        
         # Create pipeline and process with unified progress bar
         pipeline = ProcessingPipeline(
-            dataset=dataset,
+            dataset=wrapped_dataset,
             model=model,
-            output_base_dir=args.output_path,
+            output_base_dir=output_base_dir,
             input_size=args.input_size,
             scale_factor=args.scale_factor,
             max_depth=resolved_max_depth

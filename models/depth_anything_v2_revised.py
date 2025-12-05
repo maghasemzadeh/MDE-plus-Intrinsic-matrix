@@ -14,11 +14,45 @@ from .utils import identify_model_from_checkpoint
 _raw_models_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
                                 'raw_models', 'DepthAnythingV2-revised')
 
-if _raw_models_path not in sys.path:
-    sys.path.insert(0, _raw_models_path)
+# Remove any conflicting paths (DepthAnythingV2 original) to ensure we use revised
+_original_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 
+                              'raw_models', 'DepthAnythingV2')
+if _original_path in sys.path:
+    sys.path.remove(_original_path)
 
+# Ensure revised path is first and only one
+if _raw_models_path in sys.path:
+    sys.path.remove(_raw_models_path)
+sys.path.insert(0, _raw_models_path)
+
+# Clear any cached imports of depth_anything_v2 modules to force reload from correct path
+_modules_to_clear = [
+    'depth_anything_v2',
+    'depth_anything_v2.model_loader',
+    'depth_anything_v2.config',
+    'depth_anything_v2.models',
+]
+for mod_name in _modules_to_clear:
+    if mod_name in sys.modules:
+        # Only clear if it's from the wrong path
+        mod = sys.modules[mod_name]
+        mod_file = getattr(mod, '__file__', '')
+        if mod_file and 'DepthAnythingV2-revised' not in mod_file and 'DepthAnythingV2' in mod_file:
+            del sys.modules[mod_name]
+
+# Import with explicit path verification
 from depth_anything_v2.model_loader import load_model
 from depth_anything_v2.config import get_device
+
+# Verify we're using the correct module by checking __file__
+import depth_anything_v2.model_loader as _ml_module
+_ml_file = getattr(_ml_module, '__file__', '')
+if _ml_file and 'DepthAnythingV2-revised' not in _ml_file:
+    raise ImportError(
+        f"Wrong model_loader module loaded! Expected DepthAnythingV2-revised, "
+        f"but got: {_ml_file}. This indicates a path conflict. "
+        f"Please ensure DepthAnythingV2-revised is imported before DepthAnythingV2."
+    )
 
 
 def find_checkpoint(

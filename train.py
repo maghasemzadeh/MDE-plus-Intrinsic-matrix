@@ -810,13 +810,23 @@ def main():
                     plt.tight_layout()
                     
                     # Convert figure to image tensor for TensorBoard
-                    fig.canvas.draw()
-                    buf = np.frombuffer(fig.canvas.tostring_rgb(), dtype=np.uint8)
-                    buf = buf.reshape(fig.canvas.get_width_height()[::-1] + (3,))
+                    # Use BytesIO approach for maximum compatibility across matplotlib versions
+                    import io
+                    buf = io.BytesIO()
+                    fig.savefig(buf, format='png', bbox_inches='tight', dpi=100)
+                    buf.seek(0)
+                    from PIL import Image
+                    img = Image.open(buf)
+                    img_array = np.array(img)
+                    buf.close()
                     plt.close(fig)
                     
-                    # Convert to tensor and add to TensorBoard
-                    img_tensor = torch.from_numpy(buf).permute(2, 0, 1).float() / 255.0
+                    # Convert to tensor and add to TensorBoard (PIL returns RGB, convert to CHW)
+                    if len(img_array.shape) == 3:
+                        img_tensor = torch.from_numpy(img_array).permute(2, 0, 1).float() / 255.0
+                    else:
+                        # Grayscale, convert to RGB
+                        img_tensor = torch.from_numpy(img_array).unsqueeze(0).repeat(3, 1, 1).float() / 255.0
                     writer.add_image('eval/sample_prediction', img_tensor, epoch)
         
         # Track if this epoch improved any metric

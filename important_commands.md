@@ -26,7 +26,7 @@ python prepare_vkitti.py \
   python compare_models.py \
     --dataset CityScapes \
     --model1 da2 \
-    --model2 da2-revised \
+    --model2 da2-revised
 ```
 
 # train on the vkitti2 dataset

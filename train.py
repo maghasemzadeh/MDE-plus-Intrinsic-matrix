@@ -73,6 +73,57 @@ def get_device():
         return torch.device('cpu')
 
 
+def detect_encoder_from_checkpoint(checkpoint_path: str) -> str:
+    """
+    Detect encoder type from checkpoint by examining tensor shapes.
+    
+    Args:
+        checkpoint_path: Path to checkpoint file
+    
+    Returns:
+        Encoder type: 'vits', 'vitb', 'vitl', or 'vitg'
+    """
+    checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
+    
+    # Handle different checkpoint formats
+    if isinstance(checkpoint, dict) and 'model' in checkpoint:
+        state_dict = checkpoint['model']
+    elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
+        state_dict = checkpoint
+    else:
+        state_dict = checkpoint
+    
+    # Check patch_embed.proj.weight shape to determine encoder
+    if 'pretrained.patch_embed.proj.weight' in state_dict:
+        weight_shape = state_dict['pretrained.patch_embed.proj.weight'].shape
+        embed_dim = weight_shape[0]
+    elif 'patch_embed.proj.weight' in state_dict:
+        weight_shape = state_dict['patch_embed.proj.weight'].shape
+        embed_dim = weight_shape[0]
+    else:
+        # Try cls_token as fallback
+        if 'pretrained.cls_token' in state_dict:
+            embed_dim = state_dict['pretrained.cls_token'].shape[-1]
+        elif 'cls_token' in state_dict:
+            embed_dim = state_dict['cls_token'].shape[-1]
+        else:
+            # Default to vitl if cannot detect
+            return 'vitl'
+    
+    # Map embed_dim to encoder type
+    if embed_dim == 384:
+        return 'vits'
+    elif embed_dim == 768:
+        return 'vitb'
+    elif embed_dim == 1024:
+        return 'vitl'
+    elif embed_dim == 1536:
+        return 'vitg'
+    else:
+        # Default to vitl if unknown
+        return 'vitl'
+
+
 def main():
     args = parser.parse_args()
     
@@ -268,15 +319,48 @@ def main():
         'vitl': {'encoder': 'vitl', 'features': 256, 'out_channels': [256, 512, 1024, 1024]},
         'vitg': {'encoder': 'vitg', 'features': 384, 'out_channels': [1536, 1536, 1536, 1536]}
     }
+    
+    # Detect encoder from checkpoint if pretrained_from is provided
+    encoder_to_use = args.encoder
+    if args.pretrained_from:
+        # Resolve checkpoint path first
+        if not os.path.isabs(args.pretrained_from):
+            checkpoint_path_temp = os.path.join(project_root, args.pretrained_from)
+            if not os.path.exists(checkpoint_path_temp):
+                model_root = os.path.join(project_root, 'models', 'raw_models', 'DepthAnythingV2-revised')
+                checkpoint_path_temp = os.path.join(model_root, 'checkpoints', os.path.basename(args.pretrained_from))
+            if not os.path.exists(checkpoint_path_temp):
+                checkpoint_path_temp = os.path.join(_metric_depth_path, 'checkpoints', os.path.basename(args.pretrained_from))
+            if not os.path.exists(checkpoint_path_temp):
+                checkpoint_path_temp = args.pretrained_from
+        else:
+            checkpoint_path_temp = args.pretrained_from
+        
+        if os.path.exists(checkpoint_path_temp):
+            detected_encoder = detect_encoder_from_checkpoint(checkpoint_path_temp)
+            if detected_encoder != args.encoder:
+                if rank == 0:
+                    logger.warning(
+                        f"Encoder mismatch detected! "
+                        f"Checkpoint uses '{detected_encoder}' but --encoder={args.encoder} was specified. "
+                        f"Using '{detected_encoder}' from checkpoint to avoid shape mismatches."
+                    )
+                    print(f"⚠️  Warning: Auto-correcting encoder from '{args.encoder}' to '{detected_encoder}' based on checkpoint")
+                    sys.stdout.flush()
+                encoder_to_use = detected_encoder
+            else:
+                if rank == 0:
+                    logger.info(f"Checkpoint encoder matches specified encoder: {args.encoder}")
+    
     # max_depth has default value of 20.0, so we don't need to pass it unless different
-    model_kwargs = {**model_configs[args.encoder], 'use_camera_intrinsics': args.use_camera_intrinsics, 'cam_token_inject_layer': args.cam_token_inject_layer}
+    model_kwargs = {**model_configs[encoder_to_use], 'use_camera_intrinsics': args.use_camera_intrinsics, 'cam_token_inject_layer': args.cam_token_inject_layer}
     if args.max_depth != 20.0:
         model_kwargs['max_depth'] = args.max_depth
     
     if rank == 0:
-        print(f"Initializing model (encoder: {args.encoder})...")
+        print(f"Initializing model (encoder: {encoder_to_use})...")
         sys.stdout.flush()
-        logger.info(f'Initializing model with encoder: {args.encoder}')
+        logger.info(f'Initializing model with encoder: {encoder_to_use}')
     
     model = DepthAnythingV2(**model_kwargs)
     

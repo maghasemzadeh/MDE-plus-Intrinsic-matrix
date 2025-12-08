@@ -31,16 +31,37 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
         encoder = 'vitl'  # default
         if 'pretrained.patch_embed.proj.weight' in state_dict:
             weight_shape = state_dict['pretrained.patch_embed.proj.weight'].shape
-            if weight_shape[0] == 384:  # vitg
-                encoder = 'vitg'
-            elif weight_shape[0] == 256:  # vitl
+            embed_dim = weight_shape[0]
+            # Map embed_dim to encoder type
+            if embed_dim == 384:
+                encoder = 'vits'
+            elif embed_dim == 768:
+                encoder = 'vitb'
+            elif embed_dim == 1024:
                 encoder = 'vitl'
-            elif weight_shape[0] == 192:
-                # Could be vitb or vits, check more
-                if 'pretrained.blocks.11' in state_dict:  # vitb has 12 blocks
-                    encoder = 'vitb'
-                else:  # vits has fewer blocks
-                    encoder = 'vits'
+            elif embed_dim == 1536:
+                encoder = 'vitg'
+        elif 'patch_embed.proj.weight' in state_dict:
+            weight_shape = state_dict['patch_embed.proj.weight'].shape
+            embed_dim = weight_shape[0]
+            if embed_dim == 384:
+                encoder = 'vits'
+            elif embed_dim == 768:
+                encoder = 'vitb'
+            elif embed_dim == 1024:
+                encoder = 'vitl'
+            elif embed_dim == 1536:
+                encoder = 'vitg'
+        elif 'pretrained.cls_token' in state_dict:
+            embed_dim = state_dict['pretrained.cls_token'].shape[-1]
+            if embed_dim == 384:
+                encoder = 'vits'
+            elif embed_dim == 768:
+                encoder = 'vitb'
+            elif embed_dim == 1024:
+                encoder = 'vitl'
+            elif embed_dim == 1536:
+                encoder = 'vitg'
         
         # Check if it's a metric model (has depth_head)
         model_type = 'metric'  # default

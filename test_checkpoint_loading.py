@@ -69,50 +69,52 @@ def test_checkpoint_loading(checkpoint_path: str, test_image_path: str = None):
     # Try to identify model configuration from checkpoint
     print("\n2. Identifying model configuration...")
     try:
-        # Try to infer encoder from state dict
-        encoder = 'vitl'  # default
-        if 'pretrained.patch_embed.proj.weight' in state_dict:
-            weight_shape = state_dict['pretrained.patch_embed.proj.weight'].shape
-            if weight_shape[0] == 384:
-                encoder = 'vitg'
-            elif weight_shape[0] == 256:
-                encoder = 'vitl'
-            elif weight_shape[0] == 192:
-                if 'pretrained.blocks.11' in state_dict:
-                    encoder = 'vitb'
-                else:
-                    encoder = 'vits'
-        
-        # Check if it's a metric model
-        model_type = 'metric'
+        from models.utils import identify_model_from_checkpoint
+        config = identify_model_from_checkpoint(checkpoint_path)
+
+        encoder = config.get('encoder', 'vitl')
+        model_type = config.get('model_type', 'metric')
+        max_depth = config.get('max_depth', 80.0)
+        has_cam_encoder = config.get('use_camera_intrinsics', False)
+        cam_token_inject_layer = config.get('cam_token_inject_layer', None)
+
+        # Also check state dict directly for backward compatibility
         has_depth_head = any('depth_head' in k for k in state_dict.keys())
-        has_cam_encoder = any('cam_encoder' in k for k in state_dict.keys())
-        
+        has_cam_encoder_in_state = any('cam_encoder' in k for k in state_dict.keys())
+
         print(f"   ✅ Encoder: {encoder}")
         print(f"   ✅ Model type: {model_type}")
+        print(f"   ✅ Max depth: {max_depth}")
         print(f"   ✅ Has depth_head: {has_depth_head}")
-        print(f"   ✅ Has cam_encoder: {has_cam_encoder}")
-        
+        print(f"   ✅ Use camera intrinsics: {has_cam_encoder}")
+        print(f"   ✅ Has cam_encoder in state: {has_cam_encoder_in_state}")
+        if cam_token_inject_layer is not None:
+            print(f"   ✅ Cam token inject layer: {cam_token_inject_layer}")
+
     except Exception as e:
         print(f"   ⚠️  Warning: Could not identify model config: {e}")
         encoder = 'vitl'
         model_type = 'metric'
-    
+        max_depth = 80.0
+        has_cam_encoder = any('cam_encoder' in k for k in state_dict.keys())
+        cam_token_inject_layer = None
+
     # Try to create model wrapper and load checkpoint
     print("\n3. Testing model wrapper checkpoint loading...")
     try:
         model_config = {
-            'model_type': 'da2-revised',
-            'model_type_internal': model_type,
+            'model_type': model_type,
             'encoder': encoder,
             'checkpoint_path': checkpoint_path,
-            'max_depth': 20.0,
-            'use_camera_intrinsics': has_cam_encoder if has_cam_encoder else False,
+            'max_depth': max_depth,
+            'use_camera_intrinsics': has_cam_encoder,
+            'cam_token_inject_layer': cam_token_inject_layer,
         }
-        
-        model = create_model_wrapper(model_config)
+
+        model = create_model_wrapper('da2-revised', model_config)
         print(f"   ✅ Model wrapper created: {model.get_model_name()}")
         print(f"   ✅ Checkpoint path: {model.get_checkpoint_path()}")
+        print(f"   ✅ Use camera intrinsics: {model.use_camera_intrinsics}")
         
     except Exception as e:
         print(f"   ❌ ERROR: Failed to create model wrapper: {e}")

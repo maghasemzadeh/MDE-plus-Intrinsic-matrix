@@ -61,6 +61,8 @@ parser.add_argument('--freeze-dinov2', action='store_true', help='Freeze DINOv2 
 parser.add_argument('--unfreeze-dinov2', action='store_true', help='Unfreeze DINOv2 backbone (not recommended for initial training)')
 parser.add_argument('--teacher-checkpoint', type=str, help='Path to teacher model checkpoint for knowledge distillation')
 parser.add_argument('--use-distillation', action='store_true', help='Enable teacher-student knowledge distillation')
+parser.add_argument('--head-lr-multiplier', type=float, default=10.0, help='Learning rate multiplier for depth_head and cam_encoder (default: 10.0, try 1.0-5.0 for stability)')
+parser.add_argument('--grad-clip', type=float, default=None, help='Gradient clipping max norm (e.g., 1.0 for stability)')
 
 
 def get_device():
@@ -88,8 +90,15 @@ def detect_encoder_from_checkpoint(checkpoint_path: str) -> str:
     # Handle different checkpoint formats
     if isinstance(checkpoint, dict) and 'model' in checkpoint:
         state_dict = checkpoint['model']
-    elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
-        state_dict = checkpoint
+    elif isinstance(checkpoint, dict) and checkpoint:
+        # Check if any key contains 'pretrained' (indicating it's a state dict)
+        # This handles both 'pretrained.*' keys and direct state dicts
+        has_pretrained_key = any('pretrained' in str(k) for k in checkpoint.keys())
+        if has_pretrained_key:
+            state_dict = checkpoint
+        else:
+            # Assume it's a state dict if it's a dict but doesn't have 'model' key
+            state_dict = checkpoint
     else:
         state_dict = checkpoint
     
@@ -421,9 +430,16 @@ def main():
         if isinstance(checkpoint, dict) and 'model' in checkpoint:
             # Full checkpoint with 'model' key
             state_dict = checkpoint['model']
-        elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
-            # Full model state dict
-            state_dict = checkpoint
+        elif isinstance(checkpoint, dict) and checkpoint:
+            # Check if any key contains 'pretrained' (indicating it's a state dict)
+            # This handles both 'pretrained.*' keys and direct state dicts
+            has_pretrained_key = any('pretrained' in str(k) for k in checkpoint.keys())
+            if has_pretrained_key:
+                # Full model state dict
+                state_dict = checkpoint
+            else:
+                # Assume it's a state dict if it's a dict but doesn't have 'model' key
+                state_dict = checkpoint
         else:
             # Assume it's a state dict
             state_dict = checkpoint
@@ -588,29 +604,33 @@ def main():
     # Setup optimizer with different learning rates
     # Only include parameters that require gradients
     trainable_params = [param for param in model.parameters() if param.requires_grad]
-    
+
+    head_lr_mult = args.head_lr_multiplier
+
     if freeze_dinov2:
         # DINOv2 is frozen, so only optimize depth_head and cam_encoder
         optimizer = AdamW(
-            [{'params': trainable_params, 'lr': args.lr * 10.0}],
-            lr=args.lr * 10.0, betas=(0.9, 0.999), weight_decay=0.01
+            [{'params': trainable_params, 'lr': args.lr * head_lr_mult}],
+            lr=args.lr * head_lr_mult, betas=(0.9, 0.999), weight_decay=0.01
         )
         if rank == 0:
-            logger.info('Optimizer: Only training depth_head and cam_encoder (DINOv2 frozen)')
+            logger.info(f'Optimizer: Only training depth_head and cam_encoder (DINOv2 frozen)')
+            logger.info(f'Learning rate: {args.lr * head_lr_mult:.7f} (base: {args.lr}, multiplier: {head_lr_mult})')
     else:
         # DINOv2 is trainable, use different LRs
-        pretrained_params = [param for name, param in model.named_parameters() 
+        pretrained_params = [param for name, param in model.named_parameters()
                             if 'pretrained' in name and param.requires_grad]
-        other_params = [param for name, param in model.named_parameters() 
+        other_params = [param for name, param in model.named_parameters()
                        if 'pretrained' not in name and param.requires_grad]
-        
+
         optimizer = AdamW([
             {'params': pretrained_params, 'lr': args.lr},
-            {'params': other_params, 'lr': args.lr * 10.0}
+            {'params': other_params, 'lr': args.lr * head_lr_mult}
         ], lr=args.lr, betas=(0.9, 0.999), weight_decay=0.01)
-        
+
         if rank == 0:
-            logger.info('Optimizer: Training all components with different LRs')
+            logger.info(f'Optimizer: Training all components with different LRs')
+            logger.info(f'Pretrained LR: {args.lr:.7f}, Head/CamEnc LR: {args.lr * head_lr_mult:.7f}')
     
     total_iters = args.epochs * len(trainloader)
     
@@ -663,6 +683,11 @@ def main():
             loss = criterion(pred, depth, valid_depth_mask)
             
             loss.backward()
+
+            # Gradient clipping for stability
+            if args.grad_clip is not None:
+                torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
+
             optimizer.step()
             
             total_loss += loss.item()
@@ -674,11 +699,11 @@ def main():
             # Update learning rates for all parameter groups
             if freeze_dinov2:
                 # Only one group (depth_head + cam_encoder)
-                optimizer.param_groups[0]["lr"] = lr * 10.0
+                optimizer.param_groups[0]["lr"] = lr * head_lr_mult
             else:
                 # Two groups (pretrained + others)
                 optimizer.param_groups[0]["lr"] = lr
-                optimizer.param_groups[1]["lr"] = lr * 10.0
+                optimizer.param_groups[1]["lr"] = lr * head_lr_mult
             
             if rank == 0 and writer is not None:
                 writer.add_scalar('train/loss', loss.item(), iters)
@@ -747,18 +772,24 @@ def main():
             for k in results.keys():
                 dist.reduce(results[k], dst=0)
             dist.reduce(nsamples, dst=0)
-        
+
         if rank == 0:
             logger.info('==========================================================================================')
-            logger.info('{:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}'.format(*tuple(results.keys())))
-            logger.info('{:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}'.format(*tuple([(v / nsamples).item() for v in results.values()])))
-            logger.info('==========================================================================================')
-            print()
+            # Handle case where no valid samples were found
+            if nsamples.item() == 0:
+                logger.warning('No valid validation samples found! Skipping metrics computation.')
+                logger.info('==========================================================================================')
+                print()
+            else:
+                logger.info('{:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}'.format(*tuple(results.keys())))
+                logger.info('{:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}'.format(*tuple([(v / nsamples).item() for v in results.values()])))
+                logger.info('==========================================================================================')
+                print()
             
-            if writer is not None:
+            if writer is not None and nsamples.item() > 0:
                 for name, metric in results.items():
                     writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
-                
+
                 # Log sample depth predictions as images (every 5 epochs to save space)
                 if first_val_sample is not None and epoch % 5 == 0:
                     import matplotlib.pyplot as plt
@@ -829,18 +860,19 @@ def main():
                         img_tensor = torch.from_numpy(img_array).unsqueeze(0).repeat(3, 1, 1).float() / 255.0
                     writer.add_image('eval/sample_prediction', img_tensor, epoch)
         
-        # Track if this epoch improved any metric
+        # Track if this epoch improved any metric (only if we have valid samples)
         improved = False
-        for k in results.keys():
-            current_value = (results[k] / nsamples).item()
-            if k in ['d1', 'd2', 'd3']:
-                if current_value > previous_best[k]:
-                    improved = True
-                    previous_best[k] = current_value
-            else:
-                if current_value < previous_best[k]:
-                    improved = True
-                    previous_best[k] = current_value
+        if nsamples.item() > 0:
+            for k in results.keys():
+                current_value = (results[k] / nsamples).item()
+                if k in ['d1', 'd2', 'd3']:
+                    if current_value > previous_best[k]:
+                        improved = True
+                        previous_best[k] = current_value
+                else:
+                    if current_value < previous_best[k]:
+                        improved = True
+                        previous_best[k] = current_value
         
         if rank == 0:
             # Extract model state dict (handle DDP wrapper)
@@ -854,6 +886,14 @@ def main():
                 'optimizer': optimizer.state_dict(),
                 'epoch': epoch,
                 'previous_best': previous_best,
+                # Save model configuration for proper loading
+                'config': {
+                    'encoder': args.encoder,
+                    'max_depth': args.max_depth,
+                    'use_camera_intrinsics': args.use_camera_intrinsics,
+                    'cam_token_inject_layer': args.cam_token_inject_layer,
+                    'model_type': 'metric',
+                }
             }
             
             # Always save latest checkpoint

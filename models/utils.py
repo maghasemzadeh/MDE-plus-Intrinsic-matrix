@@ -10,25 +10,48 @@ from typing import Dict, Optional, Tuple
 def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     """
     Identify model configuration from checkpoint file.
-    
+
     Args:
         checkpoint_path: Path to checkpoint file
-    
+
     Returns:
-        Dictionary with model configuration (model_type, encoder, max_depth)
+        Dictionary with model configuration (model_type, encoder, max_depth, use_camera_intrinsics, etc.)
     """
+    # Default values
+    encoder = 'vitl'
+    model_type = 'metric'
+    max_depth = 80.0
+    use_camera_intrinsics = False
+    cam_token_inject_layer = None
+
     # Try to load checkpoint to get info
     try:
         checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
-        
-        # Extract state dict
+
+        # Check if checkpoint has saved config (from new train.py format)
+        if isinstance(checkpoint, dict) and 'config' in checkpoint:
+            config = checkpoint['config']
+            encoder = config.get('encoder', encoder)
+            model_type = config.get('model_type', model_type)
+            max_depth = config.get('max_depth', max_depth)
+            use_camera_intrinsics = config.get('use_camera_intrinsics', use_camera_intrinsics)
+            cam_token_inject_layer = config.get('cam_token_inject_layer', cam_token_inject_layer)
+            # Return early if config was found
+            return {
+                'model_type': model_type,
+                'encoder': encoder,
+                'max_depth': max_depth,
+                'use_camera_intrinsics': use_camera_intrinsics,
+                'cam_token_inject_layer': cam_token_inject_layer,
+            }
+
+        # Extract state dict for older checkpoint format
         if isinstance(checkpoint, dict) and 'model' in checkpoint:
             state_dict = checkpoint['model']
         else:
             state_dict = checkpoint
-        
+
         # Try to infer encoder from state dict
-        encoder = 'vitl'  # default
         if 'pretrained.patch_embed.proj.weight' in state_dict:
             weight_shape = state_dict['pretrained.patch_embed.proj.weight'].shape
             embed_dim = weight_shape[0]
@@ -62,25 +85,24 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
                 encoder = 'vitl'
             elif embed_dim == 1536:
                 encoder = 'vitg'
-        
+
         # Check if it's a metric model (has depth_head)
-        model_type = 'metric'  # default
         if 'depth_head' in str(state_dict.keys()):
             model_type = 'metric'
         else:
             model_type = 'basic'
-        
+
+        # Check if model has camera intrinsics support (has cam_encoder keys)
+        use_camera_intrinsics = any('cam_encoder' in k for k in state_dict.keys())
+
         # Infer max_depth from checkpoint metadata or filename
-        max_depth = 80.0  # default outdoor
         if isinstance(checkpoint, dict) and 'previous_best' in checkpoint:
             # This is a trained checkpoint, likely metric
             model_type = 'metric'
-        
+
     except Exception as e:
         # If we can't load, infer from filename
-        model_type = 'metric'
-        encoder = 'vitl'
-        max_depth = 80.0
+        pass
     
     # Infer from filename as fallback
     filename = os.path.basename(checkpoint_path).lower()
@@ -109,6 +131,8 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     return {
         'model_type': model_type,
         'encoder': encoder,
-        'max_depth': max_depth
+        'max_depth': max_depth,
+        'use_camera_intrinsics': use_camera_intrinsics,
+        'cam_token_inject_layer': cam_token_inject_layer,
     }
 

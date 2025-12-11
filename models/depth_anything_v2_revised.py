@@ -293,6 +293,11 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
             if checkpoint_config.get('max_depth'):
                 self.max_depth = checkpoint_config['max_depth']
             self._is_metric = self.model_type.lower() == 'metric'
+        # Always check checkpoint for camera intrinsics support (may override user setting)
+        if checkpoint_config.get('use_camera_intrinsics') is not None:
+            self.use_camera_intrinsics = checkpoint_config['use_camera_intrinsics']
+        if checkpoint_config.get('cam_token_inject_layer') is not None:
+            self.cam_token_inject_layer = checkpoint_config['cam_token_inject_layer']
     
     def load_model(self) -> None:
         """Load the Depth Anything V2 (revised) model."""

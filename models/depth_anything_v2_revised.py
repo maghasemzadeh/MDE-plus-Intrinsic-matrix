@@ -115,75 +115,106 @@ def find_checkpoint(
 ) -> Tuple[Optional[str], Dict]:
     """
     Find checkpoint for Depth Anything V2 (revised) model.
-    
+
     Priority order:
-    1. models/raw_models/DepthAnythingV2-revised/checkpoints/revised/ (trained models)
-    2. models/raw_models/DepthAnythingV2-revised/checkpoints/ (pretrained)
-    3. Project checkpoints directory (trained models)
-    
+    1. Explicit checkpoint path (if provided)
+    2. metric_depth/checkpoints/revised/ (training output directory)
+    3. models/raw_models/DepthAnythingV2-revised/checkpoints/revised/ (trained models)
+    4. models/raw_models/DepthAnythingV2-revised/checkpoints/ (pretrained)
+    5. Project checkpoints directory (trained models)
+
     Args:
         model_type: Model type ('metric' or 'basic')
         encoder: Encoder type ('vits', 'vitb', 'vitl', 'vitg')
         explicit_checkpoint: Optional explicit checkpoint path override
         max_depth: Optional max depth hint
-    
+
     Returns:
         Tuple of (checkpoint_path, model_config_dict)
     """
     project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    
+
     # If explicit checkpoint provided, use it
     if explicit_checkpoint:
         if os.path.isabs(explicit_checkpoint):
             checkpoint_path = explicit_checkpoint
         else:
             checkpoint_path = os.path.join(project_root, explicit_checkpoint)
-        
+
         if os.path.exists(checkpoint_path):
             config = identify_model_from_checkpoint(checkpoint_path)
             return checkpoint_path, config
         else:
             raise FileNotFoundError(f"Explicit checkpoint not found: {explicit_checkpoint}")
-    
-    # Priority 1: Check in revised/checkpoints/revised/ folder (trained models)
-    revised_checkpoints_dir = os.path.join(
-        project_root, 
-        'models', 
-        'raw_models', 
-        'DepthAnythingV2-revised', 
-        'checkpoints', 
-        'revised'
-    )
-    
-    if os.path.isdir(revised_checkpoints_dir):
-        # Check for best.pth or latest.pth first (trained models)
-        best_path = os.path.join(revised_checkpoints_dir, 'best.pth')
-        latest_path = os.path.join(revised_checkpoints_dir, 'latest.pth')
-        
+
+    def _find_best_or_latest(directory: str, source_name: str) -> Optional[Tuple[str, Dict]]:
+        """Helper to find best.pth or latest.pth in a directory."""
+        if not os.path.isdir(directory):
+            return None
+
+        best_path = os.path.join(directory, 'best.pth')
+        latest_path = os.path.join(directory, 'latest.pth')
+
         if os.path.exists(best_path):
             config = identify_model_from_checkpoint(best_path)
+            print(f"Found trained checkpoint: {best_path}")
             return best_path, config
         elif os.path.exists(latest_path):
-            print(f"⚠️  Warning: best.pth not found in revised checkpoints, using latest.pth instead")
+            print(f"⚠️  Warning: best.pth not found in {source_name}, using latest.pth instead")
             config = identify_model_from_checkpoint(latest_path)
             return latest_path, config
-        
-        # Check for any .pth files in revised directory
-        for file in os.listdir(revised_checkpoints_dir):
-            if file.endswith('.pth'):
-                checkpoint_path = os.path.join(revised_checkpoints_dir, file)
-                config = identify_model_from_checkpoint(checkpoint_path)
-                return checkpoint_path, config
-    
-    # Priority 2: Check in checkpoints/ root (pretrained models)
+
+        # Check for any .pth files
+        pth_files = [f for f in os.listdir(directory) if f.endswith('.pth')]
+        if pth_files:
+            # Prefer epoch checkpoints over random files
+            epoch_files = sorted([f for f in pth_files if f.startswith('epoch_')], reverse=True)
+            if epoch_files:
+                checkpoint_path = os.path.join(directory, epoch_files[0])
+            else:
+                checkpoint_path = os.path.join(directory, pth_files[0])
+            config = identify_model_from_checkpoint(checkpoint_path)
+            print(f"Found checkpoint in {source_name}: {checkpoint_path}")
+            return checkpoint_path, config
+
+        return None
+
+    # Priority 1: Check metric_depth/checkpoints/revised/ (standard training output)
+    metric_depth_checkpoints = os.path.join(
+        project_root,
+        'models',
+        'raw_models',
+        'DepthAnythingV2-revised',
+        'metric_depth',
+        'checkpoints',
+        'revised'
+    )
+    result = _find_best_or_latest(metric_depth_checkpoints, "metric_depth/checkpoints/revised")
+    if result:
+        return result
+
+    # Priority 2: Check models/raw_models/DepthAnythingV2-revised/checkpoints/revised/
+    revised_checkpoints_dir = os.path.join(
+        project_root,
+        'models',
+        'raw_models',
+        'DepthAnythingV2-revised',
+        'checkpoints',
+        'revised'
+    )
+    result = _find_best_or_latest(revised_checkpoints_dir, "checkpoints/revised")
+    if result:
+        return result
+
+    # Priority 3: Check in checkpoints/ root (pretrained models)
     checkpoints_dir = os.path.join(
-        project_root, 
-        'models', 
-        'raw_models', 
-        'DepthAnythingV2-revised', 
+        project_root,
+        'models',
+        'raw_models',
+        'DepthAnythingV2-revised',
         'checkpoints'
     )
-    
+
     if model_type == 'metric':
         # Try metric checkpoints first
         for ckpt_name in [
@@ -194,7 +225,7 @@ def find_checkpoint(
             if os.path.exists(checkpoint_path):
                 config = identify_model_from_checkpoint(checkpoint_path)
                 return checkpoint_path, config
-        
+
         # Try any encoder
         for enc in ['vitl', 'vitb', 'vits', 'vitg']:
             for ckpt_name in [
@@ -205,14 +236,14 @@ def find_checkpoint(
                 if os.path.exists(checkpoint_path):
                     config = identify_model_from_checkpoint(checkpoint_path)
                     return checkpoint_path, config
-    
+
     # Try basic checkpoint
     ckpt_name = f'depth_anything_v2_{encoder}.pth'
     checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
     if os.path.exists(checkpoint_path):
         config = identify_model_from_checkpoint(checkpoint_path)
         return checkpoint_path, config
-    
+
     # Try any encoder for basic
     for enc in ['vitl', 'vitb', 'vits', 'vitg']:
         ckpt_name = f'depth_anything_v2_{enc}.pth'
@@ -220,31 +251,47 @@ def find_checkpoint(
         if os.path.exists(checkpoint_path):
             config = identify_model_from_checkpoint(checkpoint_path)
             return checkpoint_path, config
-    
-    # Priority 3: Check project checkpoints directory (trained models)
+
+    # Priority 4: Check project checkpoints directory (trained models)
     project_checkpoints_dir = os.path.join(project_root, 'checkpoints')
     if os.path.isdir(project_checkpoints_dir):
-        for subdir in os.listdir(project_checkpoints_dir):
+        for subdir in sorted(os.listdir(project_checkpoints_dir), reverse=True):
             subdir_path = os.path.join(project_checkpoints_dir, subdir)
+            result = _find_best_or_latest(subdir_path, f"checkpoints/{subdir}")
+            if result:
+                return result
+
+    # Priority 5: Check metric_depth directory for any training runs
+    metric_depth_dir = os.path.join(
+        project_root,
+        'models',
+        'raw_models',
+        'DepthAnythingV2-revised',
+        'metric_depth'
+    )
+    if os.path.isdir(metric_depth_dir):
+        # Look for common training output directories
+        for subdir in ['checkpoints', 'exp', 'output', 'outputs']:
+            subdir_path = os.path.join(metric_depth_dir, subdir)
             if os.path.isdir(subdir_path):
-                best_path = os.path.join(subdir_path, 'best.pth')
-                latest_path = os.path.join(subdir_path, 'latest.pth')
-                if os.path.exists(best_path):
-                    config = identify_model_from_checkpoint(best_path)
-                    print(f"Found trained da2-revised model in {subdir}")
-                    return best_path, config
-                elif os.path.exists(latest_path):
-                    print(f"⚠️  Warning: best.pth not found for da2-revised (found in {subdir}), using latest.pth instead")
-                    config = identify_model_from_checkpoint(latest_path)
-                    return latest_path, config
-    
+                # Check subdirectories
+                for run_dir in sorted(os.listdir(subdir_path), reverse=True):
+                    run_path = os.path.join(subdir_path, run_dir)
+                    if os.path.isdir(run_path):
+                        result = _find_best_or_latest(run_path, f"metric_depth/{subdir}/{run_dir}")
+                        if result:
+                            return result
+
     # If we get here, no checkpoint was found
     raise FileNotFoundError(
         f"Could not find checkpoint for DepthAnythingV2-revised (model_type={model_type}, encoder={encoder}).\n"
-        f"Please ensure checkpoints are available in:\n"
-        f"  - {revised_checkpoints_dir} (priority)\n"
-        f"  - {checkpoints_dir}\n"
-        f"  - {project_checkpoints_dir}"
+        f"Please ensure checkpoints are available in one of these locations:\n"
+        f"  - {metric_depth_checkpoints} (training output - priority 1)\n"
+        f"  - {revised_checkpoints_dir} (priority 2)\n"
+        f"  - {checkpoints_dir} (pretrained - priority 3)\n"
+        f"  - {project_checkpoints_dir} (priority 4)\n"
+        f"\nTo specify a checkpoint explicitly, use:\n"
+        f"  model_config = {{'checkpoint_path': '/path/to/best.pth', ...}}"
     )
 
 

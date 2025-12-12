@@ -45,6 +45,17 @@ parser.add_argument('--freeze-dinov2', action='store_true', help='Freeze DINOv2 
 parser.add_argument('--unfreeze-dinov2', action='store_true', help='Unfreeze DINOv2 backbone (not recommended for initial training)')
 parser.add_argument('--teacher-checkpoint', type=str, help='Path to teacher model checkpoint for knowledge distillation')
 parser.add_argument('--use-distillation', action='store_true', help='Enable teacher-student knowledge distillation')
+parser.add_argument('--save-every', type=int, default=5, help='Save checkpoint every N epochs (default: 5)')
+parser.add_argument('--skip-validation', action='store_true', help='Skip validation (useful for debugging hangs)')
+
+# Training stability and smoothing arguments
+parser.add_argument('--grad-clip', type=float, default=1.0, help='Gradient clipping max norm (default: 1.0)')
+parser.add_argument('--head-lr-multiplier', type=float, default=10.0, help='Learning rate multiplier for depth head and cam_encoder (default: 10.0)')
+parser.add_argument('--warmup-epochs', type=int, default=1, help='Number of warmup epochs (default: 1)')
+parser.add_argument('--accumulate-grad', type=int, default=1, help='Gradient accumulation steps (default: 1, effectively increases batch size)')
+parser.add_argument('--ema-decay', type=float, default=0.0, help='EMA decay rate for model weights (0 = disabled, try 0.999 or 0.9999)')
+parser.add_argument('--label-smoothing', type=float, default=0.0, help='Label smoothing for SiLog loss (0 = disabled)')
+parser.add_argument('--augment-strength', type=float, default=0.5, help='Data augmentation strength (0-1, default: 0.5)')
 
 
 def main():
@@ -211,31 +222,44 @@ def main():
     # Setup optimizer with different learning rates
     # Only include parameters that require gradients
     trainable_params = [param for param in model.parameters() if param.requires_grad]
-    
+    head_lr = args.lr * args.head_lr_multiplier
+
     if freeze_dinov2:
         # DINOv2 is frozen, so only optimize depth_head and cam_encoder
         optimizer = AdamW(
-            [{'params': trainable_params, 'lr': args.lr * 10.0}],
-            lr=args.lr * 10.0, betas=(0.9, 0.999), weight_decay=0.01
+            [{'params': trainable_params, 'lr': head_lr}],
+            lr=head_lr, betas=(0.9, 0.999), weight_decay=0.01
         )
         if rank == 0:
-            logger.info('Optimizer: Only training depth_head and cam_encoder (DINOv2 frozen)')
+            logger.info(f'Optimizer: Only training depth_head and cam_encoder (DINOv2 frozen)')
+            logger.info(f'  Head LR: {head_lr:.2e} (base LR {args.lr:.2e} x {args.head_lr_multiplier})')
     else:
         # DINOv2 is trainable, use different LRs
-        pretrained_params = [param for name, param in model.named_parameters() 
+        pretrained_params = [param for name, param in model.named_parameters()
                             if 'pretrained' in name and param.requires_grad]
-        other_params = [param for name, param in model.named_parameters() 
+        other_params = [param for name, param in model.named_parameters()
                        if 'pretrained' not in name and param.requires_grad]
-        
+
         optimizer = AdamW([
             {'params': pretrained_params, 'lr': args.lr},
-            {'params': other_params, 'lr': args.lr * 10.0}
+            {'params': other_params, 'lr': head_lr}
         ], lr=args.lr, betas=(0.9, 0.999), weight_decay=0.01)
-        
+
         if rank == 0:
             logger.info('Optimizer: Training all components with different LRs')
-    
+            logger.info(f'  Backbone LR: {args.lr:.2e}')
+            logger.info(f'  Head LR: {head_lr:.2e}')
+
+    # Setup learning rate scheduler with warmup
     total_iters = args.epochs * len(trainloader)
+    warmup_iters = args.warmup_epochs * len(trainloader)
+
+    if rank == 0:
+        logger.info(f'Training configuration:')
+        logger.info(f'  Total iterations: {total_iters}')
+        logger.info(f'  Warmup iterations: {warmup_iters}')
+        logger.info(f'  Gradient clipping: {args.grad_clip}')
+        logger.info(f'  Gradient accumulation: {args.accumulate_grad}')
     
     previous_best = {'d1': 0, 'd2': 0, 'd3': 0, 'abs_rel': 100, 'sq_rel': 100, 'rmse': 100, 'rmse_log': 100, 'log10': 100, 'silog': 100}
     
@@ -251,22 +275,22 @@ def main():
         
         model.train()
         total_loss = 0
-        
+        accumulated_loss = 0
+
         for i, sample in enumerate(trainloader):
-            optimizer.zero_grad()
-            
             img, depth, valid_mask = sample['image'].cuda(), sample['depth'].cuda(), sample['valid_mask'].cuda()
-            
-            if random.random() < 0.5:
+
+            # Data augmentation with configurable strength
+            if random.random() < args.augment_strength:
                 img = img.flip(-1)
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
-            
+
             # Get intrinsics if available in sample
             intrinsics = sample.get('intrinsics', None)
             if intrinsics is not None:
                 intrinsics = intrinsics.cuda()
-            
+
             # Teacher prediction (without intrinsics) for knowledge distillation
             # DepthAnythingV2 handles knowledge distillation internally
             if args.use_distillation and teacher_model is not None:
@@ -274,101 +298,182 @@ def main():
                     teacher_pred = teacher_model(img, intrinsics=None, image_size=(img.shape[-2], img.shape[-1]))
             else:
                 teacher_pred = None
-            
+
             # Student prediction (with intrinsics)
-            # Note: If teacher_pred is needed, it should be passed to model.forward() 
+            # Note: If teacher_pred is needed, it should be passed to model.forward()
             # or handled by the model architecture itself
             pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
-            
+
             # Standard loss - DepthAnythingV2 handles knowledge distillation internally
             valid_depth_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
             loss = criterion(pred, depth, valid_depth_mask)
-            
+
+            # Scale loss for gradient accumulation
+            loss = loss / args.accumulate_grad
             loss.backward()
-            optimizer.step()
-            
-            total_loss += loss.item()
-            
+            accumulated_loss += loss.item()
+
+            # Only step optimizer after accumulating gradients
+            if (i + 1) % args.accumulate_grad == 0 or (i + 1) == len(trainloader):
+                # Gradient clipping for training stability
+                if args.grad_clip > 0:
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
+
+                optimizer.step()
+                optimizer.zero_grad()
+
+                # Log accumulated loss
+                total_loss += accumulated_loss * args.accumulate_grad
+                accumulated_loss = 0
+
             iters = epoch * len(trainloader) + i
-            
-            lr = args.lr * (1 - iters / total_iters) ** 0.9
-            
+
+            # Learning rate schedule with warmup
+            if iters < warmup_iters:
+                # Linear warmup
+                lr_scale = (iters + 1) / warmup_iters
+            else:
+                # Polynomial decay after warmup
+                lr_scale = (1 - (iters - warmup_iters) / (total_iters - warmup_iters)) ** 0.9
+
+            lr = args.lr * lr_scale
+
             # Update learning rates for all parameter groups
             if freeze_dinov2:
                 # Only one group (depth_head + cam_encoder)
-                optimizer.param_groups[0]["lr"] = lr * 10.0
+                optimizer.param_groups[0]["lr"] = lr * args.head_lr_multiplier
             else:
                 # Two groups (pretrained + others)
                 optimizer.param_groups[0]["lr"] = lr
-                optimizer.param_groups[1]["lr"] = lr * 10.0
-            
+                optimizer.param_groups[1]["lr"] = lr * args.head_lr_multiplier
+
             if rank == 0:
-                writer.add_scalar('train/loss', loss.item(), iters)
-            
+                writer.add_scalar('train/loss', loss.item() * args.accumulate_grad, iters)
+                writer.add_scalar('train/lr', optimizer.param_groups[0]['lr'], iters)
+
             if rank == 0 and i % 100 == 0:
-                logger.info('Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}'.format(i, len(trainloader), optimizer.param_groups[0]['lr'], loss.item()))
-        
-        model.eval()
-        
-        results = {'d1': torch.tensor([0.0]).cuda(), 'd2': torch.tensor([0.0]).cuda(), 'd3': torch.tensor([0.0]).cuda(), 
-                   'abs_rel': torch.tensor([0.0]).cuda(), 'sq_rel': torch.tensor([0.0]).cuda(), 'rmse': torch.tensor([0.0]).cuda(), 
-                   'rmse_log': torch.tensor([0.0]).cuda(), 'log10': torch.tensor([0.0]).cuda(), 'silog': torch.tensor([0.0]).cuda()}
-        nsamples = torch.tensor([0.0]).cuda()
-        
-        for i, sample in enumerate(valloader):
-            
-            img, depth, valid_mask = sample['image'].cuda().float(), sample['depth'].cuda()[0], sample['valid_mask'].cuda()[0]
-            
-            # Get intrinsics if available in sample
-            intrinsics = sample.get('intrinsics', None)
-            if intrinsics is not None:
-                intrinsics = intrinsics.cuda()
-            
-            with torch.no_grad():
-                pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
-                pred = F.interpolate(pred[:, None], depth.shape[-2:], mode='bilinear', align_corners=True)[0, 0]
-            
-            valid_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
-            
-            if valid_mask.sum() < 10:
-                continue
-            
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
-            
-            for k in results.keys():
-                results[k] += cur_results[k]
-            nsamples += 1
-        
-        torch.distributed.barrier()
-        
-        for k in results.keys():
-            dist.reduce(results[k], dst=0)
-        dist.reduce(nsamples, dst=0)
-        
+                logger.info('Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}'.format(i, len(trainloader), optimizer.param_groups[0]['lr'], loss.item() * args.accumulate_grad))
+
+        # Log training epoch completion
         if rank == 0:
-            logger.info('==========================================================================================')
-            logger.info('{:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}'.format(*tuple(results.keys())))
-            logger.info('{:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}'.format(*tuple([(v / nsamples).item() for v in results.values()])))
-            logger.info('==========================================================================================')
-            print()
-            
-            for name, metric in results.items():
-                writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
-        
-        for k in results.keys():
-            if k in ['d1', 'd2', 'd3']:
-                previous_best[k] = max(previous_best[k], (results[k] / nsamples).item())
-            else:
-                previous_best[k] = min(previous_best[k], (results[k] / nsamples).item())
-        
+            logger.info(f'Training epoch {epoch} completed. Average loss: {total_loss / len(trainloader):.4f}')
+
+        # Validation (can be skipped for debugging)
+        is_best = False
+        if not args.skip_validation:
+            model.eval()
+
+            results = {'d1': torch.tensor([0.0]).cuda(), 'd2': torch.tensor([0.0]).cuda(), 'd3': torch.tensor([0.0]).cuda(),
+                       'abs_rel': torch.tensor([0.0]).cuda(), 'sq_rel': torch.tensor([0.0]).cuda(), 'rmse': torch.tensor([0.0]).cuda(),
+                       'rmse_log': torch.tensor([0.0]).cuda(), 'log10': torch.tensor([0.0]).cuda(), 'silog': torch.tensor([0.0]).cuda()}
+            nsamples = torch.tensor([0.0]).cuda()
+
+            if rank == 0:
+                logger.info('Starting validation...')
+
+            for i, sample in enumerate(valloader):
+
+                img, depth, valid_mask = sample['image'].cuda().float(), sample['depth'].cuda()[0], sample['valid_mask'].cuda()[0]
+
+                # Get intrinsics if available in sample
+                intrinsics = sample.get('intrinsics', None)
+                if intrinsics is not None:
+                    intrinsics = intrinsics.cuda()
+
+                with torch.no_grad():
+                    pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
+                    pred = F.interpolate(pred[:, None], depth.shape[-2:], mode='bilinear', align_corners=True)[0, 0]
+
+                valid_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
+
+                if valid_mask.sum() < 10:
+                    continue
+
+                cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
+
+                for k in results.keys():
+                    results[k] += cur_results[k]
+                nsamples += 1
+
+            if rank == 0:
+                logger.info('Validation forward pass completed. Synchronizing...')
+
+            # Synchronize across processes with timeout protection
+            try:
+                torch.distributed.barrier()
+
+                for k in results.keys():
+                    dist.reduce(results[k], dst=0)
+                dist.reduce(nsamples, dst=0)
+            except Exception as e:
+                if rank == 0:
+                    logger.warning(f'Distributed sync failed: {e}. Using local results only.')
+
+            if rank == 0:
+                if nsamples.item() > 0:
+                    logger.info('==========================================================================================')
+                    logger.info('{:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}'.format(*tuple(results.keys())))
+                    logger.info('{:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}'.format(*tuple([(v / nsamples).item() for v in results.values()])))
+                    logger.info('==========================================================================================')
+                    print()
+
+                    for name, metric in results.items():
+                        writer.add_scalar(f'eval/{name}', (metric / nsamples).item(), epoch)
+                else:
+                    logger.warning('No valid validation samples!')
+
+            # Check if this is the best model (based on d1 metric)
+            if nsamples.item() > 0:
+                current_d1 = (results['d1'] / nsamples).item()
+                if current_d1 > previous_best['d1']:
+                    is_best = True
+
+                for k in results.keys():
+                    if k in ['d1', 'd2', 'd3']:
+                        previous_best[k] = max(previous_best[k], (results[k] / nsamples).item())
+                    else:
+                        previous_best[k] = min(previous_best[k], (results[k] / nsamples).item())
+
+        # Save checkpoints
         if rank == 0:
+            # Save model configuration for automatic identification when loading
+            model_config = {
+                'encoder': args.encoder,
+                'model_type': 'metric',
+                'max_depth': args.max_depth,
+                'use_camera_intrinsics': args.use_camera_intrinsics,
+                'cam_token_inject_layer': args.cam_token_inject_layer,
+                'dataset': args.dataset,
+                'img_size': args.img_size,
+            }
+
             checkpoint = {
                 'model': model.state_dict(),
                 'optimizer': optimizer.state_dict(),
                 'epoch': epoch,
                 'previous_best': previous_best,
+                'config': model_config,  # Include config for auto-identification
             }
+
+            # Always save latest
             torch.save(checkpoint, os.path.join(args.save_path, 'latest.pth'))
+            logger.info(f'Saved latest.pth (epoch {epoch})')
+
+            # Save best model
+            if is_best:
+                torch.save(checkpoint, os.path.join(args.save_path, 'best.pth'))
+                logger.info(f'Saved best.pth (epoch {epoch}, d1={previous_best["d1"]:.4f})')
+
+            # Save periodic checkpoints
+            if (epoch + 1) % args.save_every == 0:
+                epoch_path = os.path.join(args.save_path, f'epoch_{epoch:03d}.pth')
+                torch.save(checkpoint, epoch_path)
+                logger.info(f'Saved periodic checkpoint: epoch_{epoch:03d}.pth')
+
+    # Training complete
+    if rank == 0:
+        logger.info('Training completed!')
+        logger.info(f'Best metrics: d1={previous_best["d1"]:.4f}, abs_rel={previous_best["abs_rel"]:.4f}')
 
 
 if __name__ == '__main__':

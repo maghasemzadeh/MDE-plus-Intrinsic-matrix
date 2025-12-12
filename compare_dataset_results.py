@@ -219,30 +219,38 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
-  # Process single dataset (uses default dataset and output paths)
-  python compare.py --dataset middlebury
-  
+  # Process single dataset with da2-revised model
+  python compare_dataset_results.py --dataset middlebury --model-name da2-revised
+
+  # Compare two datasets using da2 model
+  python compare_dataset_results.py --dataset cityscapes,drivingstereo \\
+    --model-name da2 --encoder vitl --model-type basic --max-depth 120
+
+  # Compare datasets with da3 model
+  python compare_dataset_results.py --dataset cityscapes,drivingstereo \\
+    --model-name da3 --encoder vitl --model-type metric --max-depth 120 --max-items 2000
+
   # Process with custom output path
-  python compare.py --dataset middlebury --output-path custom_output
-  
-  # Process with custom dataset path
-  python compare.py --dataset middlebury --dataset-path /custom/path/to/middlebury
-  
-  # Compare two datasets (uses all default paths)
-  python compare.py --dataset cityscapes,drivingstereo
-  
-  # Compare with custom paths
-  python compare.py --dataset cityscapes,drivingstereo \\
-    --dataset-path /path/to/cityscapes,/path/to/drivingstereo \\
+  python compare_dataset_results.py --dataset middlebury --model-name da2-revised \\
     --output-path custom_output
-  
+
+  # Process with custom dataset path
+  python compare_dataset_results.py --dataset middlebury --model-name da2 \\
+    --dataset-path /custom/path/to/middlebury
+
+  # Compare with custom paths
+  python compare_dataset_results.py --dataset cityscapes,drivingstereo \\
+    --model-name da2-revised --dataset-path /path/to/cityscapes,/path/to/drivingstereo \\
+    --output-path custom_output
+
   # Use metric model with specific encoder
-  python compare.py --dataset middlebury --model-type metric --encoder vitl --max-depth 20.0
-  
+  python compare_dataset_results.py --dataset middlebury --model-name da3 \\
+    --model-type metric --encoder vitl --max-depth 20.0
+
   # Filter items using regex (works for all datasets)
-  python compare.py --dataset middlebury --filter-regex ".*-perfect"
-  python compare.py --dataset cityscapes --filter-regex ".*aachen.*"
-  python compare.py --dataset drivingstereo --filter-regex "2018-07-09.*"
+  python compare_dataset_results.py --dataset middlebury --model-name da2 --filter-regex ".*-perfect"
+  python compare_dataset_results.py --dataset cityscapes --model-name da2-revised --filter-regex ".*aachen.*"
+  python compare_dataset_results.py --dataset drivingstereo --model-name da3 --filter-regex "2018-07-09.*"
         """
     )
     
@@ -261,6 +269,8 @@ Examples:
                        help='Regex pattern to filter items by name (works for all datasets)')
     
     # Model arguments
+    parser.add_argument('--model-name', type=str, required=True, choices=['da2', 'da2-revised', 'da3'],
+                       help='Model name: da2, da2-revised, or da3')
     parser.add_argument('--model-type', type=str, default='metric', choices=['metric', 'basic'],
                        help='Model type: "metric" or "basic"')
     parser.add_argument('--model-checkpoint', type=str, default=None,
@@ -298,9 +308,9 @@ Examples:
     else:
         dataset_paths = [None] * len(dataset_names)  # Will use default paths
     
-    # Determine which model to use (default to da2-revised for metric, da2 for basic)
-    model_name = 'da2-revised' if args.model_type == 'metric' else 'da2'
-    
+    # Use the model name provided by the user
+    model_name = args.model_name
+
     # Create model config
     model_config = {
         'model_type': args.model_type,
@@ -309,7 +319,7 @@ Examples:
         'max_depth': args.max_depth,
         'device': args.device
     }
-    
+
     # Create model wrapper
     print(f"Loading {model_name} {args.model_type} model (encoder={args.encoder})...")
     try:
@@ -317,39 +327,12 @@ Examples:
     except (FileNotFoundError, ValueError) as e:
         print(f"\n❌ Error: {e}")
         sys.exit(1)
-    
+
     # Get resolved values from model
     resolved_checkpoint = model.get_checkpoint_path()
     resolved_model_type = args.model_type
     resolved_encoder = args.encoder
     resolved_max_depth = getattr(model, 'max_depth', args.max_depth)
-    
-    # Determine model name from checkpoint path for folder structure
-    # Try to identify if it's da2, da2-revised, or da3
-    model_name = "unknown"
-    if resolved_checkpoint:
-        checkpoint_lower = resolved_checkpoint.lower()
-        # Check for DA3 first (most specific)
-        if 'depth-anything-3' in checkpoint_lower or '/depth-anything-3/' in checkpoint_lower:
-            model_name = 'da3'
-        # Check for DA2-revised
-        elif 'depthanythingv2-revised' in checkpoint_lower or '/depthanythingv2-revised/' in checkpoint_lower or 'v2-revised' in checkpoint_lower:
-            model_name = 'da2-revised'
-        # Check for DA2 (original)
-        elif 'depthanythingv2' in checkpoint_lower and 'revised' not in checkpoint_lower and '/depthanythingv2/' in checkpoint_lower:
-            model_name = 'da2'
-        # Check directory structure
-        elif '/depth-anything-3/' in resolved_checkpoint:
-            model_name = 'da3'
-        elif '/depthanythingv2-revised/' in resolved_checkpoint:
-            model_name = 'da2-revised'
-        elif '/depthanythingv2/' in resolved_checkpoint and '/depthanythingv2-revised/' not in resolved_checkpoint:
-            model_name = 'da2'
-    
-    # If we couldn't determine, use a default based on model type and encoder
-    if model_name == "unknown":
-        model_name = f"{resolved_model_type}-{resolved_encoder}"
-        print(f"⚠️  Warning: Could not determine model name from checkpoint, using: {model_name}")
     
     # First, count all items across all datasets to create unified progress bar
     print("\nCounting items across all datasets...")

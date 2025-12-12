@@ -63,6 +63,8 @@ parser.add_argument('--teacher-checkpoint', type=str, help='Path to teacher mode
 parser.add_argument('--use-distillation', action='store_true', help='Enable teacher-student knowledge distillation')
 parser.add_argument('--head-lr-multiplier', type=float, default=10.0, help='Learning rate multiplier for depth_head and cam_encoder (default: 10.0, try 1.0-5.0 for stability)')
 parser.add_argument('--grad-clip', type=float, default=None, help='Gradient clipping max norm (e.g., 1.0 for stability)')
+parser.add_argument('--accumulate-grad', type=int, default=1, help='Number of gradient accumulation steps (default: 1, no accumulation)')
+parser.add_argument('--warmup-epochs', type=int, default=0, help='Number of warmup epochs with linear learning rate ramp-up (default: 0, no warmup)')
 
 
 def get_device():
@@ -633,7 +635,8 @@ def main():
             logger.info(f'Pretrained LR: {args.lr:.7f}, Head/CamEnc LR: {args.lr * head_lr_mult:.7f}')
     
     total_iters = args.epochs * len(trainloader)
-    
+    warmup_iters = args.warmup_epochs * len(trainloader)
+
     previous_best = {'d1': 0, 'd2': 0, 'd3': 0, 'abs_rel': 100, 'sq_rel': 100, 'rmse': 100, 'rmse_log': 100, 'log10': 100, 'silog': 100}
     
     for epoch in range(args.epochs):
@@ -649,22 +652,24 @@ def main():
         
         model.train()
         total_loss = 0
-        
+
         for i, sample in enumerate(trainloader):
-            optimizer.zero_grad()
-            
+            # Only zero gradients at the start of accumulation
+            if i % args.accumulate_grad == 0:
+                optimizer.zero_grad()
+
             img, depth, valid_mask = sample['image'].to(device), sample['depth'].to(device), sample['valid_mask'].to(device)
-            
+
             if random.random() < 0.5:
                 img = img.flip(-1)
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
-            
+
             # Get intrinsics if available in sample
             intrinsics = sample.get('intrinsics', None)
             if intrinsics is not None:
                 intrinsics = intrinsics.to(device)
-            
+
             # Teacher prediction (without intrinsics) for knowledge distillation
             # DepthAnythingV2 handles knowledge distillation internally
             if args.use_distillation and teacher_model is not None:
@@ -672,38 +677,49 @@ def main():
                     teacher_pred = teacher_model(img, intrinsics=None, image_size=(img.shape[-2], img.shape[-1]))
             else:
                 teacher_pred = None
-            
+
             # Student prediction (with intrinsics)
-            # Note: If teacher_pred is needed, it should be passed to model.forward() 
+            # Note: If teacher_pred is needed, it should be passed to model.forward()
             # or handled by the model architecture itself
             pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
-            
+
             # Standard loss - DepthAnythingV2 handles knowledge distillation internally
             valid_depth_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
             loss = criterion(pred, depth, valid_depth_mask)
-            
+
+            # Scale loss for gradient accumulation
+            loss = loss / args.accumulate_grad
             loss.backward()
 
-            # Gradient clipping for stability
-            if args.grad_clip is not None:
-                torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
+            # Only step optimizer and clip gradients after accumulating enough steps
+            if (i + 1) % args.accumulate_grad == 0 or (i + 1) == len(trainloader):
+                # Gradient clipping for stability
+                if args.grad_clip is not None:
+                    torch.nn.utils.clip_grad_norm_(model.parameters(), args.grad_clip)
 
-            optimizer.step()
-            
-            total_loss += loss.item()
-            
+                optimizer.step()
+
+            total_loss += loss.item() * args.accumulate_grad
+
             iters = epoch * len(trainloader) + i
-            
-            lr = args.lr * (1 - iters / total_iters) ** 0.9
-            
-            # Update learning rates for all parameter groups
-            if freeze_dinov2:
-                # Only one group (depth_head + cam_encoder)
-                optimizer.param_groups[0]["lr"] = lr * head_lr_mult
+
+            # Calculate learning rate with warmup
+            if iters < warmup_iters:
+                # Linear warmup
+                lr = args.lr * (iters / warmup_iters)
             else:
-                # Two groups (pretrained + others)
-                optimizer.param_groups[0]["lr"] = lr
-                optimizer.param_groups[1]["lr"] = lr * head_lr_mult
+                # Polynomial decay after warmup
+                lr = args.lr * (1 - (iters - warmup_iters) / (total_iters - warmup_iters)) ** 0.9
+
+            # Update learning rates for all parameter groups (only when optimizer.step() is called)
+            if (i + 1) % args.accumulate_grad == 0 or (i + 1) == len(trainloader):
+                if freeze_dinov2:
+                    # Only one group (depth_head + cam_encoder)
+                    optimizer.param_groups[0]["lr"] = lr * head_lr_mult
+                else:
+                    # Two groups (pretrained + others)
+                    optimizer.param_groups[0]["lr"] = lr
+                    optimizer.param_groups[1]["lr"] = lr * head_lr_mult
             
             if rank == 0 and writer is not None:
                 writer.add_scalar('train/loss', loss.item(), iters)

@@ -28,23 +28,39 @@ from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingData
 from dataset.hypersim import Hypersim
 GenericDatasetWithIntrinsics = None
 
-# Import DepthAnythingV2 and force reload to avoid cached version issues
-import importlib
-if 'depth_anything_v2' in sys.modules:
-    importlib.reload(sys.modules['depth_anything_v2'])
-if 'depth_anything_v2.dpt' in sys.modules:
-    importlib.reload(sys.modules['depth_anything_v2.dpt'])
-from depth_anything_v2.dpt import DepthAnythingV2
+# Import metric model from metric_depth path
+from depth_anything_v2.dpt import DepthAnythingV2 as DepthAnythingV2Metric
 from util.dist_helper import setup_distributed
-from util.loss import SiLogLoss
-from util.metric import eval_depth
+from util.loss import SiLogLoss, ScaleShiftInvariantLoss
+from util.metric import eval_depth, eval_depth_scale_aligned
 from util.utils import init_log
 
+# Path to basic (relative depth) model in the revised DepthAnythingV2
+_basic_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                  'models', 'raw_models', 'DepthAnythingV2-revised', 'depth_anything_v2')
 
-parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric Depth Estimation')
+
+def get_basic_depth_anything_v2():
+    """Import and return the basic DepthAnythingV2 model class (relative depth, with intrinsics support)."""
+    import importlib.util
+
+    # Add the basic model path to sys.path for proper imports
+    if _basic_model_path not in sys.path:
+        sys.path.insert(0, _basic_model_path)
+
+    dpt_path = os.path.join(_basic_model_path, 'dpt.py')
+    spec = importlib.util.spec_from_file_location("depth_anything_v2_basic_dpt", dpt_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.DepthAnythingV2
+
+
+parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic Depth Estimation')
 
 parser.add_argument('--encoder', default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
 parser.add_argument('--dataset', default='hypersim', choices=['hypersim', 'vkitti'])
+parser.add_argument('--model-type', default='basic', choices=['metric', 'basic'],
+                    help='Model type: metric (absolute depth in meters) or basic (relative depth with scale ambiguity)')
 parser.add_argument('--img-size', default=518, type=int)
 parser.add_argument('--min-depth', default=0.001, type=float)
 parser.add_argument('--max-depth', default=20, type=float)
@@ -363,17 +379,38 @@ def main():
                 if rank == 0:
                     logger.info(f"Checkpoint encoder matches specified encoder: {args.encoder}")
     
-    # max_depth has default value of 20.0, so we don't need to pass it unless different
-    model_kwargs = {**model_configs[encoder_to_use], 'use_camera_intrinsics': args.use_camera_intrinsics, 'cam_token_inject_layer': args.cam_token_inject_layer}
-    if args.max_depth != 20.0:
-        model_kwargs['max_depth'] = args.max_depth
-    
+    # Determine if we're training metric or basic model
+    is_metric = args.model_type == 'metric'
+
     if rank == 0:
-        print(f"Initializing model (encoder: {encoder_to_use})...")
+        print(f"Model type: {args.model_type} ({'absolute depth in meters' if is_metric else 'relative depth with scale ambiguity'})")
         sys.stdout.flush()
-        logger.info(f'Initializing model with encoder: {encoder_to_use}')
-    
-    model = DepthAnythingV2(**model_kwargs)
+        logger.info(f'Model type: {args.model_type}')
+
+    # Configure model kwargs based on model type
+    # Both metric and basic models in the revised version support camera intrinsics
+    model_kwargs = {
+        **model_configs[encoder_to_use],
+        'use_camera_intrinsics': args.use_camera_intrinsics,
+        'cam_token_inject_layer': args.cam_token_inject_layer
+    }
+
+    if is_metric:
+        # Metric model: add max_depth for scaling output to meters
+        if args.max_depth != 20.0:
+            model_kwargs['max_depth'] = args.max_depth
+
+    if rank == 0:
+        print(f"Initializing model (encoder: {encoder_to_use}, type: {args.model_type})...")
+        sys.stdout.flush()
+        logger.info(f'Initializing model with encoder: {encoder_to_use}, type: {args.model_type}')
+
+    # Create model based on type
+    if is_metric:
+        model = DepthAnythingV2Metric(**model_kwargs)
+    else:
+        DepthAnythingV2Basic = get_basic_depth_anything_v2()
+        model = DepthAnythingV2Basic(**model_kwargs)
     
     if rank == 0:
         print("Model initialized successfully")
@@ -592,13 +629,22 @@ def main():
         if rank == 0:
             logger.info(f'Teacher model loaded from {teacher_checkpoint_path} and frozen')
     
-    # Setup loss function (DepthAnythingV2 handles distillation internally)
-    criterion = SiLogLoss().to(device)
+    # Setup loss function based on model type
+    if is_metric:
+        # Metric model: use SiLog loss (requires absolute depth values)
+        criterion = SiLogLoss().to(device)
+        if rank == 0:
+            if args.use_distillation:
+                logger.info('Using SiLog loss with teacher-student knowledge distillation')
+            else:
+                logger.info('Using standard SiLog loss (metric model)')
+    else:
+        # Basic model: use scale-shift invariant loss (handles relative depth)
+        criterion = ScaleShiftInvariantLoss(alpha=0.5).to(device)
+        if rank == 0:
+            logger.info('Using Scale-Shift Invariant loss (basic model)')
+
     if rank == 0:
-        if args.use_distillation:
-            logger.info('Using SiLog loss with teacher-student knowledge distillation')
-        else:
-            logger.info('Using standard SiLog loss')
         print("Starting training...")
         print("=" * 80)
         sys.stdout.flush()
@@ -777,10 +823,16 @@ def main():
                 }
                 first_val_pred = pred.cpu()
             
-            cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
-            
+            # Use appropriate evaluation function based on model type
+            if is_metric:
+                cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
+            else:
+                # Basic model: use scale-aligned evaluation
+                cur_results = eval_depth_scale_aligned(pred[valid_mask], depth[valid_mask])
+
             for k in results.keys():
-                results[k] += cur_results[k]
+                if k in cur_results:
+                    results[k] += cur_results[k]
             nsamples += 1
         
         if world_size > 1 and device.type == 'cuda':
@@ -908,7 +960,7 @@ def main():
                     'max_depth': args.max_depth,
                     'use_camera_intrinsics': args.use_camera_intrinsics,
                     'cam_token_inject_layer': args.cam_token_inject_layer,
-                    'model_type': 'metric',
+                    'model_type': args.model_type,
                 }
             }
             

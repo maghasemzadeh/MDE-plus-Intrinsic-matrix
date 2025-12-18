@@ -25,17 +25,6 @@ Key training arguments:
 - `--freeze-dinov2` (default): Freeze DINOv2 backbone during training
 - `--use-distillation`: Enable teacher-student knowledge distillation
 
-### Testing
-```bash
-# Run all tests
-python -m pytest tests/ -v
-
-# Run specific test file
-python -m pytest tests/test_metrics.py -v
-
-# Run with coverage
-python -m pytest tests/ --cov=src --cov=datasets --cov=models
-```
 
 ### Evaluation
 The evaluation pipeline uses `ProcessingPipeline` from `src/pipeline.py` to process datasets and compute metrics. See `datasets/middlebury.py` for statistical comparison functions including paired t-tests and bootstrap confidence intervals.
@@ -58,6 +47,7 @@ The evaluation pipeline uses `ProcessingPipeline` from `src/pipeline.py` to proc
 
 **`models/`** - Model wrappers
 - `base.py`: Abstract `BaseDepthModelWrapper` interface
+- `raw_models/DepthAnythingV2/`: DepthAnythingV2 model
 - `raw_models/DepthAnythingV2-revised/`: Modified DepthAnythingV2 with camera intrinsics support
 - `raw_models/Depth-Anything-3/`: Depth-Anything-3 model
 

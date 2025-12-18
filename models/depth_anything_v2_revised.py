@@ -333,13 +333,13 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
             max_depth=self.max_depth
         )
         
-        # Update config from checkpoint if needed
-        if not explicit_checkpoint:
-            self.model_type = checkpoint_config.get('model_type', self.model_type)
-            self.encoder = checkpoint_config.get('encoder', self.encoder)
-            if checkpoint_config.get('max_depth'):
-                self.max_depth = checkpoint_config['max_depth']
-            self._is_metric = self.model_type.lower() == 'metric'
+        # Always update config from checkpoint to ensure consistency
+        # The checkpoint's actual encoder/model_type should be authoritative
+        self.model_type = checkpoint_config.get('model_type', self.model_type)
+        self.encoder = checkpoint_config.get('encoder', self.encoder)
+        if checkpoint_config.get('max_depth'):
+            self.max_depth = checkpoint_config['max_depth']
+        self._is_metric = self.model_type.lower() == 'metric'
         # Always check checkpoint for camera intrinsics support (may override user setting)
         if checkpoint_config.get('use_camera_intrinsics') is not None:
             self.use_camera_intrinsics = checkpoint_config['use_camera_intrinsics']

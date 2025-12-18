@@ -151,28 +151,28 @@ class DPTHead(nn.Module):
 
 class DepthAnythingV2(nn.Module):
     def __init__(
-        self, 
-        encoder='vitl', 
-        features=256, 
-        out_channels=[256, 512, 1024, 1024], 
-        use_bn=False, 
+        self,
+        encoder='vitl',
+        features=256,
+        out_channels=[256, 512, 1024, 1024],
+        use_bn=False,
         use_clstoken=False,
         max_depth=20.0,
         use_camera_intrinsics=False,  # Enable camera intrinsics support
         cam_token_inject_layer=None,  # Layer to inject camera token (None = first layer)
     ):
         super(DepthAnythingV2, self).__init__()
-        
+
         self.intermediate_layer_idx = {
             'vits': [2, 5, 8, 11],
-            'vitb': [2, 5, 8, 11], 
-            'vitl': [4, 11, 17, 23], 
+            'vitb': [2, 5, 8, 11],
+            'vitl': [4, 11, 17, 23],
             'vitg': [9, 19, 29, 39]
         }
-        
+
         self.encoder = encoder
         self.pretrained = DINOv2(model_name=encoder)
-        
+
         self.max_depth = max_depth
         self.use_camera_intrinsics = use_camera_intrinsics
         self.cam_token_inject_layer = cam_token_inject_layer
@@ -234,9 +234,9 @@ class DepthAnythingV2(nn.Module):
                     call_kwargs['cam_token_inject_layer'] = self.cam_token_inject_layer
         
         features = self.pretrained.get_intermediate_layers(**call_kwargs)
-        
+
         depth = self.depth_head(features, patch_h, patch_w) * self.max_depth
-        
+
         return depth.squeeze(1)
     
     @torch.no_grad()

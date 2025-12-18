@@ -135,13 +135,13 @@ class DepthAnythingV2Wrapper(BaseDepthModelWrapper):
             max_depth=self.max_depth
         )
         
-        # Update config from checkpoint if needed
-        if not explicit_checkpoint:
-            self.model_type = checkpoint_config.get('model_type', self.model_type)
-            self.encoder = checkpoint_config.get('encoder', self.encoder)
-            if checkpoint_config.get('max_depth'):
-                self.max_depth = checkpoint_config['max_depth']
-            self._is_metric = self.model_type.lower() == 'metric'
+        # Always update config from checkpoint to ensure consistency
+        # The checkpoint's actual encoder/model_type should be authoritative
+        self.model_type = checkpoint_config.get('model_type', self.model_type)
+        self.encoder = checkpoint_config.get('encoder', self.encoder)
+        if checkpoint_config.get('max_depth'):
+            self.max_depth = checkpoint_config['max_depth']
+        self._is_metric = self.model_type.lower() == 'metric'
     
     def load_model(self) -> None:
         """Load the Depth Anything V2 model."""

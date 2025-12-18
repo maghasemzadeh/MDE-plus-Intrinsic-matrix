@@ -36,23 +36,19 @@ from util.metric import eval_depth, eval_depth_scale_aligned
 from util.utils import init_log
 
 # Path to basic (relative depth) model in the revised DepthAnythingV2
-_basic_model_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                                  'models', 'raw_models', 'DepthAnythingV2-revised', 'depth_anything_v2')
+_basic_model_parent_path = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                         'models', 'raw_models', 'DepthAnythingV2-revised')
 
 
 def get_basic_depth_anything_v2():
     """Import and return the basic DepthAnythingV2 model class (relative depth, with intrinsics support)."""
-    import importlib.util
+    # Add the parent path to sys.path so we can import depth_anything_v2 as a package
+    if _basic_model_parent_path not in sys.path:
+        sys.path.insert(0, _basic_model_parent_path)
 
-    # Add the basic model path to sys.path for proper imports
-    if _basic_model_path not in sys.path:
-        sys.path.insert(0, _basic_model_path)
-
-    dpt_path = os.path.join(_basic_model_path, 'dpt.py')
-    spec = importlib.util.spec_from_file_location("depth_anything_v2_basic_dpt", dpt_path)
-    module = importlib.util.module_from_spec(spec)
-    spec.loader.exec_module(module)
-    return module.DepthAnythingV2
+    # Import the module as a proper package to support relative imports
+    from depth_anything_v2.dpt import DepthAnythingV2 as DepthAnythingV2Basic
+    return DepthAnythingV2Basic
 
 
 parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic Depth Estimation')

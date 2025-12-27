@@ -251,12 +251,19 @@ Examples:
   python compare_dataset_results.py --dataset middlebury --model-name da2 --filter-regex ".*-perfect"
   python compare_dataset_results.py --dataset cityscapes --model-name da2-revised --filter-regex ".*aachen.*"
   python compare_dataset_results.py --dataset drivingstereo --model-name da3 --filter-regex "2018-07-09.*"
+  python compare_dataset_results.py --dataset vkitti --model-name da2-revised --filter-regex "Scene01.*"
+
+  # Process vkitti dataset
+  python compare_dataset_results.py --dataset vkitti --model-name da2-revised --max-depth 80
+
+  # Compare vkitti with other datasets
+  python compare_dataset_results.py --dataset vkitti,cityscapes --model-name da2-revised --max-depth 80
         """
     )
     
     # Dataset arguments
     parser.add_argument('--dataset', type=str, required=True,
-                       help='Dataset name(s): middlebury, cityscapes, drivingstereo, or comma-separated for comparison')
+                       help='Dataset name(s): middlebury, cityscapes, drivingstereo, vkitti, or comma-separated for comparison')
     parser.add_argument('--dataset-path', type=str, default=None,
                        help='Optional path(s) to dataset(s), comma-separated if multiple datasets. If not provided, uses dataset default paths.')
     parser.add_argument('--output-path', type=str, default='results',

@@ -170,7 +170,8 @@ def compare_model_metrics(
     dataset_name: str,
     output_dir: str,
     model1_checkpoint: Optional[str] = None,
-    model2_checkpoint: Optional[str] = None
+    model2_checkpoint: Optional[str] = None,
+    is_metric_model: Optional[bool] = None
 ) -> Dict:
     """
     Compare metrics from two models using statistical tests.
@@ -182,6 +183,9 @@ def compare_model_metrics(
         model2_name: Name of second model
         dataset_name: Name of dataset
         output_dir: Output directory for saving results
+        model1_checkpoint: Optional checkpoint path for model1
+        model2_checkpoint: Optional checkpoint path for model2
+        is_metric_model: If True, use abs_rel/rmse. If False, use silog. If None, auto-detect.
     
     Returns:
         Dictionary with comparison results
@@ -194,29 +198,44 @@ def compare_model_metrics(
     print(f"{'='*80}\n")
     
     # Determine which metrics to compare
-    sample_metrics1 = metrics1[0] if metrics1 else {}
-    sample_metrics2 = metrics2[0] if metrics2 else {}
-    
-    has_abs_rel = 'abs_rel' in sample_metrics1 or 'abs_rel' in sample_metrics2
-    has_silog = 'silog' in sample_metrics1 or 'silog' in sample_metrics2
-    
-    if has_abs_rel:
-        metric_names = ['abs_rel', 'rmse']
-        metric_labels = {
-            'abs_rel': 'Absolute Relative Error',
-            'rmse': 'RMSE (meters)'
-        }
-    elif has_silog:
-        metric_names = ['silog']
-        metric_labels = {
-            'silog': 'SILog (Scale-Invariant Log RMSE)'
-        }
+    if is_metric_model is not None:
+        # Use explicit model type
+        if is_metric_model:
+            metric_names = ['abs_rel', 'rmse']
+            metric_labels = {
+                'abs_rel': 'Absolute Relative Error',
+                'rmse': 'RMSE (meters)'
+            }
+        else:
+            metric_names = ['silog']
+            metric_labels = {
+                'silog': 'SILog (Scale-Invariant Log RMSE)'
+            }
     else:
-        metric_names = ['abs_rel', 'rmse']
-        metric_labels = {
-            'abs_rel': 'Absolute Relative Error',
-            'rmse': 'RMSE (meters)'
-        }
+        # Auto-detect from available metrics (backward compatibility)
+        sample_metrics1 = metrics1[0] if metrics1 else {}
+        sample_metrics2 = metrics2[0] if metrics2 else {}
+        
+        has_abs_rel = 'abs_rel' in sample_metrics1 or 'abs_rel' in sample_metrics2
+        has_silog = 'silog' in sample_metrics1 or 'silog' in sample_metrics2
+        
+        if has_abs_rel:
+            metric_names = ['abs_rel', 'rmse']
+            metric_labels = {
+                'abs_rel': 'Absolute Relative Error',
+                'rmse': 'RMSE (meters)'
+            }
+        elif has_silog:
+            metric_names = ['silog']
+            metric_labels = {
+                'silog': 'SILog (Scale-Invariant Log RMSE)'
+            }
+        else:
+            metric_names = ['abs_rel', 'rmse']
+            metric_labels = {
+                'abs_rel': 'Absolute Relative Error',
+                'rmse': 'RMSE (meters)'
+            }
     
     results = {}
     
@@ -330,13 +349,19 @@ def compare_model_metrics(
     
     # Add metadata
     datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+    if is_metric_model is not None:
+        model_type_str = 'metric' if is_metric_model else 'basic'
+    else:
+        model_type_str = 'auto-detected'
+    
     results['metadata'] = {
         'datetime': datetime_str,
         'dataset_name': dataset_name,
         'model1_name': model1_name,
         'model2_name': model2_name,
         'model1_checkpoint': model1_checkpoint,
-        'model2_checkpoint': model2_checkpoint
+        'model2_checkpoint': model2_checkpoint,
+        'model_type': model_type_str
     }
     
     # Generate filename: model1_model2_dataset_datetime.json
@@ -386,6 +411,20 @@ Examples:
     --model2 da2 \\
     --model2-checkpoint checkpoints/custom/path/best.pth
   
+  # Compare with explicit model type (basic models, uses SILog)
+  python compare_models.py \\
+    --dataset CityScapes \\
+    --model1 da2 \\
+    --model2 da2-revised \\
+    --model-type basic
+  
+  # Compare with explicit model type (metric models, uses AbsRel/RMSE)
+  python compare_models.py \\
+    --dataset CityScapes \\
+    --model1 da2 \\
+    --model2 da2-revised \\
+    --model-type metric
+  
   # Compare with custom dataset path
   python compare_models.py \\
     --dataset vkitti \\
@@ -422,6 +461,9 @@ Examples:
                        help='Optional: Explicit checkpoint path for model1 (overrides auto-detection)')
     parser.add_argument('--model2-checkpoint', type=str, default=None,
                        help='Optional: Explicit checkpoint path for model2 (overrides auto-detection)')
+    parser.add_argument('--model-type', type=str, default=None,
+                       choices=['metric', 'basic'],
+                       help='Model type: metric (uses abs_rel/rmse) or basic (uses silog). If not specified, auto-detects from model outputs.')
     parser.add_argument('--input-size', type=int, default=518,
                        help='Input image size for models')
     parser.add_argument('--device', type=str, default=None,
@@ -450,12 +492,33 @@ Examples:
     model1_name = f"{args.model1}"
     model2_name = f"{args.model2}"
     
+    # Determine model type for comparison
+    is_metric_model = None
+    if args.model_type:
+        is_metric_model = args.model_type == 'metric'
+        print(f"\n📋 Model type explicitly set to: {args.model_type}")
+        print(f"   Metrics will be: {'abs_rel, rmse' if is_metric_model else 'silog'}")
+    else:
+        # Auto-detect from model wrappers
+        model1_is_metric = model1.is_metric()
+        model2_is_metric = model2.is_metric()
+        if model1_is_metric == model2_is_metric:
+            is_metric_model = model1_is_metric
+            print(f"\n📋 Auto-detected model type: {'metric' if is_metric_model else 'basic'}")
+            print(f"   Metrics will be: {'abs_rel, rmse' if is_metric_model else 'silog'}")
+        else:
+            print(f"\n⚠️  Warning: Model types differ (model1: {'metric' if model1_is_metric else 'basic'}, model2: {'metric' if model2_is_metric else 'basic'})")
+            print(f"   Auto-detecting metrics from available data...")
+            print(f"   Consider using --model-type to explicitly set the comparison type")
+    
     print(f"\n✅ Model 1: {model1_name}")
     print(f"   Checkpoint: {model1_checkpoint}")
     print(f"   Model: {model1.get_model_name()}")
+    print(f"   Type: {'metric' if model1.is_metric() else 'basic'}")
     print(f"\n✅ Model 2: {model2_name}")
     print(f"   Checkpoint: {model2_checkpoint}")
     print(f"   Model: {model2.get_model_name()}")
+    print(f"   Type: {'metric' if model2.is_metric() else 'basic'}")
     
     # Create dataset
     dataset_config = DatasetConfig(
@@ -643,7 +706,8 @@ Examples:
             args.dataset,
             comparison_output_dir,
             model1_checkpoint=model1_checkpoint,
-            model2_checkpoint=model2_checkpoint
+            model2_checkpoint=model2_checkpoint,
+            is_metric_model=is_metric_model
         )
     else:
         print("\n" + "="*80)

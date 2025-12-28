@@ -382,7 +382,21 @@ class ProcessingPipeline:
                     return metrics
                 elif metrics.get('n_valid', 0) >= 10 and not metrics_type_matches:
                     # Metrics exist but type doesn't match - need to recompute from depth maps
-                    # Fall through to load depth maps and recompute
+                    # This happens when model type detection changed or model was reprocessed with different type
+                    # Try to load depth maps and recompute with correct type
+                    compressed_file = os.path.join(paths['numpy_dir'], "arrays.npz")
+                    if os.path.exists(compressed_file):
+                        arrays = np.load(compressed_file)
+                        pred_depth = arrays['pred_depth']
+                        gt_depth = arrays['gt_depth']
+                        metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
+                        del pred_depth, gt_depth, arrays
+                        if metrics['n_valid'] >= 10:
+                            # Save recomputed metrics back to JSON file
+                            with open(metrics_file, 'w') as f:
+                                json.dump(metrics, f, indent=2)
+                            return metrics
+                    # Fall through to try other formats
                     pass
                 else:
                     return None
@@ -396,6 +410,10 @@ class ProcessingPipeline:
                 metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
                 del pred_depth, gt_depth, arrays  # Free memory immediately
                 if metrics['n_valid'] >= 10:
+                    # Save recomputed metrics back to JSON file
+                    import json
+                    with open(metrics_file, 'w') as f:
+                        json.dump(metrics, f, indent=2)
                     return metrics
                 return None
             
@@ -409,6 +427,10 @@ class ProcessingPipeline:
                 metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
                 del pred_depth, gt_depth  # Free memory immediately
                 if metrics['n_valid'] >= 10:
+                    # Save recomputed metrics back to JSON file
+                    import json
+                    with open(metrics_file, 'w') as f:
+                        json.dump(metrics, f, indent=2)
                     return metrics
                 return None
             

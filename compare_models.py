@@ -208,7 +208,19 @@ def compare_model_metrics(
     all_available_metrics = {k for k in all_available_metrics 
                                   if k not in ['n_valid', 'item_id', 'image_path']}
     
+    # Get metrics available in each model
+    metrics1_keys = set()
+    metrics2_keys = set()
+    if metrics1:
+        metrics1_keys = set(metrics1[0].keys()) - {'n_valid', 'item_id', 'image_path'}
+    if metrics2:
+        metrics2_keys = set(metrics2[0].keys()) - {'n_valid', 'item_id', 'image_path'}
+    common_metrics = metrics1_keys & metrics2_keys
+    
     print(f"📊 Available metrics in data: {sorted(all_available_metrics)}")
+    print(f"📊 Metrics in {model1_name}: {sorted(metrics1_keys)}")
+    print(f"📊 Metrics in {model2_name}: {sorted(metrics2_keys)}")
+    print(f"📊 Common metrics: {sorted(common_metrics)}")
     if metrics1:
         print(f"📋 Sample metrics from {model1_name}: {list(metrics1[0].keys())}")
         if len(metrics1) > 1:
@@ -218,10 +230,31 @@ def compare_model_metrics(
         if len(metrics2) > 1:
             print(f"   First item values: {[(k, v) for k, v in metrics2[0].items() if k in all_available_metrics]}")
     
+    # Determine which metrics to use
+    # Priority: 1) Use explicit type if metrics exist, 2) Auto-detect from common metrics
+    use_explicit_type = False
     if is_metric_model is not None:
-        # Use explicit model type
+        # Check if the explicitly requested metrics exist in both models
         if is_metric_model:
-            metric_names = ['abs_rel', 'rmse']
+            if 'abs_rel' in common_metrics:
+                use_explicit_type = True
+        else:
+            if 'silog' in common_metrics:
+                use_explicit_type = True
+        
+        if not use_explicit_type:
+            print(f"\n⚠️  Warning: Explicit model type '{'metric' if is_metric_model else 'basic'}' requested,")
+            print(f"   but models don't have the required metrics in common.")
+            print(f"   {model1_name} has: {sorted(metrics1_keys)}")
+            print(f"   {model2_name} has: {sorted(metrics2_keys)}")
+            print(f"   Falling back to auto-detection based on available common metrics...")
+    
+    if use_explicit_type and is_metric_model is not None:
+        # Use explicit model type (metrics verified to exist)
+        if is_metric_model:
+            metric_names = ['abs_rel']
+            if 'rmse' in common_metrics:
+                metric_names.append('rmse')
             metric_labels = {
                 'abs_rel': 'Absolute Relative Error',
                 'rmse': 'RMSE (meters)'
@@ -233,14 +266,7 @@ def compare_model_metrics(
             }
     else:
         # Auto-detect from available metrics (backward compatibility)
-        # Check what metrics are available in BOTH models (intersection)
-        sample_metrics1 = metrics1[0] if metrics1 else {}
-        sample_metrics2 = metrics2[0] if metrics2 else {}
-        
-        # Get metrics available in both models
-        metrics1_keys = set(sample_metrics1.keys()) - {'n_valid', 'item_id', 'image_path'}
-        metrics2_keys = set(sample_metrics2.keys()) - {'n_valid', 'item_id', 'image_path'}
-        common_metrics = metrics1_keys & metrics2_keys
+        # Use the common_metrics we already computed above
         
         # Check if both models have the same metric type
         has_abs_rel = 'abs_rel' in common_metrics

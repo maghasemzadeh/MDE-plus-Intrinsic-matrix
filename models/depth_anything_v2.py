@@ -120,7 +120,7 @@ class DepthAnythingV2Wrapper(BaseDepthModelWrapper):
                 - device: Device to use (None for auto-detect)
         """
         super().__init__(model_config)
-        self.model_type = model_config.get('model_type', 'metric')
+        self.model_type = model_config.get('model_type', 'basic')  # Default to basic
         self.encoder = model_config.get('encoder', 'vitl')
         self.max_depth = model_config.get('max_depth', 20.0)
         self.device = model_config.get('device', None)

@@ -367,9 +367,25 @@ class ProcessingPipeline:
                 import json
                 with open(metrics_file, 'r') as f:
                     metrics = json.load(f)
-                if metrics.get('n_valid', 0) >= 10:
+                
+                # Check if saved metrics match the current model type
+                # If model is metric, should have abs_rel/rmse; if basic, should have silog
+                has_metric_metrics = 'abs_rel' in metrics or 'rmse' in metrics
+                has_basic_metrics = 'silog' in metrics
+                
+                metrics_type_matches = (
+                    (self.is_metric and has_metric_metrics) or 
+                    (not self.is_metric and has_basic_metrics)
+                )
+                
+                if metrics.get('n_valid', 0) >= 10 and metrics_type_matches:
                     return metrics
-                return None
+                elif metrics.get('n_valid', 0) >= 10 and not metrics_type_matches:
+                    # Metrics exist but type doesn't match - need to recompute from depth maps
+                    # Fall through to load depth maps and recompute
+                    pass
+                else:
+                    return None
             
             # Fallback: try compressed numpy format
             compressed_file = os.path.join(paths['numpy_dir'], "arrays.npz")

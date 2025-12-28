@@ -17,9 +17,9 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     Returns:
         Dictionary with model configuration (model_type, encoder, max_depth, use_camera_intrinsics, etc.)
     """
-    # Default values
+    # Default values - basic by default, only metric if explicitly detected
     encoder = 'vitl'
-    model_type = 'metric'
+    model_type = 'basic'  # Default to basic, only set to metric if explicitly detected
     max_depth = 80.0
     use_camera_intrinsics = False
     cam_token_inject_layer = None
@@ -32,7 +32,8 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
         if isinstance(checkpoint, dict) and 'config' in checkpoint:
             config = checkpoint['config']
             encoder = config.get('encoder', encoder)
-            model_type = config.get('model_type', model_type)
+            # Use config's model_type if provided, otherwise default to basic
+            model_type = config.get('model_type', 'basic')
             max_depth = config.get('max_depth', max_depth)
             use_camera_intrinsics = config.get('use_camera_intrinsics', use_camera_intrinsics)
             cam_token_inject_layer = config.get('cam_token_inject_layer', cam_token_inject_layer)
@@ -96,9 +97,8 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
         use_camera_intrinsics = any('cam_encoder' in k for k in state_dict.keys())
 
         # Infer max_depth from checkpoint metadata or filename
-        if isinstance(checkpoint, dict) and 'previous_best' in checkpoint:
-            # This is a trained checkpoint, likely metric
-            model_type = 'metric'
+        # Note: previous_best doesn't necessarily mean metric - check state dict first
+        # (already done above with depth_head check)
 
     except Exception as e:
         # If we can't load, infer from filename
@@ -114,11 +114,9 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
             encoder = enc
             break
     
-    # Check for model type
-    if 'basic' in filename or 'basic' in dirname:
-        model_type = 'basic'
-        max_depth = 20.0
-    elif 'metric' in filename or 'metric' in dirname:
+    # Check for model type from filename
+    # Default is basic, only set to metric if "metric" is explicitly in the name
+    if 'metric' in filename or 'metric' in dirname:
         model_type = 'metric'
         # Check for indoor/outdoor
         if 'hypersim' in filename or 'hypersim' in dirname:
@@ -127,6 +125,17 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
             max_depth = 80.0
         else:
             max_depth = 80.0  # default outdoor
+    elif 'basic' in filename or 'basic' in dirname:
+        model_type = 'basic'
+        max_depth = 20.0
+    elif 'depth_anything_v2' in filename:
+        # DepthAnythingV2 naming convention:
+        # - depth_anything_v2_{encoder}.pth = basic (non-metric) - default
+        # - depth_anything_v2_metric_{dataset}_{encoder}.pth = metric
+        # If "metric" is not in filename, it's basic (already the default)
+        if 'metric' not in filename:
+            model_type = 'basic'  # Explicitly set, though already default
+            max_depth = 80.0  # default outdoor for basic models
     
     return {
         'model_type': model_type,

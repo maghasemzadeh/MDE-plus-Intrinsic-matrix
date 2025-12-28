@@ -198,6 +198,26 @@ def compare_model_metrics(
     print(f"{'='*80}\n")
     
     # Determine which metrics to compare
+    # First, check what metrics are actually available in the data
+    all_available_metrics = set()
+    for m in metrics1:
+        all_available_metrics.update(m.keys())
+    for m in metrics2:
+        all_available_metrics.update(m.keys())
+    # Remove non-metric keys
+    all_available_metrics = {k for k in all_available_metrics 
+                                  if k not in ['n_valid', 'item_id', 'image_path']}
+    
+    print(f"📊 Available metrics in data: {sorted(all_available_metrics)}")
+    if metrics1:
+        print(f"📋 Sample metrics from {model1_name}: {list(metrics1[0].keys())}")
+        if len(metrics1) > 1:
+            print(f"   First item values: {[(k, v) for k, v in metrics1[0].items() if k in all_available_metrics]}")
+    if metrics2:
+        print(f"📋 Sample metrics from {model2_name}: {list(metrics2[0].keys())}")
+        if len(metrics2) > 1:
+            print(f"   First item values: {[(k, v) for k, v in metrics2[0].items() if k in all_available_metrics]}")
+    
     if is_metric_model is not None:
         # Use explicit model type
         if is_metric_model:
@@ -231,16 +251,68 @@ def compare_model_metrics(
                 'silog': 'SILog (Scale-Invariant Log RMSE)'
             }
         else:
-            metric_names = ['abs_rel', 'rmse']
-            metric_labels = {
-                'abs_rel': 'Absolute Relative Error',
-                'rmse': 'RMSE (meters)'
+            # Fallback: try to use available metrics
+            if 'abs_rel' in all_available_metrics:
+                metric_names = ['abs_rel', 'rmse'] if 'rmse' in all_available_metrics else ['abs_rel']
+                metric_labels = {
+                    'abs_rel': 'Absolute Relative Error',
+                    'rmse': 'RMSE (meters)'
+                } if 'rmse' in all_available_metrics else {
+                    'abs_rel': 'Absolute Relative Error'
+                }
+            elif 'silog' in all_available_metrics:
+                metric_names = ['silog']
+                metric_labels = {
+                    'silog': 'SILog (Scale-Invariant Log RMSE)'
+                }
+            else:
+                # Last resort: use whatever metrics are available
+                metric_names = sorted(list(all_available_metrics))[:2]  # Take first 2 available
+                metric_labels = {name: name.replace('_', ' ').title() for name in metric_names}
+                print(f"⚠️  Warning: Using auto-detected metrics: {metric_names}")
+    
+    # Filter metric_names to only include metrics that are actually available
+    metric_names = [m for m in metric_names if m in all_available_metrics]
+    
+    if not metric_names:
+        print(f"❌ Error: No valid metrics found in data!")
+        print(f"   Expected metrics: {['abs_rel', 'rmse'] if is_metric_model else ['silog'] if is_metric_model is False else 'auto'}")
+        print(f"   Available metrics: {sorted(all_available_metrics)}")
+        print(f"   This comparison cannot proceed without metrics.")
+        # Still save metadata for debugging
+        results = {
+            'dataset_name': dataset_name,
+            'model1_name': model1_name,
+            'model2_name': model2_name,
+            'num_model1_images': len(metrics1),
+            'num_model2_images': len(metrics2),
+            'error': 'No valid metrics found in data',
+            'available_metrics': sorted(list(all_available_metrics)),
+            'metadata': {
+                'datetime': datetime.now().strftime("%Y%m%d_%H%M%S"),
+                'dataset_name': dataset_name,
+                'model1_name': model1_name,
+                'model2_name': model2_name,
+                'model1_checkpoint': model1_checkpoint,
+                'model2_checkpoint': model2_checkpoint,
+                'model_type': 'metric' if is_metric_model else 'basic' if is_metric_model is not None else 'auto-detected'
             }
+        }
+        filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{results['metadata']['datetime']}.json"
+        results_file = os.path.join(output_dir, filename)
+        with open(results_file, 'w') as f:
+            json.dump(results, f, indent=2)
+        print(f"\n  Results (with error) saved to: {results_file}")
+        return results
     
     results = {}
     
+    print(f"📊 Comparing metrics: {metric_names}")
+    print(f"   Total items - {model1_name}: {len(metrics1)}, {model2_name}: {len(metrics2)}\n")
+    
     for metric in metric_names:
         if metric not in metric_labels:
+            print(f"⚠️  Warning: Metric '{metric}' not in metric_labels, skipping")
             continue
         
         label = metric_labels[metric]
@@ -251,6 +323,16 @@ def compare_model_metrics(
         
         if len(vals1) == 0 or len(vals2) == 0:
             print(f"⚠️  Warning: Insufficient data for {label}")
+            print(f"   {model1_name}: {len(vals1)} valid values out of {len(metrics1)} items")
+            print(f"   {model2_name}: {len(vals2)} valid values out of {len(metrics2)} items")
+            # Still save partial results for this metric
+            results[metric] = {
+                'error': 'Insufficient data',
+                f'{model1_name.lower().replace(" ", "_")}_n': len(vals1),
+                f'{model2_name.lower().replace(" ", "_")}_n': len(vals2),
+                'total_items_model1': len(metrics1),
+                'total_items_model2': len(metrics2)
+            }
             continue
         
         n1, n2 = len(vals1), len(vals2)
@@ -698,17 +780,46 @@ Examples:
     
     # Compare results
     if len(metrics1) > 0 and len(metrics2) > 0:
-        comparison_results = compare_model_metrics(
-            metrics1,
-            metrics2,
-            model1_name,
-            model2_name,
-            args.dataset,
-            comparison_output_dir,
-            model1_checkpoint=model1_checkpoint,
-            model2_checkpoint=model2_checkpoint,
-            is_metric_model=is_metric_model
-        )
+        try:
+            comparison_results = compare_model_metrics(
+                metrics1,
+                metrics2,
+                model1_name,
+                model2_name,
+                args.dataset,
+                comparison_output_dir,
+                model1_checkpoint=model1_checkpoint,
+                model2_checkpoint=model2_checkpoint,
+                is_metric_model=is_metric_model
+            )
+        except Exception as e:
+            print(f"\n❌ Error during comparison: {e}")
+            import traceback
+            traceback.print_exc()
+            # Save error results
+            datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
+            error_results = {
+                'dataset_name': args.dataset,
+                'model1_name': model1_name,
+                'model2_name': model2_name,
+                'num_model1_images': len(metrics1),
+                'num_model2_images': len(metrics2),
+                'error': str(e),
+                'metadata': {
+                    'datetime': datetime_str,
+                    'dataset_name': args.dataset,
+                    'model1_name': model1_name,
+                    'model2_name': model2_name,
+                    'model1_checkpoint': model1_checkpoint,
+                    'model2_checkpoint': model2_checkpoint,
+                    'model_type': 'metric' if is_metric_model else 'basic' if is_metric_model is not None else 'auto-detected'
+                }
+            }
+            filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{args.dataset.lower()}_{datetime_str}.json"
+            results_file = os.path.join(comparison_output_dir, filename)
+            with open(results_file, 'w') as f:
+                json.dump(error_results, f, indent=2)
+            print(f"\n  Error results saved to: {results_file}")
     else:
         print("\n" + "="*80)
         print("COMPARISON SKIPPED")

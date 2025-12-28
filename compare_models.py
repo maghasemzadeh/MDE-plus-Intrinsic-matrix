@@ -233,43 +233,49 @@ def compare_model_metrics(
             }
     else:
         # Auto-detect from available metrics (backward compatibility)
+        # Check what metrics are available in BOTH models (intersection)
         sample_metrics1 = metrics1[0] if metrics1 else {}
         sample_metrics2 = metrics2[0] if metrics2 else {}
         
-        has_abs_rel = 'abs_rel' in sample_metrics1 or 'abs_rel' in sample_metrics2
-        has_silog = 'silog' in sample_metrics1 or 'silog' in sample_metrics2
+        # Get metrics available in both models
+        metrics1_keys = set(sample_metrics1.keys()) - {'n_valid', 'item_id', 'image_path'}
+        metrics2_keys = set(sample_metrics2.keys()) - {'n_valid', 'item_id', 'image_path'}
+        common_metrics = metrics1_keys & metrics2_keys
+        
+        # Check if both models have the same metric type
+        has_abs_rel = 'abs_rel' in common_metrics
+        has_silog = 'silog' in common_metrics
         
         if has_abs_rel:
-            metric_names = ['abs_rel', 'rmse']
+            # Both models have abs_rel, use metric metrics
+            metric_names = ['abs_rel']
+            if 'rmse' in common_metrics:
+                metric_names.append('rmse')
             metric_labels = {
                 'abs_rel': 'Absolute Relative Error',
                 'rmse': 'RMSE (meters)'
             }
         elif has_silog:
+            # Both models have silog, use basic metrics
             metric_names = ['silog']
             metric_labels = {
                 'silog': 'SILog (Scale-Invariant Log RMSE)'
             }
         else:
-            # Fallback: try to use available metrics
-            if 'abs_rel' in all_available_metrics:
-                metric_names = ['abs_rel', 'rmse'] if 'rmse' in all_available_metrics else ['abs_rel']
-                metric_labels = {
-                    'abs_rel': 'Absolute Relative Error',
-                    'rmse': 'RMSE (meters)'
-                } if 'rmse' in all_available_metrics else {
-                    'abs_rel': 'Absolute Relative Error'
-                }
-            elif 'silog' in all_available_metrics:
-                metric_names = ['silog']
-                metric_labels = {
-                    'silog': 'SILog (Scale-Invariant Log RMSE)'
-                }
-            else:
-                # Last resort: use whatever metrics are available
-                metric_names = sorted(list(all_available_metrics))[:2]  # Take first 2 available
+            # Models have different metric types - try to find common metrics
+            if len(common_metrics) > 0:
+                # Use whatever metrics are common to both models
+                metric_names = sorted(list(common_metrics))[:2]  # Take first 2 common metrics
                 metric_labels = {name: name.replace('_', ' ').title() for name in metric_names}
-                print(f"⚠️  Warning: Using auto-detected metrics: {metric_names}")
+                print(f"⚠️  Warning: Models have different metric types. Using common metrics: {metric_names}")
+            else:
+                # No common metrics - this is an error
+                print(f"❌ Error: Models have no common metrics!")
+                print(f"   {model1_name} has: {sorted(metrics1_keys)}")
+                print(f"   {model2_name} has: {sorted(metrics2_keys)}")
+                print(f"   Common metrics: {sorted(common_metrics)}")
+                metric_names = []
+                metric_labels = {}
     
     # Filter metric_names to only include metrics that are actually available
     metric_names = [m for m in metric_names if m in all_available_metrics]
@@ -325,6 +331,19 @@ def compare_model_metrics(
             print(f"⚠️  Warning: Insufficient data for {label}")
             print(f"   {model1_name}: {len(vals1)} valid values out of {len(metrics1)} items")
             print(f"   {model2_name}: {len(vals2)} valid values out of {len(metrics2)} items")
+            
+            # Diagnostic: check if metric exists in the data
+            if len(metrics1) > 0:
+                sample1_keys = set(metrics1[0].keys()) - {'n_valid', 'item_id', 'image_path'}
+                has_metric1 = sum(1 for m in metrics1 if metric in m)
+                print(f"   {model1_name} has '{metric}' in {has_metric1}/{len(metrics1)} items")
+                print(f"   {model1_name} available metrics: {sorted(sample1_keys)}")
+            if len(metrics2) > 0:
+                sample2_keys = set(metrics2[0].keys()) - {'n_valid', 'item_id', 'image_path'}
+                has_metric2 = sum(1 for m in metrics2 if metric in m)
+                print(f"   {model2_name} has '{metric}' in {has_metric2}/{len(metrics2)} items")
+                print(f"   {model2_name} available metrics: {sorted(sample2_keys)}")
+            
             # Still save partial results for this metric
             results[metric] = {
                 'error': 'Insufficient data',

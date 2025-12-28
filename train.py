@@ -4,6 +4,7 @@ import os
 import sys
 import pprint
 import random
+from datetime import datetime
 
 import warnings
 import numpy as np
@@ -87,6 +88,56 @@ def get_device():
         return torch.device('mps')
     else:
         return torch.device('cpu')
+
+
+def generate_run_name(args) -> str:
+    """
+    Generate a unique, descriptive run name for TensorBoard based on training parameters.
+    This name will appear in TensorBoard as the run identifier.
+    
+    Args:
+        args: Parsed command-line arguments
+    
+    Returns:
+        A string with format: modeltype_encoder_dataset[_intrinsics][_distill]_lr{lr}_bs{bs}_timestamp
+    """
+    components = []
+    
+    # Model type
+    components.append(args.model_type)
+    
+    # Encoder
+    components.append(args.encoder)
+    
+    # Dataset
+    components.append(args.dataset)
+    
+    # Camera intrinsics flag
+    if args.use_camera_intrinsics:
+        components.append('intrinsics')
+        if args.cam_token_inject_layer is not None:
+            components.append(f'layer{args.cam_token_inject_layer}')
+    
+    # Knowledge distillation flag
+    if args.use_distillation:
+        components.append('distill')
+    
+    # Learning rate (important hyperparameter)
+    lr_str = f"{args.lr:.0e}".replace('e-0', 'e-').replace('e+0', 'e').replace('.0', '')
+    components.append(f'lr{lr_str}')
+    
+    # Batch size (important hyperparameter)
+    components.append(f'bs{args.bs}')
+    
+    # Head LR multiplier if different from default
+    if args.head_lr_multiplier != 10.0:
+        components.append(f'headlr{args.head_lr_multiplier}')
+    
+    # Add timestamp for uniqueness and to know when run was executed
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    components.append(timestamp)
+    
+    return '_'.join(components)
 
 
 def detect_encoder_from_checkpoint(checkpoint_path: str) -> str:
@@ -193,19 +244,15 @@ def main():
         sys.stdout.flush()
         logger.info(f'Using device: {device} (distributed training disabled for non-CUDA devices)')
     
-    # Resolve save path
+    # Resolve base save path (run name will be generated after encoder detection)
     if not os.path.isabs(args.save_path):
-        save_path = os.path.join(project_root, args.save_path)
+        base_save_path = os.path.join(project_root, args.save_path)
     else:
-        save_path = args.save_path
-    os.makedirs(save_path, exist_ok=True)
+        base_save_path = args.save_path
+    os.makedirs(base_save_path, exist_ok=True)
     
-    if rank == 0:
-        all_args = {**vars(args), 'ngpus': world_size, 'save_path': save_path}
-        logger.info('{}\n'.format(pprint.pformat(all_args)))
-        writer = SummaryWriter(save_path)
-    else:
-        writer = None
+    # TensorBoard writer will be created after encoder detection and run name generation
+    writer = None
     
     cudnn.enabled = True
     cudnn.benchmark = True
@@ -374,6 +421,76 @@ def main():
             else:
                 if rank == 0:
                     logger.info(f"Checkpoint encoder matches specified encoder: {args.encoder}")
+    
+    # Generate unique run name with the correct encoder (after potential auto-correction)
+    # Temporarily update args.encoder for run name generation
+    original_encoder = args.encoder
+    args.encoder = encoder_to_use
+    run_name = generate_run_name(args)
+    args.encoder = original_encoder  # Restore original for consistency
+    
+    # Create run-specific directory
+    save_path = os.path.join(base_save_path, run_name)
+    os.makedirs(save_path, exist_ok=True)
+    
+    # Prepare hyperparameters dictionary (accessible throughout the function for final logging)
+    hparams = {
+        'model_type': args.model_type,
+        'encoder': encoder_to_use,
+        'dataset': args.dataset,
+        'use_camera_intrinsics': args.use_camera_intrinsics,
+        'cam_token_inject_layer': args.cam_token_inject_layer if args.use_camera_intrinsics else None,
+        'use_distillation': args.use_distillation,
+        'lr': args.lr,
+        'batch_size': args.bs,
+        'epochs': args.epochs,
+        'img_size': args.img_size,
+        'min_depth': args.min_depth,
+        'max_depth': args.max_depth,
+        'head_lr_multiplier': args.head_lr_multiplier,
+        'grad_clip': args.grad_clip,
+        'accumulate_grad': args.accumulate_grad,
+        'warmup_epochs': args.warmup_epochs,
+        'freeze_dinov2': args.freeze_dinov2 or not args.unfreeze_dinov2,
+    }
+    # Remove None values
+    hparams = {k: v for k, v in hparams.items() if v is not None}
+    
+    if rank == 0:
+        print(f"Training run name: {run_name}")
+        print(f"Checkpoints and logs will be saved to: {save_path}")
+        print(f"To view all runs in TensorBoard, run: tensorboard --logdir {base_save_path}")
+        sys.stdout.flush()
+        all_args = {**vars(args), 'ngpus': world_size, 'save_path': save_path, 'run_name': run_name, 'encoder_used': encoder_to_use}
+        logger.info('{}\n'.format(pprint.pformat(all_args)))
+        logger.info(f'Training run name: {run_name}')
+        logger.info(f'Using encoder: {encoder_to_use}')
+        logger.info(f'To view all runs in TensorBoard, run: tensorboard --logdir {base_save_path}')
+        
+        # Initialize TensorBoard writer with run-specific directory
+        # TensorBoard will use the directory name as the run name
+        writer = SummaryWriter(save_path)
+        
+        # Log hyperparameters early (will be updated with final metrics at end of training)
+        # TensorBoard uses this to show hyperparameters for each run
+        writer.add_hparams(hparams, {})
+        
+        # Add a text summary with run description for easy identification
+        run_description = f"""
+Training Run Summary:
+- Run Name: {run_name}
+- Model Type: {args.model_type}
+- Encoder: {encoder_to_use}
+- Dataset: {args.dataset}
+- Camera Intrinsics: {args.use_camera_intrinsics}
+- Learning Rate: {args.lr}
+- Batch Size: {args.bs}
+- Epochs: {args.epochs}
+- Started: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
+"""
+        writer.add_text('run_info/description', run_description, 0)
+    else:
+        writer = None
     
     # Determine if we're training metric or basic model
     is_metric = args.model_type == 'metric'
@@ -974,6 +1091,31 @@ def main():
                 torch.save(checkpoint, temp_path)
                 os.replace(temp_path, best_path)
                 logger.info(f'New best checkpoint saved! Metrics: {previous_best}')
+    
+    # After training completes, log final hyperparameters with best metrics
+    if rank == 0 and writer is not None:
+        # Prepare final metrics dictionary with best values achieved during training
+        final_metrics = {}
+        for metric_name, metric_value in previous_best.items():
+            # For accuracy metrics (higher is better), use as is
+            # For error metrics (lower is better), negate for TensorBoard visualization
+            if metric_name in ['d1', 'd2', 'd3']:
+                final_metrics[f'hparam/{metric_name}'] = metric_value
+            else:
+                # Negate error metrics so they appear as "higher is better" in hparam view
+                final_metrics[f'hparam/{metric_name}'] = -metric_value
+        
+        # Log hyperparameters with final metrics for proper TensorBoard visualization
+        # This allows filtering and comparing runs by hyperparameters and their results
+        try:
+            writer.add_hparams(hparams, final_metrics)
+            logger.info('Final hyperparameters and metrics logged to TensorBoard')
+        except Exception as e:
+            logger.warning(f'Could not log final hyperparameters: {e}')
+        
+        # Close the writer to ensure all data is flushed
+        writer.close()
+        logger.info('TensorBoard writer closed. Training completed.')
 
 
 if __name__ == '__main__':

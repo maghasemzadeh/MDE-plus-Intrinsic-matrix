@@ -38,6 +38,7 @@ class BaseDepthModelWrapper(ABC):
         self,
         image: np.ndarray,
         input_size: int = 518,
+        intrinsics: Optional[np.ndarray] = None,
         **kwargs
     ) -> np.ndarray:
         """
@@ -46,12 +47,25 @@ class BaseDepthModelWrapper(ABC):
         Args:
             image: Input image as numpy array (BGR format, uint8)
             input_size: Input size for model
+            intrinsics: Optional camera intrinsic matrix (3x3 numpy array)
+                        [[fx,  0, cx],
+                         [ 0, fy, cy],
+                         [ 0,  0,  1]]
             **kwargs: Additional inference parameters
         
         Returns:
             Depth map as numpy array (in meters for metric models, unitless for basic)
         """
         pass
+    
+    def supports_intrinsics(self) -> bool:
+        """
+        Whether this model supports camera intrinsic matrices as input.
+        
+        Returns:
+            True if the model can use intrinsics to improve predictions
+        """
+        return False
     
     @abstractmethod
     def is_metric(self) -> bool:

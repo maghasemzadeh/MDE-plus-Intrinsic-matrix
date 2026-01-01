@@ -17,15 +17,35 @@ class CityscapesDataset(BaseDataset):
     Cityscapes dataset for depth estimation evaluation.
     
     Cityscapes provides disparity maps that need to be converted to depth.
+    
+    Camera Intrinsics:
+        Cityscapes uses a fixed camera setup with known intrinsic parameters.
+        The camera intrinsic matrix K is:
+            K = [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
+        
+        Parameters for the left camera (from Cityscapes documentation):
+        - fx = fy = 2262.52 pixels (focal length)
+        - cx = 1024 pixels (image center x, for 2048 width images)
+        - cy = 512 pixels (image center y, for 1024 height images)
     """
+    
+    # Standard Cityscapes image dimensions
+    STANDARD_WIDTH = 2048
+    STANDARD_HEIGHT = 1024
     
     def __init__(self, config: DatasetConfig):
         super().__init__(config)
         # Cityscapes stereo parameters
         self.baseline = 0.22  # meters
-        self.focal_length = 2262.52  # pixels
+        self.focal_length = 2262.52  # pixels (fx = fy)
         self.min_disparity = 0.1  # pixels
         self.max_depth = 200.0  # meters
+        
+        # Principal point (image center for standard resolution)
+        self.cx = self.STANDARD_WIDTH / 2.0  # 1024 pixels
+        self.cy = self.STANDARD_HEIGHT / 2.0  # 512 pixels
     
     def get_default_path(self) -> str:
         """Get default Cityscapes dataset path."""
@@ -169,4 +189,85 @@ class CityscapesDataset(BaseDataset):
     def get_output_subdir(self) -> str:
         """Get output subdirectory name."""
         return 'cityscapes'
+    
+    def load_intrinsic(self, item: DatasetItem) -> Optional[np.ndarray]:
+        """
+        Load camera intrinsic matrix for a Cityscapes image.
+        
+        Cityscapes uses a fixed camera setup, so intrinsics are the same for all images.
+        The intrinsic matrix is constructed from the known camera parameters.
+        
+        If the image has a different resolution than standard (2048x1024),
+        the intrinsics will be scaled accordingly.
+        
+        Args:
+            item: DatasetItem containing the image path
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix K:
+                [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
+            Returns None if intrinsics cannot be determined.
+        """
+        # Get image dimensions to scale intrinsics if needed
+        try:
+            image = cv2.imread(item.image_path)
+            if image is None:
+                return None
+            img_height, img_width = image.shape[:2]
+        except Exception:
+            # Use standard dimensions if we can't read the image
+            img_width = self.STANDARD_WIDTH
+            img_height = self.STANDARD_HEIGHT
+        
+        # Scale factor for non-standard resolutions
+        scale_x = img_width / self.STANDARD_WIDTH
+        scale_y = img_height / self.STANDARD_HEIGHT
+        
+        # Construct intrinsic matrix with scaled parameters
+        fx = self.focal_length * scale_x
+        fy = self.focal_length * scale_y
+        cx = self.cx * scale_x
+        cy = self.cy * scale_y
+        
+        intrinsic = np.array([
+            [fx, 0.0, cx],
+            [0.0, fy, cy],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        return intrinsic
+    
+    def get_intrinsic_for_size(self, width: int, height: int) -> np.ndarray:
+        """
+        Get camera intrinsic matrix scaled to a specific image size.
+        
+        Args:
+            width: Target image width
+            height: Target image height
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix
+        """
+        # Scale factor for the target resolution
+        scale_x = width / self.STANDARD_WIDTH
+        scale_y = height / self.STANDARD_HEIGHT
+        
+        fx = self.focal_length * scale_x
+        fy = self.focal_length * scale_y
+        cx = self.cx * scale_x
+        cy = self.cy * scale_y
+        
+        intrinsic = np.array([
+            [fx, 0.0, cx],
+            [0.0, fy, cy],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        return intrinsic
+    
+    def has_intrinsics(self) -> bool:
+        """Cityscapes provides camera intrinsic parameters."""
+        return True
 

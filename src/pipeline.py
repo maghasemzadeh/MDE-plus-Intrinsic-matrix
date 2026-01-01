@@ -495,10 +495,22 @@ class ProcessingPipeline:
                     print(f"    Warning: Error loading GT for {item_id}: {e}")
                 continue
             
+            # Load camera intrinsics if available
+            intrinsics = None
+            if hasattr(self.dataset, 'load_intrinsic') and hasattr(self.dataset, 'has_intrinsics'):
+                if self.dataset.has_intrinsics():
+                    try:
+                        intrinsics = self.dataset.load_intrinsic(item)
+                    except Exception as e:
+                        # Intrinsics loading failed, continue without them
+                        if progress_bar is not None:
+                            tqdm.write(f"    ⚠️  Warning: Could not load intrinsics for {item_id}: {e}", file=sys.stdout)
+                        intrinsics = None
+            
             # Predict depth
             import torch
             with torch.no_grad():
-                pred_depth_raw = self.model.infer_image(image, input_size=self.input_size)
+                pred_depth_raw = self.model.infer_image(image, input_size=self.input_size, intrinsics=intrinsics)
             
             # Convert to meters
             if self.is_metric:

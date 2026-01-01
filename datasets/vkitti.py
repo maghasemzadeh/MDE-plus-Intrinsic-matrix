@@ -225,5 +225,140 @@ class VKITTIDataset(BaseDataset):
     def get_output_subdir(self) -> str:
         """Get output subdirectory name."""
         return 'vkitti'
+    
+    def load_intrinsic(self, item: DatasetItem) -> Optional[np.ndarray]:
+        """
+        Load camera intrinsic matrix for a VKITTI image.
+        
+        VKITTI stores intrinsic matrices in either:
+        1. Pre-processed .npy files in splits/intrinsics/
+        2. intrinsic.txt files in the textgt directory
+        3. Already loaded in item.metadata['intrinsic'] during find_items()
+        
+        Args:
+            item: DatasetItem containing the image path and metadata
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix K:
+                [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
+            Returns None if intrinsics cannot be found.
+        """
+        # First, check if intrinsics were already loaded into metadata
+        if item.metadata and 'intrinsic' in item.metadata:
+            intrinsic = item.metadata['intrinsic']
+            if isinstance(intrinsic, np.ndarray) and intrinsic.shape == (3, 3):
+                return intrinsic.astype(np.float32)
+        
+        # Try to find intrinsics from the item's path components
+        # Path structure: vkitti/vkitti_2.0.3_rgb/SceneXX/variant/frames/rgb/Camera_X/rgb_XXXXX.jpg
+        try:
+            # Extract scene and variant from the image path
+            path_parts = item.image_path.split(os.sep)
+            scene_idx = None
+            variant_idx = None
+            
+            for i, part in enumerate(path_parts):
+                if part.startswith('Scene'):
+                    scene_idx = i
+                    if i + 1 < len(path_parts):
+                        variant_idx = i + 1
+                    break
+            
+            if scene_idx is not None and variant_idx is not None:
+                scene_name = path_parts[scene_idx]
+                variant_name = path_parts[variant_idx]
+                
+                # Try to find intrinsic.txt in textgt directory
+                textgt_base = os.path.join(self.dataset_path, 'vkitti_2.0.3_textgt')
+                intrinsic_file = os.path.join(textgt_base, scene_name, variant_name, 'intrinsic.txt')
+                
+                if os.path.exists(intrinsic_file):
+                    intrinsic = self._load_intrinsic_matrix(intrinsic_file)
+                    if intrinsic is not None:
+                        return intrinsic.astype(np.float32)
+                
+                # Try to find pre-processed .npy file
+                intrinsics_dir = os.path.join(self.dataset_path, 'splits', 'intrinsics')
+                if os.path.exists(intrinsics_dir):
+                    # Generate expected filename: SceneXX_variant_CameraX.npy
+                    camera_dir = 'Camera_0'  # Default camera
+                    for part in path_parts:
+                        if part.startswith('Camera_'):
+                            camera_dir = part
+                            break
+                    
+                    npy_filename = f"{scene_name}_{variant_name}_{camera_dir}.npy"
+                    npy_path = os.path.join(intrinsics_dir, npy_filename)
+                    
+                    if os.path.exists(npy_path):
+                        intrinsic = np.load(npy_path)
+                        if intrinsic.shape == (3, 3):
+                            return intrinsic.astype(np.float32)
+        except Exception:
+            pass
+        
+        # If all else fails, use default VKITTI intrinsics
+        # VKITTI uses virtual cameras with known parameters (from documentation)
+        # Default for 1242x375 images (KITTI-like resolution)
+        # fx = fy = 725.0, cx = 620.5, cy = 187.0
+        return self.get_default_intrinsic()
+    
+    def get_default_intrinsic(self) -> np.ndarray:
+        """
+        Get default VKITTI intrinsic matrix.
+        
+        VKITTI uses virtual cameras with the following default parameters
+        (based on KITTI-like 1242x375 resolution):
+        - fx = fy = 725.0 pixels
+        - cx = 620.5 pixels  
+        - cy = 187.0 pixels
+        
+        Returns:
+            3x3 numpy array with default camera intrinsic matrix
+        """
+        intrinsic = np.array([
+            [725.0, 0.0, 620.5],
+            [0.0, 725.0, 187.0],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        return intrinsic
+    
+    def get_intrinsic_for_size(self, width: int, height: int, base_intrinsic: Optional[np.ndarray] = None) -> np.ndarray:
+        """
+        Get camera intrinsic matrix scaled to a specific image size.
+        
+        Args:
+            width: Target image width
+            height: Target image height
+            base_intrinsic: Optional base intrinsic to scale from (default: use get_default_intrinsic())
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix
+        """
+        # Default base resolution (VKITTI standard)
+        BASE_WIDTH = 1242
+        BASE_HEIGHT = 375
+        
+        if base_intrinsic is None:
+            base_intrinsic = self.get_default_intrinsic()
+        
+        # Scale from base resolution
+        scale_x = width / BASE_WIDTH
+        scale_y = height / BASE_HEIGHT
+        
+        scaled_intrinsic = base_intrinsic.copy()
+        scaled_intrinsic[0, 0] *= scale_x  # fx
+        scaled_intrinsic[1, 1] *= scale_y  # fy
+        scaled_intrinsic[0, 2] *= scale_x  # cx
+        scaled_intrinsic[1, 2] *= scale_y  # cy
+        
+        return scaled_intrinsic
+    
+    def has_intrinsics(self) -> bool:
+        """VKITTI provides camera intrinsic parameters."""
+        return True
 
 

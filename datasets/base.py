@@ -3,7 +3,7 @@ Base dataset interface for depth estimation evaluation.
 """
 
 from abc import ABC, abstractmethod
-from typing import List, Tuple, Optional, Dict, Any
+from typing import List, Tuple, Optional, Dict, Any, Union
 from dataclasses import dataclass
 import numpy as np
 
@@ -152,4 +152,43 @@ class BaseDataset(ABC):
         if item.camera_id is not None:
             return [item.camera_id]
         return ['0']  # Default single camera
+    
+    def load_intrinsic(self, item: DatasetItem) -> Optional[np.ndarray]:
+        """
+        Load camera intrinsic matrix for a dataset item.
+        
+        This method should be overridden by dataset implementations that
+        have camera intrinsic information available. The intrinsic matrix
+        is a 3x3 numpy array with the following structure:
+        
+            K = [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
+        
+        Where:
+            - fx, fy: Focal lengths in pixels
+            - cx, cy: Principal point (image center) in pixels
+        
+        Args:
+            item: DatasetItem containing image path and metadata
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix, or None if
+            intrinsics are not available for this dataset/item.
+        """
+        # Default implementation: check if intrinsic is in metadata
+        if item.metadata and 'intrinsic' in item.metadata:
+            intrinsic = item.metadata['intrinsic']
+            if isinstance(intrinsic, np.ndarray) and intrinsic.shape == (3, 3):
+                return intrinsic.astype(np.float32)
+        return None
+    
+    def has_intrinsics(self) -> bool:
+        """
+        Check if this dataset provides camera intrinsic matrices.
+        
+        Returns:
+            True if the dataset has intrinsic information available.
+        """
+        return False  # Override in subclasses that provide intrinsics
 

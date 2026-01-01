@@ -4,7 +4,7 @@ DrivingStereo dataset implementation.
 
 import os
 import re
-from typing import List
+from typing import List, Optional
 from glob import glob
 import numpy as np
 import cv2
@@ -17,7 +17,44 @@ class DrivingStereoDataset(BaseDataset):
     DrivingStereo dataset for depth estimation evaluation.
     
     DrivingStereo provides depth maps directly (no conversion needed).
+    
+    Camera Intrinsics:
+        DrivingStereo uses calibrated stereo cameras with known intrinsic parameters.
+        Based on official DrivingStereo documentation:
+        
+        Half-resolution (881x400):
+        - fx = fy = 879.03 pixels
+        - cx = 484.9 pixels
+        - cy = 280.85 pixels
+        
+        Full-resolution (1762x800):
+        - fx = fy = 1758.06 pixels
+        - cx = 969.8 pixels
+        - cy = 561.7 pixels
+        
+        The intrinsic matrix K is:
+            K = [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
     """
+    
+    # Reference resolutions for intrinsic scaling
+    HALF_RES_WIDTH = 881
+    HALF_RES_HEIGHT = 400
+    FULL_RES_WIDTH = 1762
+    FULL_RES_HEIGHT = 800
+    
+    # Half-resolution intrinsic parameters (base values)
+    HALF_RES_FX = 879.03
+    HALF_RES_FY = 879.03
+    HALF_RES_CX = 484.9
+    HALF_RES_CY = 280.85
+    
+    # Full-resolution intrinsic parameters
+    FULL_RES_FX = 1758.06
+    FULL_RES_FY = 1758.06
+    FULL_RES_CX = 969.8
+    FULL_RES_CY = 561.7
     
     def get_default_path(self) -> str:
         """Get default DrivingStereo dataset path."""
@@ -117,4 +154,82 @@ class DrivingStereoDataset(BaseDataset):
     def get_output_subdir(self) -> str:
         """Get output subdirectory name."""
         return 'drivingstereo'
+    
+    def load_intrinsic(self, item: DatasetItem) -> Optional[np.ndarray]:
+        """
+        Load camera intrinsic matrix for a DrivingStereo image.
+        
+        DrivingStereo uses calibrated cameras with known intrinsic parameters.
+        The intrinsics are scaled based on the actual image resolution.
+        
+        Args:
+            item: DatasetItem containing the image path
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix K:
+                [[fx,  0, cx],
+                 [ 0, fy, cy],
+                 [ 0,  0,  1]]
+            Returns None if intrinsics cannot be determined.
+        """
+        # Get image dimensions to determine which resolution we're working with
+        try:
+            image = cv2.imread(item.image_path)
+            if image is None:
+                return None
+            img_height, img_width = image.shape[:2]
+        except Exception:
+            # Use half-resolution as default if we can't read the image
+            img_width = self.HALF_RES_WIDTH
+            img_height = self.HALF_RES_HEIGHT
+        
+        # Determine base intrinsics and scale to actual image size
+        # Use half-resolution as reference since most DrivingStereo images are half-res
+        scale_x = img_width / self.HALF_RES_WIDTH
+        scale_y = img_height / self.HALF_RES_HEIGHT
+        
+        fx = self.HALF_RES_FX * scale_x
+        fy = self.HALF_RES_FY * scale_y
+        cx = self.HALF_RES_CX * scale_x
+        cy = self.HALF_RES_CY * scale_y
+        
+        intrinsic = np.array([
+            [fx, 0.0, cx],
+            [0.0, fy, cy],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        return intrinsic
+    
+    def get_intrinsic_for_size(self, width: int, height: int) -> np.ndarray:
+        """
+        Get camera intrinsic matrix scaled to a specific image size.
+        
+        Args:
+            width: Target image width
+            height: Target image height
+        
+        Returns:
+            3x3 numpy array with camera intrinsic matrix
+        """
+        # Scale from half-resolution reference
+        scale_x = width / self.HALF_RES_WIDTH
+        scale_y = height / self.HALF_RES_HEIGHT
+        
+        fx = self.HALF_RES_FX * scale_x
+        fy = self.HALF_RES_FY * scale_y
+        cx = self.HALF_RES_CX * scale_x
+        cy = self.HALF_RES_CY * scale_y
+        
+        intrinsic = np.array([
+            [fx, 0.0, cx],
+            [0.0, fy, cy],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        return intrinsic
+    
+    def has_intrinsics(self) -> bool:
+        """DrivingStereo provides camera intrinsic parameters."""
+        return True
 

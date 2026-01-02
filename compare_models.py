@@ -21,7 +21,10 @@ from datasets import (
     CityscapesDataset,
     DrivingStereoDataset,
     MiddleburyDataset,
-    VKITTIDataset
+    VKITTIDataset,
+    DIODEDataset,
+    NYUDataset,
+    KITTIDataset
 )
 from models import (
     BaseDepthModelWrapper,
@@ -564,8 +567,8 @@ Examples:
     
     # Dataset arguments
     parser.add_argument('--dataset', type=str, required=True,
-                       choices=['CityScapes', 'DrivingStereo', 'middlebury', 'vkitti'],
-                       help='Dataset name: CityScapes, DrivingStereo, middlebury, or vkitti')
+                       choices=['CityScapes', 'DrivingStereo', 'middlebury', 'vkitti', 'diode', 'nyu', 'kitti'],
+                       help='Dataset name: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, or kitti')
     parser.add_argument('--dataset-path', type=str, default=None,
                        help='Optional path to dataset. If not provided, uses dataset default path.')
     parser.add_argument('--output-path', type=str, default='results',
@@ -664,9 +667,15 @@ Examples:
         dataset = MiddleburyDataset(dataset_config)
     elif args.dataset == 'vkitti':
         dataset = VKITTIDataset(dataset_config)
+    elif args.dataset == 'diode':
+        dataset = DIODEDataset(dataset_config)
+    elif args.dataset == 'nyu':
+        dataset = NYUDataset(dataset_config)
+    elif args.dataset == 'kitti':
+        dataset = KITTIDataset(dataset_config)
     else:
         print(f"Error: Unknown dataset: {args.dataset}")
-        print(f"Supported datasets: CityScapes, DrivingStereo, middlebury, vkitti")
+        print(f"Supported datasets: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, kitti")
         sys.exit(1)
     
     # Create output directories - structure: results/{dataset}/{model}/

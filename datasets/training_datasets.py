@@ -381,27 +381,39 @@ class VKITTI2TrainingDataset(Dataset):
         return len(self.filelist)
 
 
-class KITTITrainingDataset(Dataset):
+class NYUTrainingDataset(Dataset):
     """
-    KITTI dataset for depth estimation validation.
+    NYU Depth V2 dataset for depth estimation training.
     
-    Reads from split files in datasets/raw_data/ or metric_depth/dataset/splits/
-    File list format (space-separated):
-        image_path depth_path
+    Loads data directly from the nyu_depth_v2_labeled.mat file which contains
+    1,449 densely labeled pairs of aligned RGB and depth images.
+    
+    The .mat file uses HDF5 format (MATLAB v7.3), so we use h5py to read it.
+    Images are 640x480 resolution with known camera intrinsics.
+    
+    Camera Intrinsics (640×480 resolution):
+        fx = 518.8579
+        fy = 519.4696
+        cx = 325.5824
+        cy = 253.7362
     """
     
-    def __init__(self, filelist_path, mode='val', size=(518, 518)):
+    # Camera intrinsic parameters (640x480 resolution)
+    INTRINSIC_FX = 518.8579
+    INTRINSIC_FY = 519.4696
+    INTRINSIC_CX = 325.5824
+    INTRINSIC_CY = 253.7362
+    
+    def __init__(self, filelist_path_or_mat_path, mode='train', size=(518, 518)):
         """
-        Initialize KITTI training dataset.
+        Initialize NYU Depth V2 training dataset.
         
         Args:
-            filelist_path: Path to file list
-            mode: 'val' (only validation supported)
+            filelist_path_or_mat_path: Path to the nyu_depth_v2_labeled.mat file
+                                       or a split file containing indices
+            mode: 'train' or 'val' (dataset will be split 80/20 if no split file)
             size: (width, height) for image resizing
         """
-        if mode != 'val':
-            raise NotImplementedError(f"KITTI dataset only supports 'val' mode, got '{mode}'")
-        
         self.mode = mode
         self.size = size
         
@@ -409,26 +421,551 @@ class KITTITrainingDataset(Dataset):
         current_file = os.path.abspath(__file__)
         self.project_root = os.path.dirname(os.path.dirname(current_file))
         
-        # Read file list
-        if not os.path.isabs(filelist_path):
+        # Try to import h5py
+        try:
+            import h5py
+            self.h5py = h5py
+        except ImportError:
+            raise ImportError(
+                "h5py is required to read NYU Depth V2 .mat files. "
+                "Install it with: pip install h5py"
+            )
+        
+        # Determine if input is a .mat file or a split file
+        if not os.path.isabs(filelist_path_or_mat_path):
+            filelist_path_or_mat_path = os.path.join(self.project_root, filelist_path_or_mat_path)
+        
+        if filelist_path_or_mat_path.endswith('.mat'):
+            self.mat_path = filelist_path_or_mat_path
+            self.indices = None  # Will be set after loading
+        else:
+            # It's a split file with indices
+            # Format: one index per line, or path to .mat file + indices
+            mat_dir = os.path.dirname(filelist_path_or_mat_path)
+            self.mat_path = os.path.join(mat_dir, 'nyu_depth_v2_labeled.mat')
+            
+            # If mat file not found in same dir, check default location
+            if not os.path.exists(self.mat_path):
+                self.mat_path = os.path.join(self.project_root, 'datasets', 'raw_data', 'nyu', 'nyu_depth_v2_labeled.mat')
+            
+            # Read indices from split file
+            with open(filelist_path_or_mat_path, 'r') as f:
+                lines = f.read().strip().splitlines()
+            
+            # Parse indices (one per line)
+            self.indices = []
+            for line in lines:
+                line = line.strip()
+                if line and line.isdigit():
+                    self.indices.append(int(line))
+            
+            if not self.indices:
+                raise ValueError(f"No valid indices found in split file: {filelist_path_or_mat_path}")
+        
+        if not os.path.exists(self.mat_path):
+            raise FileNotFoundError(
+                f"NYU Depth V2 .mat file not found: {self.mat_path}\n"
+                f"Please download the labeled subset from:\n"
+                f"https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html\n"
+                f"and place nyu_depth_v2_labeled.mat in: {os.path.dirname(self.mat_path)}"
+            )
+        
+        # Load the .mat file
+        print(f"Loading NYU Depth V2 dataset from {self.mat_path}...")
+        print("(This may take a moment for the first load)")
+        
+        with self.h5py.File(self.mat_path, 'r') as f:
+            # HDF5/MATLAB v7.3 format stores data transposed
+            # images: shape [3, height, width, n_images] in MATLAB
+            # depths: shape [height, width, n_images] in MATLAB
+            self._images = np.array(f['images'])
+            self._depths = np.array(f['depths'])
+        
+        # Transpose from HDF5 format to standard format
+        # images: [3, height, width, n_images] -> [n_images, height, width, 3]
+        # depths: [height, width, n_images] -> [n_images, height, width]
+        self._images = np.transpose(self._images, (3, 2, 1, 0))
+        self._depths = np.transpose(self._depths, (2, 1, 0))
+        
+        n_total = len(self._images)
+        
+        # Set up indices based on mode if not explicitly provided
+        if self.indices is None:
+            # Default 80/20 split
+            np.random.seed(42)  # Fixed seed for reproducibility
+            all_indices = np.random.permutation(n_total)
+            split_idx = int(0.8 * n_total)
+            
+            if mode == 'train':
+                self.indices = all_indices[:split_idx].tolist()
+            else:
+                self.indices = all_indices[split_idx:].tolist()
+        
+        print(f"Loaded NYU Depth V2 {mode} set: {len(self.indices)} samples (from {n_total} total)")
+        
+        # Build intrinsic matrix
+        self.intrinsic = np.array([
+            [self.INTRINSIC_FX, 0.0, self.INTRINSIC_CX],
+            [0.0, self.INTRINSIC_FY, self.INTRINSIC_CY],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        # Setup transforms
+        net_w, net_h = size
+        self.transform = Compose([
+            Resize(
+                width=net_w,
+                height=net_h,
+                resize_target=True if mode == 'train' else False,
+                keep_aspect_ratio=True,
+                ensure_multiple_of=14,
+                resize_method='lower_bound',
+                image_interpolation_method=cv2.INTER_CUBIC,
+            ),
+            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            PrepareForNet(),
+        ] + ([Crop(size[0])] if self.mode == 'train' else []))
+    
+    def __getitem__(self, item):
+        # Get the actual index from our subset
+        idx = self.indices[item]
+        
+        # Load image and depth from cached arrays
+        image = self._images[idx].astype(np.float32) / 255.0  # [H, W, 3] normalized to [0, 1]
+        depth = self._depths[idx].astype(np.float32)  # [H, W] in meters
+        
+        # Apply transforms
+        sample = self.transform({'image': image, 'depth': depth})
+        
+        # Convert to tensors
+        sample['image'] = torch.from_numpy(sample['image']).float()
+        sample['depth'] = torch.from_numpy(sample['depth']).float()
+        
+        # Create valid mask (NYU max depth is ~10m for indoor scenes)
+        sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
+        
+        # Add intrinsics (scaled to match the resized image)
+        # Since we're using transforms that resize the image, we need to scale intrinsics
+        # For simplicity, just provide the base intrinsics (the model should handle scaling)
+        sample['intrinsics'] = torch.from_numpy(self.intrinsic).float()
+        
+        # Add image identifier
+        sample['image_path'] = f"nyu_depth_v2_labeled.mat::{idx}"
+        
+        return sample
+    
+    def __len__(self):
+        return len(self.indices)
+
+
+class DIODETrainingDataset(Dataset):
+    """
+    DIODE dataset for depth estimation training.
+    
+    Reads from the DIODE dataset folder structure:
+        diode/val/{indoors,outdoor}/scene_XXXXX/scan_XXXXX/
+            - {name}.png (RGB image)
+            - {name}_depth.npy (depth in meters)
+            - {name}_depth_mask.npy (valid mask)
+    
+    Camera Intrinsics (1024×768 resolution):
+        fx = 886.81
+        fy = 927.06
+        cx = 512
+        cy = 384
+    """
+    
+    # Camera intrinsic parameters (1024x768 resolution)
+    INTRINSIC_FX = 886.81
+    INTRINSIC_FY = 927.06
+    INTRINSIC_CX = 512.0
+    INTRINSIC_CY = 384.0
+    
+    def __init__(self, dataset_path, mode='train', size=(518, 518)):
+        """
+        Initialize DIODE training dataset.
+        
+        Args:
+            dataset_path: Path to the DIODE dataset root (e.g., datasets/raw_data/diode)
+            mode: 'train' or 'val'
+            size: (width, height) for image resizing
+        """
+        self.mode = mode
+        self.size = size
+        
+        # Get project root
+        current_file = os.path.abspath(__file__)
+        self.project_root = os.path.dirname(os.path.dirname(current_file))
+        
+        # Resolve dataset path
+        if not os.path.isabs(dataset_path):
+            dataset_path = os.path.join(self.project_root, dataset_path)
+        
+        self.dataset_path = dataset_path
+        
+        # Find all image/depth pairs
+        self.samples = self._find_samples()
+        
+        if len(self.samples) == 0:
+            raise ValueError(f"No valid samples found in DIODE dataset at: {dataset_path}")
+        
+        # Split into train/val (80/20)
+        np.random.seed(42)  # Fixed seed for reproducibility
+        all_indices = np.random.permutation(len(self.samples))
+        split_idx = int(0.8 * len(self.samples))
+        
+        if mode == 'train':
+            indices = all_indices[:split_idx]
+        else:
+            indices = all_indices[split_idx:]
+        
+        self.samples = [self.samples[i] for i in indices]
+        
+        print(f"Loaded DIODE {mode} set: {len(self.samples)} samples")
+        
+        # Build intrinsic matrix
+        self.intrinsic = np.array([
+            [self.INTRINSIC_FX, 0.0, self.INTRINSIC_CX],
+            [0.0, self.INTRINSIC_FY, self.INTRINSIC_CY],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        # Setup transforms
+        net_w, net_h = size
+        self.transform = Compose([
+            Resize(
+                width=net_w,
+                height=net_h,
+                resize_target=True if mode == 'train' else False,
+                keep_aspect_ratio=True,
+                ensure_multiple_of=14,
+                resize_method='lower_bound',
+                image_interpolation_method=cv2.INTER_CUBIC,
+            ),
+            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            PrepareForNet(),
+        ] + ([Crop(size[0])] if self.mode == 'train' else []))
+    
+    def _find_samples(self):
+        """Find all valid image/depth pairs in the dataset."""
+        from glob import glob
+        
+        samples = []
+        
+        # Look in 'val' split (or 'train' if it exists)
+        for split_name in ['val', 'train']:
+            split_dir = os.path.join(self.dataset_path, split_name)
+            if not os.path.exists(split_dir):
+                continue
+            
+            # Find scene type directories (indoors, outdoor)
+            for scene_type in os.listdir(split_dir):
+                scene_type_path = os.path.join(split_dir, scene_type)
+                if not os.path.isdir(scene_type_path):
+                    continue
+                
+                # Find scene directories
+                for scene_name in os.listdir(scene_type_path):
+                    if not scene_name.startswith('scene_'):
+                        continue
+                    scene_path = os.path.join(scene_type_path, scene_name)
+                    if not os.path.isdir(scene_path):
+                        continue
+                    
+                    # Find scan directories
+                    for scan_name in os.listdir(scene_path):
+                        if not scan_name.startswith('scan_'):
+                            continue
+                        scan_path = os.path.join(scene_path, scan_name)
+                        if not os.path.isdir(scan_path):
+                            continue
+                        
+                        # Find all PNG files (excluding depth-related files)
+                        png_files = glob(os.path.join(scan_path, '*.png'))
+                        
+                        for rgb_path in png_files:
+                            base_name = os.path.basename(rgb_path)
+                            
+                            # Skip depth-related files
+                            if '_depth' in base_name:
+                                continue
+                            
+                            # Get base name without extension
+                            name_without_ext = os.path.splitext(base_name)[0]
+                            
+                            # Find corresponding depth file
+                            depth_file = os.path.join(scan_path, f'{name_without_ext}_depth.npy')
+                            
+                            if not os.path.exists(depth_file):
+                                # Try with wildcards
+                                depth_files = glob(os.path.join(scan_path, f'{name_without_ext}_depth.npy*'))
+                                if len(depth_files) > 0:
+                                    depth_file = depth_files[0]
+                                else:
+                                    continue
+                            
+                            # Find mask file (optional)
+                            mask_file = os.path.join(scan_path, f'{name_without_ext}_depth_mask.npy')
+                            mask_files = glob(os.path.join(scan_path, f'{name_without_ext}_depth_mask.npy*'))
+                            if len(mask_files) > 0:
+                                mask_file = mask_files[0]
+                            elif not os.path.exists(mask_file):
+                                mask_file = None
+                            
+                            samples.append({
+                                'rgb_path': rgb_path,
+                                'depth_path': depth_file,
+                                'mask_path': mask_file,
+                                'scene_type': scene_type,
+                                'scene_name': scene_name,
+                                'scan_name': scan_name,
+                            })
+        
+        return samples
+    
+    def __getitem__(self, item):
+        sample_info = self.samples[item]
+        
+        # Load image
+        image = cv2.imread(sample_info['rgb_path'])
+        if image is None:
+            raise ValueError(f"Could not load image: {sample_info['rgb_path']}")
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        
+        # Load depth (stored in meters)
+        depth = np.load(sample_info['depth_path']).astype(np.float32)
+        
+        # Load mask if available
+        if sample_info['mask_path'] and os.path.exists(sample_info['mask_path']):
+            mask = np.load(sample_info['mask_path'])
+            # Apply mask - set invalid pixels to 0
+            if mask.dtype == bool:
+                depth[~mask] = 0
+            else:
+                depth[mask == 0] = 0
+        
+        # Apply transforms
+        sample = self.transform({'image': image, 'depth': depth})
+        
+        # Convert to tensors
+        sample['image'] = torch.from_numpy(sample['image']).float()
+        sample['depth'] = torch.from_numpy(sample['depth']).float()
+        
+        # Create valid mask (DIODE max depth ~10m for indoor scenes)
+        sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
+        
+        # Add intrinsics
+        sample['intrinsics'] = torch.from_numpy(self.intrinsic).float()
+        
+        # Add image identifier
+        sample['image_path'] = sample_info['rgb_path']
+        
+        return sample
+    
+    def __len__(self):
+        return len(self.samples)
+
+
+class KITTITrainingDataset(Dataset):
+    """
+    KITTI dataset for depth estimation training/validation.
+    
+    Supports two modes:
+    1. File list mode: Reads from split files (e.g., metric_depth/dataset/splits/kitti/val.txt)
+    2. Directory mode: Reads directly from KITTI depth benchmark structure
+    
+    KITTI dataset structure:
+        kitti/
+        ├── depth_selection/
+        │   └── val_selection_cropped/
+        │       ├── groundtruth_depth/
+        │       ├── image/
+        │       └── intrinsics/
+        ├── train/
+        │   └── {date}_drive_{seq}_sync/
+        │       └── proj_depth/groundtruth/image_{02,03}/
+        └── val/
+            └── {date}_drive_{seq}_sync/
+                └── proj_depth/groundtruth/image_{02,03}/
+    
+    Camera Intrinsics:
+        KITTI intrinsics are loaded from .txt files in the intrinsics/ folder.
+        Default values (reference resolution ~1242x375):
+        - fx = fy ≈ 721.5377 pixels
+        - cx ≈ 609.5593 pixels
+        - cy ≈ 172.854 pixels
+    """
+    
+    # Default KITTI intrinsic parameters (reference resolution ~1242x375)
+    DEFAULT_FX = 721.5377
+    DEFAULT_FY = 721.5377
+    DEFAULT_CX = 609.5593
+    DEFAULT_CY = 172.854
+    DEFAULT_WIDTH = 1242
+    DEFAULT_HEIGHT = 375
+    
+    def __init__(self, filelist_or_path, mode='val', size=(518, 518)):
+        """
+        Initialize KITTI training dataset.
+        
+        Args:
+            filelist_or_path: Path to file list OR path to KITTI dataset root
+            mode: 'train' or 'val'
+            size: (width, height) for image resizing
+        """
+        self.mode = mode
+        self.size = size
+        
+        # Get project root
+        current_file = os.path.abspath(__file__)
+        self.project_root = os.path.dirname(os.path.dirname(current_file))
+        
+        # Determine if we have a filelist or a directory path
+        if not os.path.isabs(filelist_or_path):
             # Try relative to project root first
-            test_path = os.path.join(self.project_root, filelist_path)
+            test_path = os.path.join(self.project_root, filelist_or_path)
             if not os.path.exists(test_path):
                 # Try relative to metric_depth
                 metric_depth_path = os.path.join(self.project_root, 'models', 'raw_models', 
                                                  'DepthAnythingV2-revised', 'metric_depth')
-                test_path = os.path.join(metric_depth_path, filelist_path)
-            filelist_path = test_path
+                test_path = os.path.join(metric_depth_path, filelist_or_path)
+            filelist_or_path = test_path
         
-        if not os.path.exists(filelist_path):
-            raise FileNotFoundError(f"File list not found: {filelist_path}")
+        # Check if this is a directory (KITTI dataset root) or a filelist
+        if os.path.isdir(filelist_or_path):
+            # Directory mode - scan for image/depth pairs
+            self.dataset_path = filelist_or_path
+            self.filelist = self._scan_directory()
+        elif os.path.isfile(filelist_or_path) and filelist_or_path.endswith('.txt'):
+            # Filelist mode
+            self.dataset_path = os.path.dirname(filelist_or_path)
+            self.filelist = self._load_filelist(filelist_or_path)
+        else:
+            raise FileNotFoundError(f"KITTI dataset path not found: {filelist_or_path}")
         
+        if len(self.filelist) == 0:
+            raise ValueError(f"No valid entries found in KITTI dataset at: {filelist_or_path}")
+        
+        print(f"Loaded KITTI {mode} set: {len(self.filelist)} samples")
+        
+        # Build default intrinsic matrix
+        self.default_intrinsic = np.array([
+            [self.DEFAULT_FX, 0.0, self.DEFAULT_CX],
+            [0.0, self.DEFAULT_FY, self.DEFAULT_CY],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+        
+        # Setup transforms
+        net_w, net_h = size
+        self.transform = Compose([
+            Resize(
+                width=net_w,
+                height=net_h,
+                resize_target=True if mode == 'train' else False,
+                keep_aspect_ratio=True,
+                ensure_multiple_of=14,
+                resize_method='lower_bound',
+                image_interpolation_method=cv2.INTER_CUBIC,
+            ),
+            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            PrepareForNet(),
+        ] + ([Crop(size[0])] if self.mode == 'train' else []))
+    
+    def _scan_directory(self) -> list:
+        """Scan KITTI directory structure for image/depth pairs."""
+        from glob import glob
+        samples = []
+        
+        # Check for depth_selection/val_selection_cropped first
+        val_selection_path = os.path.join(self.dataset_path, 'depth_selection', 'val_selection_cropped')
+        if os.path.exists(val_selection_path):
+            image_dir = os.path.join(val_selection_path, 'image')
+            depth_dir = os.path.join(val_selection_path, 'groundtruth_depth')
+            intrinsics_dir = os.path.join(val_selection_path, 'intrinsics')
+            
+            if os.path.exists(image_dir) and os.path.exists(depth_dir):
+                for img_file in sorted(glob(os.path.join(image_dir, '*.png'))):
+                    base_name = os.path.splitext(os.path.basename(img_file))[0]
+                    depth_file = os.path.join(depth_dir, f'{base_name}.png')
+                    intrinsics_file = os.path.join(intrinsics_dir, f'{base_name}.txt')
+                    
+                    if os.path.exists(depth_file):
+                        samples.append({
+                            'image_path': img_file,
+                            'depth_path': depth_file,
+                            'intrinsics_path': intrinsics_file if os.path.exists(intrinsics_file) else None
+                        })
+        
+        # Check for train/val sequence folders
+        for split in ['train', 'val']:
+            if self.mode == 'train' and split != 'train':
+                continue
+            if self.mode == 'val' and split != 'val':
+                continue
+            
+            split_path = os.path.join(self.dataset_path, split)
+            if not os.path.exists(split_path):
+                continue
+            
+            # Find all sequence directories
+            seq_dirs = [d for d in os.listdir(split_path) 
+                       if os.path.isdir(os.path.join(split_path, d)) and '_drive_' in d]
+            
+            for seq_name in sorted(seq_dirs):
+                for camera in ['image_02', 'image_03']:
+                    gt_dir = os.path.join(split_path, seq_name, 'proj_depth', 'groundtruth', camera)
+                    
+                    if not os.path.exists(gt_dir):
+                        continue
+                    
+                    for depth_file in sorted(glob(os.path.join(gt_dir, '*.png'))):
+                        frame_name = os.path.splitext(os.path.basename(depth_file))[0]
+                        
+                        # Try to find corresponding image
+                        img_path = self._find_image_for_depth(seq_name, camera, frame_name, split)
+                        
+                        if img_path and os.path.exists(img_path):
+                            samples.append({
+                                'image_path': img_path,
+                                'depth_path': depth_file,
+                                'intrinsics_path': None,
+                                'sequence': seq_name,
+                                'camera': camera
+                            })
+        
+        return samples
+    
+    def _find_image_for_depth(self, seq_name: str, camera: str, frame_name: str, split: str) -> str:
+        """Find corresponding RGB image for a depth map."""
+        # Extract date from sequence name
+        date_match = re.match(r'(\d{4}_\d{2}_\d{2})_drive_\d+_sync', seq_name)
+        if not date_match:
+            return None
+        
+        date = date_match.group(1)
+        
+        # Common image locations to check
+        possible_paths = [
+            os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.png'),
+            os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.jpg'),
+            os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{frame_name}.png'),
+            os.path.join(self.dataset_path, split, seq_name, 'image', camera, f'{frame_name}.png'),
+        ]
+        
+        for path in possible_paths:
+            if os.path.exists(path):
+                return path
+        
+        return None
+    
+    def _load_filelist(self, filelist_path: str) -> list:
+        """Load samples from a file list."""
         with open(filelist_path, 'r') as f:
             raw_filelist = f.read().splitlines()
         
-        # Pre-validate paths and filter out invalid entries
-        self.filelist = []
+        samples = []
         skipped_count = 0
+        
         for line in raw_filelist:
             line = line.strip()
             if not line:
@@ -448,45 +985,26 @@ class KITTITrainingDataset(Dataset):
             
             # Only keep entries where both files exist
             if os.path.exists(img_path_resolved) and os.path.exists(depth_path_resolved):
-                # Reconstruct the line with resolved paths for consistency
-                resolved_line_parts = [img_path_resolved, depth_path_resolved]
-                self.filelist.append(" ".join(resolved_line_parts))
+                samples.append({
+                    'image_path': img_path_resolved,
+                    'depth_path': depth_path_resolved,
+                    'intrinsics_path': None
+                })
             else:
                 skipped_count += 1
         
-        if len(self.filelist) == 0:
-            raise ValueError(f"No valid entries found in filelist: {filelist_path}. "
-                           f"Original filelist had {len(raw_filelist)} entries, but none resolved to existing files. "
-                           f"Please check that the paths in the filelist are correct and the dataset is properly organized.")
-        
         if skipped_count > 0:
-            print(f"Warning: Skipped {skipped_count} entries with missing files (after path resolution)")
-        print(f"Loaded {len(self.filelist)} valid entries from {filelist_path}")
+            print(f"Warning: Skipped {skipped_count} entries with missing files")
         
-        # Setup transforms
-        net_w, net_h = size
-        self.transform = Compose([
-            Resize(
-                width=net_w,
-                height=net_h,
-                resize_target=True if mode == 'train' else False,
-                keep_aspect_ratio=True,
-                ensure_multiple_of=14,
-                resize_method='lower_bound',
-                image_interpolation_method=cv2.INTER_CUBIC,
-            ),
-            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            PrepareForNet(),
-        ])
+        return samples
     
     def _resolve_path(self, path):
         """
         Resolve a path that might be absolute from another system or relative.
         Maps paths from other systems (e.g., /mnt/bn/liheyang/Kitti/...)
         to local project structure (datasets/raw_data/kitti/...).
-        Returns the resolved path if it exists, otherwise returns the original path.
         """
-        # Normalize the path first (handles things like .., ., etc.)
+        # Normalize the path first
         path = os.path.normpath(path)
         
         # If path exists as-is, use it
@@ -497,12 +1015,9 @@ class KITTITrainingDataset(Dataset):
         if os.path.isabs(path):
             path_lower = path.lower()
             
-            # Check if this is a KITTI path from another system
             if 'kitti' in path_lower and ('raw_data' in path_lower or 'data_depth_annotated' in path_lower):
-                # Extract the relative part after Kitti or kitti
                 parts = [p for p in path.split('/') if p]
                 
-                # Find the index of Kitti or kitti
                 kitti_idx = None
                 for i, part in enumerate(parts):
                     if 'kitti' in part.lower():
@@ -510,24 +1025,15 @@ class KITTITrainingDataset(Dataset):
                         break
                 
                 if kitti_idx is not None:
-                    # Get the relative path after Kitti/kitti
                     relative_parts = parts[kitti_idx + 1:]
                     
-                    # Construct local path: datasets/raw_data/kitti/{relative_parts}
                     if len(relative_parts) > 0:
                         local_path = os.path.join(self.project_root, 'datasets', 'raw_data', 'kitti', *relative_parts)
                         local_path = os.path.normpath(local_path)
                         
                         if os.path.exists(local_path):
                             return local_path
-                        
-                        # Try alternative casing (Kitti vs kitti)
-                        local_path_alt = os.path.join(self.project_root, 'datasets', 'raw_data', 'Kitti', *relative_parts)
-                        local_path_alt = os.path.normpath(local_path_alt)
-                        if os.path.exists(local_path_alt):
-                            return local_path_alt
             
-            # Try to resolve symlinks for absolute paths
             try:
                 resolved = os.path.realpath(path)
                 if os.path.exists(resolved):
@@ -542,42 +1048,69 @@ class KITTITrainingDataset(Dataset):
             if os.path.exists(resolved):
                 return resolved
         
-        # Return original path (will fail with clear error if file doesn't exist)
         return path
     
-    def __getitem__(self, item):
-        # Use shlex.split to handle spaces in paths
-        parts = shlex.split(self.filelist[item])
-        img_path = parts[0]
-        depth_path = parts[1]
+    def _load_intrinsics(self, intrinsics_path: str) -> np.ndarray:
+        """Load intrinsics from a .txt file."""
+        try:
+            with open(intrinsics_path, 'r') as f:
+                line = f.readline().strip()
+            
+            values = line.split()
+            
+            if len(values) >= 4:
+                fx = float(values[0])
+                fy = float(values[1])
+                cx = float(values[2])
+                cy = float(values[3])
+                
+                return np.array([
+                    [fx, 0.0, cx],
+                    [0.0, fy, cy],
+                    [0.0, 0.0, 1.0]
+                ], dtype=np.float32)
+                
+        except Exception:
+            pass
         
-        # Paths should already be resolved during initialization, but double-check
-        img_path = self._resolve_path(img_path)
-        depth_path = self._resolve_path(depth_path)
+        return self.default_intrinsic
+    
+    def __getitem__(self, item):
+        sample_info = self.filelist[item]
+        
+        img_path = sample_info['image_path']
+        depth_path = sample_info['depth_path']
+        intrinsics_path = sample_info.get('intrinsics_path')
         
         # Load image
         image = cv2.imread(img_path)
         if image is None:
-            raise ValueError(f"Failed to load image: {img_path}. File may not exist or be corrupted.")
+            raise ValueError(f"Failed to load image: {img_path}")
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         
         # Load depth (KITTI depth is stored as uint16, divide by 256 to get meters)
         depth = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED)
         if depth is None:
-            raise ValueError(f"Failed to load depth: {depth_path}. File may not exist or be corrupted.")
-        depth = depth.astype('float32')
+            raise ValueError(f"Failed to load depth: {depth_path}")
+        depth = depth.astype('float32') / 256.0  # Convert to meters
         
         # Apply transforms
         sample = self.transform({'image': image, 'depth': depth})
         
         # Convert to tensors
-        sample['image'] = torch.from_numpy(sample['image'])
-        sample['depth'] = torch.from_numpy(sample['depth'])
-        sample['depth'] = sample['depth'] / 256.0  # convert to meters
+        sample['image'] = torch.from_numpy(sample['image']).float()
+        sample['depth'] = torch.from_numpy(sample['depth']).float()
         
-        # Create valid mask
-        sample['valid_mask'] = sample['depth'] > 0
+        # Create valid mask (KITTI max depth ~80m for outdoor)
+        sample['valid_mask'] = (sample['depth'] > 0) & (sample['depth'] <= 80.0)
+        
+        # Load intrinsics
+        if intrinsics_path and os.path.exists(intrinsics_path):
+            intrinsic = self._load_intrinsics(intrinsics_path)
+        else:
+            intrinsic = self.default_intrinsic
+        sample['intrinsics'] = torch.from_numpy(intrinsic).float()
         
         sample['image_path'] = img_path
         

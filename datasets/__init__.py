@@ -7,6 +7,9 @@ from .cityscapes import CityscapesDataset
 from .drivingstereo import DrivingStereoDataset
 from .middlebury import MiddleburyDataset
 from .vkitti import VKITTIDataset
+from .diode import DIODEDataset
+from .nyu import NYUDataset
+from .kitti import KITTIDataset
 
 # Lazy import for training datasets to avoid import errors when not needed
 def __getattr__(name):
@@ -16,6 +19,9 @@ def __getattr__(name):
     elif name == 'KITTITrainingDataset':
         from .training_datasets import KITTITrainingDataset
         return KITTITrainingDataset
+    elif name == 'NYUTrainingDataset':
+        from .training_datasets import NYUTrainingDataset
+        return NYUTrainingDataset
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
 
 __all__ = [
@@ -26,7 +32,11 @@ __all__ = [
     'DrivingStereoDataset',
     'MiddleburyDataset',
     'VKITTIDataset',
+    'DIODEDataset',
+    'NYUDataset',
+    'KITTIDataset',
     'VKITTI2TrainingDataset',
     'KITTITrainingDataset',
+    'NYUTrainingDataset',
 ]
 

@@ -23,7 +23,7 @@ if _metric_depth_path not in sys.path:
     sys.path.insert(0, _metric_depth_path)
 
 # Import training datasets from datasets folder
-from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset
+from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset, NYUTrainingDataset, DIODETrainingDataset
 
 # Import other datasets from metric_depth (for hypersim, etc.)
 from dataset.hypersim import Hypersim
@@ -55,7 +55,9 @@ def get_basic_depth_anything_v2():
 parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic Depth Estimation')
 
 parser.add_argument('--encoder', default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
-parser.add_argument('--dataset', default='hypersim', choices=['hypersim', 'vkitti'])
+parser.add_argument('--datasets', default='hypersim', 
+                    help='Comma-separated list of datasets to train on (e.g., "vkitti,diode"). '
+                         'Supported: hypersim, vkitti, nyu, diode')
 parser.add_argument('--model-type', default='basic', choices=['metric', 'basic'],
                     help='Model type: metric (absolute depth in meters) or basic (relative depth with scale ambiguity)')
 parser.add_argument('--img-size', default=518, type=int)
@@ -109,8 +111,9 @@ def generate_run_name(args) -> str:
     # Encoder
     components.append(args.encoder)
     
-    # Dataset
-    components.append(args.dataset)
+    # Dataset(s) - join with '+' if multiple
+    dataset_names = [d.strip().lower() for d in args.datasets.split(',')]
+    components.append('+'.join(dataset_names))
     
     # Camera intrinsics flag
     if args.use_camera_intrinsics:
@@ -259,39 +262,112 @@ def main():
     
     size = (args.img_size, args.img_size)
     
-    if rank == 0:
-        print(f"Loading training dataset: {args.dataset}...")
-        sys.stdout.flush()
-        logger.info(f'Loading training dataset: {args.dataset}')
+    # Parse datasets (comma-separated list)
+    dataset_names = [d.strip().lower() for d in args.datasets.split(',')]
     
-    if args.dataset == 'hypersim':
-        train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
-        trainset = Hypersim(train_file, 'train', size=size)
-    elif args.dataset == 'vkitti':
-        # Use split file from datasets/raw_data/vkitti/splits/
-        train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
-        if not os.path.exists(train_file):
-            raise FileNotFoundError(
-                f"VKITTI training file not found: {train_file}\n"
-                f"Please ensure the train.txt file exists in datasets/raw_data/vkitti/splits/"
-            )
-        if rank == 0:
-            print(f"Initializing VKITTI training dataset (this may take a while if validating many files)...")
-            sys.stdout.flush()
-        trainset = VKITTI2TrainingDataset(train_file, 'train', size=size)
-        if rank == 0:
-            print(f"Training dataset loaded: {len(trainset)} samples")
-            sys.stdout.flush()
-            logger.info(f'Training dataset loaded: {len(trainset)} samples')
-    else:
-        # Try generic dataset with intrinsics support
-        if GenericDatasetWithIntrinsics is None:
-            raise NotImplementedError(f"GenericDatasetWithIntrinsics not available. Use 'hypersim' or 'vkitti' dataset.")
-        train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', args.dataset, 'train.txt')
-        if os.path.exists(train_filelist):
-            trainset = GenericDatasetWithIntrinsics(train_filelist, 'train', size=size)
+    if rank == 0:
+        print(f"Loading training datasets: {dataset_names}...")
+        sys.stdout.flush()
+        logger.info(f'Loading training datasets: {dataset_names}')
+    
+    def create_train_dataset(dataset_name):
+        """Create a training dataset by name."""
+        if dataset_name == 'hypersim':
+            train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
+            return Hypersim(train_file, 'train', size=size)
+        elif dataset_name == 'vkitti':
+            train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
+            if not os.path.exists(train_file):
+                raise FileNotFoundError(
+                    f"VKITTI training file not found: {train_file}\n"
+                    f"Please ensure the train.txt file exists in datasets/raw_data/vkitti/splits/"
+                )
+            if rank == 0:
+                print(f"Initializing VKITTI training dataset...")
+                sys.stdout.flush()
+            dataset = VKITTI2TrainingDataset(train_file, 'train', size=size)
+            if rank == 0:
+                print(f"VKITTI training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
+        elif dataset_name == 'nyu':
+            nyu_mat_file = os.path.join(project_root, 'datasets', 'raw_data', 'nyu', 'nyu_depth_v2_labeled.mat')
+            if not os.path.exists(nyu_mat_file):
+                raise FileNotFoundError(
+                    f"NYU Depth V2 .mat file not found: {nyu_mat_file}\n"
+                    f"Please download the labeled subset from:\n"
+                    f"https://cs.nyu.edu/~silberman/datasets/nyu_depth_v2.html\n"
+                    f"and place nyu_depth_v2_labeled.mat in: {os.path.dirname(nyu_mat_file)}"
+                )
+            if rank == 0:
+                print(f"Initializing NYU Depth V2 training dataset...")
+                sys.stdout.flush()
+            dataset = NYUTrainingDataset(nyu_mat_file, 'train', size=size)
+            if rank == 0:
+                print(f"NYU training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
+        elif dataset_name == 'diode':
+            diode_path = os.path.join(project_root, 'datasets', 'raw_data', 'diode')
+            if not os.path.exists(diode_path):
+                raise FileNotFoundError(
+                    f"DIODE dataset not found: {diode_path}\n"
+                    f"Please ensure the DIODE dataset is placed in: {diode_path}"
+                )
+            if rank == 0:
+                print(f"Initializing DIODE training dataset...")
+                sys.stdout.flush()
+            dataset = DIODETrainingDataset(diode_path, 'train', size=size)
+            if rank == 0:
+                print(f"DIODE training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
+        elif dataset_name == 'kitti':
+            kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
+            if not os.path.exists(kitti_path):
+                raise FileNotFoundError(
+                    f"KITTI dataset not found: {kitti_path}\n"
+                    f"Please ensure the KITTI dataset is placed in: {kitti_path}"
+                )
+            if rank == 0:
+                print(f"Initializing KITTI training dataset...")
+                sys.stdout.flush()
+            dataset = KITTITrainingDataset(kitti_path, 'train', size=size)
+            if rank == 0:
+                print(f"KITTI training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         else:
-            raise NotImplementedError(f"Dataset '{args.dataset}' not found. Create {train_filelist} or use 'hypersim'/'vkitti'")
+            # Try generic dataset with intrinsics support
+            if GenericDatasetWithIntrinsics is None:
+                raise NotImplementedError(
+                    f"Unknown dataset: '{dataset_name}'. "
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                )
+            train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'train.txt')
+            if os.path.exists(train_filelist):
+                return GenericDatasetWithIntrinsics(train_filelist, 'train', size=size)
+            else:
+                raise NotImplementedError(
+                    f"Dataset '{dataset_name}' not found. "
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                )
+    
+    # Create training datasets
+    train_datasets = []
+    for dataset_name in dataset_names:
+        train_datasets.append(create_train_dataset(dataset_name))
+    
+    # Combine datasets if multiple
+    if len(train_datasets) == 1:
+        trainset = train_datasets[0]
+    else:
+        from torch.utils.data import ConcatDataset
+        trainset = ConcatDataset(train_datasets)
+        if rank == 0:
+            print(f"Combined training dataset: {len(trainset)} samples from {len(train_datasets)} datasets")
+            sys.stdout.flush()
+            logger.info(f'Combined training dataset: {len(trainset)} samples from {len(train_datasets)} datasets')
     
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
@@ -311,56 +387,105 @@ def main():
         trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, shuffle=True)
     
     if rank == 0:
-        print(f"Loading validation dataset: {args.dataset}...")
+        print(f"Loading validation datasets: {dataset_names}...")
         sys.stdout.flush()
-        logger.info(f'Loading validation dataset: {args.dataset}')
+        logger.info(f'Loading validation datasets: {dataset_names}')
     
-    if args.dataset == 'hypersim':
-        val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
-        valset = Hypersim(val_file, 'val', size=size)
-    elif args.dataset == 'vkitti':
-        # Use VKITTI validation set from datasets/raw_data/vkitti/splits/
-        vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
-        vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
-        
-        if os.path.exists(vkitti_val_file):
+    def create_val_dataset(dataset_name):
+        """Create a validation dataset by name."""
+        if dataset_name == 'hypersim':
+            val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
+            return Hypersim(val_file, 'val', size=size)
+        elif dataset_name == 'vkitti':
+            vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
+            vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
+            
+            if os.path.exists(vkitti_val_file):
+                if rank == 0:
+                    print(f"Initializing VKITTI validation dataset...")
+                    sys.stdout.flush()
+                dataset = VKITTI2TrainingDataset(vkitti_val_file, 'val', size=size)
+                if rank == 0:
+                    print(f"VKITTI validation dataset loaded: {len(dataset)} samples")
+                    sys.stdout.flush()
+                return dataset
+            elif os.path.exists(vkitti_train_file):
+                if rank == 0:
+                    print(f"Initializing VKITTI validation dataset from train.txt...")
+                    sys.stdout.flush()
+                    logger.warning(f'VKITTI val.txt not found, using train.txt for validation')
+                dataset = VKITTI2TrainingDataset(vkitti_train_file, 'val', size=size)
+                if rank == 0:
+                    print(f"VKITTI validation dataset loaded: {len(dataset)} samples")
+                    sys.stdout.flush()
+                return dataset
+            else:
+                raise FileNotFoundError(
+                    f"VKITTI validation file not found. Tried:\n"
+                    f"  - {vkitti_val_file}\n"
+                    f"  - {vkitti_train_file}"
+                )
+        elif dataset_name == 'nyu':
+            nyu_mat_file = os.path.join(project_root, 'datasets', 'raw_data', 'nyu', 'nyu_depth_v2_labeled.mat')
             if rank == 0:
-                print(f"Initializing VKITTI validation dataset (this may take a while if validating many files)...")
+                print(f"Initializing NYU Depth V2 validation dataset...")
                 sys.stdout.flush()
-            valset = VKITTI2TrainingDataset(vkitti_val_file, 'val', size=size)
+            dataset = NYUTrainingDataset(nyu_mat_file, 'val', size=size)
             if rank == 0:
-                print(f"Validation dataset loaded: {len(valset)} samples")
+                print(f"NYU validation dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
-                logger.info(f'Using VKITTI validation set: {vkitti_val_file}')
-                logger.info(f'Validation dataset loaded: {len(valset)} samples')
-        elif os.path.exists(vkitti_train_file):
-            # Fall back to using train.txt for validation if val.txt doesn't exist
+            return dataset
+        elif dataset_name == 'diode':
+            diode_path = os.path.join(project_root, 'datasets', 'raw_data', 'diode')
             if rank == 0:
-                print(f"Initializing VKITTI validation dataset from train.txt (this may take a while if validating many files)...")
+                print(f"Initializing DIODE validation dataset...")
                 sys.stdout.flush()
-            valset = VKITTI2TrainingDataset(vkitti_train_file, 'val', size=size)
+            dataset = DIODETrainingDataset(diode_path, 'val', size=size)
             if rank == 0:
-                print(f"Validation dataset loaded: {len(valset)} samples")
+                print(f"DIODE validation dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
-                logger.warning(f'VKITTI validation set not found at {vkitti_val_file}. Using train.txt for validation: {vkitti_train_file}')
-                logger.warning(f'To use a separate validation set, create datasets/raw_data/vkitti/splits/val.txt')
-                logger.info(f'Validation dataset loaded: {len(valset)} samples')
+            return dataset
+        elif dataset_name == 'kitti':
+            kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
+            if rank == 0:
+                print(f"Initializing KITTI validation dataset...")
+                sys.stdout.flush()
+            dataset = KITTITrainingDataset(kitti_path, 'val', size=size)
+            if rank == 0:
+                print(f"KITTI validation dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         else:
-            raise FileNotFoundError(
-                f"VKITTI validation file not found. Tried:\n"
-                f"  - {vkitti_val_file}\n"
-                f"  - {vkitti_train_file}\n"
-                f"Please ensure at least train.txt exists in datasets/raw_data/vkitti/splits/"
-            )
+            # Try generic dataset with intrinsics support
+            if GenericDatasetWithIntrinsics is None:
+                raise NotImplementedError(
+                    f"Unknown dataset: '{dataset_name}'. "
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                )
+            val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'val.txt')
+            if os.path.exists(val_filelist):
+                return GenericDatasetWithIntrinsics(val_filelist, 'val', size=size)
+            else:
+                raise NotImplementedError(
+                    f"Dataset '{dataset_name}' not found. "
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                )
+    
+    # Create validation datasets
+    val_datasets = []
+    for dataset_name in dataset_names:
+        val_datasets.append(create_val_dataset(dataset_name))
+    
+    # Combine datasets if multiple
+    if len(val_datasets) == 1:
+        valset = val_datasets[0]
     else:
-        # Try generic dataset with intrinsics support
-        if GenericDatasetWithIntrinsics is None:
-            raise NotImplementedError(f"GenericDatasetWithIntrinsics not available. Use 'hypersim' or 'vkitti' dataset.")
-        val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', args.dataset, 'val.txt')
-        if os.path.exists(val_filelist):
-            valset = GenericDatasetWithIntrinsics(val_filelist, 'val', size=size)
-        else:
-            raise NotImplementedError(f"Validation file list not found: {val_filelist}")
+        from torch.utils.data import ConcatDataset
+        valset = ConcatDataset(val_datasets)
+        if rank == 0:
+            print(f"Combined validation dataset: {len(valset)} samples from {len(val_datasets)} datasets")
+            sys.stdout.flush()
+            logger.info(f'Combined validation dataset: {len(valset)} samples from {len(val_datasets)} datasets')
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
     # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
@@ -437,7 +562,7 @@ def main():
     hparams = {
         'model_type': args.model_type,
         'encoder': encoder_to_use,
-        'dataset': args.dataset,
+        'datasets': args.datasets,
         'use_camera_intrinsics': args.use_camera_intrinsics,
         'cam_token_inject_layer': args.cam_token_inject_layer if args.use_camera_intrinsics else None,
         'use_distillation': args.use_distillation,
@@ -481,7 +606,7 @@ Training Run Summary:
 - Run Name: {run_name}
 - Model Type: {args.model_type}
 - Encoder: {encoder_to_use}
-- Dataset: {args.dataset}
+- Datasets: {args.datasets}
 - Camera Intrinsics: {args.use_camera_intrinsics}
 - Learning Rate: {args.lr}
 - Batch Size: {args.bs}

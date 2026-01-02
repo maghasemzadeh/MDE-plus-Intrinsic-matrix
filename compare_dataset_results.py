@@ -17,7 +17,10 @@ from datasets import (
     CityscapesDataset,
     DrivingStereoDataset,
     MiddleburyDataset,
-    VKITTIDataset
+    VKITTIDataset,
+    DIODEDataset,
+    NYUDataset,
+    KITTIDataset
 )
 from collections import defaultdict
 from models import (
@@ -258,12 +261,18 @@ Examples:
 
   # Compare vkitti with other datasets
   python compare_dataset_results.py --dataset vkitti,cityscapes --model-name da2-revised --max-depth 80
+
+  # Process DIODE dataset (indoor scenes, use lower max-depth)
+  python compare_dataset_results.py --dataset diode --model-name da2-revised --max-depth 10
+
+  # Filter DIODE scenes by type
+  python compare_dataset_results.py --dataset diode --model-name da2 --filter-regex "indoors.*"
         """
     )
     
     # Dataset arguments
     parser.add_argument('--dataset', type=str, required=True,
-                       help='Dataset name(s): middlebury, cityscapes, drivingstereo, vkitti, or comma-separated for comparison')
+                       help='Dataset name(s): middlebury, cityscapes, drivingstereo, vkitti, diode, nyu, kitti, or comma-separated for comparison')
     parser.add_argument('--dataset-path', type=str, default=None,
                        help='Optional path(s) to dataset(s), comma-separated if multiple datasets. If not provided, uses dataset default paths.')
     parser.add_argument('--output-path', type=str, default='results',
@@ -365,9 +374,15 @@ Examples:
             dataset = DrivingStereoDataset(dataset_config)
         elif dataset_name.lower() == 'vkitti':
             dataset = VKITTIDataset(dataset_config)
+        elif dataset_name.lower() == 'diode':
+            dataset = DIODEDataset(dataset_config)
+        elif dataset_name.lower() == 'nyu':
+            dataset = NYUDataset(dataset_config)
+        elif dataset_name.lower() == 'kitti':
+            dataset = KITTIDataset(dataset_config)
         else:
             print(f"Error: Unknown dataset: {dataset_name}")
-            print("Supported datasets: middlebury, cityscapes, drivingstereo, vkitti")
+            print("Supported datasets: middlebury, cityscapes, drivingstereo, vkitti, diode, nyu, kitti")
             sys.exit(1)
         
         items = dataset.find_items()

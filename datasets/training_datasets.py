@@ -831,11 +831,19 @@ class KITTITrainingDataset(Dataset):
                 test_path = os.path.join(metric_depth_path, filelist_or_path)
             filelist_or_path = test_path
         
-        # Check if this is a directory (KITTI dataset root) or a filelist
+        # First, check if a filelist exists (preferred method, like VKITTI)
         if os.path.isdir(filelist_or_path):
-            # Directory mode - scan for image/depth pairs
-            self.dataset_path = filelist_or_path
-            self.filelist = self._scan_directory()
+            # Check for splits directory with filelist
+            splits_dir = os.path.join(filelist_or_path, 'splits')
+            filelist_path = os.path.join(splits_dir, f'{self.mode}.txt')
+            if os.path.exists(filelist_path):
+                print(f"Found KITTI filelist at: {filelist_path}")
+                self.dataset_path = filelist_or_path
+                self.filelist = self._load_filelist(filelist_path)
+            else:
+                # Directory mode - scan for image/depth pairs
+                self.dataset_path = filelist_or_path
+                self.filelist = self._scan_directory()
         elif os.path.isfile(filelist_or_path) and filelist_or_path.endswith('.txt'):
             # Filelist mode
             self.dataset_path = os.path.dirname(filelist_or_path)
@@ -844,9 +852,33 @@ class KITTITrainingDataset(Dataset):
             raise FileNotFoundError(f"KITTI dataset path not found: {filelist_or_path}")
         
         if len(self.filelist) == 0:
-            raise ValueError(f"No valid entries found in KITTI dataset at: {filelist_or_path}")
+            # Provide more helpful error message
+            error_msg = f"No valid entries found in KITTI dataset at: {filelist_or_path}\n"
+            if os.path.isdir(filelist_or_path):
+                error_msg += f"\nDirectory structure found:\n"
+                # List what directories exist
+                if os.path.exists(filelist_or_path):
+                    subdirs = [d for d in os.listdir(filelist_or_path) 
+                              if os.path.isdir(os.path.join(filelist_or_path, d))]
+                    if subdirs:
+                        error_msg += f"  Subdirectories: {', '.join(subdirs[:10])}\n"
+                    else:
+                        error_msg += f"  (directory is empty or contains only files)\n"
+                
+                # Check for expected structure
+                train_path = os.path.join(filelist_or_path, 'train')
+                val_path = os.path.join(filelist_or_path, 'val')
+                depth_selection_path = os.path.join(filelist_or_path, 'depth_selection')
+                
+                if not os.path.exists(train_path) and not os.path.exists(val_path) and not os.path.exists(depth_selection_path):
+                    error_msg += f"\nExpected one of:\n"
+                    error_msg += f"  - {train_path}/ (with sequence directories)\n"
+                    error_msg += f"  - {val_path}/ (with sequence directories)\n"
+                    error_msg += f"  - {depth_selection_path}/val_selection_cropped/\n"
+                    error_msg += f"  - {os.path.join(filelist_or_path, 'splits', f'{self.mode}.txt')} (filelist)\n"
+            raise ValueError(error_msg)
         
-        print(f"Loaded KITTI {mode} set: {len(self.filelist)} samples")
+        print(f"Loaded KITTI {self.mode} set: {len(self.filelist)} samples")
         
         # Build default intrinsic matrix
         self.default_intrinsic = np.array([
@@ -875,16 +907,21 @@ class KITTITrainingDataset(Dataset):
         """Scan KITTI directory structure for image/depth pairs."""
         from glob import glob
         samples = []
+        debug_info = []
         
-        # Check for depth_selection/val_selection_cropped first
+        # Check for depth_selection/val_selection_cropped (mainly for validation)
         val_selection_path = os.path.join(self.dataset_path, 'depth_selection', 'val_selection_cropped')
-        if os.path.exists(val_selection_path):
+        if os.path.exists(val_selection_path) and self.mode == 'val':
             image_dir = os.path.join(val_selection_path, 'image')
+            # Try both possible depth directory names
             depth_dir = os.path.join(val_selection_path, 'groundtruth_depth')
+            if not os.path.exists(depth_dir):
+                depth_dir = os.path.join(val_selection_path, 'groundtruth')
             intrinsics_dir = os.path.join(val_selection_path, 'intrinsics')
             
             if os.path.exists(image_dir) and os.path.exists(depth_dir):
-                for img_file in sorted(glob(os.path.join(image_dir, '*.png'))):
+                img_files = sorted(glob(os.path.join(image_dir, '*.png'))) + sorted(glob(os.path.join(image_dir, '*.jpg')))
+                for img_file in img_files:
                     base_name = os.path.splitext(os.path.basename(img_file))[0]
                     depth_file = os.path.join(depth_dir, f'{base_name}.png')
                     intrinsics_file = os.path.join(intrinsics_dir, f'{base_name}.txt')
@@ -895,6 +932,8 @@ class KITTITrainingDataset(Dataset):
                             'depth_path': depth_file,
                             'intrinsics_path': intrinsics_file if os.path.exists(intrinsics_file) else None
                         })
+                if len(img_files) > 0:
+                    debug_info.append(f"Found {len(samples)} samples in depth_selection/val_selection_cropped")
         
         # Check for train/val sequence folders
         for split in ['train', 'val']:
@@ -905,11 +944,22 @@ class KITTITrainingDataset(Dataset):
             
             split_path = os.path.join(self.dataset_path, split)
             if not os.path.exists(split_path):
+                debug_info.append(f"Split directory not found: {split_path}")
                 continue
             
             # Find all sequence directories
-            seq_dirs = [d for d in os.listdir(split_path) 
-                       if os.path.isdir(os.path.join(split_path, d)) and '_drive_' in d]
+            try:
+                seq_dirs = [d for d in os.listdir(split_path) 
+                           if os.path.isdir(os.path.join(split_path, d)) and '_drive_' in d]
+            except PermissionError:
+                debug_info.append(f"Permission denied accessing: {split_path}")
+                continue
+            
+            if len(seq_dirs) == 0:
+                debug_info.append(f"No sequence directories found in {split_path}")
+                continue
+            
+            debug_info.append(f"Found {len(seq_dirs)} sequence directories in {split}")
             
             for seq_name in sorted(seq_dirs):
                 for camera in ['image_02', 'image_03']:
@@ -918,7 +968,12 @@ class KITTITrainingDataset(Dataset):
                     if not os.path.exists(gt_dir):
                         continue
                     
-                    for depth_file in sorted(glob(os.path.join(gt_dir, '*.png'))):
+                    depth_files = sorted(glob(os.path.join(gt_dir, '*.png')))
+                    if len(depth_files) == 0:
+                        continue
+                    
+                    found_images = 0
+                    for depth_file in depth_files:
                         frame_name = os.path.splitext(os.path.basename(depth_file))[0]
                         
                         # Try to find corresponding image
@@ -932,6 +987,16 @@ class KITTITrainingDataset(Dataset):
                                 'sequence': seq_name,
                                 'camera': camera
                             })
+                            found_images += 1
+                    
+                    if found_images == 0 and len(depth_files) > 0:
+                        debug_info.append(f"Warning: Found {len(depth_files)} depth files in {gt_dir} but no matching images")
+        
+        # Print debug information if no samples found
+        if len(samples) == 0 and len(debug_info) > 0:
+            print("KITTI directory scan diagnostics:")
+            for info in debug_info:
+                print(f"  {info}")
         
         return samples
     
@@ -939,18 +1004,32 @@ class KITTITrainingDataset(Dataset):
         """Find corresponding RGB image for a depth map."""
         # Extract date from sequence name
         date_match = re.match(r'(\d{4}_\d{2}_\d{2})_drive_\d+_sync', seq_name)
-        if not date_match:
-            return None
-        
-        date = date_match.group(1)
+        date = None
+        if date_match:
+            date = date_match.group(1)
         
         # Common image locations to check
-        possible_paths = [
-            os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.png'),
-            os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.jpg'),
+        possible_paths = []
+        
+        # If we have a date, try kitti_raw structure
+        if date:
+            possible_paths.extend([
+                os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.png'),
+                os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.jpg'),
+            ])
+        
+        # Try various locations relative to split directory
+        possible_paths.extend([
             os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{frame_name}.png'),
+            os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{frame_name}.jpg'),
             os.path.join(self.dataset_path, split, seq_name, 'image', camera, f'{frame_name}.png'),
-        ]
+            os.path.join(self.dataset_path, split, seq_name, 'image', camera, f'{frame_name}.jpg'),
+            os.path.join(self.dataset_path, split, seq_name, camera, f'{frame_name}.png'),
+            os.path.join(self.dataset_path, split, seq_name, camera, f'{frame_name}.jpg'),
+            # Also check if images are in the same directory structure as depth
+            os.path.join(self.dataset_path, split, seq_name, 'image_02', 'data', f'{frame_name}.png'),
+            os.path.join(self.dataset_path, split, seq_name, 'image_03', 'data', f'{frame_name}.png'),
+        ])
         
         for path in possible_paths:
             if os.path.exists(path):

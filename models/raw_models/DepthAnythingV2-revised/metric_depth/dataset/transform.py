@@ -244,6 +244,24 @@ class Resize(object):
                 f"Image shape: {image.shape}. This usually indicates a corrupted or empty image file."
             )
         
+        # Check for extremely unusual aspect ratios (likely corrupted data)
+        aspect_ratio = img_width / img_height if img_height > 0 else 0
+        if aspect_ratio < 0.01 or aspect_ratio > 100:
+            raise ValueError(
+                f"Extreme aspect ratio detected: width={img_width}, height={img_height}, "
+                f"ratio={aspect_ratio:.4f}. Image shape: {image.shape}. "
+                f"This usually indicates a corrupted image file or incorrect dimension extraction. "
+                f"Expected reasonable aspect ratios (typically 0.1 to 10)."
+            )
+        
+        # Check for extremely small dimensions in one direction
+        if img_width < 10 or img_height < 10:
+            raise ValueError(
+                f"Image has extremely small dimensions: width={img_width}, height={img_height}. "
+                f"Image shape: {image.shape}. Minimum expected dimension is 10 pixels. "
+                f"This usually indicates a corrupted or incorrectly processed image."
+            )
+        
         # Get target size
         width, height = self.get_size(img_width, img_height)
         
@@ -287,6 +305,23 @@ class Resize(object):
                 f"Unreasonably large dimensions calculated: width={width}, height={height}. "
                 f"This likely indicates a calculation error. Input: {img_width}x{img_height}, "
                 f"Target: {self.__width}x{self.__height}."
+            )
+        
+        # Check if output dimensions are way too different from target (indicates extreme aspect ratio issue)
+        # Allow up to 10x difference to account for aspect ratio preservation
+        max_reasonable_scale = 10.0
+        if (width > self.__width * max_reasonable_scale or 
+            height > self.__height * max_reasonable_scale or
+            width < self.__width / max_reasonable_scale or
+            height < self.__height / max_reasonable_scale):
+            raise ValueError(
+                f"Output dimensions are unreasonably different from target: "
+                f"output={width}x{height}, target={self.__width}x{self.__height} "
+                f"(ratio: {width/self.__width:.2f}x, {height/self.__height:.2f}x). "
+                f"Input: {img_width}x{img_height} (aspect ratio: {img_width/img_height:.4f}). "
+                f"This usually indicates an image with extreme aspect ratio that cannot be "
+                f"reasonably resized with the current settings. Consider checking the input image "
+                f"or adjusting resize parameters."
             )
 
         # resize sample with error handling

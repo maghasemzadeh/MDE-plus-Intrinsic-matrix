@@ -541,10 +541,38 @@ class NYUTrainingDataset(Dataset):
         image = self._images[idx].astype(np.float32) / 255.0  # [H, W, 3] normalized to [0, 1]
         depth = self._depths[idx].astype(np.float32)  # [H, W] in meters
         
-        # Validate image dimensions
+        # Validate image dimensions and shape
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
             raise ValueError(
                 f"Invalid image dimensions: shape={image.shape}, index={idx}. "
+                f"This usually indicates corrupted data in the .mat file."
+            )
+        
+        # Check for expected shape [H, W, 3] or [H, W]
+        if len(image.shape) == 3:
+            if image.shape[2] not in [1, 3]:
+                raise ValueError(
+                    f"Unexpected number of channels: shape={image.shape}, index={idx}. "
+                    f"Expected [H, W, 3] or [H, W, 1], got {image.shape}."
+                )
+        
+        # Check for extremely unusual aspect ratios (likely data corruption)
+        img_height, img_width = image.shape[0], image.shape[1]
+        aspect_ratio = img_width / img_height if img_height > 0 else 0
+        
+        if aspect_ratio < 0.01 or aspect_ratio > 100:
+            raise ValueError(
+                f"Extreme aspect ratio in NYU image: width={img_width}, height={img_height}, "
+                f"ratio={aspect_ratio:.4f}, shape={image.shape}, index={idx}. "
+                f"This usually indicates corrupted data in the .mat file. "
+                f"NYU images should be approximately 640x480."
+            )
+        
+        # Check for extremely small dimensions
+        if img_width < 10 or img_height < 10:
+            raise ValueError(
+                f"Image has extremely small dimensions: width={img_width}, height={img_height}, "
+                f"shape={image.shape}, index={idx}. Minimum expected dimension is 10 pixels. "
                 f"This usually indicates corrupted data in the .mat file."
             )
         

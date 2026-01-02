@@ -973,7 +973,8 @@ class KITTITrainingDataset(Dataset):
                         continue
                     
                     found_images = 0
-                    for depth_file in depth_files:
+                    missing_images_sample = None
+                    for depth_file in depth_files[:10]:  # Check first 10 to diagnose
                         frame_name = os.path.splitext(os.path.basename(depth_file))[0]
                         
                         # Try to find corresponding image
@@ -988,20 +989,59 @@ class KITTITrainingDataset(Dataset):
                                 'camera': camera
                             })
                             found_images += 1
+                        elif missing_images_sample is None:
+                            missing_images_sample = frame_name
+                    
+                    # Process remaining depth files if we found at least one image
+                    if found_images > 0:
+                        for depth_file in depth_files[10:]:
+                            frame_name = os.path.splitext(os.path.basename(depth_file))[0]
+                            img_path = self._find_image_for_depth(seq_name, camera, frame_name, split)
+                            if img_path and os.path.exists(img_path):
+                                samples.append({
+                                    'image_path': img_path,
+                                    'depth_path': depth_file,
+                                    'intrinsics_path': None,
+                                    'sequence': seq_name,
+                                    'camera': camera
+                                })
+                                found_images += 1
                     
                     if found_images == 0 and len(depth_files) > 0:
-                        debug_info.append(f"Warning: Found {len(depth_files)} depth files in {gt_dir} but no matching images")
+                        # Provide more detailed diagnostic
+                        sample_frame = missing_images_sample or os.path.splitext(os.path.basename(depth_files[0]))[0]
+                        debug_info.append(
+                            f"Warning: Found {len(depth_files)} depth files in {gt_dir} but no matching images.\n"
+                            f"  Example: Looking for image matching frame '{sample_frame}' for camera '{camera}' in sequence '{seq_name}'.\n"
+                            f"  Checked locations include:\n"
+                            f"    - {os.path.join(self.dataset_path, 'kitti_raw', '*', seq_name, camera, 'data', f'{sample_frame}.png')}\n"
+                            f"    - {os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{sample_frame}.png')}\n"
+                            f"  Note: KITTI depth benchmark may require separate download of RGB images from KITTI Raw dataset."
+                        )
         
         # Print debug information if no samples found
         if len(samples) == 0 and len(debug_info) > 0:
             print("KITTI directory scan diagnostics:")
             for info in debug_info:
                 print(f"  {info}")
+            
+            # Check if kitti_raw exists
+            kitti_raw_path = os.path.join(self.dataset_path, 'kitti_raw')
+            if not os.path.exists(kitti_raw_path):
+                print(f"\n  Note: KITTI Raw dataset not found at: {kitti_raw_path}")
+                print(f"  KITTI Depth Prediction Benchmark provides depth maps, but RGB images")
+                print(f"  need to be downloaded separately from KITTI Raw dataset.")
+                print(f"  Expected structure: {kitti_raw_path}/{{date}}/{{sequence}}/{{camera}}/data/{{frame}}.png")
+                print(f"\n  Alternative: Create a filelist at:")
+                print(f"    {os.path.join(self.dataset_path, 'splits', f'{self.mode}.txt')}")
+                print(f"  Format: image_path depth_path [intrinsics_path]")
         
         return samples
     
     def _find_image_for_depth(self, seq_name: str, camera: str, frame_name: str, split: str) -> str:
         """Find corresponding RGB image for a depth map."""
+        from glob import glob
+        
         # Extract date from sequence name
         date_match = re.match(r'(\d{4}_\d{2}_\d{2})_drive_\d+_sync', seq_name)
         date = None
@@ -1011,11 +1051,14 @@ class KITTITrainingDataset(Dataset):
         # Common image locations to check
         possible_paths = []
         
-        # If we have a date, try kitti_raw structure
+        # If we have a date, try kitti_raw structure (common KITTI organization)
         if date:
             possible_paths.extend([
                 os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.png'),
                 os.path.join(self.dataset_path, 'kitti_raw', date, seq_name, camera, 'data', f'{frame_name}.jpg'),
+                # Also try without date in path
+                os.path.join(self.dataset_path, 'kitti_raw', seq_name, camera, 'data', f'{frame_name}.png'),
+                os.path.join(self.dataset_path, 'kitti_raw', seq_name, camera, 'data', f'{frame_name}.jpg'),
             ])
         
         # Try various locations relative to split directory
@@ -1026,14 +1069,50 @@ class KITTITrainingDataset(Dataset):
             os.path.join(self.dataset_path, split, seq_name, 'image', camera, f'{frame_name}.jpg'),
             os.path.join(self.dataset_path, split, seq_name, camera, f'{frame_name}.png'),
             os.path.join(self.dataset_path, split, seq_name, camera, f'{frame_name}.jpg'),
-            # Also check if images are in the same directory structure as depth
-            os.path.join(self.dataset_path, split, seq_name, 'image_02', 'data', f'{frame_name}.png'),
-            os.path.join(self.dataset_path, split, seq_name, 'image_03', 'data', f'{frame_name}.png'),
+            # Check if images are in the same directory structure as depth (sibling to proj_depth)
+            os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{frame_name}.png'),
+            os.path.join(self.dataset_path, split, seq_name, camera, 'data', f'{frame_name}.jpg'),
         ])
         
+        # Check standard paths first
         for path in possible_paths:
             if os.path.exists(path):
                 return path
+        
+        # If not found in standard locations, try recursive search in sequence directory
+        seq_dir = os.path.join(self.dataset_path, split, seq_name)
+        if os.path.exists(seq_dir):
+            # Search for any image file with matching frame name in the sequence directory
+            search_patterns = [
+                os.path.join(seq_dir, '**', f'{frame_name}.png'),
+                os.path.join(seq_dir, '**', f'{frame_name}.jpg'),
+            ]
+            
+            for pattern in search_patterns:
+                matches = glob(pattern, recursive=True)
+                # Filter out depth files (they're in proj_depth/groundtruth)
+                for match in matches:
+                    if 'proj_depth' not in match and 'groundtruth' not in match:
+                        return match
+        
+        # Also try searching in parent kitti_raw if it exists
+        if date:
+            kitti_raw_base = os.path.join(self.dataset_path, 'kitti_raw')
+            if os.path.exists(kitti_raw_base):
+                # Search recursively for the frame
+                search_patterns = [
+                    os.path.join(kitti_raw_base, '**', f'{frame_name}.png'),
+                    os.path.join(kitti_raw_base, '**', f'{frame_name}.jpg'),
+                ]
+                for pattern in search_patterns:
+                    matches = glob(pattern, recursive=True)
+                    # Prefer matches in the same camera directory
+                    for match in matches:
+                        if camera in match:
+                            return match
+                    # If no camera match, return first match
+                    if matches:
+                        return matches[0]
         
         return None
     

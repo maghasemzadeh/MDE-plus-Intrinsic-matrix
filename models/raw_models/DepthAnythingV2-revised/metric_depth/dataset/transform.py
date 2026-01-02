@@ -94,22 +94,42 @@ class Resize(object):
         self.__image_interpolation_method = image_interpolation_method
 
     def constrain_to_multiple_of(self, x, min_val=0, max_val=None):
-        if np.isnan(x) or np.isinf(x) or x < 0:
-            raise ValueError(f"Invalid input to constrain_to_multiple_of: x={x}")
+        if np.isnan(x) or np.isinf(x):
+            raise ValueError(f"Invalid input to constrain_to_multiple_of: x={x} (NaN or Inf)")
         
+        if x < 0:
+            raise ValueError(f"Invalid input to constrain_to_multiple_of: x={x} (negative)")
+        
+        # Calculate the constrained value
         y = (np.round(x / self.__multiple_of) * self.__multiple_of).astype(int)
 
         if max_val is not None and y > max_val:
             y = (np.floor(x / self.__multiple_of) * self.__multiple_of).astype(int)
+            # Ensure it doesn't exceed max_val
+            if y > max_val:
+                y = ((max_val // self.__multiple_of) * self.__multiple_of)
 
         if y < min_val:
             y = (np.ceil(x / self.__multiple_of) * self.__multiple_of).astype(int)
+            # Ensure it meets min_val
+            if y < min_val:
+                y = ((min_val + self.__multiple_of - 1) // self.__multiple_of) * self.__multiple_of
         
-        # Ensure we never return 0 or negative
+        # Final validation - ensure we never return 0 or negative
         if y <= 0:
+            # Use the maximum of multiple_of and min_val, but ensure it's at least multiple_of
             y = max(self.__multiple_of, min_val) if min_val > 0 else self.__multiple_of
+            # Ensure it's still a multiple
+            y = ((y + self.__multiple_of - 1) // self.__multiple_of) * self.__multiple_of
+        
+        # Final check for validity
+        if y <= 0 or np.isnan(y) or np.isinf(y):
+            raise ValueError(
+                f"constrain_to_multiple_of returned invalid value: {y} "
+                f"(input: x={x}, min_val={min_val}, max_val={max_val}, multiple_of={self.__multiple_of})"
+            )
 
-        return y
+        return int(y)
 
     def get_size(self, width, height):
         # Validate input dimensions
@@ -128,6 +148,13 @@ class Resize(object):
         # determine new height and width
         scale_height = self.__height / height
         scale_width = self.__width / width
+        
+        # Validate scales
+        if np.isnan(scale_height) or np.isnan(scale_width) or np.isinf(scale_height) or np.isinf(scale_width):
+            raise ValueError(
+                f"Invalid scale calculated: scale_width={scale_width}, scale_height={scale_height}. "
+                f"Input: {width}x{height}, Target: {self.__width}x{self.__height}"
+            )
 
         if self.__keep_aspect_ratio:
             if self.__resize_method == "lower_bound":
@@ -174,10 +201,24 @@ class Resize(object):
                 scale_width * width, max_val=self.__width
             )
         elif self.__resize_method == "minimal":
-            new_height = self.constrain_to_multiple_of(scale_height * height)
-            new_width = self.constrain_to_multiple_of(scale_width * width)
+            new_height = self.constrain_to_multiple_of(scale_height * height, min_val=1)
+            new_width = self.constrain_to_multiple_of(scale_width * width, min_val=1)
         else:
             raise ValueError(f"resize_method {self.__resize_method} not implemented")
+        
+        # Final validation of calculated dimensions
+        if new_width <= 0 or new_height <= 0:
+            raise ValueError(
+                f"get_size() returned invalid dimensions: width={new_width}, height={new_height}. "
+                f"Input: {width}x{height}, Target: {self.__width}x{self.__height}, "
+                f"Scales: {scale_width}x{scale_height}, Method: {self.__resize_method}"
+            )
+        
+        if np.isnan(new_width) or np.isnan(new_height) or np.isinf(new_width) or np.isinf(new_height):
+            raise ValueError(
+                f"get_size() returned NaN/Inf dimensions: width={new_width}, height={new_height}. "
+                f"Input: {width}x{height}, Target: {self.__width}x{self.__height}"
+            )
 
         return (new_width, new_height)
 
@@ -215,34 +256,85 @@ class Resize(object):
                 f"This may indicate an issue with the resize parameters or input image."
             )
         
-        # Ensure dimensions are integers
-        width = int(width)
-        height = int(height)
+        # Ensure dimensions are integers and validate
+        try:
+            width = int(width)
+            height = int(height)
+        except (ValueError, TypeError) as e:
+            raise ValueError(
+                f"Cannot convert dimensions to integers: width={width} (type: {type(width)}), "
+                f"height={height} (type: {type(height)}). Original error: {e}"
+            )
+        
+        # Check for NaN, Inf, or invalid values
+        if np.isnan(width) or np.isnan(height) or np.isinf(width) or np.isinf(height):
+            raise ValueError(
+                f"Invalid dimensions (NaN or Inf): width={width}, height={height}. "
+                f"Input dimensions: width={img_width}, height={img_height}. "
+                f"Target size: width={self.__width}, height={self.__height}."
+            )
         
         if width <= 0 or height <= 0:
             raise ValueError(
-                f"Output dimensions must be positive integers, got: width={width}, height={height}"
+                f"Output dimensions must be positive integers, got: width={width}, height={height}. "
+                f"Input dimensions: width={img_width}, height={img_height}. "
+                f"Target size: width={self.__width}, height={self.__height}."
+            )
+        
+        # Check for unreasonably large dimensions (likely a calculation error)
+        if width > 100000 or height > 100000:
+            raise ValueError(
+                f"Unreasonably large dimensions calculated: width={width}, height={height}. "
+                f"This likely indicates a calculation error. Input: {img_width}x{img_height}, "
+                f"Target: {self.__width}x{self.__height}."
             )
 
-        # resize sample
-        sample["image"] = cv2.resize(
-            sample["image"],
-            (width, height),
-            interpolation=self.__image_interpolation_method,
-        )
+        # resize sample with error handling
+        try:
+            dsize = (int(width), int(height))
+            # Double-check the tuple is valid
+            if len(dsize) != 2 or dsize[0] <= 0 or dsize[1] <= 0:
+                raise ValueError(f"Invalid dsize tuple: {dsize}")
+            
+            sample["image"] = cv2.resize(
+                sample["image"],
+                dsize,
+                interpolation=self.__image_interpolation_method,
+            )
+        except cv2.error as e:
+            raise ValueError(
+                f"cv2.resize failed with dimensions: width={width}, height={height}, dsize={dsize}. "
+                f"Input image shape: {image.shape}, Input dimensions: {img_width}x{img_height}, "
+                f"Target size: {self.__width}x{self.__height}. "
+                f"OpenCV error: {e}"
+            ) from e
 
         if self.__resize_target:
+            dsize = (int(width), int(height))
+            
             if "disparity" in sample:
-                sample["disparity"] = cv2.resize(
-                    sample["disparity"],
-                    (width, height),
-                    interpolation=cv2.INTER_NEAREST,
-                )
+                try:
+                    sample["disparity"] = cv2.resize(
+                        sample["disparity"],
+                        dsize,
+                        interpolation=cv2.INTER_NEAREST,
+                    )
+                except cv2.error as e:
+                    raise ValueError(
+                        f"cv2.resize failed for disparity with dsize={dsize}. "
+                        f"Disparity shape: {sample['disparity'].shape}. Error: {e}"
+                    ) from e
 
             if "depth" in sample:
-                sample["depth"] = cv2.resize(
-                    sample["depth"], (width, height), interpolation=cv2.INTER_NEAREST
-                )
+                try:
+                    sample["depth"] = cv2.resize(
+                        sample["depth"], dsize, interpolation=cv2.INTER_NEAREST
+                    )
+                except cv2.error as e:
+                    raise ValueError(
+                        f"cv2.resize failed for depth with dsize={dsize}. "
+                        f"Depth shape: {sample['depth'].shape}. Error: {e}"
+                    ) from e
 
             if "semseg_mask" in sample:
                 # sample["semseg_mask"] = cv2.resize(
@@ -251,11 +343,17 @@ class Resize(object):
                 sample["semseg_mask"] = F.interpolate(torch.from_numpy(sample["semseg_mask"]).float()[None, None, ...], (height, width), mode='nearest').numpy()[0, 0]
                 
             if "mask" in sample:
-                sample["mask"] = cv2.resize(
-                    sample["mask"].astype(np.float32),
-                    (width, height),
-                    interpolation=cv2.INTER_NEAREST,
-                )
+                try:
+                    sample["mask"] = cv2.resize(
+                        sample["mask"].astype(np.float32),
+                        dsize,
+                        interpolation=cv2.INTER_NEAREST,
+                    )
+                except cv2.error as e:
+                    raise ValueError(
+                        f"cv2.resize failed for mask with dsize={dsize}. "
+                        f"Mask shape: {sample['mask'].shape}. Error: {e}"
+                    ) from e
                 # sample["mask"] = sample["mask"].astype(bool)
 
         # print(sample['image'].shape, sample['depth'].shape)

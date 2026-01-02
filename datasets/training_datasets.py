@@ -316,6 +316,13 @@ class VKITTI2TrainingDataset(Dataset):
             else:
                 error_msg += f"  Directory does not exist: {img_dir}\n"
             raise ValueError(error_msg)
+        # Validate image dimensions
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(
+                f"Invalid image dimensions: shape={image.shape}, path={img_path}. "
+                f"This usually indicates a corrupted or empty image file."
+            )
+        
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         
         # Load depth (VKITTI depth is in cm, convert to meters)
@@ -534,6 +541,13 @@ class NYUTrainingDataset(Dataset):
         image = self._images[idx].astype(np.float32) / 255.0  # [H, W, 3] normalized to [0, 1]
         depth = self._depths[idx].astype(np.float32)  # [H, W] in meters
         
+        # Validate image dimensions
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(
+                f"Invalid image dimensions: shape={image.shape}, index={idx}. "
+                f"This usually indicates corrupted data in the .mat file."
+            )
+        
         # Apply transforms
         sample = self.transform({'image': image, 'depth': depth})
         
@@ -730,6 +744,14 @@ class DIODETrainingDataset(Dataset):
         image = cv2.imread(sample_info['rgb_path'])
         if image is None:
             raise ValueError(f"Could not load image: {sample_info['rgb_path']}")
+        
+        # Validate image dimensions
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(
+                f"Invalid image dimensions: shape={image.shape}, path={sample_info['rgb_path']}. "
+                f"This usually indicates a corrupted or empty image file."
+            )
+        
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         
         # Load depth (stored in meters)
@@ -1244,6 +1266,13 @@ class KITTITrainingDataset(Dataset):
         image = cv2.imread(img_path)
         if image is None:
             raise ValueError(f"Failed to load image: {img_path}")
+        
+        # Validate image dimensions
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(
+                f"Invalid image dimensions: shape={image.shape}, path={img_path}. "
+                f"This usually indicates a corrupted or empty image file."
+            )
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         

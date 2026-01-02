@@ -94,6 +94,9 @@ class Resize(object):
         self.__image_interpolation_method = image_interpolation_method
 
     def constrain_to_multiple_of(self, x, min_val=0, max_val=None):
+        if np.isnan(x) or np.isinf(x) or x < 0:
+            raise ValueError(f"Invalid input to constrain_to_multiple_of: x={x}")
+        
         y = (np.round(x / self.__multiple_of) * self.__multiple_of).astype(int)
 
         if max_val is not None and y > max_val:
@@ -101,10 +104,27 @@ class Resize(object):
 
         if y < min_val:
             y = (np.ceil(x / self.__multiple_of) * self.__multiple_of).astype(int)
+        
+        # Ensure we never return 0 or negative
+        if y <= 0:
+            y = max(self.__multiple_of, min_val) if min_val > 0 else self.__multiple_of
 
         return y
 
     def get_size(self, width, height):
+        # Validate input dimensions
+        if width <= 0 or height <= 0:
+            raise ValueError(
+                f"Invalid input dimensions: width={width}, height={height}. "
+                f"Both must be positive integers."
+            )
+        
+        if self.__width <= 0 or self.__height <= 0:
+            raise ValueError(
+                f"Invalid target dimensions: width={self.__width}, height={self.__height}. "
+                f"Both must be positive integers."
+            )
+        
         # determine new height and width
         scale_height = self.__height / height
         scale_width = self.__width / width
@@ -162,9 +182,47 @@ class Resize(object):
         return (new_width, new_height)
 
     def __call__(self, sample):
-        width, height = self.get_size(
-            sample["image"].shape[1], sample["image"].shape[0]
-        )
+        # Validate input image dimensions
+        if "image" not in sample:
+            raise ValueError("Sample must contain 'image' key")
+        
+        image = sample["image"]
+        if len(image.shape) < 2:
+            raise ValueError(f"Invalid image shape: {image.shape}. Expected at least 2 dimensions (H, W) or (H, W, C)")
+        
+        # Get image dimensions (handle both (H, W) and (H, W, C) formats)
+        if len(image.shape) == 2:
+            img_height, img_width = image.shape
+        else:
+            img_height, img_width = image.shape[0], image.shape[1]
+        
+        # Validate input dimensions
+        if img_width <= 0 or img_height <= 0:
+            raise ValueError(
+                f"Invalid image dimensions: width={img_width}, height={img_height}. "
+                f"Image shape: {image.shape}. This usually indicates a corrupted or empty image file."
+            )
+        
+        # Get target size
+        width, height = self.get_size(img_width, img_height)
+        
+        # Validate output dimensions
+        if width <= 0 or height <= 0:
+            raise ValueError(
+                f"Invalid output dimensions calculated: width={width}, height={height}. "
+                f"Input dimensions: width={img_width}, height={img_height}. "
+                f"Target size: width={self.__width}, height={self.__height}. "
+                f"This may indicate an issue with the resize parameters or input image."
+            )
+        
+        # Ensure dimensions are integers
+        width = int(width)
+        height = int(height)
+        
+        if width <= 0 or height <= 0:
+            raise ValueError(
+                f"Output dimensions must be positive integers, got: width={width}, height={height}"
+            )
 
         # resize sample
         sample["image"] = cv2.resize(

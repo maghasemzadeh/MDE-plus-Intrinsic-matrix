@@ -1044,9 +1044,22 @@ Training Run Summary:
             
             with torch.no_grad():
                 pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
-                pred = F.interpolate(pred[:, None], depth.shape[-2:], mode='bilinear', align_corners=True)[0, 0]
+                # Handle both 3D (B, H, W) and 4D (B, 1, H, W) model outputs
+                if pred.dim() == 4:
+                    # Already has channel dimension, just interpolate and take first sample
+                    pred = F.interpolate(pred, depth.shape[-2:], mode='bilinear', align_corners=True)[0, 0]
+                else:
+                    # 3D output (B, H, W), add channel dim for interpolation
+                    pred = F.interpolate(pred[:, None], depth.shape[-2:], mode='bilinear', align_corners=True)[0, 0]
             
-            valid_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
+            # Ensure valid_mask is boolean and matches depth constraints
+            valid_mask = valid_mask.bool() & (depth >= args.min_depth) & (depth <= args.max_depth)
+            
+            # Verify shapes match before indexing
+            if pred.shape != valid_mask.shape:
+                if rank == 0 and i == 0:
+                    logger.warning(f'Shape mismatch: pred={pred.shape}, valid_mask={valid_mask.shape}, depth={depth.shape}')
+                continue
             
             if valid_mask.sum() < 10:
                 continue

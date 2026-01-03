@@ -483,16 +483,213 @@ class NYUTrainingDataset(Dataset):
         
         with self.h5py.File(self.mat_path, 'r') as f:
             # HDF5/MATLAB v7.3 format stores data transposed
-            # images: shape [3, height, width, n_images] in MATLAB
-            # depths: shape [height, width, n_images] in MATLAB
-            self._images = np.array(f['images'])
-            self._depths = np.array(f['depths'])
+            # When loaded with h5py, we need to handle the reference-based storage
+            # Load the actual data (h5py may return references that need to be dereferenced)
+            images_ref = f['images']
+            depths_ref = f['depths']
+            
+            # Get the actual shape (may be different due to HDF5 reference storage)
+            images_shape = images_ref.shape
+            depths_shape = depths_ref.shape
+            
+            # Load the data
+            self._images = np.array(images_ref)
+            self._depths = np.array(depths_ref)
         
-        # Transpose from HDF5 format to standard format
-        # images: [3, height, width, n_images] -> [n_images, height, width, 3]
-        # depths: [height, width, n_images] -> [n_images, height, width]
-        self._images = np.transpose(self._images, (3, 2, 1, 0))
-        self._depths = np.transpose(self._depths, (2, 1, 0))
+        # Check actual loaded shapes
+        original_img_shape = self._images.shape
+        original_depth_shape = self._depths.shape
+        
+        print(f"Loaded NYU data - Images shape: {original_img_shape}, Depths shape: {original_depth_shape}")
+        
+        # NYU Depth V2 has 1449 images, typically 480x640 resolution (height x width)
+        n_images_expected = 1449
+        expected_height = 480
+        expected_width = 640
+        
+        # Transpose images to [n_images, height, width, channels]
+        # The .mat file from NYU stores data in MATLAB format, which h5py loads with reversed dimensions
+        # We need to identify which dimension is which and construct the correct transpose
+        img_dims = list(original_img_shape)
+        
+        if len(img_dims) != 4:
+            raise ValueError(
+                f"Expected 4D image array from NYU .mat file, got shape {original_img_shape}. "
+                f"Expected dimensions: [n_images={n_images_expected}, height={expected_height}, "
+                f"width={expected_width}, channels=3] in some order."
+            )
+        
+        # Find each dimension by its expected size
+        # n_images = 1449, channels = 3, height = 480, width = 640
+        def find_dim_idx(dims, target_value, exclude_indices=None):
+            """Find index of dimension matching target value, excluding already-matched indices."""
+            exclude_indices = exclude_indices or []
+            for i, d in enumerate(dims):
+                if d == target_value and i not in exclude_indices:
+                    return i
+            return None
+        
+        # Find n_images (1449) - most unique value
+        img_n_idx = find_dim_idx(img_dims, n_images_expected)
+        
+        # Find channels (3)
+        img_c_idx = find_dim_idx(img_dims, 3, exclude_indices=[img_n_idx] if img_n_idx is not None else [])
+        
+        # Find height (480) and width (640)
+        exclude = [i for i in [img_n_idx, img_c_idx] if i is not None]
+        img_h_idx = find_dim_idx(img_dims, expected_height, exclude_indices=exclude)
+        exclude = [i for i in [img_n_idx, img_c_idx, img_h_idx] if i is not None]
+        img_w_idx = find_dim_idx(img_dims, expected_width, exclude_indices=exclude)
+        
+        # Build transpose order: target is [n_images, height, width, channels]
+        if img_n_idx is not None and img_c_idx is not None:
+            # We found n_images and channels, figure out height/width from remaining dims
+            remaining_indices = [i for i in range(4) if i not in [img_n_idx, img_c_idx]]
+            
+            if img_h_idx is not None and img_w_idx is not None:
+                # All dimensions identified - construct transpose directly
+                transpose_order = (img_n_idx, img_h_idx, img_w_idx, img_c_idx)
+            elif img_h_idx is not None:
+                # Height identified, width is the other remaining dimension
+                img_w_idx = [i for i in remaining_indices if i != img_h_idx][0]
+                transpose_order = (img_n_idx, img_h_idx, img_w_idx, img_c_idx)
+            elif img_w_idx is not None:
+                # Width identified, height is the other remaining dimension
+                img_h_idx = [i for i in remaining_indices if i != img_w_idx][0]
+                transpose_order = (img_n_idx, img_h_idx, img_w_idx, img_c_idx)
+            else:
+                # Neither height nor width identified - infer from remaining dimensions
+                # remaining_indices has the two spatial dimensions
+                # Try to figure out which is height (480) and which is width (640)
+                dim0_size = img_dims[remaining_indices[0]]
+                dim1_size = img_dims[remaining_indices[1]]
+                
+                # Height should be smaller than width for typical landscape images
+                if dim0_size <= dim1_size:
+                    img_h_idx, img_w_idx = remaining_indices[0], remaining_indices[1]
+                else:
+                    img_h_idx, img_w_idx = remaining_indices[1], remaining_indices[0]
+                
+                transpose_order = (img_n_idx, img_h_idx, img_w_idx, img_c_idx)
+            
+            print(f"  Identified image dimensions: n_images={img_n_idx}, height={img_h_idx}, width={img_w_idx}, channels={img_c_idx}")
+            print(f"  Applying transpose: {transpose_order}")
+            
+            if transpose_order != (0, 1, 2, 3):
+                self._images = np.transpose(self._images, transpose_order)
+        else:
+            # Could not identify key dimensions - try common fallback patterns
+            print(f"  Warning: Could not identify all dimensions. Trying fallback patterns.")
+            print(f"    Found: n_images_idx={img_n_idx}, channels_idx={img_c_idx}")
+            
+            # Common HDF5/MATLAB patterns:
+            # Pattern 1: (3, 480, 640, 1449) -> [C, H, W, N] - transpose to [N, H, W, C]
+            # Pattern 2: (1449, 3, 640, 480) -> [N, C, W, H] - transpose to [N, H, W, C]
+            # Pattern 3: (480, 640, 3, 1449) -> [H, W, C, N] - transpose to [N, H, W, C]
+            
+            if img_dims[0] == 3 and img_dims[-1] == n_images_expected:
+                # [C, H, W, N] -> [N, H, W, C]
+                self._images = np.transpose(self._images, (3, 1, 2, 0))
+                print(f"    Applied pattern 1: (3, 1, 2, 0)")
+            elif img_dims[-1] == 3 and img_dims[0] == n_images_expected:
+                # Already [N, ?, ?, C] - may need height/width swap
+                if img_dims[1] > img_dims[2]:
+                    # [N, W, H, C] -> [N, H, W, C]
+                    self._images = np.transpose(self._images, (0, 2, 1, 3))
+                    print(f"    Applied height/width swap: (0, 2, 1, 3)")
+            elif img_dims[0] == n_images_expected and img_dims[1] == 3:
+                # [N, C, ?, ?] -> [N, H, W, C]
+                # Determine if dims 2,3 are (W,H) or (H,W)
+                if img_dims[2] > img_dims[3]:
+                    # [N, C, W, H] -> [N, H, W, C]
+                    self._images = np.transpose(self._images, (0, 3, 2, 1))
+                    print(f"    Applied pattern: (0, 3, 2, 1)")
+                else:
+                    # [N, C, H, W] -> [N, H, W, C]
+                    self._images = np.transpose(self._images, (0, 2, 3, 1))
+                    print(f"    Applied pattern: (0, 2, 3, 1)")
+            elif img_dims[-1] == n_images_expected:
+                # [?, ?, ?, N] -> [N, H, W, C]
+                if img_dims[0] == 3:
+                    self._images = np.transpose(self._images, (3, 1, 2, 0))
+                elif img_dims[2] == 3:
+                    self._images = np.transpose(self._images, (3, 0, 1, 2))
+                else:
+                    # Assume [H, W, C, N]
+                    self._images = np.transpose(self._images, (3, 0, 1, 2))
+                print(f"    Applied N-last pattern")
+            else:
+                raise ValueError(
+                    f"Cannot determine correct transpose for images. Shape: {original_img_shape}. "
+                    f"Expected to find n_images={n_images_expected} and channels=3 in dimensions. "
+                    f"Please ensure the .mat file contains valid NYU Depth V2 data."
+                )
+        
+        # Handle depths: need [n_images, height, width]
+        depth_dims = list(original_depth_shape)
+        
+        if len(depth_dims) != 3:
+            raise ValueError(
+                f"Expected 3D depth array from NYU .mat file, got shape {original_depth_shape}. "
+                f"Expected dimensions: [n_images={n_images_expected}, height, width] in some order."
+            )
+        
+        depth_n_idx = find_dim_idx(depth_dims, n_images_expected)
+        
+        if depth_n_idx is not None:
+            remaining = [i for i in range(3) if i != depth_n_idx]
+            # Put n_images first, keep spatial dims in order (smaller=height, larger=width)
+            if depth_dims[remaining[0]] <= depth_dims[remaining[1]]:
+                depth_h_idx, depth_w_idx = remaining[0], remaining[1]
+            else:
+                depth_h_idx, depth_w_idx = remaining[1], remaining[0]
+            
+            transpose_order = (depth_n_idx, depth_h_idx, depth_w_idx)
+            print(f"  Identified depth dimensions: n_images={depth_n_idx}, height={depth_h_idx}, width={depth_w_idx}")
+            
+            if transpose_order != (0, 1, 2):
+                self._depths = np.transpose(self._depths, transpose_order)
+                print(f"  Applied depth transpose: {transpose_order}")
+        else:
+            # Fallback: assume last dimension is n_images
+            if depth_dims[-1] == n_images_expected or depth_dims[2] > depth_dims[0]:
+                # [H, W, N] -> [N, H, W]
+                self._depths = np.transpose(self._depths, (2, 0, 1))
+                print(f"  Applied depth fallback transpose: (2, 0, 1)")
+        
+        # Validate final shapes
+        final_img_shape = self._images.shape
+        final_depth_shape = self._depths.shape
+        
+        print(f"After transpose - Images shape: {final_img_shape}, Depths shape: {final_depth_shape}")
+        
+        # Validate that we have correct format: [n_images, H, W, 3] for images
+        if len(final_img_shape) != 4:
+            raise ValueError(f"Image array should be 4D, got shape {final_img_shape}")
+        
+        if final_img_shape[-1] != 3:
+            raise ValueError(
+                f"After transpose, image shape is {final_img_shape}, but last dimension should be 3 (channels). "
+                f"Original shape was {original_img_shape}. The transpose logic may need adjustment."
+            )
+        
+        if final_img_shape[0] != n_images_expected:
+            raise ValueError(
+                f"After transpose, image shape is {final_img_shape}, but first dimension should be {n_images_expected} (n_images). "
+                f"Original shape was {original_img_shape}. The transpose logic may need adjustment."
+            )
+        
+        # Validate depth shape: [n_images, H, W]
+        if len(final_depth_shape) != 3:
+            raise ValueError(f"Depth array should be 3D, got shape {final_depth_shape}")
+        
+        if final_depth_shape[0] != n_images_expected:
+            raise ValueError(
+                f"After transpose, depth shape is {final_depth_shape}, but first dimension should be {n_images_expected} (n_images). "
+                f"Original shape was {original_depth_shape}. The transpose logic may need adjustment."
+            )
+        
+        print(f"After transpose - Images shape: {final_img_shape}, Depths shape: {final_depth_shape}")
         
         n_total = len(self._images)
         
@@ -545,15 +742,34 @@ class NYUTrainingDataset(Dataset):
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
             raise ValueError(
                 f"Invalid image dimensions: shape={image.shape}, index={idx}. "
-                f"This usually indicates corrupted data in the .mat file."
+                f"This usually indicates corrupted data in the .mat file or incorrect transpose."
             )
         
         # Check for expected shape [H, W, 3] or [H, W]
+        # Handle case where channels might be in wrong position due to transpose issues
         if len(image.shape) == 3:
-            if image.shape[2] not in [1, 3]:
+            # Check if channels are in the last dimension (expected)
+            if image.shape[2] in [1, 3]:
+                # Correct format [H, W, C]
+                pass
+            elif image.shape[0] == 3 or image.shape[1] == 3:
+                # Channels are in wrong position - try to fix
+                old_shape = image.shape
+                if image.shape[0] == 3:
+                    # [C, H, W] -> [H, W, C]
+                    image = np.transpose(image, (1, 2, 0))
+                    print(f"Warning: Fixed image shape for index {idx} from {old_shape} to {image.shape}")
+                elif image.shape[1] == 3:
+                    # [H, C, W] -> [H, W, C]  
+                    image = np.transpose(image, (0, 2, 1))
+                    print(f"Warning: Fixed image shape for index {idx} from {old_shape} to {image.shape}")
+            else:
+                # Unexpected shape
                 raise ValueError(
-                    f"Unexpected number of channels: shape={image.shape}, index={idx}. "
-                    f"Expected [H, W, 3] or [H, W, 1], got {image.shape}."
+                    f"Unexpected image shape: {image.shape}, index={idx}. "
+                    f"Expected [H, W, 3] or [H, W, 1], but channels dimension (size 3 or 1) not found. "
+                    f"This indicates the .mat file transpose may be incorrect. "
+                    f"Full array shape: {self._images.shape}, indexed shape: {image.shape}."
                 )
         
         # Check for extremely unusual aspect ratios (likely data corruption)

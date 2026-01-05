@@ -123,14 +123,96 @@ class NYUDataset(BaseDataset):
             self._images = np.array(f['images'])
             self._depths = np.array(f['depths'])
         
+        # Check the original shape
+        original_img_shape = self._images.shape
+        original_depth_shape = self._depths.shape
+        print(f"NYU .mat file - Original image shape: {original_img_shape}, depth shape: {original_depth_shape}")
+        
         # Transpose from HDF5 format to standard format
-        # images: [3, height, width, n_images] -> [n_images, height, width, 3]
-        # depths: [height, width, n_images] -> [n_images, height, width]
-        self._images = np.transpose(self._images, (3, 2, 1, 0))
-        self._depths = np.transpose(self._depths, (2, 1, 0))
+        # The exact transpose depends on how h5py loads the data
+        # Expected final shape: [n_images, height, width, 3] for images
+        # Expected final shape: [n_images, height, width] for depths
+        
+        # Try to determine the correct transpose based on shape
+        if len(original_img_shape) == 4:
+            # Find dimensions by size: n_images=1449, height=480, width=640, channels=3
+            n_imgs_idx = None
+            h_idx = None
+            w_idx = None
+            c_idx = None
+            
+            for i, size in enumerate(original_img_shape):
+                if size == 1449:
+                    n_imgs_idx = i
+                elif size == 480:
+                    h_idx = i
+                elif size == 640:
+                    w_idx = i
+                elif size == 3:
+                    c_idx = i
+            
+            if n_imgs_idx is not None and h_idx is not None and w_idx is not None and c_idx is not None:
+                # Create transpose to get [n_images, height, width, channels]
+                transpose_order = (n_imgs_idx, h_idx, w_idx, c_idx)
+                self._images = np.transpose(self._images, transpose_order)
+                print(f"Transposed images using order {transpose_order}")
+            else:
+                # Fallback to original transpose (may need adjustment)
+                self._images = np.transpose(self._images, (3, 2, 1, 0))
+                print(f"Using fallback transpose (3, 2, 1, 0)")
+        else:
+            raise ValueError(f"Unexpected image shape from NYU .mat file: {original_img_shape}")
+        
+        # Transpose depths similarly
+        if len(original_depth_shape) == 3:
+            # Find dimensions: n_images=1449, height=480, width=640
+            n_imgs_idx = None
+            h_idx = None
+            w_idx = None
+            
+            for i, size in enumerate(original_depth_shape):
+                if size == 1449:
+                    n_imgs_idx = i
+                elif size == 480:
+                    h_idx = i
+                elif size == 640:
+                    w_idx = i
+            
+            if n_imgs_idx is not None and h_idx is not None and w_idx is not None:
+                transpose_order = (n_imgs_idx, h_idx, w_idx)
+                self._depths = np.transpose(self._depths, transpose_order)
+                print(f"Transposed depths using order {transpose_order}")
+            else:
+                # Fallback
+                self._depths = np.transpose(self._depths, (2, 1, 0))
+                print(f"Using fallback transpose for depths (2, 1, 0)")
+        else:
+            raise ValueError(f"Unexpected depth shape from NYU .mat file: {original_depth_shape}")
+        
+        # Validate final shapes
+        if len(self._images.shape) != 4 or self._images.shape[3] != 3:
+            raise ValueError(
+                f"Invalid final image shape: {self._images.shape}. "
+                f"Expected [n_images, height, width, 3]"
+            )
+        if len(self._depths.shape) != 3:
+            raise ValueError(
+                f"Invalid final depth shape: {self._depths.shape}. "
+                f"Expected [n_images, height, width]"
+            )
+        
+        # Validate dimensions are reasonable
+        n_images, height, width, channels = self._images.shape
+        if height < 100 or height > 2000 or width < 100 or width > 2000:
+            raise ValueError(
+                f"Unreasonable image dimensions: {height}x{width}. "
+                f"NYU images should be approximately 480x640. "
+                f"This suggests incorrect transpose."
+            )
         
         self._mat_loaded = True
         print(f"Loaded {len(self._images)} image pairs from NYU Depth V2 dataset")
+        print(f"Final image shape: {self._images.shape}, depth shape: {self._depths.shape}")
     
     def find_items(self) -> List[DatasetItem]:
         """
@@ -195,13 +277,14 @@ class NYUDataset(BaseDataset):
     
     def load_image(self, item: DatasetItem) -> np.ndarray:
         """
-        Load RGB image from the cached data.
+        Load image from the cached data.
         
         Args:
             item: DatasetItem containing the index in metadata
         
         Returns:
-            RGB image as numpy array with shape [H, W, 3] and dtype uint8
+            BGR image as numpy array with shape [H, W, 3] and dtype uint8
+            (matches cv2.imread format for consistency with other datasets)
         """
         # Ensure mat file is loaded
         self._load_mat_file()
@@ -209,8 +292,21 @@ class NYUDataset(BaseDataset):
         # Get index from metadata
         idx = item.metadata['index']
         
-        # Return the cached image
-        return self._images[idx].astype(np.uint8)
+        # Get the cached image (shape: [H, W, 3], RGB format)
+        image_rgb = self._images[idx].astype(np.uint8)
+        
+        # Verify shape is correct
+        if len(image_rgb.shape) != 3 or image_rgb.shape[2] != 3:
+            raise ValueError(
+                f"Invalid image shape: {image_rgb.shape}. Expected [H, W, 3]. "
+                f"This may indicate an issue with the .mat file loading."
+            )
+        
+        # Convert RGB to BGR to match cv2.imread format (which the models expect)
+        import cv2
+        image_bgr = cv2.cvtColor(image_rgb, cv2.COLOR_RGB2BGR)
+        
+        return image_bgr
     
     def load_gt_depth(self, gt_path: str, item: DatasetItem) -> np.ndarray:
         """

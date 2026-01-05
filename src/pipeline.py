@@ -474,13 +474,24 @@ class ProcessingPipeline:
                 compare_dir_created = True
             
             # Load image
-            image = cv2.imread(item.image_path)
-            if image is None:
-                if progress_bar is not None:
-                    tqdm.write(f"    ⚠️  Warning: Could not read image: {item.image_path}", file=sys.stdout)
-                else:
-                    print(f"    Warning: Could not read image: {item.image_path}")
-                continue
+            # Check if dataset uses cached data (like NYU) or file paths
+            if self.dataset.is_cached_dataset():
+                try:
+                    image = self.dataset.load_image(item)
+                except Exception as e:
+                    if progress_bar is not None:
+                        tqdm.write(f"    ⚠️  Warning: Could not load image for {item_id}: {e}", file=sys.stdout)
+                    else:
+                        print(f"    Warning: Could not load image for {item_id}: {e}")
+                    continue
+            else:
+                image = cv2.imread(item.image_path)
+                if image is None:
+                    if progress_bar is not None:
+                        tqdm.write(f"    ⚠️  Warning: Could not read image: {item.image_path}", file=sys.stdout)
+                    else:
+                        print(f"    Warning: Could not read image: {item.image_path}")
+                    continue
             
             # Store image for warping
             images[cam_id] = image

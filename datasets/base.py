@@ -191,4 +191,32 @@ class BaseDataset(ABC):
             True if the dataset has intrinsic information available.
         """
         return False  # Override in subclasses that provide intrinsics
+    
+    def is_cached_dataset(self) -> bool:
+        """
+        Indicates whether this dataset uses cached data rather than file paths.
+        
+        Returns:
+            True if images should be loaded via load_image method, False if using file paths
+        """
+        return False  # Override in subclasses that use cached data
+    
+    def load_image(self, item: DatasetItem) -> np.ndarray:
+        """
+        Load RGB image from file or cache.
+        
+        For non-cached datasets, this loads from file path.
+        For cached datasets (like NYU), this should be overridden to load from cache.
+        
+        Args:
+            item: DatasetItem containing image path or cache information
+        
+        Returns:
+            RGB image as numpy array with shape [H, W, 3] and dtype uint8
+        """
+        import cv2
+        image = cv2.imread(item.image_path)
+        if image is None:
+            raise ValueError(f"Could not load image: {item.image_path}")
+        return image
 

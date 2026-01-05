@@ -499,6 +499,12 @@ class ProcessingPipeline:
             # Load ground truth
             try:
                 gt_depth = self.dataset.load_gt_depth(item.gt_path, item)
+                # Ensure gt_depth is 2D (remove singleton dimensions)
+                if len(gt_depth.shape) > 2:
+                    gt_depth = np.squeeze(gt_depth)
+                # Ensure it's still 2D after squeezing
+                if len(gt_depth.shape) != 2:
+                    raise ValueError(f"Expected 2D gt_depth, got shape {gt_depth.shape}")
             except Exception as e:
                 if progress_bar is not None:
                     tqdm.write(f"    ⚠️  Warning: Error loading GT for {item_id}: {e}", file=sys.stdout)
@@ -532,6 +538,25 @@ class ProcessingPipeline:
                     pred_depth_raw, gt_depth, self.scale_factor
                 )
                 pred_depth = (pred_depth_raw * scale).astype(np.float32)
+            
+            # Ensure pred_depth is 2D (remove singleton dimensions)
+            if len(pred_depth.shape) > 2:
+                pred_depth = np.squeeze(pred_depth)
+            # Ensure it's still 2D after squeezing
+            if len(pred_depth.shape) != 2:
+                if progress_bar is not None:
+                    tqdm.write(f"    ⚠️  Warning: Expected 2D pred_depth, got shape {pred_depth.shape} for {item_id}", file=sys.stdout)
+                else:
+                    print(f"    Warning: Expected 2D pred_depth, got shape {pred_depth.shape} for {item_id}")
+                continue
+            
+            # Ensure gt_depth and pred_depth have the same shape
+            if gt_depth.shape != pred_depth.shape:
+                if progress_bar is not None:
+                    tqdm.write(f"    ⚠️  Warning: Shape mismatch for {item_id}: gt_depth {gt_depth.shape} vs pred_depth {pred_depth.shape}", file=sys.stdout)
+                else:
+                    print(f"    Warning: Shape mismatch for {item_id}: gt_depth {gt_depth.shape} vs pred_depth {pred_depth.shape}")
+                continue
             
             # Compute error
             error_depth = np.full_like(gt_depth, np.nan, dtype=np.float32)

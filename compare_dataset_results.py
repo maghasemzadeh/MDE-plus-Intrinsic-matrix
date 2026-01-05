@@ -267,6 +267,10 @@ Examples:
 
   # Filter DIODE scenes by type
   python compare_dataset_results.py --dataset diode --model-name da2 --filter-regex "indoors.*"
+  
+  # Process with explicit encoder size (for organizing output directories)
+  python compare_dataset_results.py --dataset cityscapes --model-name da2-revised \\
+    --encoder-size vits
         """
     )
     
@@ -301,6 +305,9 @@ Examples:
                        help='Device to use (cuda, mps, or cpu). Auto-detect if not specified')
     parser.add_argument('--scale-factor', type=float, default=None,
                        help='Scale factor for basic model (default: auto-calculate from GT depth)')
+    parser.add_argument('--encoder-size', type=str, default=None,
+                       choices=['vits', 'vitb', 'vitl', 'vitg'],
+                       help='Explicit encoder size (overrides auto-detection). Used for organizing output directories.')
     
     # Processing arguments
     parser.add_argument('--force-evaluate', action='store_true',
@@ -428,12 +435,33 @@ Examples:
         tqdm.write(f"\n📂 Processing dataset {idx+1}/{len(dataset_names)}: {dataset_name}", file=sys.stdout)
         tqdm.write(f"   Dataset path: {dataset.dataset_path}", file=sys.stdout)
         
-        # Create output directory structure: results/{dataset}/{model}/
+        # Create output directory structure: results/{dataset}/{model}/{encoder}/
         # The ProcessingPipeline uses output_base_dir, and dataset.get_item_output_dir() 
         # creates: {output_base_dir}/{dataset_subdir}/{item_id}/
-        # We want: {output_path}/{dataset_subdir}/{model}/{item_id}/
+        # We want: {output_path}/{dataset_subdir}/{model}/{encoder}/{item_id}/
         dataset_output_subdir = dataset.get_output_subdir()
-        output_base_dir = os.path.join(args.output_path, dataset_output_subdir, model_name)
+        
+        # Get encoder from model wrapper (for DA3, extract from model_name or use default)
+        # Use explicit encoder size if provided, otherwise auto-detect
+        if args.encoder_size:
+            model_encoder = args.encoder_size
+        else:
+            model_encoder = getattr(model, 'encoder', None)
+            if model_encoder is None:
+                # For DA3, try to extract from model_name or use default
+                model_name_lower = model_name.lower()
+                if 'large' in model_name_lower:
+                    model_encoder = 'vitl'
+                elif 'giant' in model_name_lower:
+                    model_encoder = 'vitg'
+                elif 'base' in model_name_lower:
+                    model_encoder = 'vitb'
+                elif 'small' in model_name_lower:
+                    model_encoder = 'vits'
+                else:
+                    model_encoder = 'vitl'  # default
+        
+        output_base_dir = os.path.join(args.output_path, dataset_output_subdir, model_name, model_encoder)
         
         # Create a wrapper dataset that modifies get_item_output_dir to not add dataset_subdir again
         class DatasetWrapper:
@@ -445,7 +473,7 @@ Examples:
                 return getattr(self.dataset, name)
             
             def get_item_output_dir(self, base_output_dir, item):
-                # Override: base_output_dir already includes dataset_subdir/model, so just add item_id
+                # Override: base_output_dir already includes dataset_subdir/model/encoder, so just add item_id
                 return os.path.join(base_output_dir, item.item_id)
         
         wrapped_dataset = DatasetWrapper(dataset)

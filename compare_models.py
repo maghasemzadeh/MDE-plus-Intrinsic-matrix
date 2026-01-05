@@ -562,6 +562,14 @@ Examples:
     --model1 da2-revised \\
     --model2 da2 \\
     --max-items 50
+  
+  # Compare with explicit encoder sizes (for organizing output directories)
+  python compare_models.py \\
+    --dataset CityScapes \\
+    --model1 da2-revised \\
+    --model2 da2 \\
+    --model1-encoder-size vits \\
+    --model2-encoder-size vitl
         """
     )
     
@@ -598,6 +606,12 @@ Examples:
                        help='Input image size for models')
     parser.add_argument('--device', type=str, default=None,
                        help='Device to use (cuda, mps, or cpu). Auto-detect if not specified')
+    parser.add_argument('--model1-encoder-size', type=str, default=None,
+                       choices=['vits', 'vitb', 'vitl', 'vitg'],
+                       help='Explicit encoder size for model1 (overrides auto-detection). Used for organizing output directories.')
+    parser.add_argument('--model2-encoder-size', type=str, default=None,
+                       choices=['vits', 'vitb', 'vitl', 'vitg'],
+                       help='Explicit encoder size for model2 (overrides auto-detection). Used for organizing output directories.')
     
     args = parser.parse_args()
     
@@ -678,24 +692,62 @@ Examples:
         print(f"Supported datasets: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, kitti")
         sys.exit(1)
     
-    # Create output directories - structure: results/{dataset}/{model}/
+    # Create output directories - structure: results/{dataset}/{model}/{encoder}/
     # The ProcessingPipeline uses output_base_dir, and dataset.get_item_output_dir() 
     # creates: {output_base_dir}/{dataset_subdir}/{item_id}/
-    # We want: {output_path}/{dataset_subdir}/{model}/{item_id}/
-    # So we pass: {output_path}/{dataset_subdir}/{model}/ as output_base_dir
+    # We want: {output_path}/{dataset_subdir}/{model}/{encoder}/{item_id}/
+    # So we pass: {output_path}/{dataset_subdir}/{model}/{encoder}/ as output_base_dir
     # But get_item_output_dir will add dataset_subdir again, creating:
-    # {output_path}/{dataset_subdir}/{model}/{dataset_subdir}/{item_id}/ (WRONG!)
+    # {output_path}/{dataset_subdir}/{model}/{encoder}/{dataset_subdir}/{item_id}/ (WRONG!)
     # 
     # Solution: Create a wrapper that overrides get_item_output_dir to skip adding dataset_subdir
     dataset_output_subdir = dataset.get_output_subdir()  # e.g., 'cityscapes', 'drivingstereo', etc.
     
-    # Get max_depth from model wrappers
+    # Get max_depth and encoder from model wrappers
     model1_max_depth = getattr(model1, 'max_depth', 80.0)
     model2_max_depth = getattr(model2, 'max_depth', 80.0)
     
-    # Create the desired structure: results/{dataset}/{model}/
-    output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name)
-    output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name)
+    # Get encoder from model wrappers (for DA3, extract from model_name or use default)
+    # Use explicit encoder size if provided, otherwise auto-detect
+    if args.model1_encoder_size:
+        model1_encoder = args.model1_encoder_size
+    else:
+        model1_encoder = getattr(model1, 'encoder', None)
+        if model1_encoder is None:
+            # For DA3, try to extract from model_name or use default
+            model1_name_lower = model1_name.lower()
+            if 'large' in model1_name_lower:
+                model1_encoder = 'vitl'
+            elif 'giant' in model1_name_lower:
+                model1_encoder = 'vitg'
+            elif 'base' in model1_name_lower:
+                model1_encoder = 'vitb'
+            elif 'small' in model1_name_lower:
+                model1_encoder = 'vits'
+            else:
+                model1_encoder = 'vitl'  # default
+    
+    if args.model2_encoder_size:
+        model2_encoder = args.model2_encoder_size
+    else:
+        model2_encoder = getattr(model2, 'encoder', None)
+        if model2_encoder is None:
+            # For DA3, try to extract from model_name or use default
+            model2_name_lower = model2_name.lower()
+            if 'large' in model2_name_lower:
+                model2_encoder = 'vitl'
+            elif 'giant' in model2_name_lower:
+                model2_encoder = 'vitg'
+            elif 'base' in model2_name_lower:
+                model2_encoder = 'vitb'
+            elif 'small' in model2_name_lower:
+                model2_encoder = 'vits'
+            else:
+                model2_encoder = 'vitl'  # default
+    
+    # Create the desired structure: results/{dataset}/{model}/{encoder}/
+    output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name, model1_encoder)
+    output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name, model2_encoder)
     # Comparison JSON will be saved in results folder (not in a subdirectory)
     comparison_output_dir = args.output_path
     
@@ -710,7 +762,7 @@ Examples:
             return getattr(self.dataset, name)
         
         def get_item_output_dir(self, base_output_dir, item):
-            # Override: base_output_dir already includes dataset_subdir/model, so just add item_id
+            # Override: base_output_dir already includes dataset_subdir/model/encoder, so just add item_id
             return os.path.join(base_output_dir, item.item_id)
     
     # Wrap datasets to fix output directory structure

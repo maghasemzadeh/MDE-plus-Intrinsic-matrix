@@ -4,8 +4,10 @@ These datasets read from split files in datasets/raw_data/ and use transforms fr
 """
 
 import os
+import random
 import re
 import shlex
+import warnings
 import cv2
 import numpy as np
 import torch
@@ -20,6 +22,40 @@ if _metric_depth_path not in sys.path:
     sys.path.insert(0, _metric_depth_path)
 
 from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
+
+
+class RobustDataset(Dataset):
+    """
+    Wrapper that catches load errors in __getitem__ and returns a fallback sample instead of crashing.
+    Useful when some files in the dataset are corrupted (e.g., libpng CRC errors on PNG files).
+    """
+
+    def __init__(self, dataset, max_retries=10):
+        """
+        Args:
+            dataset: The underlying dataset to wrap.
+            max_retries: Maximum number of random fallback attempts when the requested index fails.
+        """
+        self.dataset = dataset
+        self.max_retries = max_retries
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, index):
+        try:
+            return self.dataset[index]
+        except (ValueError, OSError, RuntimeError) as e:
+            warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+            # Try random fallback indices
+            for _ in range(self.max_retries - 1):
+                fallback_idx = random.randint(0, len(self.dataset) - 1)
+                try:
+                    return self.dataset[fallback_idx]
+                except (ValueError, OSError, RuntimeError):
+                    continue
+            # Re-raise if all retries failed
+            raise
 
 
 class VKITTI2TrainingDataset(Dataset):

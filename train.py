@@ -23,7 +23,7 @@ if _metric_depth_path not in sys.path:
     sys.path.insert(0, _metric_depth_path)
 
 # Import training datasets from datasets folder
-from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset, NYUTrainingDataset, DIODETrainingDataset
+from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset, NYUTrainingDataset, DIODETrainingDataset, RobustDataset
 
 # Import other datasets from metric_depth (for hypersim, etc.)
 from dataset.hypersim import Hypersim
@@ -369,6 +369,9 @@ def main():
             sys.stdout.flush()
             logger.info(f'Combined training dataset: {len(trainset)} samples from {len(train_datasets)} datasets')
     
+    # Wrap with RobustDataset to skip corrupted samples (e.g., libpng CRC errors)
+    trainset = RobustDataset(trainset)
+
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
     # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
@@ -486,6 +489,8 @@ def main():
             print(f"Combined validation dataset: {len(valset)} samples from {len(val_datasets)} datasets")
             sys.stdout.flush()
             logger.info(f'Combined validation dataset: {len(valset)} samples from {len(val_datasets)} datasets')
+    # Wrap with RobustDataset to skip corrupted samples
+    valset = RobustDataset(valset)
     # Use distributed sampler only if world_size > 1
     # pin_memory only works with CUDA
     # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)

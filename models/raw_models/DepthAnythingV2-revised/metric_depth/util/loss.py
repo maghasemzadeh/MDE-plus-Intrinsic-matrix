@@ -10,6 +10,9 @@ class SiLogLoss(nn.Module):
 
     def forward(self, pred, target, valid_mask):
         valid_mask = valid_mask.detach()
+        # Clamp to avoid log(0) or log(negative) which causes NaN
+        pred = torch.clamp(pred, min=1e-6)
+        target = torch.clamp(target, min=1e-6)
         diff_log = torch.log(target[valid_mask]) - torch.log(pred[valid_mask])
         loss = torch.sqrt(torch.pow(diff_log, 2).mean() -
                           self.lambd * torch.pow(diff_log.mean(), 2))

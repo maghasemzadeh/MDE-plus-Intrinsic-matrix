@@ -89,6 +89,26 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
     
     def _load_checkpoint(self, checkpoint_path: str, **kwargs) -> None:
         """Load checkpoint weights."""
+        # #region agent log
+        try:
+            _d = os.path.dirname(os.path.abspath(__file__))
+            for _ in range(10):
+                _d = os.path.dirname(_d)
+                if os.path.exists(os.path.join(_d, 'train.py')) or os.path.exists(os.path.join(_d, 'compare_models.py')):
+                    _logp = os.path.join(_d, '.cursor', 'debug.log')
+                    _isf = os.path.isfile(checkpoint_path)
+                    _isd = os.path.isdir(checkpoint_path)
+                    _sz = os.path.getsize(checkpoint_path) if _isf else -1
+                    _first8 = ''
+                    if _isf and _sz > 0:
+                        with open(checkpoint_path, 'rb') as _f:
+                            _first8 = _f.read(8).hex()
+                    with open(_logp, 'a') as _lf:
+                        import json
+                        _lf.write(json.dumps({"hypothesisId": "A,B,C", "location": "depth_anything_v2_metric:_load_checkpoint", "message": "checkpoint path before torch.load", "data": {"checkpoint_path": checkpoint_path, "is_file": _isf, "is_dir": _isd, "size_bytes": _sz, "first8_hex": _first8, "basename": os.path.basename(checkpoint_path)}, "timestamp": __import__('time').time()}) + '\n')
+        except Exception:
+            pass
+        # #endregion
         if not os.path.exists(checkpoint_path):
             raise FileNotFoundError(
                 f"Checkpoint not found: {checkpoint_path}. "

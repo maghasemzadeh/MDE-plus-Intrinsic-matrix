@@ -141,7 +141,27 @@ def find_checkpoint(
         else:
             checkpoint_path = os.path.join(project_root, explicit_checkpoint)
 
+        # #region agent log
+        try:
+            _logp = os.path.join(project_root, '.cursor', 'debug.log')
+            _isf = os.path.isfile(checkpoint_path) if os.path.exists(checkpoint_path) else False
+            _isd = os.path.isdir(checkpoint_path) if os.path.exists(checkpoint_path) else False
+            with open(_logp, 'a') as _lf:
+                import json
+                _lf.write(json.dumps({"hypothesisId": "B,D,E", "location": "find_checkpoint:explicit", "message": "explicit checkpoint path resolved", "data": {"explicit_input": explicit_checkpoint, "resolved_path": checkpoint_path, "exists": os.path.exists(checkpoint_path), "is_file": _isf, "is_dir": _isd, "basename": os.path.basename(checkpoint_path)}, "timestamp": __import__('time').time()}) + '\n')
+        except Exception:
+            pass
+        # #endregion
         if os.path.exists(checkpoint_path):
+            # #region agent log
+            try:
+                _logp = os.path.join(project_root, '.cursor', 'debug.log')
+                with open(_logp, 'a') as _lf:
+                    import json
+                    _lf.write(json.dumps({"hypothesisId": "D", "location": "find_checkpoint:before_identify", "message": "about to call identify_model_from_checkpoint", "data": {"checkpoint_path": checkpoint_path, "will_use_dir_as_file": os.path.isdir(checkpoint_path)}, "timestamp": __import__('time').time()}) + '\n')
+            except Exception:
+                pass
+            # #endregion
             config = identify_model_from_checkpoint(checkpoint_path)
             return checkpoint_path, config
         else:

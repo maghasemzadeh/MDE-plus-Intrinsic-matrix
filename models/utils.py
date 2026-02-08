@@ -25,6 +25,22 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
     cam_token_inject_layer = None
 
     # Try to load checkpoint to get info
+    # #region agent log
+    _logp = None
+    try:
+        _d = os.path.dirname(os.path.abspath(__file__))
+        for _ in range(5):
+            _d = os.path.dirname(_d)
+            if os.path.exists(os.path.join(_d, 'train.py')) or os.path.exists(os.path.join(_d, 'compare_models.py')):
+                _logp = os.path.join(_d, '.cursor', 'debug.log')
+                break
+        if _logp:
+            with open(_logp, 'a') as _lf:
+                import json
+                _lf.write(json.dumps({"hypothesisId": "E", "location": "identify_model_from_checkpoint:before_load", "message": "about to torch.load in identify", "data": {"checkpoint_path": checkpoint_path, "is_file": os.path.isfile(checkpoint_path), "is_dir": os.path.isdir(checkpoint_path)}, "timestamp": __import__('time').time()}) + '\n')
+    except Exception:
+        pass
+    # #endregion
     try:
         checkpoint = torch.load(checkpoint_path, map_location='cpu', weights_only=False)
 
@@ -101,6 +117,15 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
         # (already done above with depth_head check)
 
     except Exception as e:
+        # #region agent log
+        if _logp:
+            try:
+                with open(_logp, 'a') as _lf:
+                    import json
+                    _lf.write(json.dumps({"hypothesisId": "A,E", "location": "identify_model_from_checkpoint:catch", "message": "torch.load failed, using filename fallback", "data": {"checkpoint_path": checkpoint_path, "error_type": type(e).__name__, "error_msg": str(e)[:200]}, "timestamp": __import__('time').time()}) + '\n')
+            except Exception:
+                pass
+        # #endregion
         # If we can't load, infer from filename
         pass
     

@@ -1197,8 +1197,13 @@ Training Run Summary:
                     if current_value < previous_best[k]:
                         improved = True
                         previous_best[k] = current_value
+        else:
+            # No valid validation samples: treat first epoch as improved so we always save at least one checkpoint
+            improved = (epoch == 0)
         
         if rank == 0:
+            # Ensure save directory exists (in case it was removed)
+            os.makedirs(save_path, exist_ok=True)
             # Extract model state dict (handle DDP wrapper)
             if hasattr(model, 'module'):
                 model_state_dict = model.module.state_dict()
@@ -1222,18 +1227,26 @@ Training Run Summary:
             
             # Always save latest checkpoint
             latest_path = os.path.join(save_path, 'latest.pth')
-            # Use atomic write to prevent corruption: write to temp file then rename
-            temp_path = latest_path + '.tmp'
-            torch.save(checkpoint, temp_path)
-            os.replace(temp_path, latest_path)
+            try:
+                temp_path = latest_path + '.tmp'
+                torch.save(checkpoint, temp_path)
+                os.replace(temp_path, latest_path)
+                logger.info(f'Checkpoint saved: {latest_path}')
+            except Exception as e:
+                logger.error(f'Failed to save latest.pth to {latest_path}: {e}')
+                raise
             
             # Save best checkpoint if metrics improved
             if improved:
                 best_path = os.path.join(save_path, 'best.pth')
-                temp_path = best_path + '.tmp'
-                torch.save(checkpoint, temp_path)
-                os.replace(temp_path, best_path)
-                logger.info(f'New best checkpoint saved! Metrics: {previous_best}')
+                try:
+                    temp_path = best_path + '.tmp'
+                    torch.save(checkpoint, temp_path)
+                    os.replace(temp_path, best_path)
+                    logger.info(f'Best checkpoint saved: {best_path}')
+                    logger.info(f'New best checkpoint saved! Metrics: {previous_best}')
+                except Exception as e:
+                    logger.error(f'Failed to save best.pth to {best_path}: {e}')
     
     # After training completes, log final hyperparameters with best metrics
     if rank == 0 and writer is not None:

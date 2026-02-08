@@ -153,6 +153,30 @@ def find_checkpoint(
             pass
         # #endregion
         if os.path.exists(checkpoint_path):
+            # If path is a directory or a TensorBoard events file, look for best.pth/latest.pth
+            # in the same directory (fixes passing run dir or events.out.tfevents.* by mistake)
+            resolved = checkpoint_path
+            if os.path.isdir(checkpoint_path):
+                resolved_dir = checkpoint_path
+            elif os.path.basename(checkpoint_path).startswith('events.out.tfevents'):
+                resolved_dir = os.path.dirname(checkpoint_path)
+            else:
+                resolved_dir = None
+            if resolved_dir is not None:
+                best_pth = os.path.join(resolved_dir, 'best.pth')
+                latest_pth = os.path.join(resolved_dir, 'latest.pth')
+                if os.path.exists(best_pth):
+                    resolved = best_pth
+                elif os.path.exists(latest_pth):
+                    resolved = latest_pth
+                    print(f"Warning: best.pth not found, using latest.pth from {resolved_dir}")
+                else:
+                    raise FileNotFoundError(
+                        f"No checkpoint (best.pth or latest.pth) found in: {resolved_dir}. "
+                        f"You passed a directory or TensorBoard events file. "
+                        f"Use the path to best.pth or latest.pth instead."
+                    )
+                checkpoint_path = resolved
             # #region agent log
             try:
                 _logp = os.path.join(project_root, '.cursor', 'debug.log')

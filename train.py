@@ -70,7 +70,10 @@ parser.add_argument('--pretrained-from', type=str, help='Path to pretrained chec
 parser.add_argument('--save-path', type=str, required=True, help='Path to save checkpoints. Can be relative to project root')
 parser.add_argument('--local-rank', default=0, type=int)
 parser.add_argument('--port', default=None, type=int)
-parser.add_argument('--use-camera-intrinsics', action='store_true', help='Enable camera intrinsics support')
+parser.add_argument('--model-variant', default='revised', choices=['base', 'revised'],
+                    help='Model variant: base (original DA2, no intrinsics support) or revised (DA2 with camera intrinsics support). '
+                         'Use base for a fair baseline comparison without intrinsics.')
+parser.add_argument('--use-camera-intrinsics', action='store_true', help='Enable camera intrinsics support (only valid with --model-variant revised)')
 parser.add_argument('--cam-token-inject-layer', type=int, default=None, help='Layer index to inject camera token (None = first layer)')
 parser.add_argument('--freeze-dinov2', action='store_true', help='Freeze DINOv2 backbone (default: True, recommended)')
 parser.add_argument('--unfreeze-dinov2', action='store_true', help='Unfreeze DINOv2 backbone (not recommended for initial training)')
@@ -104,7 +107,10 @@ def generate_run_name(args) -> str:
         A string with format: modeltype_encoder_dataset[_intrinsics][_distill]_lr{lr}_bs{bs}_timestamp
     """
     components = []
-    
+
+    # Model variant (base vs revised)
+    components.append(args.model_variant)
+
     # Model type
     components.append(args.model_type)
     
@@ -203,7 +209,19 @@ def detect_encoder_from_checkpoint(checkpoint_path: str) -> str:
 
 def main():
     args = parser.parse_args()
-    
+
+    # Validate model-variant / intrinsics combination
+    if args.model_variant == 'base' and args.use_camera_intrinsics:
+        raise ValueError(
+            "--use-camera-intrinsics is not compatible with --model-variant base. "
+            "The base model does not have a camera encoder. "
+            "Use --model-variant revised to enable camera intrinsics support."
+        )
+    # Ensure base variant never receives intrinsics (safety guard)
+    if args.model_variant == 'base':
+        args.use_camera_intrinsics = False
+        args.cam_token_inject_layer = None
+
     # Ignore numpy warnings (RankWarning was removed in newer numpy versions)
     try:
         warnings.simplefilter('ignore', np.RankWarning)
@@ -565,6 +583,7 @@ def main():
     
     # Prepare hyperparameters dictionary (accessible throughout the function for final logging)
     hparams = {
+        'model_variant': args.model_variant,
         'model_type': args.model_type,
         'encoder': encoder_to_use,
         'datasets': args.datasets,
@@ -609,6 +628,7 @@ def main():
         run_description = f"""
 Training Run Summary:
 - Run Name: {run_name}
+- Model Variant: {args.model_variant}
 - Model Type: {args.model_type}
 - Encoder: {encoder_to_use}
 - Datasets: {args.datasets}
@@ -812,11 +832,15 @@ Training Run Summary:
         if rank == 0:
             logger.info('Setting up teacher model for knowledge distillation...')
         
-        # Create teacher model (without camera intrinsics)
+        # Create teacher model (without camera intrinsics, same type as student)
         teacher_kwargs = {**model_configs[args.encoder], 'use_camera_intrinsics': False, 'cam_token_inject_layer': None}
-        if args.max_depth != 20.0:
-            teacher_kwargs['max_depth'] = args.max_depth
-        teacher_model = DepthAnythingV2(**teacher_kwargs)
+        if is_metric:
+            if args.max_depth != 20.0:
+                teacher_kwargs['max_depth'] = args.max_depth
+            teacher_model = DepthAnythingV2Metric(**teacher_kwargs)
+        else:
+            TeacherBasicClass = get_basic_depth_anything_v2()
+            teacher_model = TeacherBasicClass(**teacher_kwargs)
         
         # Load teacher checkpoint
         if not os.path.isabs(args.teacher_checkpoint):
@@ -1217,6 +1241,7 @@ Training Run Summary:
                 'previous_best': previous_best,
                 # Save model configuration for proper loading
                 'config': {
+                    'model_variant': args.model_variant,
                     'encoder': args.encoder,
                     'max_depth': args.max_depth,
                     'use_camera_intrinsics': args.use_camera_intrinsics,

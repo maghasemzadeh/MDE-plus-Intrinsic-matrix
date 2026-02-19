@@ -73,17 +73,20 @@ def compare_datasets(
     print(f"DATASET COMPARISON: {dataset1_name} vs {dataset2_name}")
     print(f"{'='*80}\n")
     
-    if is_metric_model:
-        metric_names = ['abs_rel', 'rmse']
-        metric_labels = {
-            'abs_rel': 'AbsRel',
-            'rmse': 'RMSE (m)'
-        }
-    else:
-        metric_names = ['silog']
-        metric_labels = {
-            'silog': 'SILog'
-        }
+    # Always compare all four standard metrics
+    metric_names = ['rmse', 'rmse_log', 'abs_rel', 'silog']
+    metric_labels = {
+        'rmse': 'RMSE (m)',
+        'rmse_log': 'RMSE Log',
+        'abs_rel': 'AbsRel',
+        'silog': 'SILog'
+    }
+
+    # Filter to metrics actually present in the data
+    available = set()
+    for m in metrics1 + metrics2:
+        available.update(m.keys())
+    metric_names = [m for m in metric_names if m in available]
     
     results = {}
     
@@ -541,27 +544,23 @@ Examples:
         total_processed = len(all_metrics[0]) if len(all_metrics) > 0 else 0
         
         if total_processed > 0:
-            # Calculate aggregate statistics
-            if model.is_metric():
-                metric_key = 'abs_rel'
-                metric_label = 'AbsRel'
-            else:
-                metric_key = 'silog'
-                metric_label = 'SILog'
-            
-            valid_metrics = [m[metric_key] for m in all_metrics[0] 
-                           if metric_key in m and not np.isnan(m[metric_key])]
-            
-            if len(valid_metrics) > 0:
-                mean_metric = np.mean(valid_metrics)
-                std_metric = np.std(valid_metrics, ddof=1)
-                print(f"  Dataset: {dataset_name}")
-                print(f"  Images processed: {total_processed}")
-                print(f"  Mean {metric_label}: {mean_metric:.6f} ± {std_metric:.6f}")
-                print(f"  Range: [{np.min(valid_metrics):.6f}, {np.max(valid_metrics):.6f}]")
-            else:
-                print(f"  Dataset: {dataset_name}")
-                print(f"  Images processed: {total_processed}")
+            print(f"  Dataset: {dataset_name}")
+            print(f"  Images processed: {total_processed}")
+
+            summary_metrics = [
+                ('rmse',     'RMSE (m)'),
+                ('rmse_log', 'RMSE Log'),
+                ('abs_rel',  'AbsRel'),
+                ('silog',    'SILog'),
+            ]
+            for metric_key, metric_label in summary_metrics:
+                valid_values = [m[metric_key] for m in all_metrics[0]
+                                if metric_key in m and not np.isnan(m[metric_key])]
+                if len(valid_values) > 0:
+                    mean_val = np.mean(valid_values)
+                    std_val = np.std(valid_values, ddof=1)
+                    print(f"  Mean {metric_label}: {mean_val:.6f} ± {std_val:.6f}"
+                          f"  (range [{np.min(valid_values):.6f}, {np.max(valid_values):.6f}])")
         else:
             print(f"  Dataset: {dataset_name}")
             print(f"  Images processed: 0 (no valid results)")

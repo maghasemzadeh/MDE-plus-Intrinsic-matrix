@@ -200,121 +200,31 @@ def compare_model_metrics(
     print(f"Dataset: {dataset_name}")
     print(f"{'='*80}\n")
     
-    # Determine which metrics to compare
-    # First, check what metrics are actually available in the data
+    # Always compare all four standard metrics
+    metric_names = ['rmse', 'rmse_log', 'abs_rel', 'silog']
+    metric_labels = {
+        'rmse': 'RMSE (meters)',
+        'rmse_log': 'RMSE Log',
+        'abs_rel': 'Absolute Relative Error',
+        'silog': 'SILog (Scale-Invariant Log RMSE)'
+    }
+
+    # Check what metrics are actually present in the data
     all_available_metrics = set()
     for m in metrics1:
         all_available_metrics.update(m.keys())
     for m in metrics2:
         all_available_metrics.update(m.keys())
-    # Remove non-metric keys
-    all_available_metrics = {k for k in all_available_metrics 
-                                  if k not in ['n_valid', 'item_id', 'image_path']}
-    
-    # Get metrics available in each model
-    metrics1_keys = set()
-    metrics2_keys = set()
-    if metrics1:
-        metrics1_keys = set(metrics1[0].keys()) - {'n_valid', 'item_id', 'image_path'}
-    if metrics2:
-        metrics2_keys = set(metrics2[0].keys()) - {'n_valid', 'item_id', 'image_path'}
-    common_metrics = metrics1_keys & metrics2_keys
-    
-    print(f"📊 Available metrics in data: {sorted(all_available_metrics)}")
-    print(f"📊 Metrics in {model1_name}: {sorted(metrics1_keys)}")
-    print(f"📊 Metrics in {model2_name}: {sorted(metrics2_keys)}")
-    print(f"📊 Common metrics: {sorted(common_metrics)}")
-    if metrics1:
-        print(f"📋 Sample metrics from {model1_name}: {list(metrics1[0].keys())}")
-        if len(metrics1) > 1:
-            print(f"   First item values: {[(k, v) for k, v in metrics1[0].items() if k in all_available_metrics]}")
-    if metrics2:
-        print(f"📋 Sample metrics from {model2_name}: {list(metrics2[0].keys())}")
-        if len(metrics2) > 1:
-            print(f"   First item values: {[(k, v) for k, v in metrics2[0].items() if k in all_available_metrics]}")
-    
-    # Determine which metrics to use
-    # Priority: 1) Use explicit type if metrics exist, 2) Auto-detect from common metrics
-    use_explicit_type = False
-    if is_metric_model is not None:
-        # Check if the explicitly requested metrics exist in both models
-        if is_metric_model:
-            if 'abs_rel' in common_metrics:
-                use_explicit_type = True
-        else:
-            if 'silog' in common_metrics:
-                use_explicit_type = True
-        
-        if not use_explicit_type:
-            print(f"\n⚠️  Warning: Explicit model type '{'metric' if is_metric_model else 'basic'}' requested,")
-            print(f"   but models don't have the required metrics in common.")
-            print(f"   {model1_name} has: {sorted(metrics1_keys)}")
-            print(f"   {model2_name} has: {sorted(metrics2_keys)}")
-            print(f"   Falling back to auto-detection based on available common metrics...")
-    
-    if use_explicit_type and is_metric_model is not None:
-        # Use explicit model type (metrics verified to exist)
-        if is_metric_model:
-            metric_names = ['abs_rel']
-            if 'rmse' in common_metrics:
-                metric_names.append('rmse')
-            metric_labels = {
-                'abs_rel': 'Absolute Relative Error',
-                'rmse': 'RMSE (meters)'
-            }
-        else:
-            metric_names = ['silog']
-            metric_labels = {
-                'silog': 'SILog (Scale-Invariant Log RMSE)'
-            }
-    else:
-        # Auto-detect from available metrics (backward compatibility)
-        # Use the common_metrics we already computed above
-        
-        # Check if both models have the same metric type
-        has_abs_rel = 'abs_rel' in common_metrics
-        has_silog = 'silog' in common_metrics
-        
-        if has_abs_rel:
-            # Both models have abs_rel, use metric metrics
-            metric_names = ['abs_rel']
-            if 'rmse' in common_metrics:
-                metric_names.append('rmse')
-            metric_labels = {
-                'abs_rel': 'Absolute Relative Error',
-                'rmse': 'RMSE (meters)'
-            }
-        elif has_silog:
-            # Both models have silog, use basic metrics
-            metric_names = ['silog']
-            metric_labels = {
-                'silog': 'SILog (Scale-Invariant Log RMSE)'
-            }
-        else:
-            # Models have different metric types - try to find common metrics
-            if len(common_metrics) > 0:
-                # Use whatever metrics are common to both models
-                metric_names = sorted(list(common_metrics))[:2]  # Take first 2 common metrics
-                metric_labels = {name: name.replace('_', ' ').title() for name in metric_names}
-                print(f"⚠️  Warning: Models have different metric types. Using common metrics: {metric_names}")
-            else:
-                # No common metrics - this is an error
-                print(f"❌ Error: Models have no common metrics!")
-                print(f"   {model1_name} has: {sorted(metrics1_keys)}")
-                print(f"   {model2_name} has: {sorted(metrics2_keys)}")
-                print(f"   Common metrics: {sorted(common_metrics)}")
-                metric_names = []
-                metric_labels = {}
-    
-    # Filter metric_names to only include metrics that are actually available
+    all_available_metrics = {k for k in all_available_metrics
+                             if k not in ['n_valid', 'item_id', 'image_path']}
+
+    # Filter to only metrics present in both models
     metric_names = [m for m in metric_names if m in all_available_metrics]
-    
+
     if not metric_names:
         print(f"❌ Error: No valid metrics found in data!")
-        print(f"   Expected metrics: {['abs_rel', 'rmse'] if is_metric_model else ['silog'] if is_metric_model is False else 'auto'}")
         print(f"   Available metrics: {sorted(all_available_metrics)}")
         print(f"   This comparison cannot proceed without metrics.")
-        # Still save metadata for debugging
         results = {
             'dataset_name': dataset_name,
             'model1_name': model1_name,
@@ -330,7 +240,6 @@ def compare_model_metrics(
                 'model2_name': model2_name,
                 'model1_checkpoint': model1_checkpoint,
                 'model2_checkpoint': model2_checkpoint,
-                'model_type': 'metric' if is_metric_model else 'basic' if is_metric_model is not None else 'auto-detected'
             }
         }
         filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{results['metadata']['datetime']}.json"
@@ -341,7 +250,7 @@ def compare_model_metrics(
         return results
     
     results = {}
-    
+
     print(f"📊 Comparing metrics: {metric_names}")
     print(f"   Total items - {model1_name}: {len(metrics1)}, {model2_name}: {len(metrics2)}\n")
     
@@ -479,11 +388,7 @@ def compare_model_metrics(
     
     # Add metadata
     datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
-    if is_metric_model is not None:
-        model_type_str = 'metric' if is_metric_model else 'basic'
-    else:
-        model_type_str = 'auto-detected'
-    
+
     results['metadata'] = {
         'datetime': datetime_str,
         'dataset_name': dataset_name,
@@ -491,7 +396,6 @@ def compare_model_metrics(
         'model2_name': model2_name,
         'model1_checkpoint': model1_checkpoint,
         'model2_checkpoint': model2_checkpoint,
-        'model_type': model_type_str
     }
     
     # Generate filename: model1_model2_dataset_datetime.json
@@ -641,19 +545,16 @@ Examples:
     if args.model_type:
         is_metric_model = args.model_type == 'metric'
         print(f"\n📋 Model type explicitly set to: {args.model_type}")
-        print(f"   Metrics will be: {'abs_rel, rmse' if is_metric_model else 'silog'}")
     else:
-        # Auto-detect from model wrappers
+        # Auto-detect from model wrappers (used only to decide scale alignment in metrics)
         model1_is_metric = model1.is_metric()
         model2_is_metric = model2.is_metric()
-        if model1_is_metric == model2_is_metric:
-            is_metric_model = model1_is_metric
-            print(f"\n📋 Auto-detected model type: {'metric' if is_metric_model else 'basic'}")
-            print(f"   Metrics will be: {'abs_rel, rmse' if is_metric_model else 'silog'}")
-        else:
+        is_metric_model = model1_is_metric
+        if model1_is_metric != model2_is_metric:
             print(f"\n⚠️  Warning: Model types differ (model1: {'metric' if model1_is_metric else 'basic'}, model2: {'metric' if model2_is_metric else 'basic'})")
-            print(f"   Auto-detecting metrics from available data...")
-            print(f"   Consider using --model-type to explicitly set the comparison type")
+        else:
+            print(f"\n📋 Auto-detected model type: {'metric' if is_metric_model else 'basic'}")
+    print(f"   Metrics compared: rmse, rmse_log, abs_rel, silog")
     
     print(f"\n✅ Model 1: {model1_name}")
     print(f"   Checkpoint: {model1_checkpoint}")
@@ -911,15 +812,14 @@ Examples:
                 'num_model1_images': len(metrics1),
                 'num_model2_images': len(metrics2),
                 'error': str(e),
-                'metadata': {
-                    'datetime': datetime_str,
-                    'dataset_name': args.dataset,
-                    'model1_name': model1_name,
-                    'model2_name': model2_name,
-                    'model1_checkpoint': model1_checkpoint,
-                    'model2_checkpoint': model2_checkpoint,
-                    'model_type': 'metric' if is_metric_model else 'basic' if is_metric_model is not None else 'auto-detected'
-                }
+                    'metadata': {
+                        'datetime': datetime_str,
+                        'dataset_name': args.dataset,
+                        'model1_name': model1_name,
+                        'model2_name': model2_name,
+                        'model1_checkpoint': model1_checkpoint,
+                        'model2_checkpoint': model2_checkpoint,
+                    }
             }
             filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{args.dataset.lower()}_{datetime_str}.json"
             results_file = os.path.join(comparison_output_dir, filename)

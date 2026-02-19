@@ -257,16 +257,10 @@ class ProcessingPipeline:
                             
                             # Update progress bar
                             if progress_bar is not None:
-                                if self.is_metric:
-                                    metric_val = metrics.get('abs_rel', 0.0)
-                                    progress_bar.set_postfix_str(
-                                        f"Item: {item_id[:25]} | Status: ⏭️  loaded | AbsRel: {metric_val:.4f}"
-                                    )
-                                else:
-                                    metric_val = metrics.get('silog', 0.0)
-                                    progress_bar.set_postfix_str(
-                                        f"Item: {item_id[:25]} | Status: ⏭️  loaded | SILog: {metric_val:.4f}"
-                                    )
+                                metric_val = metrics.get('abs_rel', 0.0)
+                                progress_bar.set_postfix_str(
+                                    f"Item: {item_id[:25]} | Status: ⏭️  loaded | AbsRel: {metric_val:.4f}"
+                                )
                                 progress_bar.update(1)
                             continue
                         # If loading failed, fall through to process the item
@@ -281,16 +275,10 @@ class ProcessingPipeline:
                     
                     # Update progress bar with success status
                     if progress_bar is not None:
-                        if self.is_metric:
-                            metric_val = metrics.get('abs_rel', 0.0)
-                            progress_bar.set_postfix_str(
-                                f"Item: {item_id[:25]} | Status: ✅ done | AbsRel: {metric_val:.4f}"
-                            )
-                        else:
-                            metric_val = metrics.get('silog', 0.0)
-                            progress_bar.set_postfix_str(
-                                f"Item: {item_id[:25]} | Status: ✅ done | SILog: {metric_val:.4f}"
-                            )
+                        metric_val = metrics.get('abs_rel', 0.0)
+                        progress_bar.set_postfix_str(
+                            f"Item: {item_id[:25]} | Status: ✅ done | AbsRel: {metric_val:.4f}"
+                        )
                         progress_bar.update(1)
                 else:
                     if progress_bar is not None:
@@ -368,15 +356,9 @@ class ProcessingPipeline:
                 with open(metrics_file, 'r') as f:
                     metrics = json.load(f)
                 
-                # Check if saved metrics match the current model type
-                # If model is metric, should have abs_rel/rmse; if basic, should have silog
-                has_metric_metrics = 'abs_rel' in metrics or 'rmse' in metrics
-                has_basic_metrics = 'silog' in metrics
-                
-                metrics_type_matches = (
-                    (self.is_metric and has_metric_metrics) or 
-                    (not self.is_metric and has_basic_metrics)
-                )
+                # Check if saved metrics contain all expected keys
+                all_expected = {'abs_rel', 'rmse', 'rmse_log', 'silog'}
+                metrics_type_matches = all_expected.issubset(metrics.keys())
                 
                 if metrics.get('n_valid', 0) >= 10 and metrics_type_matches:
                     return metrics

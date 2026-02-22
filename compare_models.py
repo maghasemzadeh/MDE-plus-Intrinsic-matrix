@@ -6,6 +6,7 @@ error and precision metrics using statistical tests.
 """
 
 import os
+import re
 import sys
 import argparse
 import json
@@ -34,6 +35,23 @@ from models import (
     DepthAnything3Wrapper
 )
 from src import ProcessingPipeline, compute_depth_metrics
+
+
+def checkpoint_output_slug(checkpoint_path: Optional[str]) -> str:
+    """
+    Return a folder-safe name from the checkpoint path so different checkpoints
+    of the same model get distinct output directories (avoids skipping when
+    comparing e.g. da2-revised with vs without intrinsics).
+    """
+    if not checkpoint_path:
+        return "default"
+    path = checkpoint_path.rstrip(os.sep)
+    if os.path.isfile(path):
+        name = os.path.basename(os.path.dirname(path))
+    else:
+        name = os.path.basename(path) or "default"
+    # Sanitize for use as folder name
+    return re.sub(r"[^\w\-.]", "_", name) or "default"
 
 
 def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None, device: Optional[str] = None) -> Tuple[BaseDepthModelWrapper, str]:
@@ -519,10 +537,10 @@ Examples:
         print(f"Supported datasets: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, kitti")
         sys.exit(1)
     
-    # Create output directories - structure: results/{dataset}/{model}/{encoder}/
+    # Create output directories - structure: results/{dataset}/{model}/{checkpoint_slug}/{encoder}/
     # The ProcessingPipeline uses output_base_dir, and dataset.get_item_output_dir() 
     # creates: {output_base_dir}/{dataset_subdir}/{item_id}/
-    # We want: {output_path}/{dataset_subdir}/{model}/{encoder}/{item_id}/
+    # We want: {output_path}/{dataset_subdir}/{model}/{checkpoint_slug}/{encoder}/{item_id}/
     # So we pass: {output_path}/{dataset_subdir}/{model}/{encoder}/ as output_base_dir
     # But get_item_output_dir will add dataset_subdir again, creating:
     # {output_path}/{dataset_subdir}/{model}/{encoder}/{dataset_subdir}/{item_id}/ (WRONG!)
@@ -572,9 +590,12 @@ Examples:
             else:
                 model2_encoder = 'vitl'  # default
     
-    # Create the desired structure: results/{dataset}/{model}/{encoder}/
-    output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name, model1_encoder)
-    output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name, model2_encoder)
+    # Create the desired structure: results/{dataset}/{model}/{checkpoint_slug}/{encoder}/
+    # Checkpoint slug ensures different checkpoints (e.g. same model with/without intrinsics) get distinct dirs
+    model1_checkpoint_slug = checkpoint_output_slug(model1_checkpoint)
+    model2_checkpoint_slug = checkpoint_output_slug(model2_checkpoint)
+    output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name, model1_checkpoint_slug, model1_encoder)
+    output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name, model2_checkpoint_slug, model2_encoder)
     # Comparison JSON will be saved in results folder (not in a subdirectory)
     comparison_output_dir = args.output_path
     
@@ -589,7 +610,7 @@ Examples:
             return getattr(self.dataset, name)
         
         def get_item_output_dir(self, base_output_dir, item):
-            # Override: base_output_dir already includes dataset_subdir/model/encoder, so just add item_id
+            # Override: base_output_dir already includes dataset_subdir/model/checkpoint_slug/encoder, so just add item_id
             return os.path.join(base_output_dir, item.item_id)
     
     # Wrap datasets to fix output directory structure

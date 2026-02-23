@@ -6,10 +6,16 @@ through both models and prints:
   - Sample pixels: predicted depth, ground truth depth, and per-pixel abs_rel = |pred - gt| / gt
   - Image-level abs_rel = mean of per-pixel abs_rel over all valid pixels
 
+It also saves (to --output-dir):
+  - depth_ground_truth.png: ground truth depth colormap
+  - depth_<model1>.png, depth_<model2>.png: each model's predicted depth colormap
+  - input_image_with_sample_pixels.png: input image with numbered circles at sample pixels
+    (circle index 1 = first row in the table, 2 = second row, etc.)
+
 Usage:
   python show_absrel_calculation.py --dataset CityScapes --model1 da2-revised --model2 da2-revised \\
     --model1-checkpoint path/to/checkpoint1/best.pth --model2-checkpoint path/to/checkpoint2/best.pth \\
-    --item-index 0 --num-sample-pixels 10
+    --item-index 0 --num-sample-pixels 10 --output-dir absrel_sample_output
 """
 
 import os
@@ -29,6 +35,7 @@ from datasets import (
     KITTIDataset,
 )
 from src import compute_depth_metrics
+from src.visualization import depth_to_color
 
 # Import model loading from compare_models to keep same behavior
 from compare_models import find_model_by_name, checkpoint_output_slug, display_name_for_comparison
@@ -180,6 +187,9 @@ def run_one_image_and_show_absrel(
             for r, c, p, g, a in zip(sample_rows, sample_cols, sample_pred, sample_gt, sample_abs_rel)
         ],
         "is_metric": is_metric,
+        "image": image.copy(),
+        "gt_depth": gt_depth.copy(),
+        "pred_depth": pred_depth_aligned.copy(),
     }, None
 
 
@@ -191,17 +201,103 @@ def print_report(data: dict) -> None:
     print(f"  Valid pixels: {data['n_valid']}  (metric type: {'metric' if data['is_metric'] else 'basic'})")
     print(f"{'─' * 80}")
     print("\n  Formula: abs_rel (per pixel) = |pred - gt| / gt   (all in meters)")
-    print("           abs_rel (image)      = mean( abs_rel (per pixel) ) over all valid pixels\n")
+    print("           abs_rel (image)      = mean( abs_rel (per pixel) ) over all valid pixels")
+    print("  (Index = circle number in saved image input_image_with_sample_pixels.png)\n")
     print("  Sample pixels:")
-    print(f"  {'row':>6} {'col':>6} {'pred (m)':>12} {'gt (m)':>12} {'|pred-gt|/gt':>14}")
-    print("  " + "-" * 54)
-    for s in data["sample_pixels"]:
-        print(f"  {s['row']:>6} {s['col']:>6} {s['pred_m']:>12.6f} {s['gt_m']:>12.6f} {s['abs_rel_pixel']:>14.6f}")
+    print(f"  {'idx':>4} {'row':>6} {'col':>6} {'pred (m)':>12} {'gt (m)':>12} {'|pred-gt|/gt':>14}")
+    print("  " + "-" * 58)
+    for idx, s in enumerate(data["sample_pixels"], start=1):
+        print(f"  {idx:>4} {s['row']:>6} {s['col']:>6} {s['pred_m']:>12.6f} {s['gt_m']:>12.6f} {s['abs_rel_pixel']:>14.6f}")
     print("  " + "-" * 54)
     print(f"\n  Image-level abs_rel (from this script): {data['abs_rel_image']:.6f}")
     print(f"  Image-level abs_rel (from compute_depth_metrics): {data['abs_rel_from_api']:.6f}")
     print(f"  (Fraction; as percent: {data['abs_rel_image'] * 100:.4f}%)")
     print()
+
+
+def save_visualizations(
+    output_dir: str,
+    image: np.ndarray,
+    gt_depth: np.ndarray,
+    pred_depth1: np.ndarray,
+    pred_depth2: np.ndarray,
+    data1: dict,
+    data2: dict,
+    display_name1: str,
+    display_name2: str,
+) -> None:
+    """
+    Save depth visualizations and the input image with sample pixels marked by numbered circles.
+    Table row index 1 = circle label 1, etc.
+    """
+    os.makedirs(output_dir, exist_ok=True)
+    # Use a common max_depth for consistent color scale across depth maps (from valid GT and preds)
+    valid_gt = gt_depth[np.isfinite(gt_depth) & (gt_depth > 0)]
+    valid_p1 = pred_depth1[np.isfinite(pred_depth1) & (pred_depth1 > 0)]
+    valid_p2 = pred_depth2[np.isfinite(pred_depth2) & (pred_depth2 > 0)]
+    all_valid = np.concatenate([
+        valid_gt.ravel() if len(valid_gt) else [0],
+        valid_p1.ravel() if len(valid_p1) else [0],
+        valid_p2.ravel() if len(valid_p2) else [0],
+    ])
+    max_depth = float(np.percentile(all_valid, 99)) if len(all_valid) > 0 else 100.0
+    max_depth = max(max_depth, 1.0)
+
+    # Depth colormaps
+    gt_vis = depth_to_color(gt_depth, max_depth=max_depth)
+    p1_vis = depth_to_color(pred_depth1, max_depth=max_depth)
+    p2_vis = depth_to_color(pred_depth2, max_depth=max_depth)
+
+    # Safe filenames for model names
+    def safe_name(s: str, max_len: int = 40) -> str:
+        out = "".join(c if c.isalnum() or c in "._-" else "_" for c in s)[:max_len]
+        return out or "model"
+
+    name1 = safe_name(display_name1)
+    name2 = safe_name(display_name2)
+
+    cv2.imwrite(os.path.join(output_dir, "depth_ground_truth.png"), gt_vis)
+    cv2.imwrite(os.path.join(output_dir, f"depth_{name1}.png"), p1_vis)
+    cv2.imwrite(os.path.join(output_dir, f"depth_{name2}.png"), p2_vis)
+
+    # Input image with numbered circles at sample pixels (table row 1 = circle 1)
+    img_marked = image.copy()
+    sample_pixels = data1["sample_pixels"]  # same (row,col) order as in both tables
+    radius = max(8, min(image.shape[0], image.shape[1]) // 80)
+    thickness = max(2, radius // 4)
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = max(0.5, radius / 20.0)
+    font_thick = max(1, thickness)
+
+    for idx, s in enumerate(sample_pixels):
+        # Table row is 1-based: first row in table = index 1
+        label = str(idx + 1)
+        col, row = int(s["col"]), int(s["row"])
+        # Draw circle (OpenCV uses (x,y) = (col, row))
+        cv2.circle(img_marked, (col, row), radius, (0, 255, 0), thickness)
+        # Draw label above the circle so it's visible
+        (tw, th), _ = cv2.getTextSize(label, font, font_scale, font_thick)
+        tx = col - tw // 2
+        ty = row - radius - 4
+        if ty < th + 2:
+            ty = row + radius + th + 2
+        # Background for text readability
+        cv2.rectangle(
+            img_marked,
+            (tx - 2, ty - th - 2),
+            (tx + tw + 2, ty + 2),
+            (0, 255, 0),
+            -1,
+        )
+        cv2.putText(img_marked, label, (tx, ty), font, font_scale, (0, 0, 0), font_thick)
+
+    cv2.imwrite(os.path.join(output_dir, "input_image_with_sample_pixels.png"), img_marked)
+
+    print(f"\n  Saved visualizations to {output_dir}:")
+    print(f"    - depth_ground_truth.png")
+    print(f"    - depth_{name1}.png")
+    print(f"    - depth_{name2}.png")
+    print(f"    - input_image_with_sample_pixels.png  (circle index = table row number)")
 
 
 def main():
@@ -231,6 +327,8 @@ def main():
                         help="Index of the dataset item to use (default: 0)")
     parser.add_argument("--num-sample-pixels", type=int, default=10,
                         help="Number of sample pixels to print (default: 10)")
+    parser.add_argument("--output-dir", type=str, default="absrel_sample_output",
+                        help="Directory to save depth images and input image with marked sample pixels (default: absrel_sample_output)")
 
     args = parser.parse_args()
 
@@ -303,7 +401,21 @@ def main():
     print("=" * 80)
     print(f"  Model 1 ({display_name1}): abs_rel = {data1['abs_rel_image']:.6f} ({data1['abs_rel_image'] * 100:.4f}%)")
     print(f"  Model 2 ({display_name2}): abs_rel = {data2['abs_rel_image']:.6f} ({data2['abs_rel_image'] * 100:.4f}%)")
-    print("=" * 80 + "\n")
+    print("=" * 80)
+
+    # Save depth images and input image with sample pixels marked
+    save_visualizations(
+        args.output_dir,
+        data1["image"],
+        data1["gt_depth"],
+        data1["pred_depth"],
+        data2["pred_depth"],
+        data1,
+        data2,
+        display_name1,
+        display_name2,
+    )
+    print()
 
 
 if __name__ == "__main__":

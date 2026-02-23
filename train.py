@@ -973,28 +973,49 @@ Training Run Summary:
 
             img, depth, valid_mask = sample['image'].to(device), sample['depth'].to(device), sample['valid_mask'].to(device)
 
+            # Bug 1+2 fix: load intrinsics and original size BEFORE the flip so we can
+            # update cx correctly, and pass the original (pre-resize) image dimensions to
+            # the camera encoder so its normalisation (fx/W, cx/W …) matches inference.
+            intrinsics = sample.get('intrinsics', None)
+            if intrinsics is not None:
+                intrinsics = intrinsics.to(device)
+
+            original_size = sample.get('original_size', None)
+            if original_size is not None:
+                original_size = original_size.to(device)  # (B, 2)  [H, W]
+
             if random.random() < 0.5:
                 img = img.flip(-1)
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
+                # Bug 2 fix: horizontal flip mirrors the principal point.
+                # cx_new = original_width - cx  (intrinsics are still at original resolution)
+                if intrinsics is not None and original_size is not None:
+                    intrinsics = intrinsics.clone()
+                    original_w = original_size[:, 1].float()  # (B,)
+                    intrinsics[:, 0, 2] = original_w - intrinsics[:, 0, 2]
 
-            # Get intrinsics if available in sample
-            intrinsics = sample.get('intrinsics', None)
-            if intrinsics is not None:
-                intrinsics = intrinsics.to(device)
+            # Bug 1 fix: use the original image dimensions (matching the intrinsics'
+            # resolution) so the camera encoder's normalisation is consistent with
+            # inference.  All images in a batch from the same dataset share the same
+            # original resolution, so using the first item's size is correct.
+            if original_size is not None:
+                image_size_for_cam = (original_size[0, 0].item(), original_size[0, 1].item())
+            else:
+                image_size_for_cam = (img.shape[-2], img.shape[-1])
 
             # Teacher prediction (without intrinsics) for knowledge distillation
             # DepthAnythingV2 handles knowledge distillation internally
             if args.use_distillation and teacher_model is not None:
                 with torch.no_grad():
-                    teacher_pred = teacher_model(img, intrinsics=None, image_size=(img.shape[-2], img.shape[-1]))
+                    teacher_pred = teacher_model(img, intrinsics=None, image_size=image_size_for_cam)
             else:
                 teacher_pred = None
 
             # Student prediction (with intrinsics)
             # Note: If teacher_pred is needed, it should be passed to model.forward()
             # or handled by the model architecture itself
-            pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
+            pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
 
             # Standard loss - DepthAnythingV2 handles knowledge distillation internally
             valid_depth_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
@@ -1066,13 +1087,20 @@ Training Run Summary:
             
             img, depth, valid_mask = sample['image'].to(device).float(), sample['depth'].to(device)[0], sample['valid_mask'].to(device)[0]
             
-            # Get intrinsics if available in sample
+            # Bug 1 fix: use original image size for the camera encoder's normalisation
             intrinsics = sample.get('intrinsics', None)
             if intrinsics is not None:
                 intrinsics = intrinsics.to(device)
             
+            original_size = sample.get('original_size', None)
+            if original_size is not None:
+                original_size = original_size.to(device)
+                image_size_for_cam = (original_size[0, 0].item(), original_size[0, 1].item())
+            else:
+                image_size_for_cam = (img.shape[-2], img.shape[-1])
+            
             with torch.no_grad():
-                pred = model(img, intrinsics=intrinsics, image_size=(img.shape[-2], img.shape[-1]))
+                pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
                 # Handle both 3D (B, H, W) and 4D (B, 1, H, W) model outputs
                 if pred.dim() == 4:
                     # Already has channel dimension, just interpolate and take first sample

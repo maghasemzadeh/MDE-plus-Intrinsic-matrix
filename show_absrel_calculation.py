@@ -215,6 +215,25 @@ def print_report(data: dict) -> None:
     print()
 
 
+def _add_scale_overlay(vis: np.ndarray, max_depth: float, label: str, depth_arr: np.ndarray) -> np.ndarray:
+    """Add a text overlay showing scale (0 - max_depth m) and this image's actual range."""
+    out = vis.copy()
+    valid = depth_arr[np.isfinite(depth_arr) & (depth_arr > 0)]
+    d_min = float(np.min(valid)) if len(valid) > 0 else 0.0
+    d_max = float(np.max(valid)) if len(valid) > 0 else 0.0
+    w = out.shape[1]
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    scale = max(0.4, min(1.2, w / 800))
+    thick = max(1, int(scale * 2))
+    y = int(28 * scale)
+    cv2.putText(out, f"Scale: 0 - {max_depth:.1f} m (same for all)", (8, y), font, scale, (255, 255, 255), thick + 2)
+    cv2.putText(out, f"Scale: 0 - {max_depth:.1f} m (same for all)", (10, y), font, scale, (0, 0, 0), thick)
+    y += int(26 * scale)
+    cv2.putText(out, f"{label} range: {d_min:.2f} - {d_max:.2f} m", (8, y), font, scale, (255, 255, 255), thick + 2)
+    cv2.putText(out, f"{label} range: {d_min:.2f} - {d_max:.2f} m", (10, y), font, scale, (0, 0, 0), thick)
+    return out
+
+
 def save_visualizations(
     output_dir: str,
     image: np.ndarray,
@@ -228,6 +247,7 @@ def save_visualizations(
 ) -> None:
     """
     Save depth visualizations and the input image with sample pixels marked by numbered circles.
+    All depth images use the same color scale (0 to max_depth m): blue = near, red = far.
     Table row index 1 = circle label 1, etc.
     """
     os.makedirs(output_dir, exist_ok=True)
@@ -243,7 +263,7 @@ def save_visualizations(
     max_depth = float(np.percentile(all_valid, 99)) if len(all_valid) > 0 else 100.0
     max_depth = max(max_depth, 1.0)
 
-    # Depth colormaps
+    # Depth colormaps (same scale for all: JET, 0 = blue, max_depth = red)
     gt_vis = depth_to_color(gt_depth, max_depth=max_depth)
     p1_vis = depth_to_color(pred_depth1, max_depth=max_depth)
     p2_vis = depth_to_color(pred_depth2, max_depth=max_depth)
@@ -255,6 +275,11 @@ def save_visualizations(
 
     name1 = safe_name(display_name1)
     name2 = safe_name(display_name2)
+
+    # Add scale and per-image range overlay so you can see shared scale and compare ranges
+    gt_vis = _add_scale_overlay(gt_vis, max_depth, "GT", gt_depth)
+    p1_vis = _add_scale_overlay(p1_vis, max_depth, "Pred", pred_depth1)
+    p2_vis = _add_scale_overlay(p2_vis, max_depth, "Pred", pred_depth2)
 
     cv2.imwrite(os.path.join(output_dir, "depth_ground_truth.png"), gt_vis)
     cv2.imwrite(os.path.join(output_dir, f"depth_{name1}.png"), p1_vis)
@@ -293,6 +318,18 @@ def save_visualizations(
 
     cv2.imwrite(os.path.join(output_dir, "input_image_with_sample_pixels.png"), img_marked)
 
+    # Print depth ranges so you can see why colors differ (same scale: blue=low, red=high)
+    def _stats(d: np.ndarray) -> tuple:
+        v = d[np.isfinite(d) & (d > 0)]
+        return (float(np.min(v)), float(np.max(v)), float(np.mean(v))) if len(v) > 0 else (0.0, 0.0, 0.0)
+    gt_min, gt_max, gt_mean = _stats(gt_depth)
+    p1_min, p1_max, p1_mean = _stats(pred_depth1)
+    p2_min, p2_max, p2_mean = _stats(pred_depth2)
+    print(f"\n  Depth color scale: same for all images (0 - {max_depth:.1f} m). Blue = near, red = far.")
+    print(f"  Depth ranges (if one image is mostly blue and another mostly red, ranges differ):")
+    print(f"    GT:     {gt_min:.2f} - {gt_max:.2f} m  (mean {gt_mean:.2f})")
+    print(f"    {display_name1}: {p1_min:.2f} - {p1_max:.2f} m  (mean {p1_mean:.2f})")
+    print(f"    {display_name2}: {p2_min:.2f} - {p2_max:.2f} m  (mean {p2_mean:.2f})")
     print(f"\n  Saved visualizations to {output_dir}:")
     print(f"    - depth_ground_truth.png")
     print(f"    - depth_{name1}.png")

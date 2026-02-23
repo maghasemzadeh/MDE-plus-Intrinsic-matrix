@@ -281,12 +281,14 @@ class DinoVisionTransformer(nn.Module):
         for i, blk in enumerate(self.blocks):
             # Inject camera token at specified layer
             if cam_token is not None and i == cam_token_inject_layer:
-                # Replace CLS token (position 0) with camera token
-                # cam_token shape: (B, 1, embed_dim)
+                # Bug 3+6 fix: add camera signal to the CLS token rather than replacing
+                # it.  Using torch.cat (not in-place assignment) avoids autograd issues,
+                # and the '+' keeps the pretrained CLS content intact so patch tokens
+                # continue to receive meaningful global context via self-attention.
                 B = x.shape[0]
                 if cam_token.shape[0] == 1 and B > 1:
                     cam_token = cam_token.expand(B, -1, -1)
-                x[:, 0:1] = cam_token  # Replace CLS token
+                x = torch.cat([x[:, :1] + cam_token, x[:, 1:]], dim=1)
             
             x = blk(x)
             if i in blocks_to_take:
@@ -308,11 +310,11 @@ class DinoVisionTransformer(nn.Module):
             for blk in block_chunk[i:]:  # Passing the nn.Identity()
                 # Inject camera token at specified layer
                 if cam_token is not None and i == cam_token_inject_layer:
-                    # Replace CLS token (position 0) with camera token
+                    # Bug 3+6 fix: additive injection via torch.cat (no in-place op)
                     B = x.shape[0]
                     if cam_token.shape[0] == 1 and B > 1:
                         cam_token = cam_token.expand(B, -1, -1)
-                    x[:, 0:1] = cam_token  # Replace CLS token
+                    x = torch.cat([x[:, :1] + cam_token, x[:, 1:]], dim=1)
                 
                 x = blk(x)
                 if i in blocks_to_take:

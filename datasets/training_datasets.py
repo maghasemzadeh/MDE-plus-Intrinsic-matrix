@@ -360,6 +360,8 @@ class VKITTI2TrainingDataset(Dataset):
             )
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        # Record original resolution before any resizing (Bug 1 fix)
+        orig_h, orig_w = image.shape[:2]
         
         # Load depth (VKITTI depth is in cm, convert to meters)
         depth = cv2.imread(depth_path, cv2.IMREAD_ANYCOLOR | cv2.IMREAD_ANYDEPTH)
@@ -379,6 +381,10 @@ class VKITTI2TrainingDataset(Dataset):
         
         # Create valid mask
         sample['valid_mask'] = (sample['depth'] <= 80) & (sample['depth'] > 0)
+        
+        # Store original image dimensions so intrinsics can be correctly normalised
+        # during training (the intrinsics correspond to this resolution, not the resized one)
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
         
         # Load intrinsics if provided
         if intrinsics_path and os.path.exists(intrinsics_path):
@@ -773,6 +779,8 @@ class NYUTrainingDataset(Dataset):
         # Load image and depth from cached arrays
         image = self._images[idx].astype(np.float32) / 255.0  # [H, W, 3] normalized to [0, 1]
         depth = self._depths[idx].astype(np.float32)  # [H, W] in meters
+        # Record original resolution before any resizing (Bug 1 fix)
+        orig_h, orig_w = image.shape[:2]
         
         # Validate image dimensions and shape
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
@@ -838,9 +846,10 @@ class NYUTrainingDataset(Dataset):
         # Create valid mask (NYU max depth is ~10m for indoor scenes)
         sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
         
-        # Add intrinsics (scaled to match the resized image)
-        # Since we're using transforms that resize the image, we need to scale intrinsics
-        # For simplicity, just provide the base intrinsics (the model should handle scaling)
+        # Store original image dimensions for correct intrinsics normalisation (Bug 1 fix)
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
+        
+        # Intrinsics are for the original (640x480) resolution
         sample['intrinsics'] = torch.from_numpy(self.intrinsic).float()
         
         # Add image identifier
@@ -1033,6 +1042,8 @@ class DIODETrainingDataset(Dataset):
             )
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        # Record original resolution before any resizing (Bug 1 fix)
+        orig_h, orig_w = image.shape[:2]
         
         # Load depth (stored in meters)
         depth = np.load(sample_info['depth_path']).astype(np.float32)
@@ -1056,7 +1067,10 @@ class DIODETrainingDataset(Dataset):
         # Create valid mask (DIODE max depth ~10m for indoor scenes)
         sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
         
-        # Add intrinsics
+        # Store original image dimensions for correct intrinsics normalisation (Bug 1 fix)
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
+        
+        # Intrinsics are for the original (1024x768) resolution
         sample['intrinsics'] = torch.from_numpy(self.intrinsic).float()
         
         # Add image identifier
@@ -1555,6 +1569,8 @@ class KITTITrainingDataset(Dataset):
             )
         
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        # Record original resolution before any resizing (Bug 1 fix)
+        orig_h, orig_w = image.shape[:2]
         
         # Load depth (KITTI depth is stored as uint16, divide by 256 to get meters)
         depth = cv2.imread(depth_path, cv2.IMREAD_UNCHANGED)
@@ -1572,7 +1588,10 @@ class KITTITrainingDataset(Dataset):
         # Create valid mask (KITTI max depth ~80m for outdoor)
         sample['valid_mask'] = (sample['depth'] > 0) & (sample['depth'] <= 80.0)
         
-        # Load intrinsics
+        # Store original image dimensions for correct intrinsics normalisation (Bug 1 fix)
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
+        
+        # Load intrinsics (correspond to the original resolution stored above)
         if intrinsics_path and os.path.exists(intrinsics_path):
             intrinsic = self._load_intrinsics(intrinsics_path)
         else:

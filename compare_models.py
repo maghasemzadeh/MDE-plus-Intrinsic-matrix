@@ -54,6 +54,29 @@ def checkpoint_output_slug(checkpoint_path: Optional[str]) -> str:
     return re.sub(r"[^\w\-.]", "_", name) or "default"
 
 
+def display_name_for_comparison(
+    model_type_name: str,
+    checkpoint_path: Optional[str],
+    checkpoint_slug: str,
+    other_model_type_name: str,
+) -> str:
+    """
+    Return a display name for use in comparison output (JSON, console).
+    When comparing two checkpoints of the same model type (e.g. da2-revised vs da2-revised),
+    use the checkpoint folder name so we can tell which is which.
+    Otherwise return the model type name (e.g. da2, da2-revised, da3).
+    """
+    if model_type_name == other_model_type_name and checkpoint_slug and checkpoint_slug != "default":
+        return checkpoint_slug
+    return model_type_name
+
+
+def key_from_display_name(display_name: str) -> str:
+    """Return a JSON/key-safe version of the display name (lowercase, alphanumeric + _ - .)."""
+    key = re.sub(r"[^\w\-.]", "_", display_name.lower()).strip("_")
+    return key or "model"
+
+
 def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None, device: Optional[str] = None) -> Tuple[BaseDepthModelWrapper, str]:
     """
     Create model wrapper by name.
@@ -127,10 +150,20 @@ def compare_model_metrics(
         Dictionary with comparison results
     """
     os.makedirs(output_dir, exist_ok=True)
-    
+
+    # Key-safe names for JSON keys (handles long checkpoint slugs)
+    key1 = key_from_display_name(model1_name)
+    key2 = key_from_display_name(model2_name)
+
     print(f"\n{'='*80}")
     print(f"MODEL COMPARISON: {model1_name} vs {model2_name}")
     print(f"Dataset: {dataset_name}")
+    if model1_checkpoint or model2_checkpoint:
+        if model1_checkpoint:
+            print(f"  Model 1 checkpoint: {model1_checkpoint}")
+        if model2_checkpoint:
+            print(f"  Model 2 checkpoint: {model2_checkpoint}")
+    print(f"  (Difference = Model 1 − Model 2; negative ⇒ Model 1 better for error metrics)")
     print(f"{'='*80}\n")
     
     # Always compare all four standard metrics
@@ -175,7 +208,7 @@ def compare_model_metrics(
                 'model2_checkpoint': model2_checkpoint,
             }
         }
-        filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{results['metadata']['datetime']}.json"
+        filename = f"{key1}_{key2}_{dataset_name.lower()}_{results['metadata']['datetime']}.json"
         results_file = os.path.join(output_dir, filename)
         with open(results_file, 'w') as f:
             json.dump(results, f, indent=2)
@@ -218,8 +251,8 @@ def compare_model_metrics(
             # Still save partial results for this metric
             results[metric] = {
                 'error': 'Insufficient data',
-                f'{model1_name.lower().replace(" ", "_")}_n': len(vals1),
-                f'{model2_name.lower().replace(" ", "_")}_n': len(vals2),
+                f'{key1}_n': len(vals1),
+                f'{key2}_n': len(vals2),
                 'total_items_model1': len(metrics1),
                 'total_items_model2': len(metrics2)
             }
@@ -273,14 +306,14 @@ def compare_model_metrics(
         improvement = abs(mean_diff) / max(mean1, mean2) * 100 if max(mean1, mean2) > 0 else 0
         
         results[metric] = {
-            f'{model1_name.lower().replace(" ", "_")}_mean': float(mean1),
-            f'{model1_name.lower().replace(" ", "_")}_std': float(std1),
-            f'{model1_name.lower().replace(" ", "_")}_median': float(median1),
-            f'{model1_name.lower().replace(" ", "_")}_n': int(n1),
-            f'{model2_name.lower().replace(" ", "_")}_mean': float(mean2),
-            f'{model2_name.lower().replace(" ", "_")}_std': float(std2),
-            f'{model2_name.lower().replace(" ", "_")}_median': float(median2),
-            f'{model2_name.lower().replace(" ", "_")}_n': int(n2),
+            f'{key1}_mean': float(mean1),
+            f'{key1}_std': float(std1),
+            f'{key1}_median': float(median1),
+            f'{key1}_n': int(n1),
+            f'{key2}_mean': float(mean2),
+            f'{key2}_std': float(std2),
+            f'{key2}_median': float(median2),
+            f'{key2}_n': int(n2),
             'mean_diff': float(mean_diff),
             'median_diff': float(median1 - median2),
             't_statistic': float(t_stat),
@@ -332,7 +365,7 @@ def compare_model_metrics(
     }
     
     # Generate filename: model1_model2_dataset_datetime.json
-    filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{dataset_name.lower()}_{datetime_str}.json"
+    filename = f"{key1}_{key2}_{dataset_name.lower()}_{datetime_str}.json"
     results_file = os.path.join(output_dir, filename)
     with open(results_file, 'w') as f:
         json.dump(results, f, indent=2)
@@ -483,6 +516,17 @@ Examples:
     
     model1_name = f"{args.model1}"
     model2_name = f"{args.model2}"
+
+    # For directory structure we keep model type names; slugs are used in path
+    # For comparison output (JSON, console) use checkpoint slugs when same model type
+    model1_checkpoint_slug = checkpoint_output_slug(model1_checkpoint)
+    model2_checkpoint_slug = checkpoint_output_slug(model2_checkpoint)
+    comparison_display_name1 = display_name_for_comparison(
+        model1_name, model1_checkpoint, model1_checkpoint_slug, model2_name
+    )
+    comparison_display_name2 = display_name_for_comparison(
+        model2_name, model2_checkpoint, model2_checkpoint_slug, model1_name
+    )
     
     # Determine model type for comparison
     is_metric_model = None
@@ -500,11 +544,11 @@ Examples:
             print(f"\n📋 Auto-detected model type: {'metric' if is_metric_model else 'basic'}")
     print(f"   Metrics compared: rmse, rmse_log, abs_rel, silog")
     
-    print(f"\n✅ Model 1: {model1_name}")
+    print(f"\n✅ Model 1: {comparison_display_name1}")
     print(f"   Checkpoint: {model1_checkpoint}")
     print(f"   Model: {model1.get_model_name()}")
     print(f"   Type: {'metric' if model1.is_metric() else 'basic'}")
-    print(f"\n✅ Model 2: {model2_name}")
+    print(f"\n✅ Model 2: {comparison_display_name2}")
     print(f"   Checkpoint: {model2_checkpoint}")
     print(f"   Model: {model2.get_model_name()}")
     print(f"   Type: {'metric' if model2.is_metric() else 'basic'}")
@@ -592,8 +636,6 @@ Examples:
     
     # Create the desired structure: results/{dataset}/{model}/{checkpoint_slug}/{encoder}/
     # Checkpoint slug ensures different checkpoints (e.g. same model with/without intrinsics) get distinct dirs
-    model1_checkpoint_slug = checkpoint_output_slug(model1_checkpoint)
-    model2_checkpoint_slug = checkpoint_output_slug(model2_checkpoint)
     output_base_dir1 = os.path.join(args.output_path, dataset_output_subdir, model1_name, model1_checkpoint_slug, model1_encoder)
     output_base_dir2 = os.path.join(args.output_path, dataset_output_subdir, model2_name, model2_checkpoint_slug, model2_encoder)
     # Comparison JSON will be saved in results folder (not in a subdirectory)
@@ -646,10 +688,10 @@ Examples:
     model2_exists = check_dataset_evaluation_exists(output_base_dir2, wrapped_dataset2)
     
     if model1_exists:
-        print(f"\n⏭️  Skipping {model1_name} evaluation on {args.dataset} - results already exist")
+        print(f"\n⏭️  Skipping {comparison_display_name1} evaluation on {args.dataset} - results already exist")
         print(f"   Output directory: {output_base_dir1}")
     if model2_exists:
-        print(f"\n⏭️  Skipping {model2_name} evaluation on {args.dataset} - results already exist")
+        print(f"\n⏭️  Skipping {comparison_display_name2} evaluation on {args.dataset} - results already exist")
         print(f"   Output directory: {output_base_dir2}")
     
     # Process with both models (skip if already exists)
@@ -658,13 +700,13 @@ Examples:
     
     if not model1_exists:
         print(f"\n{'='*80}")
-        print(f"Evaluating {model1_name} on {args.dataset}...")
+        print(f"Evaluating {comparison_display_name1} on {args.dataset}...")
         print(f"{'='*80}")
-        
+
         # Create unified progress bar for model1
         pbar1 = tqdm(
             total=total_items,
-            desc=f"🚀 {model1_name} on {args.dataset}",
+            desc=f"🚀 {comparison_display_name1} on {args.dataset}",
             unit="item",
             ncols=120,
             dynamic_ncols=False,
@@ -683,7 +725,7 @@ Examples:
         pbar1.close()
     else:
         # Load existing metrics
-        print(f"\n📂 Loading existing results for {model1_name} on {args.dataset}...")
+        print(f"\n📂 Loading existing results for {comparison_display_name1} on {args.dataset}...")
         pipeline1 = ProcessingPipeline(
             dataset=wrapped_dataset1,
             model=model1,
@@ -696,13 +738,13 @@ Examples:
     
     if not model2_exists:
         print(f"\n{'='*80}")
-        print(f"Evaluating {model2_name} on {args.dataset}...")
+        print(f"Evaluating {comparison_display_name2} on {args.dataset}...")
         print(f"{'='*80}")
-        
+
         # Create unified progress bar for model2
         pbar2 = tqdm(
             total=total_items,
-            desc=f"🚀 {model2_name} on {args.dataset}",
+            desc=f"🚀 {comparison_display_name2} on {args.dataset}",
             unit="item",
             ncols=120,
             dynamic_ncols=False,
@@ -721,7 +763,7 @@ Examples:
         pbar2.close()
     else:
         # Load existing metrics
-        print(f"\n📂 Loading existing results for {model2_name} on {args.dataset}...")
+        print(f"\n📂 Loading existing results for {comparison_display_name2} on {args.dataset}...")
         pipeline2 = ProcessingPipeline(
             dataset=wrapped_dataset2,
             model=model2,
@@ -738,8 +780,8 @@ Examples:
             comparison_results = compare_model_metrics(
                 metrics1,
                 metrics2,
-                model1_name,
-                model2_name,
+                comparison_display_name1,
+                comparison_display_name2,
                 args.dataset,
                 comparison_output_dir,
                 model1_checkpoint=model1_checkpoint,
@@ -754,21 +796,23 @@ Examples:
             datetime_str = datetime.now().strftime("%Y%m%d_%H%M%S")
             error_results = {
                 'dataset_name': args.dataset,
-                'model1_name': model1_name,
-                'model2_name': model2_name,
+                'model1_name': comparison_display_name1,
+                'model2_name': comparison_display_name2,
                 'num_model1_images': len(metrics1),
                 'num_model2_images': len(metrics2),
                 'error': str(e),
                     'metadata': {
                         'datetime': datetime_str,
                         'dataset_name': args.dataset,
-                        'model1_name': model1_name,
-                        'model2_name': model2_name,
+                        'model1_name': comparison_display_name1,
+                        'model2_name': comparison_display_name2,
                         'model1_checkpoint': model1_checkpoint,
                         'model2_checkpoint': model2_checkpoint,
                     }
             }
-            filename = f"{model1_name.lower().replace(' ', '_')}_{model2_name.lower().replace(' ', '_')}_{args.dataset.lower()}_{datetime_str}.json"
+            key1 = key_from_display_name(comparison_display_name1)
+            key2 = key_from_display_name(comparison_display_name2)
+            filename = f"{key1}_{key2}_{args.dataset.lower()}_{datetime_str}.json"
             results_file = os.path.join(comparison_output_dir, filename)
             with open(results_file, 'w') as f:
                 json.dump(error_results, f, indent=2)
@@ -777,18 +821,18 @@ Examples:
         print("\n" + "="*80)
         print("COMPARISON SKIPPED")
         print("="*80)
-        print(f"{model1_name}: {len(metrics1)} images processed")
-        print(f"{model2_name}: {len(metrics2)} images processed")
+        print(f"{comparison_display_name1}: {len(metrics1)} images processed")
+        print(f"{comparison_display_name2}: {len(metrics2)} images processed")
         print("\nCannot compare models - need data from both models.")
         print("="*80)
-    
+
     # Print final summary
     print(f"\n{'═'*80}")
     print("✅ EVALUATION COMPLETE")
     print(f"{'═'*80}")
     print(f"  Dataset: {args.dataset}")
-    print(f"  Model 1 ({model1_name}): {len(metrics1)} images")
-    print(f"  Model 2 ({model2_name}): {len(metrics2)} images")
+    print(f"  Model 1 ({comparison_display_name1}): {len(metrics1)} images")
+    print(f"  Model 2 ({comparison_display_name2}): {len(metrics2)} images")
     print(f"  Output directory: {args.output_path}")
     print(f"{'═'*80}\n")
 

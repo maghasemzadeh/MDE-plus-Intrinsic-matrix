@@ -790,7 +790,32 @@ Training Run Summary:
                         logger.info(f'  - {key}')
             if unexpected_keys:
                 logger.warning(f'Unexpected keys: {len(unexpected_keys)} keys')
-    
+
+            # Detect max_depth mismatch between pretrained checkpoint and
+            # current training settings.  The DPT output is sigmoid(x)*max_depth,
+            # so changing max_depth shifts ALL initial predictions by the ratio.
+            pretrained_max_depth = None
+            if isinstance(checkpoint, dict) and 'config' in checkpoint:
+                pretrained_max_depth = checkpoint['config'].get('max_depth', None)
+            if pretrained_max_depth is None:
+                ckpt_basename = os.path.basename(checkpoint_path).lower()
+                if 'hypersim' in ckpt_basename:
+                    pretrained_max_depth = 20.0
+                elif 'vkitti' in ckpt_basename:
+                    pretrained_max_depth = 80.0
+            if pretrained_max_depth is not None and abs(pretrained_max_depth - args.max_depth) > 0.1:
+                ratio = args.max_depth / pretrained_max_depth
+                logger.warning(
+                    f'max_depth MISMATCH: pretrained checkpoint used max_depth={pretrained_max_depth}, '
+                    f'but training uses max_depth={args.max_depth} ({ratio:.1f}x). '
+                    f'All initial depth predictions will be {ratio:.1f}x too {"large" if ratio > 1 else "small"}. '
+                    f'This is fine if you intend to adapt the model to a new depth range, '
+                    f'but convergence will be slower. Consider using a checkpoint '
+                    f'pretrained with a matching max_depth for faster convergence.'
+                )
+                print(f"⚠️  max_depth mismatch: pretrained={pretrained_max_depth}, training={args.max_depth} ({ratio:.1f}x)")
+                sys.stdout.flush()
+
     # Freeze DINOv2 backbone (default behavior, unless explicitly unfrozen)
     freeze_dinov2 = args.freeze_dinov2 or not args.unfreeze_dinov2
     if freeze_dinov2:

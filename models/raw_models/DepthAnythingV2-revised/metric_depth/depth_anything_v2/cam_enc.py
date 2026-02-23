@@ -107,6 +107,11 @@ class CameraEncoder(nn.Module):
         
         self.token_norm = nn.LayerNorm(dim_out)
         self.trunk_norm = nn.LayerNorm(dim_out)
+
+        # Zero-initialized gate so the cam_token starts at exactly 0.
+        # This preserves pretrained CLS-token behaviour at the beginning of
+        # training and lets the encoder gradually learn to contribute.
+        self.output_gate = nn.Parameter(torch.zeros(1))
     
     def _make_block(self, dim, num_heads, mlp_ratio, init_values):
         """Create a transformer block."""
@@ -156,7 +161,11 @@ class CameraEncoder(nn.Module):
             pose_tokens = block(pose_tokens)
         
         pose_tokens = self.trunk_norm(pose_tokens)
-        
+
+        # Gate starts at 0 → cam_token ≈ 0 initially, so the pretrained CLS
+        # token is unperturbed.  The gate learns to open during training.
+        pose_tokens = pose_tokens * self.output_gate
+
         return pose_tokens  # (B, 1, dim_out)
 
 

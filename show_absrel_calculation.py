@@ -1,0 +1,310 @@
+"""
+Show how abs_rel (Absolute Relative Error) is calculated for a sample image.
+
+This script uses the same arguments as compare_models.py. It runs one image
+through both models and prints:
+  - Sample pixels: predicted depth, ground truth depth, and per-pixel abs_rel = |pred - gt| / gt
+  - Image-level abs_rel = mean of per-pixel abs_rel over all valid pixels
+
+Usage:
+  python show_absrel_calculation.py --dataset CityScapes --model1 da2-revised --model2 da2-revised \\
+    --model1-checkpoint path/to/checkpoint1/best.pth --model2-checkpoint path/to/checkpoint2/best.pth \\
+    --item-index 0 --num-sample-pixels 10
+"""
+
+import os
+import sys
+import argparse
+import numpy as np
+import cv2
+
+from datasets import (
+    DatasetConfig,
+    CityscapesDataset,
+    DrivingStereoDataset,
+    MiddleburyDataset,
+    VKITTIDataset,
+    DIODEDataset,
+    NYUDataset,
+    KITTIDataset,
+)
+from src import compute_depth_metrics
+
+# Import model loading from compare_models to keep same behavior
+from compare_models import find_model_by_name, checkpoint_output_slug, display_name_for_comparison
+
+
+def create_dataset(args):
+    """Create dataset instance from args (same logic as compare_models.py)."""
+    dataset_config = DatasetConfig(
+        dataset_path=args.dataset_path,
+        split=args.split,
+        max_items=args.max_items,
+        regex_filter=args.filter_regex,
+    )
+    if args.dataset == "CityScapes":
+        return CityscapesDataset(dataset_config)
+    if args.dataset == "DrivingStereo":
+        return DrivingStereoDataset(dataset_config)
+    if args.dataset == "middlebury":
+        return MiddleburyDataset(dataset_config)
+    if args.dataset == "vkitti":
+        return VKITTIDataset(dataset_config)
+    if args.dataset == "diode":
+        return DIODEDataset(dataset_config)
+    if args.dataset == "nyu":
+        return NYUDataset(dataset_config)
+    if args.dataset == "kitti":
+        return KITTIDataset(dataset_config)
+    raise ValueError(f"Unknown dataset: {args.dataset}")
+
+
+def run_one_image_and_show_absrel(
+    model,
+    model_display_name: str,
+    item,
+    dataset,
+    input_size: int,
+    is_metric: bool,
+    num_sample_pixels: int,
+):
+    """
+    Load image and GT, run model inference, then show sample pixels and image-level abs_rel.
+    """
+    # Load image
+    if dataset.is_cached_dataset():
+        image = dataset.load_image(item)
+    else:
+        image = cv2.imread(item.image_path)
+    if image is None:
+        return None, f"Could not read image: {item.image_path}"
+
+    # Load ground truth depth
+    try:
+        gt_depth = dataset.load_gt_depth(item.gt_path, item)
+    except Exception as e:
+        return None, f"Could not load GT: {e}"
+    if len(gt_depth.shape) > 2:
+        gt_depth = np.squeeze(gt_depth)
+    if len(gt_depth.shape) != 2:
+        return None, f"Expected 2D gt_depth, got shape {gt_depth.shape}"
+
+    # Load intrinsics if available
+    intrinsics = None
+    if hasattr(dataset, "load_intrinsic") and hasattr(dataset, "has_intrinsics") and dataset.has_intrinsics():
+        try:
+            intrinsics = dataset.load_intrinsic(item)
+        except Exception:
+            intrinsics = None
+
+    # Run inference
+    import torch
+    with torch.no_grad():
+        pred_depth_raw = model.infer_image(image, input_size=input_size, intrinsics=intrinsics)
+    if pred_depth_raw is None:
+        return None, "Model inference returned None"
+    pred_depth = pred_depth_raw.astype(np.float32)
+    if len(pred_depth.shape) > 2:
+        pred_depth = np.squeeze(pred_depth)
+    if len(pred_depth.shape) != 2:
+        return None, f"Expected 2D pred_depth, got shape {pred_depth.shape}"
+
+    # Resize pred to GT shape if needed
+    if pred_depth.shape != gt_depth.shape:
+        pred_depth = cv2.resize(
+            pred_depth, (gt_depth.shape[1], gt_depth.shape[0]),
+            interpolation=cv2.INTER_LINEAR
+        )
+
+    # Same valid mask and optional scale as in compute_depth_metrics
+    valid_mask = (
+        np.isfinite(pred_depth) & np.isfinite(gt_depth)
+        & (gt_depth > 0) & (pred_depth > 0)
+    )
+    pred_valid = pred_depth[valid_mask]
+    gt_valid = gt_depth[valid_mask]
+
+    if not is_metric:
+        scale = np.median(gt_valid) / np.median(pred_valid)
+        pred_valid = pred_valid * scale
+        pred_depth_aligned = pred_depth.copy()
+        pred_depth_aligned[valid_mask] = pred_valid
+    else:
+        pred_depth_aligned = pred_depth.copy()
+
+    n_valid = int(np.sum(valid_mask))
+    if n_valid < 10:
+        return None, f"Insufficient valid pixels: {n_valid}"
+
+    # Per-pixel abs_rel contribution: |pred - gt| / gt (for valid pixels only)
+    diff = pred_valid - gt_valid
+    abs_rel_per_pixel = np.abs(diff) / gt_valid
+    abs_rel_image = float(np.mean(abs_rel_per_pixel))
+
+    # Pick sample pixel indices (from flattened valid indices)
+    valid_flat_idx = np.where(valid_mask.ravel())[0]
+    n_show = min(num_sample_pixels, len(valid_flat_idx))
+    rng = np.random.default_rng(42)
+    sample_flat_indices = rng.choice(valid_flat_idx, size=n_show, replace=False)
+    sample_flat_indices = np.sort(sample_flat_indices)
+
+    # Map back to (row, col) and get values
+    h, w = gt_depth.shape
+    rows = sample_flat_indices // w
+    cols = sample_flat_indices % w
+
+    sample_rows = rows.tolist()
+    sample_cols = cols.tolist()
+    sample_pred = pred_depth_aligned[rows, cols].tolist()
+    sample_gt = gt_depth[rows, cols].tolist()
+    sample_abs_rel = (np.abs(pred_depth_aligned[rows, cols] - gt_depth[rows, cols]) / gt_depth[rows, cols]).tolist()
+
+    # Verify with official metric
+    metrics = compute_depth_metrics(pred_depth, gt_depth, is_metric_model=is_metric)
+    abs_rel_from_api = metrics["abs_rel"]
+
+    return {
+        "model_name": model_display_name,
+        "item_id": item.item_id,
+        "n_valid": n_valid,
+        "abs_rel_image": abs_rel_image,
+        "abs_rel_from_api": abs_rel_from_api,
+        "sample_pixels": [
+            {
+                "row": int(r),
+                "col": int(c),
+                "pred_m": float(p),
+                "gt_m": float(g),
+                "abs_rel_pixel": float(a),
+            }
+            for r, c, p, g, a in zip(sample_rows, sample_cols, sample_pred, sample_gt, sample_abs_rel)
+        ],
+        "is_metric": is_metric,
+    }, None
+
+
+def print_report(data: dict) -> None:
+    """Print a readable report for one model."""
+    print(f"\n{'─' * 80}")
+    print(f"  Model: {data['model_name']}")
+    print(f"  Image: {data['item_id']}")
+    print(f"  Valid pixels: {data['n_valid']}  (metric type: {'metric' if data['is_metric'] else 'basic'})")
+    print(f"{'─' * 80}")
+    print("\n  Formula: abs_rel (per pixel) = |pred - gt| / gt   (all in meters)")
+    print("           abs_rel (image)      = mean( abs_rel (per pixel) ) over all valid pixels\n")
+    print("  Sample pixels:")
+    print(f"  {'row':>6} {'col':>6} {'pred (m)':>12} {'gt (m)':>12} {'|pred-gt|/gt':>14}")
+    print("  " + "-" * 54)
+    for s in data["sample_pixels"]:
+        print(f"  {s['row']:>6} {s['col']:>6} {s['pred_m']:>12.6f} {s['gt_m']:>12.6f} {s['abs_rel_pixel']:>14.6f}")
+    print("  " + "-" * 54)
+    print(f"\n  Image-level abs_rel (from this script): {data['abs_rel_image']:.6f}")
+    print(f"  Image-level abs_rel (from compute_depth_metrics): {data['abs_rel_from_api']:.6f}")
+    print(f"  (Fraction; as percent: {data['abs_rel_image'] * 100:.4f}%)")
+    print()
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="Show how abs_rel is calculated for a sample image (same args as compare_models.py)",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=__doc__,
+    )
+    # Same dataset args as compare_models
+    parser.add_argument("--dataset", type=str, required=True,
+                        choices=["CityScapes", "DrivingStereo", "middlebury", "vkitti", "diode", "nyu", "kitti"],
+                        help="Dataset name")
+    parser.add_argument("--dataset-path", type=str, default=None, help="Optional path to dataset")
+    parser.add_argument("--split", type=str, default="train", help="Dataset split")
+    parser.add_argument("--max-items", type=int, default=None, help="Max items to consider")
+    parser.add_argument("--filter-regex", type=str, default=None, help="Regex to filter items")
+    # Same model args as compare_models
+    parser.add_argument("--model1", type=str, required=True, choices=["da2", "da2-revised", "da3"])
+    parser.add_argument("--model2", type=str, required=True, choices=["da2", "da2-revised", "da3"])
+    parser.add_argument("--model1-checkpoint", type=str, default=None)
+    parser.add_argument("--model2-checkpoint", type=str, default=None)
+    parser.add_argument("--model-type", type=str, default=None, choices=["metric", "basic"])
+    parser.add_argument("--input-size", type=int, default=518)
+    parser.add_argument("--device", type=str, default=None)
+    # Extra args for this script
+    parser.add_argument("--item-index", type=int, default=0,
+                        help="Index of the dataset item to use (default: 0)")
+    parser.add_argument("--num-sample-pixels", type=int, default=10,
+                        help="Number of sample pixels to print (default: 10)")
+
+    args = parser.parse_args()
+
+    print("\n" + "=" * 80)
+    print("  AbsRel calculation sample (same inputs as compare_models.py)")
+    print("=" * 80)
+
+    # Create dataset
+    try:
+        dataset = create_dataset(args)
+    except ValueError as e:
+        print(f"\n❌ Error: {e}")
+        sys.exit(1)
+
+    items = dataset.find_items()
+    if not items:
+        print("\n❌ No items found in dataset.")
+        sys.exit(1)
+
+    # For multi-camera datasets, items may be grouped; we take one item (first camera if grouped)
+    item_index = min(args.item_index, len(items) - 1)
+    item = items[item_index]
+    print(f"\n  Using item index {item_index}: {item.item_id}")
+
+    # Load both models
+    print("\n  Loading models...")
+    try:
+        model1, model1_checkpoint = find_model_by_name(args.model1, args.model1_checkpoint, args.device)
+        model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
+    except (FileNotFoundError, ValueError) as e:
+        print(f"\n❌ Error: {e}")
+        sys.exit(1)
+
+    model1_name = args.model1
+    model2_name = args.model2
+    slug1 = checkpoint_output_slug(model1_checkpoint)
+    slug2 = checkpoint_output_slug(model2_checkpoint)
+    display_name1 = display_name_for_comparison(model1_name, model1_checkpoint, slug1, model2_name)
+    display_name2 = display_name_for_comparison(model2_name, model2_checkpoint, slug2, model1_name)
+
+    is_metric1 = model1.is_metric()
+    is_metric2 = model2.is_metric()
+    if args.model_type is not None:
+        is_metric1 = args.model_type == "metric"
+        is_metric2 = is_metric1
+
+    # Run for model 1
+    print(f"\n  Running model 1: {display_name1}")
+    data1, err1 = run_one_image_and_show_absrel(
+        model1, display_name1, item, dataset, args.input_size, is_metric1, args.num_sample_pixels
+    )
+    if err1:
+        print(f"\n❌ Model 1 failed: {err1}")
+        sys.exit(1)
+    print_report(data1)
+
+    # Run for model 2
+    print(f"\n  Running model 2: {display_name2}")
+    data2, err2 = run_one_image_and_show_absrel(
+        model2, display_name2, item, dataset, args.input_size, is_metric2, args.num_sample_pixels
+    )
+    if err2:
+        print(f"\n❌ Model 2 failed: {err2}")
+        sys.exit(1)
+    print_report(data2)
+
+    # Short summary
+    print("=" * 80)
+    print("  Summary (same image, same formula)")
+    print("=" * 80)
+    print(f"  Model 1 ({display_name1}): abs_rel = {data1['abs_rel_image']:.6f} ({data1['abs_rel_image'] * 100:.4f}%)")
+    print(f"  Model 2 ({display_name2}): abs_rel = {data2['abs_rel_image']:.6f} ({data2['abs_rel_image'] * 100:.4f}%)")
+    print("=" * 80 + "\n")
+
+
+if __name__ == "__main__":
+    main()

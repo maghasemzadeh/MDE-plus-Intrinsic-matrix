@@ -1,5 +1,6 @@
 import argparse
 import logging
+import math
 import os
 import sys
 import pprint
@@ -23,7 +24,14 @@ if _metric_depth_path not in sys.path:
     sys.path.insert(0, _metric_depth_path)
 
 # Import training datasets from datasets folder
-from datasets.training_datasets import VKITTI2TrainingDataset, KITTITrainingDataset, NYUTrainingDataset, DIODETrainingDataset, RobustDataset
+from datasets.training_datasets import (
+    VKITTI2TrainingDataset,
+    KITTITrainingDataset,
+    NYUTrainingDataset,
+    DIODETrainingDataset,
+    MiddleburyTrainingDataset,
+    RobustDataset,
+)
 
 # Import other datasets from metric_depth (for hypersim, etc.)
 from dataset.hypersim import Hypersim
@@ -55,9 +63,9 @@ def get_basic_depth_anything_v2():
 parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic Depth Estimation')
 
 parser.add_argument('--encoder', default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
-parser.add_argument('--datasets', default='hypersim', 
+parser.add_argument('--datasets', default='hypersim',
                     help='Comma-separated list of datasets to train on (e.g., "vkitti,diode"). '
-                         'Supported: hypersim, vkitti, nyu, diode')
+                         'Supported: hypersim, vkitti, nyu, diode, middlebury')
 parser.add_argument('--model-type', default='basic', choices=['metric', 'basic'],
                     help='Model type: metric (absolute depth in meters) or basic (relative depth with scale ambiguity)')
 parser.add_argument('--img-size', default=518, type=int)
@@ -83,6 +91,11 @@ parser.add_argument('--head-lr-multiplier', type=float, default=10.0, help='Lear
 parser.add_argument('--grad-clip', type=float, default=None, help='Gradient clipping max norm (e.g., 1.0 for stability)')
 parser.add_argument('--accumulate-grad', type=int, default=1, help='Number of gradient accumulation steps (default: 1, no accumulation)')
 parser.add_argument('--warmup-epochs', type=int, default=0, help='Number of warmup epochs with linear learning rate ramp-up (default: 0, no warmup)')
+parser.add_argument('--test', action='store_true',
+                    help='Test mode: save best.pth and latest.pth every N iterations (see --test-save-every) '
+                         'so you can sanity-check training early without waiting for a full epoch.')
+parser.add_argument('--test-save-every', type=int, default=10,
+                    help='When --test: save checkpoints every N training iterations (default: 10)')
 
 
 def get_device():
@@ -340,6 +353,23 @@ def main():
                 print(f"DIODE training dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
+        elif dataset_name == 'middlebury':
+            middlebury_path = os.path.join(project_root, 'datasets', 'raw_data', 'middlebury')
+            if not os.path.exists(middlebury_path):
+                raise FileNotFoundError(
+                    f"Middlebury dataset not found: {middlebury_path}\n"
+                    f"Please download Middlebury Stereo Evaluation data and place scenes in:\n"
+                    f"  {middlebury_path}/{{scene_name}}/\n"
+                    f"Each scene needs: calib.txt, im0.png, im1.png, disp0.pfm, disp1.pfm"
+                )
+            if rank == 0:
+                print(f"Initializing Middlebury training dataset...")
+                sys.stdout.flush()
+            dataset = MiddleburyTrainingDataset(middlebury_path, 'train', size=size)
+            if rank == 0:
+                print(f"Middlebury training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         elif dataset_name == 'kitti':
             kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
             if not os.path.exists(kitti_path):
@@ -360,7 +390,7 @@ def main():
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
                 )
             train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'train.txt')
             if os.path.exists(train_filelist):
@@ -368,7 +398,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
                 )
     
     # Create training datasets
@@ -466,6 +496,16 @@ def main():
                 print(f"DIODE validation dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
+        elif dataset_name == 'middlebury':
+            middlebury_path = os.path.join(project_root, 'datasets', 'raw_data', 'middlebury')
+            if rank == 0:
+                print(f"Initializing Middlebury validation dataset...")
+                sys.stdout.flush()
+            dataset = MiddleburyTrainingDataset(middlebury_path, 'val', size=size)
+            if rank == 0:
+                print(f"Middlebury validation dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         elif dataset_name == 'kitti':
             kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
             if rank == 0:
@@ -481,7 +521,7 @@ def main():
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
                 )
             val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'val.txt')
             if os.path.exists(val_filelist):
@@ -489,7 +529,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
                 )
     
     # Create validation datasets
@@ -791,9 +831,12 @@ Training Run Summary:
             if unexpected_keys:
                 logger.warning(f'Unexpected keys: {len(unexpected_keys)} keys')
 
-            # Detect max_depth mismatch between pretrained checkpoint and
-            # current training settings.  The DPT output is sigmoid(x)*max_depth,
-            # so changing max_depth shifts ALL initial predictions by the ratio.
+            # Detect max_depth mismatch and apply bias correction.
+            # The DPT output is sigmoid(x + bias) * max_depth.  When max_depth
+            # changes by a factor `ratio`, the sigmoid saturates (approaches 1.0)
+            # and gradients vanish, making training impossible.
+            # Fix: subtract log(ratio) from the last Conv2d bias so that
+            #   sigmoid(x + bias_new) * max_depth_new ≈ sigmoid(x + bias_old) * max_depth_old
             pretrained_max_depth = None
             if isinstance(checkpoint, dict) and 'config' in checkpoint:
                 pretrained_max_depth = checkpoint['config'].get('max_depth', None)
@@ -805,16 +848,37 @@ Training Run Summary:
                     pretrained_max_depth = 80.0
             if pretrained_max_depth is not None and abs(pretrained_max_depth - args.max_depth) > 0.1:
                 ratio = args.max_depth / pretrained_max_depth
-                logger.warning(
-                    f'max_depth MISMATCH: pretrained checkpoint used max_depth={pretrained_max_depth}, '
-                    f'but training uses max_depth={args.max_depth} ({ratio:.1f}x). '
-                    f'All initial depth predictions will be {ratio:.1f}x too {"large" if ratio > 1 else "small"}. '
-                    f'This is fine if you intend to adapt the model to a new depth range, '
-                    f'but convergence will be slower. Consider using a checkpoint '
-                    f'pretrained with a matching max_depth for faster convergence.'
-                )
-                print(f"⚠️  max_depth mismatch: pretrained={pretrained_max_depth}, training={args.max_depth} ({ratio:.1f}x)")
-                sys.stdout.flush()
+                bias_correction = math.log(ratio)
+
+                # The last Conv2d before Sigmoid lives at depth_head.scratch.output_conv2[2]
+                bias_param_name = 'depth_head.scratch.output_conv2.2.bias'
+                found_bias = False
+                for name, param in model.named_parameters():
+                    if name == bias_param_name:
+                        old_mean = param.data.mean().item()
+                        param.data -= bias_correction
+                        new_mean = param.data.mean().item()
+                        found_bias = True
+                        logger.info(
+                            f'Applied bias correction for max_depth change '
+                            f'({pretrained_max_depth} → {args.max_depth}, ratio={ratio:.1f}x): '
+                            f'subtracted {bias_correction:.4f} from {bias_param_name} '
+                            f'(mean bias: {old_mean:.4f} → {new_mean:.4f})'
+                        )
+                        print(f"✅ Applied sigmoid bias correction: -{bias_correction:.4f} "
+                              f"(max_depth {pretrained_max_depth} → {args.max_depth})")
+                        sys.stdout.flush()
+                        break
+
+                if not found_bias:
+                    logger.warning(
+                        f'Could not find {bias_param_name} to apply bias correction. '
+                        f'max_depth mismatch ({pretrained_max_depth} → {args.max_depth}) '
+                        f'will cause sigmoid saturation and very slow convergence.'
+                    )
+                    print(f"⚠️  max_depth mismatch: pretrained={pretrained_max_depth}, "
+                          f"training={args.max_depth} ({ratio:.1f}x) — bias correction FAILED")
+                    sys.stdout.flush()
 
     # Freeze DINOv2 backbone (default behavior, unless explicitly unfrozen)
     freeze_dinov2 = args.freeze_dinov2 or not args.unfreeze_dinov2
@@ -1091,6 +1155,38 @@ Training Run Summary:
             
             if rank == 0 and i % 100 == 0:
                 logger.info('Iter: {}/{}, LR: {:.7f}, Loss: {:.3f}'.format(i, len(trainloader), optimizer.param_groups[0]['lr'], loss.item()))
+
+            # Test mode: save best.pth and latest.pth every N iterations for early sanity checks
+            if args.test and rank == 0 and (i + 1) % args.test_save_every == 0:
+                os.makedirs(save_path, exist_ok=True)
+                if hasattr(model, 'module'):
+                    model_state_dict = model.module.state_dict()
+                else:
+                    model_state_dict = model.state_dict()
+                checkpoint = {
+                    'model': model_state_dict,
+                    'optimizer': optimizer.state_dict(),
+                    'epoch': epoch,
+                    'iteration': iters,
+                    'previous_best': previous_best,
+                    'config': {
+                        'model_variant': args.model_variant,
+                        'encoder': args.encoder,
+                        'max_depth': args.max_depth,
+                        'use_camera_intrinsics': args.use_camera_intrinsics,
+                        'cam_token_inject_layer': args.cam_token_inject_layer,
+                        'model_type': args.model_type,
+                    }
+                }
+                for ckpt_name in ['latest.pth', 'best.pth']:
+                    ckpt_path = os.path.join(save_path, ckpt_name)
+                    try:
+                        temp_path = ckpt_path + '.tmp'
+                        torch.save(checkpoint, temp_path)
+                        os.replace(temp_path, ckpt_path)
+                        logger.info(f'[--test] Checkpoint saved: {ckpt_path} (iter {iters})')
+                    except Exception as e:
+                        logger.error(f'Failed to save {ckpt_name}: {e}')
         
         # Log average training loss per epoch
         if rank == 0 and writer is not None:

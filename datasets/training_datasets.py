@@ -24,6 +24,85 @@ if _metric_depth_path not in sys.path:
 from dataset.transform import Resize, NormalizeImage, PrepareForNet, Crop
 
 
+def _read_pfm(filepath):
+    """Read a .pfm disparity file."""
+    with open(filepath, 'rb') as f:
+        header = f.readline().decode('utf-8').rstrip()
+        dims = f.readline().decode('utf-8').rstrip()
+        width, height = map(int, dims.split())
+        scale = float(f.readline().decode('utf-8').rstrip())
+        data = np.fromfile(f, '<f' if scale < 0 else '>f')
+        data = np.reshape(data, (height, width))
+        data = np.flipud(data)
+        return data
+
+
+def _depth_from_disparity(disparity, f, baseline, doffs):
+    """Convert disparity map to depth in meters."""
+    depth = np.zeros_like(disparity, dtype=np.float32)
+    mask = np.isfinite(disparity) & ((disparity + doffs) != 0)
+    with np.errstate(divide='ignore', invalid='ignore'):
+        depth[mask] = (baseline * f) / (disparity[mask] + doffs)
+    depth[~np.isfinite(depth)] = 0.0
+    return depth / 1000.0  # mm to meters
+
+
+def _parse_middlebury_calib(calib_file):
+    """Parse Middlebury calib.txt to get f0,f1,cx0,cy0,cx1,cy1,doffs,baseline."""
+    calib = {}
+    current_key = None
+    current_vals = []
+
+    with open(calib_file, 'r') as f:
+        for line in f:
+            line = line.strip()
+            if not line:
+                continue
+            if '=' in line:
+                if current_key is not None:
+                    calib[current_key] = current_vals
+                    current_vals = []
+                key, val = line.split('=', 1)
+                key = key.strip()
+                if '[' in val:
+                    current_key = key
+                    val_clean = val.split('[', 1)[1].replace(']', ' ').replace(';', ' ')
+                    vals = val_clean.split()
+                    current_vals.extend([float(v) for v in vals if v])
+                    if ']' in val:
+                        calib[current_key] = current_vals
+                        current_key = None
+                        current_vals = []
+                else:
+                    val_clean = val.replace('[', ' ').replace(']', ' ').replace(';', ' ')
+                    vals = list(map(float, val_clean.split()))
+                    calib[key] = vals
+                    current_key = None
+            else:
+                if current_key is not None:
+                    val_clean = line.replace(']', ' ').replace(';', ' ')
+                    vals = val_clean.split()
+                    current_vals.extend([float(v) for v in vals if v])
+                    if ']' in line:
+                        calib[current_key] = current_vals
+                        current_key = None
+                        current_vals = []
+    if current_key is not None:
+        calib[current_key] = current_vals
+
+    cam0 = calib.get('cam0')
+    cam1 = calib.get('cam1')
+    if cam0 is None or cam1 is None or len(cam0) < 6 or len(cam1) < 6:
+        raise ValueError(f"Invalid calib file: cam0/cam1 missing or insufficient values")
+
+    f0, cx0, cy0 = cam0[0], cam0[2], cam0[5] if len(cam0) > 5 else cam0[4]
+    f1, cx1, cy1 = cam1[0], cam1[2], cam1[5] if len(cam1) > 5 else cam1[4]
+    doffs = calib['doffs'][0] if 'doffs' in calib else (cx1 - cx0)
+    baseline = calib['baseline'][0] if 'baseline' in calib else 1.0
+
+    return f0, f1, cx0, cy0, cx1, cy1, doffs, baseline
+
+
 class RobustDataset(Dataset):
     """
     Wrapper that catches load errors in __getitem__ and returns a fallback sample instead of crashing.
@@ -1078,6 +1157,181 @@ class DIODETrainingDataset(Dataset):
         
         return sample
     
+    def __len__(self):
+        return len(self.samples)
+
+
+class MiddleburyTrainingDataset(Dataset):
+    """
+    Middlebury stereo dataset for depth estimation training.
+
+    Loads from the Middlebury Stereo Evaluation structure:
+        middlebury/{scene_name}/
+            - calib.txt    # Camera intrinsics (cam0, cam1, doffs, baseline)
+            - im0.png      # Left camera image
+            - im1.png      # Right camera image
+            - disp0.pfm    # Left disparity (convertible to depth)
+            - disp1.pfm    # Right disparity
+
+    Intrinsics are loaded from calib.txt per scene/camera.
+    Depth is computed from disparity: depth = (baseline * f) / (disparity + doffs)
+    """
+
+    def __init__(self, dataset_path, mode='train', size=(518, 518), train_ratio=0.8):
+        """
+        Initialize Middlebury training dataset.
+
+        Args:
+            dataset_path: Path to the Middlebury dataset root (e.g., datasets/raw_data/middlebury)
+            mode: 'train' or 'val'
+            size: (width, height) for image resizing
+            train_ratio: Fraction of scenes for training (remainder for validation)
+        """
+        self.mode = mode
+        self.size = size
+
+        current_file = os.path.abspath(__file__)
+        self.project_root = os.path.dirname(os.path.dirname(current_file))
+
+        if not os.path.isabs(dataset_path):
+            dataset_path = os.path.join(self.project_root, dataset_path)
+
+        self.dataset_path = dataset_path
+
+        # Find all valid scene samples (each scene yields 2 samples: cam0 and cam1)
+        self.samples = self._find_samples()
+
+        if len(self.samples) == 0:
+            raise ValueError(
+                f"No valid Middlebury samples found at: {dataset_path}\n"
+                f"Each scene needs: calib.txt, im0.png, im1.png, disp0.pfm, disp1.pfm"
+            )
+
+        # Split by scene (avoid same scene in train and val)
+        scene_to_samples = {}
+        for s in self.samples:
+            scene = s['scene_name']
+            if scene not in scene_to_samples:
+                scene_to_samples[scene] = []
+            scene_to_samples[scene].append(s)
+
+        scenes = sorted(scene_to_samples.keys())
+        np.random.seed(42)
+        np.random.shuffle(scenes)
+        split_idx = int(len(scenes) * train_ratio)
+        train_scenes = set(scenes[:split_idx])
+        val_scenes = set(scenes[split_idx:])
+
+        if mode == 'train':
+            self.samples = [s for s in self.samples if s['scene_name'] in train_scenes]
+        else:
+            self.samples = [s for s in self.samples if s['scene_name'] in val_scenes]
+
+        print(f"Loaded Middlebury {mode} set: {len(self.samples)} samples from {len(scene_to_samples)} scenes")
+
+        net_w, net_h = size
+        self.transform = Compose([
+            Resize(
+                width=net_w,
+                height=net_h,
+                resize_target=True if mode == 'train' else False,
+                keep_aspect_ratio=True,
+                ensure_multiple_of=14,
+                resize_method='lower_bound',
+                image_interpolation_method=cv2.INTER_CUBIC,
+            ),
+            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            PrepareForNet(),
+        ] + ([Crop(size[0])] if self.mode == 'train' else []))
+
+    def _find_samples(self):
+        """Find all valid image/depth pairs with intrinsics."""
+        samples = []
+        if not os.path.isdir(self.dataset_path):
+            return samples
+
+        for scene_name in sorted(os.listdir(self.dataset_path)):
+            scene_path = os.path.join(self.dataset_path, scene_name)
+            if not os.path.isdir(scene_path):
+                continue
+
+            calib_file = os.path.join(scene_path, 'calib.txt')
+            if not os.path.exists(calib_file):
+                continue
+
+            try:
+                f0, f1, cx0, cy0, cx1, cy1, doffs, baseline = _parse_middlebury_calib(calib_file)
+            except Exception:
+                continue
+
+            for cam_id in [0, 1]:
+                im_path = os.path.join(scene_path, f'im{cam_id}.png')
+                disp_path = os.path.join(scene_path, f'disp{cam_id}.pfm')
+                if not (os.path.exists(im_path) and os.path.exists(disp_path)):
+                    continue
+
+                f_val = f0 if cam_id == 0 else f1
+                cx_val = cx0 if cam_id == 0 else cx1
+                cy_val = cy0 if cam_id == 0 else cy1
+
+                intrinsic = np.array([
+                    [f_val, 0.0, cx_val],
+                    [0.0, f_val, cy_val],
+                    [0.0, 0.0, 1.0]
+                ], dtype=np.float32)
+
+                samples.append({
+                    'image_path': im_path,
+                    'disp_path': disp_path,
+                    'scene_name': scene_name,
+                    'cam_id': cam_id,
+                    'f': f_val,
+                    'baseline': baseline,
+                    'doffs': doffs,
+                    'intrinsic': intrinsic,
+                })
+
+        return samples
+
+    def __getitem__(self, item):
+        s = self.samples[item]
+
+        image = cv2.imread(s['image_path'])
+        if image is None:
+            raise ValueError(f"Could not load image: {s['image_path']}")
+
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(f"Invalid image dimensions: {image.shape}, path={s['image_path']}")
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        orig_h, orig_w = image.shape[:2]
+
+        disparity = _read_pfm(s['disp_path'])
+        depth = _depth_from_disparity(
+            disparity,
+            s['f'],
+            s['baseline'],
+            s['doffs'],
+        )
+
+        # Ensure depth shape matches image (PFM can have different conventions)
+        if depth.shape != (orig_h, orig_w):
+            depth = cv2.resize(depth, (orig_w, orig_h), interpolation=cv2.INTER_NEAREST)
+
+        sample = self.transform({'image': image, 'depth': depth})
+
+        sample['image'] = torch.from_numpy(sample['image']).float()
+        sample['depth'] = torch.from_numpy(sample['depth']).float()
+
+        # Indoor Middlebury: max depth ~20m
+        sample['valid_mask'] = (sample['depth'] > 0) & (sample['depth'] <= 20.0)
+
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
+        sample['intrinsics'] = torch.from_numpy(s['intrinsic']).float()
+        sample['image_path'] = s['image_path']
+
+        return sample
+
     def __len__(self):
         return len(self.samples)
 

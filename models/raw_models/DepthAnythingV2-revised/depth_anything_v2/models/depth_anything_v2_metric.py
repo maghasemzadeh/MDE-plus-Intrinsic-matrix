@@ -121,14 +121,22 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
         if isinstance(checkpoint, dict) and 'model' in checkpoint:
             # Trained checkpoint format (from train.py)
             state_dict = checkpoint['model']
-        elif isinstance(checkpoint, dict) and 'pretrained' in list(checkpoint.keys())[0]:
+        elif isinstance(checkpoint, dict) and 'pretrained' in str(list(checkpoint.keys())[0]):
             # Full model state dict
             state_dict = checkpoint
         else:
             # Assume it's a state dict
             state_dict = checkpoint
         
-        # Filter out cam_encoder keys if they don't exist in model (for backward compatibility)
+        # Strip "model." / "module." prefix - train.py saves wrapper's state_dict (keys like
+        # "model.pretrained.xxx"), but we load into self.model which expects "pretrained.xxx"
+        def _strip_prefix(k: str) -> str:
+            for prefix in ('model.', 'module.'):
+                if k.startswith(prefix):
+                    return k[len(prefix):]
+            return k
+        state_dict = {_strip_prefix(k): v for k, v in state_dict.items()}
+        
         model_state_dict = self.model.state_dict()
         filtered_dict = {}
         for k, v in state_dict.items():

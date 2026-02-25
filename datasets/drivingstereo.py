@@ -139,6 +139,8 @@ class DrivingStereoDataset(BaseDataset):
         depth_img = cv2.imread(gt_path, cv2.IMREAD_UNCHANGED)
         if depth_img is None:
             raise ValueError(f"Could not read depth image: {gt_path}")
+        if len(depth_img.shape) > 2:
+            depth_img = depth_img[:, :, 0]
         
         # Convert uint16 to float and divide by 256 to get depth in meters
         if depth_img.dtype == np.uint16:

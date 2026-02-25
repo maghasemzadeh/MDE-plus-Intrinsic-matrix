@@ -163,6 +163,8 @@ class CityscapesDataset(BaseDataset):
             disp_img = cv2.imread(gt_path, cv2.IMREAD_UNCHANGED)
             if disp_img is None:
                 raise ValueError(f"Could not read disparity image: {gt_path}")
+            if len(disp_img.shape) > 2:
+                disp_img = disp_img[:, :, 0]
             
             # Convert uint16 to float and divide by 256
             if disp_img.dtype == np.uint16:

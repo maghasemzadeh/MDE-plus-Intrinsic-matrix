@@ -94,6 +94,9 @@ def run_one_image_and_show_absrel(
         gt_depth = dataset.load_gt_depth(item.gt_path, item)
     except Exception as e:
         return None, f"Could not load GT: {e}"
+    # Ensure 2D (some OpenCV/loaders return BGR for grayscale PNG)
+    if len(gt_depth.shape) == 3:
+        gt_depth = gt_depth[:, :, 0]
     if len(gt_depth.shape) > 2:
         gt_depth = np.squeeze(gt_depth)
     if len(gt_depth.shape) != 2:
@@ -116,6 +119,8 @@ def run_one_image_and_show_absrel(
     pred_depth = pred_depth_raw.astype(np.float32)
     if len(pred_depth.shape) > 2:
         pred_depth = np.squeeze(pred_depth)
+    if len(pred_depth.shape) == 3:
+        pred_depth = pred_depth[:, :, 0]  # ensure 2D if model returned 3 channels
     if len(pred_depth.shape) != 2:
         return None, f"Expected 2D pred_depth, got shape {pred_depth.shape}"
 
@@ -144,7 +149,25 @@ def run_one_image_and_show_absrel(
 
     n_valid = int(np.sum(valid_mask))
     if n_valid < 10:
-        return None, f"Insufficient valid pixels: {n_valid}"
+        # Diagnostic info to help debug "0 valid pixels" across all images
+        n_gt_finite = int(np.sum(np.isfinite(gt_depth)))
+        n_gt_positive = int(np.sum(np.isfinite(gt_depth) & (gt_depth > 0)))
+        n_pred_finite = int(np.sum(np.isfinite(pred_depth)))
+        n_pred_positive = int(np.sum(np.isfinite(pred_depth) & (pred_depth > 0)))
+        gt_valid_vals = gt_depth[np.isfinite(gt_depth) & (gt_depth > 0)]
+        pred_valid_vals = pred_depth[np.isfinite(pred_depth) & (pred_depth > 0)]
+        diag = (
+            f"Insufficient valid pixels: {n_valid}. "
+            f"Diagnostics: gt_depth shape={gt_depth.shape} (n_finite={n_gt_finite}, n_>0={n_gt_positive}), "
+            f"pred_depth shape={pred_depth.shape} (n_finite={n_pred_finite}, n_>0={n_pred_positive}). "
+        )
+        if n_gt_positive > 0:
+            diag += f"GT valid range: [{float(np.min(gt_valid_vals)):.4f}, {float(np.max(gt_valid_vals)):.4f}]m. "
+        if n_pred_positive > 0:
+            diag += f"Pred valid range: [{float(np.min(pred_valid_vals)):.4f}, {float(np.max(pred_valid_vals)):.4f}]."
+        else:
+            diag += "Pred has no positive finite values (model may output zeros or invalid)."
+        return None, diag
 
     # Per-pixel abs_rel contribution: |pred - gt| / gt (for valid pixels only)
     diff = pred_valid - gt_valid

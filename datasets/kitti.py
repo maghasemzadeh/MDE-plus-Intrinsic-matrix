@@ -491,6 +491,8 @@ class KITTIDataset(BaseDataset):
         depth_img = cv2.imread(gt_path, cv2.IMREAD_UNCHANGED)
         if depth_img is None:
             raise ValueError(f"Could not read depth image: {gt_path}")
+        if len(depth_img.shape) > 2:
+            depth_img = depth_img[:, :, 0]
         
         # Convert to float and divide by 256 to get depth in meters
         depth = depth_img.astype(np.float32) / 256.0

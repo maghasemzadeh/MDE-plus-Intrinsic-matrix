@@ -210,6 +210,9 @@ class VKITTIDataset(BaseDataset):
         depth_img = cv2.imread(gt_path, cv2.IMREAD_UNCHANGED | cv2.IMREAD_ANYDEPTH)
         if depth_img is None:
             raise ValueError(f"Could not read depth image: {gt_path}")
+        # Some OpenCV builds load grayscale PNG as BGR (H,W,3); ensure 2D
+        if len(depth_img.shape) > 2:
+            depth_img = depth_img[:, :, 0]
         
         # Convert to float and divide by 100 to get depth in meters
         depth = depth_img.astype(np.float32) / 100.0

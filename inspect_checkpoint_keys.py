@@ -5,6 +5,7 @@ Run: python inspect_checkpoint_keys.py path/to/best.pth
 """
 import os
 import sys
+import numpy as np
 import torch
 
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -102,6 +103,50 @@ def main():
         print("  Sample ckpt depth_head keys:", depth_head_ckpt[:3])
     if depth_head_model:
         print("  Sample model depth_head keys:", depth_head_model[:3])
+
+    # 5. Actually load checkpoint and run inference
+    print("\n" + "="*60)
+    print("5. Loading checkpoint into model and running inference...")
+    state_dict = ckpt['model'] if isinstance(ckpt, dict) and 'model' in ckpt else ckpt
+    def _strip(k):
+        for p in ('model.', 'module.'):
+            if k.startswith(p):
+                return k[len(p):]
+        return k
+    state_dict = {_strip(k): v for k, v in state_dict.items()}
+    model.load_state_dict(state_dict, strict=False)
+    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+    model = model.to(device)
+    model.eval()
+
+    import cv2
+    dummy_img = np.random.randint(0, 255, (375, 1242, 3), dtype=np.uint8)
+    with torch.no_grad():
+        depth = model.infer_image(dummy_img, input_size=518, intrinsics=None)
+    n_pos = np.sum(np.isfinite(depth) & (depth > 0))
+    print(f"   Inference (no intrinsics): depth range [{depth.min():.4f}, {depth.max():.4f}], n_>0={n_pos}")
+
+    if use_intrinsics:
+        K = np.array([[725, 0, 621], [0, 725, 187], [0, 0, 1]], dtype=np.float32)
+        with torch.no_grad():
+            depth2 = model.infer_image(dummy_img, input_size=518, intrinsics=K)
+        n_pos2 = np.sum(np.isfinite(depth2) & (depth2 > 0))
+        print(f"   Inference (with intrinsics): depth range [{depth2.min():.4f}, {depth2.max():.4f}], n_>0={n_pos2}")
+
+    # 6. Test via wrapper (same path as show_absrel_calculation)
+    print("\n" + "="*60)
+    print("6. Testing via model wrapper (same as show_absrel)...")
+    from models import create_model_wrapper
+    wrapper = create_model_wrapper('da2-revised', {
+        'model_type': 'basic',
+        'encoder': encoder,
+        'checkpoint_path': ckpt_path,
+        'use_camera_intrinsics': use_intrinsics,
+    })
+    with torch.no_grad():
+        depth3 = wrapper.infer_image(dummy_img, input_size=518, intrinsics=K if use_intrinsics else None)
+    n_pos3 = np.sum(np.isfinite(depth3) & (depth3 > 0))
+    print(f"   Wrapper inference: depth range [{depth3.min():.4f}, {depth3.max():.4f}], n_>0={n_pos3}")
 
 if __name__ == '__main__':
     main()

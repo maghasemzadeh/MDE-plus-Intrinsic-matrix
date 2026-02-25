@@ -15,12 +15,15 @@ It also saves (to --output-dir):
 Usage:
   python show_absrel_calculation.py --dataset CityScapes --model1 da2-revised --model2 da2-revised \\
     --model1-checkpoint path/to/checkpoint1/best.pth --model2-checkpoint path/to/checkpoint2/best.pth \\
-    --item-index 0 --num-sample-pixels 10 --output-dir absrel_sample_output
+    --num-sample-pixels 10 --output-dir absrel_sample_output
+
+  By default, a random image from the dataset is selected each run. Use --item-index N for a specific image.
 """
 
 import os
 import sys
 import argparse
+import random
 import numpy as np
 import cv2
 
@@ -360,8 +363,8 @@ def main():
     parser.add_argument("--input-size", type=int, default=518)
     parser.add_argument("--device", type=str, default=None)
     # Extra args for this script
-    parser.add_argument("--item-index", type=int, default=0,
-                        help="Index of the dataset item to use (default: 0)")
+    parser.add_argument("--item-index", type=int, default=None,
+                        help="Index of the dataset item to use. If omitted, a random image is selected each run.")
     parser.add_argument("--num-sample-pixels", type=int, default=10,
                         help="Number of sample pixels to print (default: 10)")
     parser.add_argument("--output-dir", type=str, default="absrel_sample_output",
@@ -386,7 +389,10 @@ def main():
         sys.exit(1)
 
     # For multi-camera datasets, items may be grouped; we take one item (first camera if grouped)
-    item_index = min(args.item_index, len(items) - 1)
+    if args.item_index is not None:
+        item_index = min(args.item_index, len(items) - 1)
+    else:
+        item_index = random.randint(0, len(items) - 1)
     item = items[item_index]
     print(f"\n  Using item index {item_index}: {item.item_id}")
 

@@ -95,9 +95,7 @@ class DepthAnythingV2BasicModel(BaseDepthModel):
             # Assume it's a state dict
             state_dict = checkpoint
         
-        # Strip "model." prefix if present - train.py saves DepthAnythingV2BasicModel.state_dict()
-        # which has keys like "model.pretrained.xxx", but we load into self.model (DepthAnythingV2)
-        # which expects "pretrained.xxx". Same for DDP "module." prefix.
+        # Strip "model." / "module." prefix when present (DDP or wrapper state_dict)
         def _strip_prefix(k: str) -> str:
             for prefix in ('model.', 'module.'):
                 if k.startswith(prefix):
@@ -106,14 +104,29 @@ class DepthAnythingV2BasicModel(BaseDepthModel):
         state_dict = {_strip_prefix(k): v for k, v in state_dict.items()}
         
         model_state_dict = self.model.state_dict()
-        filtered_dict = {}
-        for k, v in state_dict.items():
-            if k in model_state_dict:
-                if v.shape == model_state_dict[k].shape:
-                    filtered_dict[k] = v
         
-        missing_keys, unexpected_keys = self.model.load_state_dict(filtered_dict, strict=False)
+        # Try direct load (train.py saves DepthAnythingV2.state_dict() - keys should match)
+        try:
+            missing_keys, unexpected_keys = self.model.load_state_dict(state_dict, strict=False)
+        except RuntimeError as e:
+            if "size mismatch" in str(e).lower() or "shape" in str(e).lower():
+                # Shape mismatch: load only keys with matching shapes
+                filtered_dict = {k: v for k, v in state_dict.items()
+                                if k in model_state_dict and v.shape == model_state_dict[k].shape}
+                missing_keys, unexpected_keys = self.model.load_state_dict(filtered_dict, strict=False)
+                print(f"Loaded {len(filtered_dict)} params (shape mismatch fallback)")
+            else:
+                raise
+        
         if missing_keys:
+            depth_missing = [k for k in missing_keys if 'depth_head' in k]
+            if depth_missing:
+                print(f"Warning: depth_head not loaded ({len(depth_missing)} keys) - model will output zeros!")
+                # Diagnostic: show key format mismatch
+                ckpt_sample = [k for k in state_dict.keys() if 'depth_head' in k or 'pretrained' in k][:3]
+                model_sample = [k for k in model_state_dict.keys() if 'depth_head' in k or 'pretrained' in k][:3]
+                print(f"  Checkpoint key sample: {ckpt_sample}")
+                print(f"  Model key sample:      {model_sample}")
             print(f"Warning: {len(missing_keys)} keys missing from checkpoint (will use random init)")
         if unexpected_keys:
             print(f"Warning: {len(unexpected_keys)} unexpected keys in checkpoint")

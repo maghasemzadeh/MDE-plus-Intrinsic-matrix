@@ -114,6 +114,13 @@ def run_one_image_and_show_absrel(
     import torch
     with torch.no_grad():
         pred_depth_raw = model.infer_image(image, input_size=input_size, intrinsics=intrinsics)
+    # If model outputs all zeros and we passed intrinsics, retry without intrinsics
+    # (some checkpoints trained without intrinsics may fail when intrinsics are passed)
+    if pred_depth_raw is not None and intrinsics is not None:
+        n_positive = np.sum(np.isfinite(pred_depth_raw) & (pred_depth_raw > 0))
+        if n_positive == 0:
+            with torch.no_grad():
+                pred_depth_raw = model.infer_image(image, input_size=input_size, intrinsics=None)
     if pred_depth_raw is None:
         return None, "Model inference returned None"
     pred_depth = pred_depth_raw.astype(np.float32)

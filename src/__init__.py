@@ -3,7 +3,7 @@ Source package for depth estimation evaluation.
 Contains core processing, utilities, and tools.
 """
 
-from .metrics import compute_depth_metrics
+from .metrics import compute_depth_metrics, align_non_metric_predictions
 from .visualization import (
     depth_to_color,
     create_depth_color_scale_overlay,
@@ -17,6 +17,7 @@ from .pipeline import ProcessingPipeline
 
 __all__ = [
     'compute_depth_metrics',
+    'align_non_metric_predictions',
     'depth_to_color',
     'create_depth_color_scale_overlay',
     'create_error_scale_overlay',

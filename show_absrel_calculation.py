@@ -38,6 +38,7 @@ from datasets import (
     KITTIDataset,
 )
 from src import compute_depth_metrics
+from src.metrics import align_non_metric_predictions
 from src.visualization import depth_to_color
 
 # Import model loading from compare_models to keep same behavior
@@ -148,8 +149,7 @@ def run_one_image_and_show_absrel(
     gt_valid = gt_depth[valid_mask]
 
     if not is_metric:
-        scale = np.median(gt_valid) / np.median(pred_valid)
-        pred_valid = pred_valid * scale
+        pred_valid = align_non_metric_predictions(pred_valid, gt_valid)
         pred_depth_aligned = pred_depth.copy()
         pred_depth_aligned[valid_mask] = pred_valid
     else:

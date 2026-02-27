@@ -248,6 +248,64 @@ def print_report(data: dict) -> None:
     print()
 
 
+def print_comparison_table(data1: dict, data2: dict) -> None:
+    """Print a single table comparing both models on the same pixels.
+
+    Assumes data1["sample_pixels"] and data2["sample_pixels"] share (row, col).
+    """
+    samples1 = data1["sample_pixels"]
+    samples2 = data2["sample_pixels"]
+    if len(samples1) != len(samples2):
+        print("\n⚠️ Cannot build comparison table: different number of sample pixels.")
+        return
+
+    print(f"\n{'─' * 80}")
+    print("  Per-pixel comparison (same pixels for both models)")
+    print(f"{'─' * 80}")
+    print("  Columns:")
+    print(f"    - better: which model is closer to GT at that pixel (1, 2, or = for tie)")
+    print()
+    print(
+        "  "
+        f"{'idx':>4} {'row':>6} {'col':>6} "
+        f"{'gt (m)':>12} "
+        f"{'pred1 (m)':>12} {'|p1-gt|/gt':>12} "
+        f"{'pred2 (m)':>12} {'|p2-gt|/gt':>12} "
+        f"{'better':>8}"
+    )
+    print("  " + "-" * 92)
+
+    for idx, (s1, s2) in enumerate(zip(samples1, samples2), start=1):
+        # Sanity: they should share coordinates and GT
+        row = s1["row"]
+        col = s1["col"]
+        gt = s1["gt_m"]
+        pred1 = s1["pred_m"]
+        pred2 = s2["pred_m"]
+        absrel1 = s1["abs_rel_pixel"]
+        absrel2 = s2["abs_rel_pixel"]
+
+        # Determine which model is closer to GT in absolute depth error
+        abs_err1 = abs(pred1 - gt)
+        abs_err2 = abs(pred2 - gt)
+        if abs_err1 < abs_err2:
+            better = "1"
+        elif abs_err2 < abs_err1:
+            better = "2"
+        else:
+            better = "="
+
+        print(
+            f"  {idx:>4} {row:>6} {col:>6} "
+            f"{gt:>12.6f} "
+            f"{pred1:>12.6f} {absrel1:>12.6f} "
+            f"{pred2:>12.6f} {absrel2:>12.6f} "
+            f"{better:>8}"
+        )
+
+    print("  " + "-" * 92)
+    print()
+
 def _add_scale_overlay(vis: np.ndarray, max_depth: float, label: str, depth_arr: np.ndarray) -> np.ndarray:
     """Add a text overlay showing scale (0 - max_depth m) and this image's actual range."""
     out = vis.copy()
@@ -520,6 +578,9 @@ def main():
     # Now print reports using locked pixel positions
     print_report(data1)
     print_report(data2)
+
+    # And a single comparison table highlighting which model is closer per pixel
+    print_comparison_table(data1, data2)
 
     # Short summary
     print("=" * 80)

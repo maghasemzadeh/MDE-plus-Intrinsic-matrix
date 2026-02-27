@@ -1470,11 +1470,17 @@ class CityscapesTrainingDataset(Dataset):
 
     def __getitem__(self, item):
         s = self.samples[item]
-        image = cv2.imread(s['image_path'])
+        img_path = s['image_path']
+        # Prefer real image over macOS resource-fork (._*) file; skip if only ._ exists
+        if os.path.basename(img_path).startswith('._'):
+            alt_path = os.path.join(os.path.dirname(img_path), os.path.basename(img_path)[2:])
+            if os.path.exists(alt_path):
+                img_path = alt_path
+        image = cv2.imread(img_path)
         if image is None:
-            raise ValueError(f"Could not load image: {s['image_path']}")
+            raise ValueError(f"Could not load image: {img_path}")
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
-            raise ValueError(f"Invalid image dimensions: {image.shape}, path={s['image_path']}")
+            raise ValueError(f"Invalid image dimensions: {image.shape}, path={img_path}")
 
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
         orig_h, orig_w = image.shape[:2]
@@ -1496,7 +1502,7 @@ class CityscapesTrainingDataset(Dataset):
         sample['valid_mask'] = (sample['depth'] > 0) & (sample['depth'] <= 80.0)
         sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
         sample['intrinsics'] = torch.from_numpy(self._intrinsic_for_size(orig_w, orig_h)).float()
-        sample['image_path'] = s['image_path']
+        sample['image_path'] = img_path
         return sample
 
     def __len__(self):

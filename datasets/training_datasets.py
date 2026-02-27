@@ -1425,11 +1425,13 @@ class CityscapesTrainingDataset(Dataset):
 
         samples = []
         for city_dir in sorted(os.listdir(gt_dir)):
+            if city_dir.startswith('._'):
+                continue
             city_gt_path = os.path.join(gt_dir, city_dir)
             if not os.path.isdir(city_gt_path):
                 continue
             for fname in sorted(os.listdir(city_gt_path)):
-                if not fname.endswith('_disparity.png'):
+                if fname.startswith('._') or not fname.endswith('_disparity.png'):
                     continue
                 base_name = fname.replace('_disparity.png', '')
                 disp_path = os.path.join(city_gt_path, fname)
@@ -1438,7 +1440,7 @@ class CityscapesTrainingDataset(Dataset):
                     city_left = left_img_dir
                 for img_name in (f'{base_name}_leftImg8bit.png', f'{base_name}_left.png', f'{base_name}.png'):
                     img_path = os.path.join(city_left, img_name)
-                    if os.path.exists(img_path):
+                    if os.path.exists(img_path) and not os.path.basename(img_path).startswith('._'):
                         samples.append({'image_path': img_path, 'disp_path': disp_path})
                         break
         return samples

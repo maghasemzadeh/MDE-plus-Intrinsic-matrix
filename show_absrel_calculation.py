@@ -479,6 +479,16 @@ def main():
         print(f"\n❌ Error: {e}")
         sys.exit(1)
 
+    # Intrinsics configuration sanity check (same logic as compare_models.py)
+    dataset_has_intrinsics = (
+        hasattr(dataset, "has_intrinsics")
+        and callable(getattr(dataset, "has_intrinsics"))
+        and bool(dataset.has_intrinsics())
+    )
+
+    # Models will be created below; for now, just log dataset side
+    print("\n📐 Camera intrinsics (dataset side)")
+    print(f"  Dataset '{args.dataset}' provides intrinsics: {dataset_has_intrinsics}")
     items = dataset.find_items()
     if not items:
         print("\n❌ No items found in dataset.")
@@ -499,6 +509,24 @@ def main():
         model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
     except (FileNotFoundError, ValueError) as e:
         print(f"\n❌ Error: {e}")
+        sys.exit(1)
+
+    # Log / validate intrinsics usage for the two models
+    model1_uses_intrinsics = bool(getattr(model1, "use_camera_intrinsics", False))
+    model2_uses_intrinsics = bool(getattr(model2, "use_camera_intrinsics", False))
+
+    print("\n📐 Camera intrinsics (model side)")
+    print(f"  Model 1 ('{args.model1}') uses intrinsics: {model1_uses_intrinsics}")
+    print(f"  Model 2 ('{args.model2}') uses intrinsics: {model2_uses_intrinsics}")
+
+    if (model1_uses_intrinsics or model2_uses_intrinsics) and not dataset_has_intrinsics:
+        print("\n❌ Configuration error:")
+        print(f"   One or both models are configured to use camera intrinsics,")
+        print(f"   but dataset '{args.dataset}' does not provide intrinsic matrices.")
+        print("   This would silently disable the intended intrinsics usage.")
+        print("   Please either:")
+        print("     - use a dataset with intrinsics (CityScapes, DrivingStereo, vkitti, diode, nyu, kitti), or")
+        print("     - use checkpoints trained without camera intrinsics.")
         sys.exit(1)
 
     model1_name = args.model1

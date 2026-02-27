@@ -580,7 +580,32 @@ Examples:
         print(f"Error: Unknown dataset: {args.dataset}")
         print(f"Supported datasets: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, kitti")
         sys.exit(1)
-    
+
+    # ------------------------------------------------------------------
+    # Intrinsics configuration sanity check
+    # ------------------------------------------------------------------
+    dataset_has_intrinsics = (
+        hasattr(dataset, "has_intrinsics") and callable(getattr(dataset, "has_intrinsics"))
+        and bool(dataset.has_intrinsics())
+    )
+    model1_uses_intrinsics = bool(getattr(model1, "use_camera_intrinsics", False))
+    model2_uses_intrinsics = bool(getattr(model2, "use_camera_intrinsics", False))
+
+    print("\n📐 Camera intrinsics configuration")
+    print(f"   Dataset '{args.dataset}' provides intrinsics: {dataset_has_intrinsics}")
+    print(f"   Model 1 uses intrinsics: {model1_uses_intrinsics}")
+    print(f"   Model 2 uses intrinsics: {model2_uses_intrinsics}")
+
+    if (model1_uses_intrinsics or model2_uses_intrinsics) and not dataset_has_intrinsics:
+        print("\n❌ Configuration error:")
+        print(f"   One or both models are configured to use camera intrinsics,")
+        print(f"   but dataset '{args.dataset}' does not provide intrinsic matrices.")
+        print("   This would silently disable the intended intrinsics usage.")
+        print("   Please either:")
+        print("     - use a dataset with intrinsics (CityScapes, DrivingStereo, vkitti, diode, nyu, kitti), or")
+        print("     - use checkpoints trained without camera intrinsics.")
+        sys.exit(1)
+
     # Create output directories - structure: results/{dataset}/{model}/{checkpoint_slug}/{encoder}/
     # The ProcessingPipeline uses output_base_dir, and dataset.get_item_output_dir() 
     # creates: {output_base_dir}/{dataset_subdir}/{item_id}/

@@ -483,6 +483,8 @@ Examples:
     parser.add_argument('--model-type', type=str, default=None,
                        choices=['metric', 'basic'],
                        help='Model type: metric (uses abs_rel/rmse) or basic (uses silog). If not specified, auto-detects from model outputs.')
+    parser.add_argument('--outputs-inverse-depth', choices=['auto', 'true', 'false'], default='auto',
+                       help="For basic models: use inverse-depth alignment. 'auto' = from model metadata, 'true'/'false' = override.")
     parser.add_argument('--input-size', type=int, default=518,
                        help='Input image size for models')
     parser.add_argument('--device', type=str, default=None,
@@ -544,15 +546,27 @@ Examples:
             print(f"\n📋 Auto-detected model type: {'metric' if is_metric_model else 'basic'}")
     print(f"   Metrics compared: rmse, rmse_log, abs_rel, silog")
     
+    outputs_inv_override = None
+    if args.outputs_inverse_depth == 'true':
+        outputs_inv_override = True
+    elif args.outputs_inverse_depth == 'false':
+        outputs_inv_override = False
+
     print(f"\n✅ Model 1: {comparison_display_name1}")
     print(f"   Checkpoint: {model1_checkpoint}")
     print(f"   Model: {model1.get_model_name()}")
     print(f"   Type: {'metric' if model1.is_metric() else 'basic'}")
+    if not model1.is_metric():
+        inv1 = outputs_inv_override if outputs_inv_override is not None else getattr(model1, 'outputs_inverse_depth', lambda: False)()
+        print(f"   outputs_inverse_depth: {inv1}")
     print(f"\n✅ Model 2: {comparison_display_name2}")
     print(f"   Checkpoint: {model2_checkpoint}")
     print(f"   Model: {model2.get_model_name()}")
     print(f"   Type: {'metric' if model2.is_metric() else 'basic'}")
-    
+    if not model2.is_metric():
+        inv2 = outputs_inv_override if outputs_inv_override is not None else getattr(model2, 'outputs_inverse_depth', lambda: False)()
+        print(f"   outputs_inverse_depth: {inv2}")
+
     # Create dataset
     dataset_config = DatasetConfig(
         dataset_path=args.dataset_path,
@@ -743,7 +757,8 @@ Examples:
             model=model1,
             output_base_dir=output_base_dir1,
             input_size=args.input_size,
-            max_depth=model1_max_depth
+            max_depth=model1_max_depth,
+            outputs_inverse_depth_override=outputs_inv_override,
         )
         
         metrics1 = pipeline1.process_dataset(progress_bar=pbar1)
@@ -756,7 +771,8 @@ Examples:
             model=model1,
             output_base_dir=output_base_dir1,
             input_size=args.input_size,
-            max_depth=model1_max_depth
+            max_depth=model1_max_depth,
+            outputs_inverse_depth_override=outputs_inv_override,
         )
         metrics1 = pipeline1.process_dataset(progress_bar=None)
         print(f"   Loaded {len(metrics1)} items")
@@ -781,7 +797,8 @@ Examples:
             model=model2,
             output_base_dir=output_base_dir2,
             input_size=args.input_size,
-            max_depth=model2_max_depth
+            max_depth=model2_max_depth,
+            outputs_inverse_depth_override=outputs_inv_override,
         )
         
         metrics2 = pipeline2.process_dataset(progress_bar=pbar2)
@@ -794,7 +811,8 @@ Examples:
             model=model2,
             output_base_dir=output_base_dir2,
             input_size=args.input_size,
-            max_depth=model2_max_depth
+            max_depth=model2_max_depth,
+            outputs_inverse_depth_override=outputs_inv_override,
         )
         metrics2 = pipeline2.process_dataset(progress_bar=None)
         print(f"   Loaded {len(metrics2)} items")

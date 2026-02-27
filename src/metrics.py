@@ -6,34 +6,30 @@ import numpy as np
 from typing import Dict
 
 
-def align_non_metric_predictions(pred: np.ndarray, gt: np.ndarray) -> np.ndarray:
+def align_non_metric_predictions(
+    pred: np.ndarray,
+    gt: np.ndarray,
+    outputs_inverse_depth: bool = False,
+) -> np.ndarray:
     """
     Align non-metric (relative/basic) model predictions to ground-truth depth.
 
-    The Depth Anything V2 basic model outputs **affine-invariant inverse depth**
-    (per the paper, Section 5.2): values are proportional to 1/z with unknown
-    scale and shift, so larger values mean *closer* to the camera.
+    Inverse depth (outputs_inverse_depth=True) means the model outputs values
+    proportional to 1/z: larger = closer to the camera. The Depth Anything V2
+    *pretrained* basic model does this (paper Section 5.2: "affine-invariant
+    inverse depth"). Direct depth (outputs_inverse_depth=False) means larger =
+    farther; e.g. fine-tuned basic models trained with depth targets.
 
-    The paper achieves abs_rel ~0.078 on KITTI by using affine scale+shift
-    alignment.  Simple median-scale alignment assumes the output is already in
-    the depth domain (larger = farther), which is wrong for inverse-depth
-    models and can inflate abs_rel to 80–90%.
-
-    Algorithm
-    ---------
-    1. Detect whether the model output is inverse-depth (Pearson r < 0 with GT).
-    2a. If inverse-depth: fit  s·pred + t ≈ 1/gt  (alignment in inverse-depth
-        space), then convert: depth_pred = 1 / max(s·pred + t, ε).
-    2b. If direct-depth: fit  s·pred + t ≈ gt  (affine alignment in depth
-        space), then clip negatives to ε.
-    Fallback in either branch: median-scale alignment.
-
-    This matches the evaluation protocol used in the Depth Anything V2 paper
-    for zero-shot relative depth estimation (Table 2).
+    Alignment uses affine scale+shift (least squares). For inverse-depth models
+    we fit s·pred + t ≈ 1/gt then convert to depth as 1/(s·pred+t). For
+    direct-depth we fit s·pred + t ≈ gt. Callers should pass
+    outputs_inverse_depth from model metadata or script argument, not derived
+    from correlation.
 
     Args:
         pred: Valid predicted values (1-D, all finite and > 0)
         gt:   Corresponding GT depth values (1-D, all finite and > 0)
+        outputs_inverse_depth: True if model outputs inverse depth (1/z).
 
     Returns:
         Aligned prediction array (same shape as pred, all > 0)
@@ -42,11 +38,8 @@ def align_non_metric_predictions(pred: np.ndarray, gt: np.ndarray) -> np.ndarray
     if n < 2:
         return pred.copy()
 
-    correlation = float(np.corrcoef(pred, gt)[0, 1])
-
-    if correlation < 0:
-        # Inverse-depth model (e.g. original DA2 pretrained basic weights).
-        # Align in inverse-depth space: solve  s·pred + t ≈ 1/gt
+    if outputs_inverse_depth:
+        # Align in inverse-depth space: s·pred + t ≈ 1/gt, then depth = 1/(s·pred+t)
         gt_inv = 1.0 / np.maximum(gt, 1e-8)
         A = np.stack([pred, np.ones(n, dtype=pred.dtype)], axis=1)
         try:
@@ -58,13 +51,11 @@ def align_non_metric_predictions(pred: np.ndarray, gt: np.ndarray) -> np.ndarray
                 return 1.0 / pred_inv_aligned
         except Exception:
             pass
-        # Fallback: invert then median scale
         pred_inv = 1.0 / np.maximum(pred, 1e-8)
         scale = np.median(gt) / np.median(pred_inv)
         return pred_inv * max(scale, 1e-8)
     else:
-        # Direct-depth model (e.g. fine-tuned / metric-conditioned models).
-        # Affine scale+shift alignment in depth space: solve  s·pred + t ≈ gt
+        # Direct-depth: affine alignment s·pred + t ≈ gt
         A = np.stack([pred, np.ones(n, dtype=pred.dtype)], axis=1)
         try:
             result = np.linalg.lstsq(A, gt, rcond=None)
@@ -74,7 +65,6 @@ def align_non_metric_predictions(pred: np.ndarray, gt: np.ndarray) -> np.ndarray
                 return np.maximum(aligned, 1e-8)
         except Exception:
             pass
-        # Fallback: median scale
         scale = np.median(gt) / np.median(pred)
         return pred * max(scale, 1e-8)
 
@@ -82,26 +72,23 @@ def align_non_metric_predictions(pred: np.ndarray, gt: np.ndarray) -> np.ndarray
 def compute_depth_metrics(
     pred_depth: np.ndarray,
     gt_depth: np.ndarray,
-    is_metric_model: bool = True
+    is_metric_model: bool = True,
+    outputs_inverse_depth: bool = False,
 ) -> Dict[str, float]:
     """
     Compute depth estimation metrics for a single image.
 
-    Always returns all metrics regardless of model type.  For non-metric
-    (basic) models, affine scale+shift alignment is applied via
-    ``align_non_metric_predictions``, which automatically handles both
-    direct-depth and inverse-depth model outputs.
-
-    The Depth Anything V2 *basic* pretrained model produces affine-invariant
-    *inverse* depth (per the paper).  Evaluating it with simple median-scale
-    alignment gives abs_rel ~0.85 even for a high-quality model; the correct
-    affine-inverse-depth alignment recovers abs_rel ~0.08–0.15, consistent
-    with the paper's reported numbers.
+    For non-metric (basic) models, alignment is applied using
+    ``align_non_metric_predictions``. Pass ``outputs_inverse_depth`` from the
+    model (e.g. ``model.outputs_inverse_depth()``) or from script args; do not
+    infer it from data.
 
     Args:
         pred_depth: Predicted depth map
         gt_depth: Ground truth depth map (in metres)
         is_metric_model: If False, apply affine alignment before computing metrics.
+        outputs_inverse_depth: If True (and not metric), treat predictions as
+            inverse depth (1/z). Only used when is_metric_model is False.
 
     Returns:
         Dictionary with metrics: abs_rel, rmse, rmse_log, silog, n_valid
@@ -122,7 +109,9 @@ def compute_depth_metrics(
     gt_valid = gt_depth[valid_mask]
 
     if not is_metric_model:
-        pred_valid = align_non_metric_predictions(pred_valid, gt_valid)
+        pred_valid = align_non_metric_predictions(
+            pred_valid, gt_valid, outputs_inverse_depth=outputs_inverse_depth
+        )
 
     pred_valid = np.maximum(pred_valid, 1e-8)
     gt_valid = np.maximum(gt_valid, 1e-8)

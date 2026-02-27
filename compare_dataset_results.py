@@ -606,6 +606,7 @@ Examples:
             output_path=middlebury_output_dir,
             max_scenes=None,
             is_metric_model=model.is_metric(),
+            outputs_inverse_depth=getattr(model, 'outputs_inverse_depth', lambda: False)(),
             regex_pattern=args.filter_regex
         )
         

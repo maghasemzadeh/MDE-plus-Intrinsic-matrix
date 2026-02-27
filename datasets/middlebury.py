@@ -213,17 +213,23 @@ def bootstrap_confidence_interval(diff_values: np.ndarray, n_bootstrap: int = 10
     return float(mean_diff), float(lower), float(upper)
 
 
-def evaluate_per_image_metrics(output_path: str, max_scenes: Optional[int] = None,
-                               is_metric_model: bool = True, regex_pattern: Optional[str] = None) -> Dict:
+def evaluate_per_image_metrics(
+    output_path: str,
+    max_scenes: Optional[int] = None,
+    is_metric_model: bool = True,
+    outputs_inverse_depth: bool = False,
+    regex_pattern: Optional[str] = None,
+) -> Dict:
     """
     Evaluate depth metrics per image and perform statistical comparison for Middlebury dataset.
-    
+
     Args:
         output_path: Path to output directory containing scene folders
         max_scenes: Maximum number of scenes to process (None for all)
         is_metric_model: If True, use AbsRel and RMSE. If False, use SILog.
+        outputs_inverse_depth: For basic models, True if predictions are inverse depth (1/z).
         regex_pattern: Optional regex pattern to filter scene names
-    
+
     Returns:
         Dictionary with evaluation results
     """
@@ -303,8 +309,14 @@ def evaluate_per_image_metrics(output_path: str, max_scenes: Optional[int] = Non
             continue
         
         # Compute metrics for each camera
-        metrics0 = compute_depth_metrics(pred0, gt0, is_metric_model)
-        metrics1 = compute_depth_metrics(pred1, gt1, is_metric_model)
+        metrics0 = compute_depth_metrics(
+            pred0, gt0, is_metric_model,
+            outputs_inverse_depth=outputs_inverse_depth,
+        )
+        metrics1 = compute_depth_metrics(
+            pred1, gt1, is_metric_model,
+            outputs_inverse_depth=outputs_inverse_depth,
+        )
         
         # Check if metrics are valid
         if metrics0['n_valid'] < 10 or metrics1['n_valid'] < 10:

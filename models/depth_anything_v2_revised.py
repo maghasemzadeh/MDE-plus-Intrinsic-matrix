@@ -468,7 +468,11 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
     def is_metric(self) -> bool:
         """Whether this model outputs metric depth."""
         return self._is_metric
-    
+
+    def outputs_inverse_depth(self) -> bool:
+        """Revised basic models are trained with depth targets (scale-shift invariant loss), not inverse depth."""
+        return False
+
     def get_model_name(self) -> str:
         """Get model name."""
         return f"DepthAnythingV2-revised-{self.model_type}-{self.encoder}"

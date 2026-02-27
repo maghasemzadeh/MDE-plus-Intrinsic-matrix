@@ -159,11 +159,12 @@ class ProcessingPipeline:
         output_base_dir: str,
         input_size: int = 518,
         scale_factor: Optional[float] = None,
-        max_depth: Optional[float] = None
+        max_depth: Optional[float] = None,
+        outputs_inverse_depth_override: Optional[bool] = None,
     ):
         """
         Initialize processing pipeline.
-        
+
         Args:
             dataset: Dataset instance
             model: Model wrapper instance
@@ -171,6 +172,7 @@ class ProcessingPipeline:
             input_size: Input image size for model
             scale_factor: Scale factor for non-metric models (None for auto)
             max_depth: Maximum depth for visualization (None for auto)
+            outputs_inverse_depth_override: If not None, use instead of model.outputs_inverse_depth()
         """
         self.dataset = dataset
         self.model = model
@@ -179,6 +181,12 @@ class ProcessingPipeline:
         self.scale_factor = scale_factor
         self.max_depth = max_depth
         self.is_metric = model.is_metric()
+        if outputs_inverse_depth_override is not None:
+            self.outputs_inverse_depth = outputs_inverse_depth_override
+        else:
+            self.outputs_inverse_depth = (
+                getattr(model, 'outputs_inverse_depth', lambda: False)()
+            )
         self.model_label = 'metric' if self.is_metric else 'basic'
         
         # Create output directory
@@ -371,7 +379,10 @@ class ProcessingPipeline:
                         arrays = np.load(compressed_file)
                         pred_depth = arrays['pred_depth']
                         gt_depth = arrays['gt_depth']
-                        metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
+                        metrics = compute_depth_metrics(
+                            pred_depth, gt_depth, self.is_metric,
+                            outputs_inverse_depth=self.outputs_inverse_depth,
+                        )
                         del pred_depth, gt_depth, arrays
                         if metrics['n_valid'] >= 10:
                             # Save recomputed metrics back to JSON file
@@ -389,7 +400,10 @@ class ProcessingPipeline:
                 arrays = np.load(compressed_file)
                 pred_depth = arrays['pred_depth']
                 gt_depth = arrays['gt_depth']
-                metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
+                metrics = compute_depth_metrics(
+                    pred_depth, gt_depth, self.is_metric,
+                    outputs_inverse_depth=self.outputs_inverse_depth,
+                )
                 del pred_depth, gt_depth, arrays  # Free memory immediately
                 if metrics['n_valid'] >= 10:
                     # Save recomputed metrics back to JSON file
@@ -406,7 +420,10 @@ class ProcessingPipeline:
             if os.path.exists(pred_file) and os.path.exists(gt_file):
                 pred_depth = np.load(pred_file)
                 gt_depth = np.load(gt_file)
-                metrics = compute_depth_metrics(pred_depth, gt_depth, self.is_metric)
+                metrics = compute_depth_metrics(
+                    pred_depth, gt_depth, self.is_metric,
+                    outputs_inverse_depth=self.outputs_inverse_depth,
+                )
                 del pred_depth, gt_depth  # Free memory immediately
                 if metrics['n_valid'] >= 10:
                     # Save recomputed metrics back to JSON file
@@ -572,7 +589,8 @@ class ProcessingPipeline:
         metrics = compute_depth_metrics(
             pred_depths[first_cam],
             gt_depths[first_cam],
-            self.is_metric
+            self.is_metric,
+            outputs_inverse_depth=self.outputs_inverse_depth,
         )
         
         if metrics['n_valid'] < 10:

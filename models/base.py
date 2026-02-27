@@ -76,6 +76,22 @@ class BaseDepthModelWrapper(ABC):
             True if metric depth, False if relative depth
         """
         pass
+
+    def outputs_inverse_depth(self) -> bool:
+        """
+        Whether this model outputs inverse depth (disparity-like) for non-metric
+        (basic) models. Only relevant when is_metric() is False.
+
+        Inverse depth = 1/depth: larger values mean *closer* to the camera.
+        The Depth Anything V2 pretrained basic model was trained to produce
+        affine-invariant inverse depth; fine-tuned basic models typically
+        output direct depth (larger = farther).
+
+        Returns:
+            True if the model outputs inverse depth (1/z), False if it outputs
+            depth (z) or is metric. Default False.
+        """
+        return False
     
     @abstractmethod
     def get_model_name(self) -> str:

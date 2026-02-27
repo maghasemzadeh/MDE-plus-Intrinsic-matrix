@@ -179,7 +179,11 @@ class DepthAnythingV2Wrapper(BaseDepthModelWrapper):
     def is_metric(self) -> bool:
         """Whether this model outputs metric depth."""
         return self._is_metric
-    
+
+    def outputs_inverse_depth(self) -> bool:
+        """Original DA2 basic (pretrained) outputs affine-invariant inverse depth (paper Section 5.2)."""
+        return not self._is_metric
+
     def get_model_name(self) -> str:
         """Get model name."""
         return f"DepthAnythingV2-{self.model_type}-{self.encoder}"

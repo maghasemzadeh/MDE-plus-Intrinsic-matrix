@@ -78,6 +78,7 @@ def run_one_image_and_show_absrel(
     dataset,
     input_size: int,
     is_metric: bool,
+    outputs_inverse_depth: bool,
     num_sample_pixels: int,
 ):
     """
@@ -149,7 +150,9 @@ def run_one_image_and_show_absrel(
     gt_valid = gt_depth[valid_mask]
 
     if not is_metric:
-        pred_valid = align_non_metric_predictions(pred_valid, gt_valid)
+        pred_valid = align_non_metric_predictions(
+            pred_valid, gt_valid, outputs_inverse_depth=outputs_inverse_depth
+        )
         pred_depth_aligned = pred_depth.copy()
         pred_depth_aligned[valid_mask] = pred_valid
     else:
@@ -201,7 +204,11 @@ def run_one_image_and_show_absrel(
     sample_abs_rel = (np.abs(pred_depth_aligned[rows, cols] - gt_depth[rows, cols]) / gt_depth[rows, cols]).tolist()
 
     # Verify with official metric
-    metrics = compute_depth_metrics(pred_depth, gt_depth, is_metric_model=is_metric)
+    metrics = compute_depth_metrics(
+        pred_depth, gt_depth,
+        is_metric_model=is_metric,
+        outputs_inverse_depth=outputs_inverse_depth,
+    )
     abs_rel_from_api = metrics["abs_rel"]
 
     return {
@@ -465,6 +472,12 @@ def main():
                         help="Number of sample pixels to print (default: 10)")
     parser.add_argument("--output-dir", type=str, default="absrel_sample_output",
                         help="Directory to save depth images and input image with marked sample pixels (default: absrel_sample_output)")
+    parser.add_argument(
+        "--outputs-inverse-depth",
+        choices=["auto", "true", "false"],
+        default="auto",
+        help="For basic models: use inverse-depth alignment. 'auto' = from model metadata (default), 'true'/'false' = override.",
+    )
 
     args = parser.parse_args()
 
@@ -542,10 +555,21 @@ def main():
         is_metric1 = args.model_type == "metric"
         is_metric2 = is_metric1
 
+    def _outputs_inverse_depth(model, override: str) -> bool:
+        if override == "true":
+            return True
+        if override == "false":
+            return False
+        return getattr(model, "outputs_inverse_depth", lambda: False)()
+
+    outputs_inv1 = _outputs_inverse_depth(model1, args.outputs_inverse_depth)
+    outputs_inv2 = _outputs_inverse_depth(model2, args.outputs_inverse_depth)
+    print(f"\n  Basic model alignment: outputs_inverse_depth (model1) = {outputs_inv1}, (model2) = {outputs_inv2}")
+
     # Run for model 1
     print(f"\n  Running model 1: {display_name1}")
     data1, err1 = run_one_image_and_show_absrel(
-        model1, display_name1, item, dataset, args.input_size, is_metric1, args.num_sample_pixels
+        model1, display_name1, item, dataset, args.input_size, is_metric1, outputs_inv1, args.num_sample_pixels
     )
     if err1:
         print(f"\n❌ Model 1 failed: {err1}")
@@ -554,7 +578,7 @@ def main():
     # Run for model 2
     print(f"\n  Running model 2: {display_name2}")
     data2, err2 = run_one_image_and_show_absrel(
-        model2, display_name2, item, dataset, args.input_size, is_metric2, args.num_sample_pixels
+        model2, display_name2, item, dataset, args.input_size, is_metric2, outputs_inv2, args.num_sample_pixels
     )
     if err2:
         print(f"\n❌ Model 2 failed: {err2}")

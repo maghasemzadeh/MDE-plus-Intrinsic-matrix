@@ -30,6 +30,7 @@ from datasets.training_datasets import (
     NYUTrainingDataset,
     DIODETrainingDataset,
     MiddleburyTrainingDataset,
+    CityscapesTrainingDataset,
     RobustDataset,
 )
 
@@ -65,7 +66,7 @@ parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic
 parser.add_argument('--encoder', default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
 parser.add_argument('--datasets', default='hypersim',
                     help='Comma-separated list of datasets to train on (e.g., "vkitti,diode"). '
-                         'Supported: hypersim, vkitti, nyu, diode, middlebury')
+                         'Supported: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes')
 parser.add_argument('--model-type', default='basic', choices=['metric', 'basic'],
                     help='Model type: metric (absolute depth in meters) or basic (relative depth with scale ambiguity)')
 parser.add_argument('--img-size', default=518, type=int)
@@ -385,12 +386,31 @@ def main():
                 print(f"KITTI training dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
+        elif dataset_name == 'cityscapes':
+            cityscapes_path = os.path.join(project_root, 'datasets', 'raw_data', 'cityscapes')
+            if not os.path.isdir(cityscapes_path):
+                cityscapes_path = os.path.join(project_root, 'datasets', 'raw_data', 'CityScapes')
+            if not os.path.isdir(cityscapes_path):
+                raise FileNotFoundError(
+                    f"Cityscapes dataset not found. Tried:\n"
+                    f"  - {os.path.join(project_root, 'datasets', 'raw_data', 'cityscapes')}\n"
+                    f"  - {os.path.join(project_root, 'datasets', 'raw_data', 'CityScapes')}\n"
+                    f"Please ensure Cityscapes (leftImg8bit/ and disparity/ for train/val) is placed in one of these paths."
+                )
+            if rank == 0:
+                print(f"Initializing Cityscapes training dataset...")
+                sys.stdout.flush()
+            dataset = CityscapesTrainingDataset(cityscapes_path, 'train', size=size)
+            if rank == 0:
+                print(f"Cityscapes training dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         else:
             # Try generic dataset with intrinsics support
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
                 )
             train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'train.txt')
             if os.path.exists(train_filelist):
@@ -398,7 +418,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
                 )
     
     # Create training datasets
@@ -516,12 +536,30 @@ def main():
                 print(f"KITTI validation dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
+        elif dataset_name == 'cityscapes':
+            cityscapes_path = os.path.join(project_root, 'datasets', 'raw_data', 'cityscapes')
+            if not os.path.isdir(cityscapes_path):
+                cityscapes_path = os.path.join(project_root, 'datasets', 'raw_data', 'CityScapes')
+            if not os.path.isdir(cityscapes_path):
+                raise FileNotFoundError(
+                    f"Cityscapes dataset not found. Tried:\n"
+                    f"  - {os.path.join(project_root, 'datasets', 'raw_data', 'cityscapes')}\n"
+                    f"  - {os.path.join(project_root, 'datasets', 'raw_data', 'CityScapes')}"
+                )
+            if rank == 0:
+                print(f"Initializing Cityscapes validation dataset...")
+                sys.stdout.flush()
+            dataset = CityscapesTrainingDataset(cityscapes_path, 'val', size=size)
+            if rank == 0:
+                print(f"Cityscapes validation dataset loaded: {len(dataset)} samples")
+                sys.stdout.flush()
+            return dataset
         else:
             # Try generic dataset with intrinsics support
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
                 )
             val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'val.txt')
             if os.path.exists(val_filelist):
@@ -529,7 +567,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti"
+                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
                 )
     
     # Create validation datasets

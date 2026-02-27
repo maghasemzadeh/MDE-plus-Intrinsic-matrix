@@ -1336,6 +1336,171 @@ class MiddleburyTrainingDataset(Dataset):
         return len(self.samples)
 
 
+class CityscapesTrainingDataset(Dataset):
+    """
+    Cityscapes dataset for depth estimation training.
+
+    Uses left images and disparity maps. Disparity is converted to depth via:
+        depth = (baseline * focal_length) / disparity
+
+    Cityscapes camera (fixed): baseline=0.22 m, fx=fy=2262.52 px, standard resolution 2048x1024.
+    Intrinsics are scaled when image resolution differs.
+    """
+
+    STANDARD_WIDTH = 2048
+    STANDARD_HEIGHT = 1024
+    BASELINE = 0.22
+    FOCAL_LENGTH = 2262.52
+    MIN_DISPARITY = 0.1
+    MAX_DEPTH = 200.0
+
+    def __init__(self, dataset_path, mode='train', size=(518, 518)):
+        """
+        Initialize Cityscapes training dataset.
+
+        Args:
+            dataset_path: Path to Cityscapes root (e.g., datasets/raw_data/cityscapes or .../CityScapes)
+            mode: 'train' or 'val'
+            size: (width, height) for image resizing
+        """
+        self.mode = mode
+        self.size = size
+
+        current_file = os.path.abspath(__file__)
+        self.project_root = os.path.dirname(os.path.dirname(current_file))
+
+        if not os.path.isabs(dataset_path):
+            dataset_path = os.path.join(self.project_root, dataset_path)
+        if not os.path.isdir(dataset_path):
+            for name in ('cityscapes', 'CityScapes'):
+                candidate = os.path.join(self.project_root, 'datasets', 'raw_data', name)
+                if os.path.isdir(candidate):
+                    dataset_path = candidate
+                    break
+        self.dataset_path = dataset_path
+        self.samples = self._find_samples()
+
+        if len(self.samples) == 0:
+            raise FileNotFoundError(
+                f"Cityscapes: no image/disparity pairs found at {dataset_path}\n"
+                f"Expected: leftImg8bit/{{train,val}}/ and disparity/{{train,val}}/"
+            )
+
+        net_w, net_h = size
+        self.transform = Compose([
+            Resize(
+                width=net_w,
+                height=net_h,
+                resize_target=True if mode == 'train' else False,
+                keep_aspect_ratio=True,
+                ensure_multiple_of=14,
+                resize_method='lower_bound',
+                image_interpolation_method=cv2.INTER_CUBIC,
+            ),
+            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+            PrepareForNet(),
+        ] + ([Crop(size[0])] if self.mode == 'train' else []))
+
+    def _find_samples(self):
+        """Find (image_path, disparity_path) for the current split."""
+        split = self.mode  # 'train' or 'val'
+        gt_dir = os.path.join(self.dataset_path, 'disparity', split)
+        if not os.path.exists(gt_dir):
+            gt_dir = os.path.join(self.dataset_path, 'disparity', split.lower())
+        if not os.path.exists(gt_dir):
+            return []
+
+        possible_left_dirs = [
+            os.path.join(self.dataset_path, 'leftImg8bit', split),
+            os.path.join(self.dataset_path, 'leftImg8bit', split.lower()),
+            os.path.join(self.dataset_path, 'images', split),
+        ]
+        left_img_dir = None
+        for d in possible_left_dirs:
+            if os.path.exists(d):
+                left_img_dir = d
+                break
+        if left_img_dir is None:
+            return []
+
+        samples = []
+        for city_dir in sorted(os.listdir(gt_dir)):
+            city_gt_path = os.path.join(gt_dir, city_dir)
+            if not os.path.isdir(city_gt_path):
+                continue
+            for fname in sorted(os.listdir(city_gt_path)):
+                if not fname.endswith('_disparity.png'):
+                    continue
+                base_name = fname.replace('_disparity.png', '')
+                disp_path = os.path.join(city_gt_path, fname)
+                city_left = os.path.join(left_img_dir, city_dir)
+                if not os.path.isdir(city_left):
+                    city_left = left_img_dir
+                for img_name in (f'{base_name}_leftImg8bit.png', f'{base_name}_left.png', f'{base_name}.png'):
+                    img_path = os.path.join(city_left, img_name)
+                    if os.path.exists(img_path):
+                        samples.append({'image_path': img_path, 'disp_path': disp_path})
+                        break
+        return samples
+
+    def _disparity_to_depth(self, disparity):
+        """Convert Cityscapes disparity (float pixels) to depth in meters."""
+        depth = np.zeros_like(disparity, dtype=np.float32)
+        valid = np.isfinite(disparity) & (disparity >= self.MIN_DISPARITY)
+        with np.errstate(divide='ignore', invalid='ignore'):
+            depth[valid] = (self.BASELINE * self.FOCAL_LENGTH) / disparity[valid]
+            depth[valid] = np.clip(depth[valid], 0.0, self.MAX_DEPTH)
+        depth[~valid] = 0.0
+        return depth
+
+    def _intrinsic_for_size(self, width, height):
+        scale_x = width / self.STANDARD_WIDTH
+        scale_y = height / self.STANDARD_HEIGHT
+        fx = self.FOCAL_LENGTH * scale_x
+        fy = self.FOCAL_LENGTH * scale_y
+        cx = (self.STANDARD_WIDTH / 2.0) * scale_x
+        cy = (self.STANDARD_HEIGHT / 2.0) * scale_y
+        return np.array([
+            [fx, 0.0, cx],
+            [0.0, fy, cy],
+            [0.0, 0.0, 1.0]
+        ], dtype=np.float32)
+
+    def __getitem__(self, item):
+        s = self.samples[item]
+        image = cv2.imread(s['image_path'])
+        if image is None:
+            raise ValueError(f"Could not load image: {s['image_path']}")
+        if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
+            raise ValueError(f"Invalid image dimensions: {image.shape}, path={s['image_path']}")
+
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB) / 255.0
+        orig_h, orig_w = image.shape[:2]
+
+        disp_img = cv2.imread(s['disp_path'], cv2.IMREAD_UNCHANGED)
+        if disp_img is None:
+            raise ValueError(f"Could not load disparity: {s['disp_path']}")
+        if len(disp_img.shape) > 2:
+            disp_img = disp_img[:, :, 0]
+        disparity = disp_img.astype(np.float32) / 256.0
+        disparity[disparity == 0] = np.nan
+        depth = self._disparity_to_depth(disparity)
+        if depth.shape != (orig_h, orig_w):
+            depth = cv2.resize(depth, (orig_w, orig_h), interpolation=cv2.INTER_NEAREST)
+
+        sample = self.transform({'image': image, 'depth': depth})
+        sample['image'] = torch.from_numpy(sample['image']).float()
+        sample['depth'] = torch.from_numpy(sample['depth']).float()
+        sample['valid_mask'] = (sample['depth'] > 0) & (sample['depth'] <= 80.0)
+        sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
+        sample['intrinsics'] = torch.from_numpy(self._intrinsic_for_size(orig_w, orig_h)).float()
+        sample['image_path'] = s['image_path']
+        return sample
+
+    def __len__(self):
+        return len(self.samples)
+
+
 class KITTITrainingDataset(Dataset):
     """
     KITTI dataset for depth estimation training/validation.

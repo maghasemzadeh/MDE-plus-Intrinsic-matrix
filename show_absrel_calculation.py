@@ -13,7 +13,12 @@ It also saves (to --output-dir):
     (circle index 1 = first row in the table, 2 = second row, etc.)
 
 Usage:
-  python show_absrel_calculation.py --dataset CityScapes --model1 da2-revised --model2 da2-revised \\
+  # Single model (one dataset, one model — view abs_rel for that model only):
+  python show_absrel_calculation.py --dataset NYU --model1 da2-revised \\
+    --model1-checkpoint path/to/checkpoint/best.pth --output-dir absrel_sample_output
+
+  # Compare two models on the same image:
+  python show_absrel_calculation.py --dataset CityScapes --model1 da2-revised --model2 da2 \\
     --model1-checkpoint path/to/checkpoint1/best.pth --model2-checkpoint path/to/checkpoint2/best.pth \\
     --num-sample-pixels 10 --output-dir absrel_sample_output
 
@@ -342,34 +347,36 @@ def save_visualizations(
     image: np.ndarray,
     gt_depth: np.ndarray,
     pred_depth1: np.ndarray,
-    pred_depth2: np.ndarray,
     data1: dict,
-    data2: dict,
     display_name1: str,
-    display_name2: str,
+    pred_depth2: np.ndarray | None = None,
+    data2: dict | None = None,
+    display_name2: str | None = None,
 ) -> None:
     """
     Save depth visualizations and the input image with sample pixels marked by numbered circles.
     All depth images use the same color scale (0 to max_depth m): blue = near, red = far.
     Table row index 1 = circle label 1, etc.
+    When data2/display_name2 are None, only GT and model1 outputs are saved (single-model mode).
     """
     os.makedirs(output_dir, exist_ok=True)
     # Use a common max_depth for consistent color scale across depth maps (from valid GT and preds)
     valid_gt = gt_depth[np.isfinite(gt_depth) & (gt_depth > 0)]
     valid_p1 = pred_depth1[np.isfinite(pred_depth1) & (pred_depth1 > 0)]
-    valid_p2 = pred_depth2[np.isfinite(pred_depth2) & (pred_depth2 > 0)]
-    all_valid = np.concatenate([
+    all_valid_list = [
         valid_gt.ravel() if len(valid_gt) else [0],
         valid_p1.ravel() if len(valid_p1) else [0],
-        valid_p2.ravel() if len(valid_p2) else [0],
-    ])
+    ]
+    if pred_depth2 is not None:
+        valid_p2 = pred_depth2[np.isfinite(pred_depth2) & (pred_depth2 > 0)]
+        all_valid_list.append(valid_p2.ravel() if len(valid_p2) else [0])
+    all_valid = np.concatenate(all_valid_list)
     max_depth = float(np.percentile(all_valid, 99)) if len(all_valid) > 0 else 100.0
     max_depth = max(max_depth, 1.0)
 
     # Depth colormaps (same scale for all: JET, 0 = blue, max_depth = red)
     gt_vis = depth_to_color(gt_depth, max_depth=max_depth)
     p1_vis = depth_to_color(pred_depth1, max_depth=max_depth)
-    p2_vis = depth_to_color(pred_depth2, max_depth=max_depth)
 
     # Safe filenames for model names
     def safe_name(s: str, max_len: int = 40) -> str:
@@ -377,16 +384,18 @@ def save_visualizations(
         return out or "model"
 
     name1 = safe_name(display_name1)
-    name2 = safe_name(display_name2)
 
     # Add scale and per-image range overlay so you can see shared scale and compare ranges
     gt_vis = _add_scale_overlay(gt_vis, max_depth, "GT", gt_depth)
     p1_vis = _add_scale_overlay(p1_vis, max_depth, "Pred", pred_depth1)
-    p2_vis = _add_scale_overlay(p2_vis, max_depth, "Pred", pred_depth2)
 
     cv2.imwrite(os.path.join(output_dir, "depth_ground_truth.png"), gt_vis)
     cv2.imwrite(os.path.join(output_dir, f"depth_{name1}.png"), p1_vis)
-    cv2.imwrite(os.path.join(output_dir, f"depth_{name2}.png"), p2_vis)
+    if pred_depth2 is not None and display_name2 is not None:
+        p2_vis = depth_to_color(pred_depth2, max_depth=max_depth)
+        p2_vis = _add_scale_overlay(p2_vis, max_depth, "Pred", pred_depth2)
+        name2 = safe_name(display_name2)
+        cv2.imwrite(os.path.join(output_dir, f"depth_{name2}.png"), p2_vis)
 
     # Input image with numbered circles at sample pixels (table row 1 = circle 1)
     img_marked = image.copy()
@@ -427,16 +436,18 @@ def save_visualizations(
         return (float(np.min(v)), float(np.max(v)), float(np.mean(v))) if len(v) > 0 else (0.0, 0.0, 0.0)
     gt_min, gt_max, gt_mean = _stats(gt_depth)
     p1_min, p1_max, p1_mean = _stats(pred_depth1)
-    p2_min, p2_max, p2_mean = _stats(pred_depth2)
     print(f"\n  Depth color scale: same for all images (0 - {max_depth:.1f} m). Blue = near, red = far.")
     print(f"  Depth ranges (if one image is mostly blue and another mostly red, ranges differ):")
     print(f"    GT:     {gt_min:.2f} - {gt_max:.2f} m  (mean {gt_mean:.2f})")
     print(f"    {display_name1}: {p1_min:.2f} - {p1_max:.2f} m  (mean {p1_mean:.2f})")
-    print(f"    {display_name2}: {p2_min:.2f} - {p2_max:.2f} m  (mean {p2_mean:.2f})")
+    if pred_depth2 is not None and display_name2 is not None:
+        p2_min, p2_max, p2_mean = _stats(pred_depth2)
+        print(f"    {display_name2}: {p2_min:.2f} - {p2_max:.2f} m  (mean {p2_mean:.2f})")
     print(f"\n  Saved visualizations to {output_dir}:")
     print(f"    - depth_ground_truth.png")
     print(f"    - depth_{name1}.png")
-    print(f"    - depth_{name2}.png")
+    if pred_depth2 is not None and display_name2 is not None:
+        print(f"    - depth_{safe_name(display_name2)}.png")
     print(f"    - input_image_with_sample_pixels.png  (circle index = table row number)")
 
 
@@ -457,9 +468,10 @@ def main():
     parser.add_argument("--split", type=str, default="train", help="Dataset split")
     parser.add_argument("--max-items", type=int, default=None, help="Max items to consider")
     parser.add_argument("--filter-regex", type=str, default=None, help="Regex to filter items")
-    # Same model args as compare_models
+    # Same model args as compare_models (model2 optional: omit for single-model / one-dataset view)
     parser.add_argument("--model1", type=str, required=True, choices=["da2", "da2-revised", "da3"])
-    parser.add_argument("--model2", type=str, required=True, choices=["da2", "da2-revised", "da3"])
+    parser.add_argument("--model2", type=str, default=None, choices=["da2", "da2-revised", "da3"],
+                        help="Second model for comparison. Omit to run only --model1 on the dataset and view its abs_rel results.")
     parser.add_argument("--model1-checkpoint", type=str, default=None)
     parser.add_argument("--model2-checkpoint", type=str, default=None)
     parser.add_argument("--model-type", type=str, default=None, choices=["metric", "basic"])
@@ -515,22 +527,25 @@ def main():
     item = items[item_index]
     print(f"\n  Using item index {item_index}: {item.item_id}")
 
-    # Load both models
-    print("\n  Loading models...")
+    # Load model(s)
+    single_model_mode = args.model2 is None
+    print("\n  Loading model(s)...")
     try:
         model1, model1_checkpoint = find_model_by_name(args.model1, args.model1_checkpoint, args.device)
-        model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
+        if not single_model_mode:
+            model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
     except (FileNotFoundError, ValueError) as e:
         print(f"\n❌ Error: {e}")
         sys.exit(1)
 
-    # Log / validate intrinsics usage for the two models
+    # Log / validate intrinsics usage
     model1_uses_intrinsics = bool(getattr(model1, "use_camera_intrinsics", False))
-    model2_uses_intrinsics = bool(getattr(model2, "use_camera_intrinsics", False))
+    model2_uses_intrinsics = bool(getattr(model2, "use_camera_intrinsics", False)) if not single_model_mode else False
 
     print("\n📐 Camera intrinsics (model side)")
     print(f"  Model 1 ('{args.model1}') uses intrinsics: {model1_uses_intrinsics}")
-    print(f"  Model 2 ('{args.model2}') uses intrinsics: {model2_uses_intrinsics}")
+    if not single_model_mode:
+        print(f"  Model 2 ('{args.model2}') uses intrinsics: {model2_uses_intrinsics}")
 
     if (model1_uses_intrinsics or model2_uses_intrinsics) and not dataset_has_intrinsics:
         print("\n❌ Configuration error:")
@@ -543,17 +558,12 @@ def main():
         sys.exit(1)
 
     model1_name = args.model1
-    model2_name = args.model2
     slug1 = checkpoint_output_slug(model1_checkpoint)
-    slug2 = checkpoint_output_slug(model2_checkpoint)
-    display_name1 = display_name_for_comparison(model1_name, model1_checkpoint, slug1, model2_name)
-    display_name2 = display_name_for_comparison(model2_name, model2_checkpoint, slug2, model1_name)
+    display_name1 = display_name_for_comparison(model1_name, model1_checkpoint, slug1, args.model2 or model1_name)
 
     is_metric1 = model1.is_metric()
-    is_metric2 = model2.is_metric()
     if args.model_type is not None:
         is_metric1 = args.model_type == "metric"
-        is_metric2 = is_metric1
 
     def _outputs_inverse_depth(model, override: str) -> bool:
         if override == "true":
@@ -563,8 +573,16 @@ def main():
         return getattr(model, "outputs_inverse_depth", lambda: False)()
 
     outputs_inv1 = _outputs_inverse_depth(model1, args.outputs_inverse_depth)
-    outputs_inv2 = _outputs_inverse_depth(model2, args.outputs_inverse_depth)
-    print(f"\n  Basic model alignment: outputs_inverse_depth (model1) = {outputs_inv1}, (model2) = {outputs_inv2}")
+    print(f"\n  Basic model alignment: outputs_inverse_depth (model1) = {outputs_inv1}")
+    if not single_model_mode:
+        is_metric2 = model2.is_metric()
+        if args.model_type is not None:
+            is_metric2 = is_metric1
+        outputs_inv2 = _outputs_inverse_depth(model2, args.outputs_inverse_depth)
+        print(f"  (model2) = {outputs_inv2}")
+        model2_name = args.model2
+        slug2 = checkpoint_output_slug(model2_checkpoint)
+        display_name2 = display_name_for_comparison(model2_name, model2_checkpoint, slug2, model1_name)
 
     # Run for model 1
     print(f"\n  Running model 1: {display_name1}")
@@ -575,7 +593,30 @@ def main():
         print(f"\n❌ Model 1 failed: {err1}")
         sys.exit(1)
 
-    # Run for model 2
+    if single_model_mode:
+        # Single model: print report and save visualizations for this model only
+        print_report(data1)
+        print("=" * 80)
+        print("  Summary")
+        print("=" * 80)
+        print(f"  Dataset: {args.dataset}  |  Image: {data1['item_id']}")
+        print(f"  Model: {display_name1}  |  abs_rel = {data1['abs_rel_image']:.6f} ({data1['abs_rel_image'] * 100:.4f}%)")
+        print("=" * 80)
+        save_visualizations(
+            args.output_dir,
+            data1["image"],
+            data1["gt_depth"],
+            data1["pred_depth"],
+            data1,
+            display_name1,
+            pred_depth2=None,
+            data2=None,
+            display_name2=None,
+        )
+        print()
+        return
+
+    # Two-model mode: run model 2 and compare
     print(f"\n  Running model 2: {display_name2}")
     data2, err2 = run_one_image_and_show_absrel(
         model2, display_name2, item, dataset, args.input_size, is_metric2, outputs_inv2, args.num_sample_pixels
@@ -656,11 +697,11 @@ def main():
         data1["image"],
         data1["gt_depth"],
         data1["pred_depth"],
-        data2["pred_depth"],
         data1,
-        data2,
         display_name1,
-        display_name2,
+        pred_depth2=data2["pred_depth"],
+        data2=data2,
+        display_name2=display_name2,
     )
     print()
 

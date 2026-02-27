@@ -270,11 +270,11 @@ def print_comparison_table(data1: dict, data2: dict) -> None:
         "  "
         f"{'idx':>4} {'row':>6} {'col':>6} "
         f"{'gt (m)':>12} "
-        f"{'pred1 (m)':>12} {'|p1-gt|/gt':>12} "
-        f"{'pred2 (m)':>12} {'|p2-gt|/gt':>12} "
-        f"{'better':>8} {'m1*':>4} {'m2*':>4}"
+        f"{'pred1 (m)':>14} {'|p1-gt|/gt':>12} "
+        f"{'pred2 (m)':>14} {'|p2-gt|/gt':>12} "
+        f"{'better':>8}"
     )
-    print("  " + "-" * 104)
+    print("  " + "-" * 96)
 
     for idx, (s1, s2) in enumerate(zip(samples1, samples2), start=1):
         # Sanity: they should share coordinates and GT
@@ -296,19 +296,19 @@ def print_comparison_table(data1: dict, data2: dict) -> None:
         else:
             better = "="
 
-        # Star markers: put '*' under the model that is closer (or both if tie)
-        mark1 = "*" if better in ("1", "=") else ""
-        mark2 = "*" if better in ("2", "=") else ""
+        # Star markers: append '*' directly after the better prediction value
+        pred1_str = f"{pred1:.6f}" + ("*" if better in ("1", "=") else "")
+        pred2_str = f"{pred2:.6f}" + ("*" if better in ("2", "=") else "")
 
         print(
             f"  {idx:>4} {row:>6} {col:>6} "
             f"{gt:>12.6f} "
-            f"{pred1:>12.6f} {absrel1:>12.6f} "
-            f"{pred2:>12.6f} {absrel2:>12.6f} "
-            f"{better:>8} {mark1:>4} {mark2:>4}"
+            f"{pred1_str:>14} {absrel1:>12.6f} "
+            f"{pred2_str:>14} {absrel2:>12.6f} "
+            f"{better:>8}"
         )
 
-    print("  " + "-" * 104)
+    print("  " + "-" * 96)
     print()
 
 def _add_scale_overlay(vis: np.ndarray, max_depth: float, label: str, depth_arr: np.ndarray) -> np.ndarray:

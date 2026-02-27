@@ -456,7 +456,6 @@ def main():
     if err1:
         print(f"\n❌ Model 1 failed: {err1}")
         sys.exit(1)
-    print_report(data1)
 
     # Run for model 2
     print(f"\n  Running model 2: {display_name2}")
@@ -466,6 +465,60 @@ def main():
     if err2:
         print(f"\n❌ Model 2 failed: {err2}")
         sys.exit(1)
+
+    # Recompute sample pixels so both models use the same (row, col) positions.
+    # We sample from the intersection of valid pixels for both models.
+    gt_depth = data1["gt_depth"]
+    pred1 = data1["pred_depth"]
+    pred2 = data2["pred_depth"]
+
+    valid1 = (
+        np.isfinite(pred1) & np.isfinite(gt_depth)
+        & (gt_depth > 0) & (pred1 > 0)
+    )
+    valid2 = (
+        np.isfinite(pred2) & np.isfinite(gt_depth)
+        & (gt_depth > 0) & (pred2 > 0)
+    )
+    shared_valid = valid1 & valid2
+    shared_flat_idx = np.where(shared_valid.ravel())[0]
+    if len(shared_flat_idx) == 0:
+        print("\n❌ No shared valid pixels between the two models for this image.")
+        sys.exit(1)
+
+    n_show = min(args.num_sample_pixels, len(shared_flat_idx))
+    rng = np.random.default_rng(42)
+    sample_flat_indices = rng.choice(shared_flat_idx, size=n_show, replace=False)
+    sample_flat_indices = np.sort(sample_flat_indices)
+
+    h, w = gt_depth.shape
+    rows = sample_flat_indices // w
+    cols = sample_flat_indices % w
+
+    def _build_sample_pixels(pred_depth_aligned):
+        sample_list = []
+        for r, c in zip(rows, cols):
+            r_int = int(r)
+            c_int = int(c)
+            pred_val = float(pred_depth_aligned[r_int, c_int])
+            gt_val = float(gt_depth[r_int, c_int])
+            abs_rel_val = float(abs(pred_val - gt_val) / gt_val)
+            sample_list.append(
+                {
+                    "row": r_int,
+                    "col": c_int,
+                    "pred_m": pred_val,
+                    "gt_m": gt_val,
+                    "abs_rel_pixel": abs_rel_val,
+                }
+            )
+        return sample_list
+
+    data1["sample_pixels"] = _build_sample_pixels(pred1)
+    data2["sample_pixels"] = _build_sample_pixels(pred2)
+
+    # Now print reports using locked pixel positions
+    print_report(data1)
     print_report(data2)
 
     # Short summary

@@ -94,7 +94,7 @@ parser.add_argument('--warmup-epochs', type=int, default=0, help='Number of warm
 parser.add_argument('--test', action='store_true',
                     help='Test mode: save best.pth and latest.pth every N iterations (see --test-save-every) '
                          'so you can sanity-check training early without waiting for a full epoch.')
-parser.add_argument('--test-save-every', type=int, default=10,
+parser.add_argument('--test-save-every', type=int, default=1000,
                     help='When --test: save checkpoints every N training iterations (default: 10)')
 
 
@@ -621,30 +621,6 @@ def main():
     save_path = os.path.join(base_save_path, run_name)
     os.makedirs(save_path, exist_ok=True)
     
-    # Prepare hyperparameters dictionary (accessible throughout the function for final logging)
-    hparams = {
-        'model_variant': args.model_variant,
-        'model_type': args.model_type,
-        'encoder': encoder_to_use,
-        'datasets': args.datasets,
-        'use_camera_intrinsics': args.use_camera_intrinsics,
-        'cam_token_inject_layer': args.cam_token_inject_layer if args.use_camera_intrinsics else None,
-        'use_distillation': args.use_distillation,
-        'lr': args.lr,
-        'batch_size': args.bs,
-        'epochs': args.epochs,
-        'img_size': args.img_size,
-        'min_depth': args.min_depth,
-        'max_depth': args.max_depth,
-        'head_lr_multiplier': args.head_lr_multiplier,
-        'grad_clip': args.grad_clip,
-        'accumulate_grad': args.accumulate_grad,
-        'warmup_epochs': args.warmup_epochs,
-        'freeze_dinov2': args.freeze_dinov2 or not args.unfreeze_dinov2,
-    }
-    # Remove None values
-    hparams = {k: v for k, v in hparams.items() if v is not None}
-    
     if rank == 0:
         print(f"Training run name: {run_name}")
         print(f"Checkpoints and logs will be saved to: {save_path}")
@@ -659,10 +635,6 @@ def main():
         # Initialize TensorBoard writer with run-specific directory
         # TensorBoard will use the directory name as the run name
         writer = SummaryWriter(save_path)
-        
-        # Log hyperparameters early (will be updated with final metrics at end of training)
-        # TensorBoard uses this to show hyperparameters for each run
-        writer.add_hparams(hparams, {})
         
         # Add a text summary with run description for easy identification
         run_description = f"""
@@ -1422,28 +1394,8 @@ Training Run Summary:
                 except Exception as e:
                     logger.error(f'Failed to save best.pth to {best_path}: {e}')
     
-    # After training completes, log final hyperparameters with best metrics
+    # After training completes, close TensorBoard writer so all data is flushed
     if rank == 0 and writer is not None:
-        # Prepare final metrics dictionary with best values achieved during training
-        final_metrics = {}
-        for metric_name, metric_value in previous_best.items():
-            # For accuracy metrics (higher is better), use as is
-            # For error metrics (lower is better), negate for TensorBoard visualization
-            if metric_name in ['d1', 'd2', 'd3']:
-                final_metrics[f'hparam/{metric_name}'] = metric_value
-            else:
-                # Negate error metrics so they appear as "higher is better" in hparam view
-                final_metrics[f'hparam/{metric_name}'] = -metric_value
-        
-        # Log hyperparameters with final metrics for proper TensorBoard visualization
-        # This allows filtering and comparing runs by hyperparameters and their results
-        try:
-            writer.add_hparams(hparams, final_metrics)
-            logger.info('Final hyperparameters and metrics logged to TensorBoard')
-        except Exception as e:
-            logger.warning(f'Could not log final hyperparameters: {e}')
-        
-        # Close the writer to ensure all data is flushed
         writer.close()
         logger.info('TensorBoard writer closed. Training completed.')
 

@@ -147,6 +147,26 @@ def main():
             for k in sorted(only_broken)[:5]:
                 print(f"    {k}")
 
+    # 2b. Compare depth_head weight statistics (are broken weights degenerate?)
+    if "state_dict" in info_working and "state_dict" in info_broken:
+        print("\n" + "=" * 70)
+        print("DEPTH_HEAD WEIGHT COMPARISON")
+        print("=" * 70)
+        for label, info in [("WORKING", info_working), ("BROKEN", info_broken)]:
+            sd = info["state_dict"]
+            dh_tensors = [(k, v) for k, v in sd.items() if "depth_head" in k and isinstance(v, torch.Tensor)]
+            if not dh_tensors:
+                print(f"\n{label}: no depth_head tensors")
+                continue
+            vals = torch.cat([t.flatten().float() for _, t in dh_tensors])
+            mean, std = vals.mean().item(), vals.std().item()
+            abs_min, abs_max = vals.abs().min().item(), vals.abs().max().item()
+            n_zero = (vals == 0).sum().item()
+            print(f"\n{label}: {len(dh_tensors)} depth_head tensors")
+            print(f"  mean={mean:.6f}, std={std:.6f}")
+            print(f"  |values|: min={abs_min:.6f}, max={abs_max:.6f}")
+            print(f"  exact zeros: {n_zero} / {vals.numel()}")
+
     # 3. Test inference
     print("\n" + "=" * 70)
     print("INFERENCE TEST")

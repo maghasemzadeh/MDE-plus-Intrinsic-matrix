@@ -46,25 +46,26 @@ from compare_models import find_model_by_name, checkpoint_output_slug, display_n
 
 def create_dataset(args):
     """Create dataset instance from args (same logic as compare_models.py)."""
+    dataset_name = args.dataset.lower()
     dataset_config = DatasetConfig(
         dataset_path=args.dataset_path,
         split=args.split,
         max_items=args.max_items,
         regex_filter=args.filter_regex,
     )
-    if args.dataset == "CityScapes":
+    if dataset_name == "cityscapes":
         return CityscapesDataset(dataset_config)
-    if args.dataset == "DrivingStereo":
+    if dataset_name == "drivingstereo":
         return DrivingStereoDataset(dataset_config)
-    if args.dataset == "middlebury":
+    if dataset_name == "middlebury":
         return MiddleburyDataset(dataset_config)
-    if args.dataset == "vkitti":
+    if dataset_name == "vkitti":
         return VKITTIDataset(dataset_config)
-    if args.dataset == "diode":
+    if dataset_name == "diode":
         return DIODEDataset(dataset_config)
-    if args.dataset == "nyu":
+    if dataset_name == "nyu":
         return NYUDataset(dataset_config)
-    if args.dataset == "kitti":
+    if dataset_name == "kitti":
         return KITTIDataset(dataset_config)
     raise ValueError(f"Unknown dataset: {args.dataset}")
 
@@ -271,9 +272,9 @@ def print_comparison_table(data1: dict, data2: dict) -> None:
         f"{'gt (m)':>12} "
         f"{'pred1 (m)':>12} {'|p1-gt|/gt':>12} "
         f"{'pred2 (m)':>12} {'|p2-gt|/gt':>12} "
-        f"{'better':>8}"
+        f"{'better':>8} {'m1*':>4} {'m2*':>4}"
     )
-    print("  " + "-" * 92)
+    print("  " + "-" * 104)
 
     for idx, (s1, s2) in enumerate(zip(samples1, samples2), start=1):
         # Sanity: they should share coordinates and GT
@@ -295,15 +296,19 @@ def print_comparison_table(data1: dict, data2: dict) -> None:
         else:
             better = "="
 
+        # Star markers: put '*' under the model that is closer (or both if tie)
+        mark1 = "*" if better in ("1", "=") else ""
+        mark2 = "*" if better in ("2", "=") else ""
+
         print(
             f"  {idx:>4} {row:>6} {col:>6} "
             f"{gt:>12.6f} "
             f"{pred1:>12.6f} {absrel1:>12.6f} "
             f"{pred2:>12.6f} {absrel2:>12.6f} "
-            f"{better:>8}"
+            f"{better:>8} {mark1:>4} {mark2:>4}"
         )
 
-    print("  " + "-" * 92)
+    print("  " + "-" * 104)
     print()
 
 def _add_scale_overlay(vis: np.ndarray, max_depth: float, label: str, depth_arr: np.ndarray) -> np.ndarray:
@@ -435,9 +440,12 @@ def main():
         epilog=__doc__,
     )
     # Same dataset args as compare_models
-    parser.add_argument("--dataset", type=str, required=True,
-                        choices=["CityScapes", "DrivingStereo", "middlebury", "vkitti", "diode", "nyu", "kitti"],
-                        help="Dataset name")
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        required=True,
+        help="Dataset name (case-insensitive: CityScapes, DrivingStereo, middlebury, vkitti, diode, nyu, kitti)",
+    )
     parser.add_argument("--dataset-path", type=str, default=None, help="Optional path to dataset")
     parser.add_argument("--split", type=str, default="train", help="Dataset split")
     parser.add_argument("--max-items", type=int, default=None, help="Max items to consider")

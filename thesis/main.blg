@@ -1,0 +1,28 @@
+This is 8-bit Big BibTeX version 0.99d-x4.02 (TeX Live 2025)
+Implementation:  C for Unix
+Release version: 4.02 (16 dec 2023)
+
+The 8-bit codepage and sorting file: cp1256fa.csf
+The top-level auxiliary file: main.aux
+A level-1 auxilliary file: ./tex/chapter1.aux
+A level-1 auxilliary file: ./tex/chapter2.aux
+A level-1 auxilliary file: ./tex/chapter3.aux
+A level-1 auxilliary file: ./tex/chapter4.aux
+A level-1 auxilliary file: ./tex/chapter5.aux
+The style file: unsrt-fa.bst
+Reallocated glb_str_ptr (elt_size=8) to 10 items from 0.
+Reallocated global_strs (elt_size=200001) to 10 items from 0.
+Reallocated glb_str_end (elt_size=8) to 10 items from 0.
+Database file #1: ./tex/MyReferences.bib
+-- unsrt-fa.bst version 0.9 (2015/05/09) 
+-- This is a BibTeX style for XePersian: http://www.parsilatex.com
+
+Done.
+
+Here's how much of BibTeX's memory you used:
+ Cites:                27 out of 750
+ Fields:              661 out of 5000
+ Hash table:        29829 out of 30000
+ Strings:             717 out of 30000
+ Free string pool:   9663 out of 65000
+ Wizard functions:   2198 out of 3000

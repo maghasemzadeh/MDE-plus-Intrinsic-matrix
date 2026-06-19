@@ -1,0 +1,36 @@
+% !TeX root=../main.tex
+% در این فایل، عنوان پایان‌نامه، مشخصات خود و چکیده پایان‌نامه را به انگلیسی، وارد کنید.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\latinuniversity{K. N. Toosi University of Technology}
+\latincollege{...}
+\latinfaculty{Faculty of Computer Engineering}
+\latindepartment{Artificial Intelligence Group}
+\latinsubject{Computer Engineering}
+%\latinfield{field}
+\latintitle{Unsupervised Depth Estimation Using Internal Calibration Parameters as Input}
+\firstlatinsupervisor{Dr. Behrouz Nasihatkon}
+%\secondlatinsupervisor{}
+%\firstlatinadvisor{}
+%\secondlatinadvisor{}
+\latinname{Mohammad Amin}
+\latinsurname{Ghasemzadeh}
+\latinthesisdate{Winter 2026}
+\latinkeywords{
+Monocular Depth Estimation,
+Unsupervised Deep Learning, 
+Metric Depth,
+Camera Intrinsics,
+Imaging Geometry,
+Depth Anything V2
+}
+
+\enabstract{
+Monocular depth estimation is a fundamental problem in computer vision with broad applications in robotics, autonomous driving, and three-dimensional reconstruction. Despite recent advances driven by deep learning, many existing approaches still suffer from metric scale instability and high sensitivity to camera-specific imaging parameters. In particular, most learning-based models estimate depth in a relative or dataset-dependent manner, without explicitly accounting for imaging geometry.
+
+In this thesis, the problem of stable metric monocular depth estimation is investigated, with a specific focus on the role of camera intrinsic parameters in improving depth consistency. To this end, a modified version of the Depth Anything V2 model is proposed, in which the camera intrinsic matrix is explicitly and structurally integrated into the depth estimation process. The primary objective is to reduce sensitivity to camera calibration variations and enhance the metric consistency of depth predictions across diverse imaging conditions.
+
+Extensive experimental evaluations are conducted on multiple benchmark datasets, including VKITTI, NYUv2, DIODE, DrivingStereo, and CityScapes. Quantitative results demonstrate that the proposed model achieves statistically significant improvements over the baseline in metric evaluation criteria such as RMSE and SiLog. Statistical analyses based on two-sample t-tests and bootstrap confidence intervals confirm the significance of these gains. Furthermore, sensitivity analysis reveals that metrics such as AbsRel fail to capture scale-related instabilities, whereas RMSE exhibits a more direct response to geometric variations in camera parameters.
+
+Overall, the results indicate that explicitly incorporating imaging geometry into deep learning models provides an effective and reliable framework for achieving stable metric monocular depth estimation.
+}

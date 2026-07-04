@@ -91,16 +91,23 @@ def compute_depth_metrics(
             inverse depth (1/z). Only used when is_metric_model is False.
 
     Returns:
-        Dictionary with metrics: abs_rel, rmse, rmse_log, silog, n_valid
+        Dictionary with metrics: d1, d2, d3, abs_rel, sq_rel, rmse, rmse_log,
+        log10, silog, n_valid (same definitions as the official DA2
+        util/metric.py eval_depth)
     """
     # Get valid mask (finite, positive values)
     valid_mask = np.isfinite(pred_depth) & np.isfinite(gt_depth) & (gt_depth > 0) & (pred_depth > 0)
 
     if np.sum(valid_mask) < 10:
         return {
+            'd1': np.nan,
+            'd2': np.nan,
+            'd3': np.nan,
             'abs_rel': np.nan,
+            'sq_rel': np.nan,
             'rmse': np.nan,
             'rmse_log': np.nan,
+            'log10': np.nan,
             'silog': np.nan,
             'n_valid': 0
         }
@@ -119,15 +126,28 @@ def compute_depth_metrics(
     diff = pred_valid - gt_valid
     diff_log = np.log(pred_valid) - np.log(gt_valid)
 
+    # Threshold accuracy (delta) metrics, as in DA2 util/metric.py
+    thresh = np.maximum(gt_valid / pred_valid, pred_valid / gt_valid)
+    d1 = np.mean(thresh < 1.25)
+    d2 = np.mean(thresh < 1.25 ** 2)
+    d3 = np.mean(thresh < 1.25 ** 3)
+
     abs_rel = np.mean(np.abs(diff) / gt_valid)
+    sq_rel = np.mean(diff ** 2 / gt_valid)
     rmse = np.sqrt(np.mean(diff ** 2))
     rmse_log = np.sqrt(np.mean(diff_log ** 2))
+    log10 = np.mean(np.abs(np.log10(pred_valid) - np.log10(gt_valid)))
     silog = np.sqrt(np.mean(diff_log ** 2) - 0.5 * np.mean(diff_log) ** 2)
 
     return {
+        'd1': float(d1),
+        'd2': float(d2),
+        'd3': float(d3),
         'abs_rel': float(abs_rel),
+        'sq_rel': float(sq_rel),
         'rmse': float(rmse),
         'rmse_log': float(rmse_log),
+        'log10': float(log10),
         'silog': float(silog),
         'n_valid': int(np.sum(valid_mask))
     }

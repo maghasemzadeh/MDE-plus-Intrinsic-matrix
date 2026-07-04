@@ -365,7 +365,9 @@ class ProcessingPipeline:
                     metrics = json.load(f)
                 
                 # Check if saved metrics contain all expected keys
-                all_expected = {'abs_rel', 'rmse', 'rmse_log', 'silog'}
+                # (d1/d2/d3 were added later; older caches without them are
+                # recomputed from the saved depth arrays below)
+                all_expected = {'d1', 'd2', 'd3', 'abs_rel', 'rmse', 'rmse_log', 'silog'}
                 metrics_type_matches = all_expected.issubset(metrics.keys())
                 
                 if metrics.get('n_valid', 0) >= 10 and metrics_type_matches:

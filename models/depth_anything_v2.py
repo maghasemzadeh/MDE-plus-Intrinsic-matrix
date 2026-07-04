@@ -59,26 +59,44 @@ def find_checkpoint(
     
     # Try to find checkpoint based on model_type and encoder
     if model_type == 'metric':
-        # Try metric checkpoints first
-        for ckpt_name in [
-            f'depth_anything_v2_metric_hypersim_{encoder}.pth',
-            f'depth_anything_v2_metric_vkitti_{encoder}.pth',
-        ]:
+        # Select checkpoint order based on max_depth hint:
+        # max_depth > 20 (or unspecified default 20) for outdoor scenes → prefer vkitti (max_depth=80)
+        # max_depth <= 20 for indoor scenes → prefer hypersim (max_depth=20)
+        # This prevents silently loading the indoor model for outdoor KITTI evaluation.
+        if max_depth is not None and max_depth > 20.0:
+            ordered_names = [
+                f'depth_anything_v2_metric_vkitti_{encoder}.pth',
+                f'depth_anything_v2_metric_hypersim_{encoder}.pth',
+            ]
+            ordered_names_any_enc = [
+                (enc, variant)
+                for enc in ['vitl', 'vitb', 'vits', 'vitg']
+                for variant in ['vkitti', 'hypersim']
+            ]
+        else:
+            ordered_names = [
+                f'depth_anything_v2_metric_hypersim_{encoder}.pth',
+                f'depth_anything_v2_metric_vkitti_{encoder}.pth',
+            ]
+            ordered_names_any_enc = [
+                (enc, variant)
+                for enc in ['vitl', 'vitb', 'vits', 'vitg']
+                for variant in ['hypersim', 'vkitti']
+            ]
+
+        for ckpt_name in ordered_names:
             checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
             if os.path.exists(checkpoint_path):
                 config = identify_model_from_checkpoint(checkpoint_path)
                 return checkpoint_path, config
-        
-        # Try any encoder
-        for enc in ['vitl', 'vitb', 'vits', 'vitg']:
-            for ckpt_name in [
-                f'depth_anything_v2_metric_hypersim_{enc}.pth',
-                f'depth_anything_v2_metric_vkitti_{enc}.pth',
-            ]:
-                checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
-                if os.path.exists(checkpoint_path):
-                    config = identify_model_from_checkpoint(checkpoint_path)
-                    return checkpoint_path, config
+
+        # Try any encoder with same priority order
+        for enc, variant in ordered_names_any_enc:
+            ckpt_name = f'depth_anything_v2_metric_{variant}_{enc}.pth'
+            checkpoint_path = os.path.join(checkpoints_dir, ckpt_name)
+            if os.path.exists(checkpoint_path):
+                config = identify_model_from_checkpoint(checkpoint_path)
+                return checkpoint_path, config
     
     # Try basic checkpoint
     ckpt_name = f'depth_anything_v2_{encoder}.pth'

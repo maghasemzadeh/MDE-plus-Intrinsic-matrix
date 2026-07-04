@@ -116,10 +116,17 @@ class KITTIDataset(BaseDataset):
     def find_items(self) -> List[DatasetItem]:
         """Find all KITTI image pairs based on the split."""
         items = []
-        
+
         split = self.split.lower()
-        
-        if split in ['val_selection', 'val_selection_cropped']:
+
+        # Support DA2-paper-style filelist split: a .txt file with
+        # space-separated "image_path depth_path" lines (absolute or relative
+        # to dataset_path).  Pass split='filelist:/path/to/val.txt' or point
+        # config.split_file to the file.
+        if split.startswith('filelist:'):
+            filelist_path = split[len('filelist:'):]
+            items = self._find_items_from_filelist(filelist_path)
+        elif split in ['val_selection', 'val_selection_cropped']:
             items = self._find_val_selection_items()
         elif split == 'test_depth_prediction':
             items = self._find_test_depth_prediction_items()
@@ -155,10 +162,66 @@ class KITTIDataset(BaseDataset):
         print(f"Found {len(items)} KITTI image pairs (split: {split})")
         return items
     
+    def _find_items_from_filelist(self, filelist_path: str) -> List['DatasetItem']:
+        """
+        Load items from a DA2-paper-style filelist.
+
+        File format (one entry per line):
+            /abs/path/image.png /abs/path/depth.png
+        or relative paths resolved against dataset_path.
+
+        This matches the format of the official DA2 kitti/val.txt split
+        (652 images from data_depth_annotated/val/).
+        """
+        if not os.path.exists(filelist_path):
+            raise FileNotFoundError(
+                f"KITTI filelist not found: {filelist_path}\n"
+                f"The DA2 kitti/val.txt is at:\n"
+                f"  models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/kitti/val.txt\n"
+                f"but its paths point to the original authors' storage. You need a local copy\n"
+                f"with paths updated to your KITTI data location."
+            )
+
+        items = []
+        with open(filelist_path, 'r') as f:
+            lines = [l.strip() for l in f if l.strip()]
+
+        for line in lines:
+            parts = line.split()
+            if len(parts) < 2:
+                continue
+            img_path, depth_path = parts[0], parts[1]
+
+            # Resolve relative paths against dataset_path
+            if not os.path.isabs(img_path):
+                img_path = os.path.join(self.dataset_path, img_path)
+            if not os.path.isabs(depth_path):
+                depth_path = os.path.join(self.dataset_path, depth_path)
+
+            if not os.path.exists(img_path) or not os.path.exists(depth_path):
+                continue
+
+            # Build a stable item_id from the relative depth path
+            try:
+                item_id = os.path.relpath(depth_path, self.dataset_path)
+            except ValueError:
+                item_id = os.path.basename(depth_path)
+
+            items.append(DatasetItem(
+                item_id=item_id,
+                image_path=img_path,
+                gt_path=depth_path,
+                camera_id=None,
+                metadata={'split': 'filelist'}
+            ))
+
+        print(f"Loaded {len(items)} KITTI items from filelist: {filelist_path}")
+        return items
+
     def _find_val_selection_items(self) -> List[DatasetItem]:
         """Find items from depth_selection/val_selection_cropped/."""
         items = []
-        
+
         base_path = os.path.join(self.dataset_path, 'depth_selection', 'val_selection_cropped')
         image_dir = os.path.join(base_path, 'image')
         depth_dir = os.path.join(base_path, 'groundtruth_depth')

@@ -19,7 +19,7 @@ pip install -r requirements.txt
 # Train with camera intrinsics on VKITTI dataset
 python train.py \
     --encoder vitl \
-    --dataset vkitti \
+    --datasets vkitti \
     --max-depth 80.0 \
     --epochs 40 \
     --bs 4 \
@@ -35,7 +35,7 @@ python train.py \
 # Train baseline without intrinsics
 python train.py \
     --encoder vitl \
-    --dataset vkitti \
+    --datasets vkitti \
     --max-depth 80.0 \
     --epochs 40 \
     --pretrained-from models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vitl.pth \
@@ -45,7 +45,7 @@ python train.py \
 
 Key training arguments:
 - `--encoder`: Model size (`vits`, `vitb`, `vitl`, `vitg`)
-- `--dataset`: Training dataset (`vkitti`, `kitti`, `nyu`, `hypersim`, etc.)
+- `--datasets`: Training dataset(s) (`vkitti`, `kitti`, `nyu`, `hypersim`, etc.)
 - `--use-camera-intrinsics`: Enable camera intrinsics as model input
 - `--pretrained-from`: Path to pretrained checkpoint to fine-tune from
 - `--save-path`: Directory for saving model checkpoints
@@ -56,11 +56,14 @@ Key training arguments:
 ### Model Comparison & Evaluation
 ```bash
 # Compare two models on a dataset
+# --max-depth controls which metric checkpoint is loaded:
+#   >20 → vkitti (outdoor, max_depth=80); <=20 → hypersim (indoor, max_depth=20)
 python compare_models.py \
     --dataset cityscapes \
     --model1 da2 \
     --model2 da2-revised \
     --encoder vitl \
+    --max-depth 80.0 \
     --max-items 2000
 
 # Compare results across multiple datasets
@@ -139,6 +142,11 @@ python tests/run_tests.py
 - `test_data_loading.py`: Dataset loading and preprocessing
 - `test_scale_factor.py`, `test_statistical_tests.py`: Evaluation-specific tests
 
+### Dataset-Specific Evaluation Notes
+
+- **NYU**: Defaults to the Eigen 654-image test split (`split='test'` or `split='eigen_test'`). Use `split='all'` for all 1449 images — results on the full set are **not comparable** to DA2 paper numbers.
+- **KITTI**: Supports a DA2-paper-style filelist split (`split='filelist:/path/to/val.txt'`) where each line is `image_path depth_path`. The official DA2 val.txt is at `models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/kitti/val.txt` but requires paths updated to your local KITTI location.
+
 ### Key Design Patterns
 
 1. **Dataset abstraction**: All datasets inherit from `BaseDataset` and implement:
@@ -188,6 +196,10 @@ output_dir/{dataset}/{item_id}/
 
 The training script auto-detects encoder type (`vits`/`vitb`/`vitl`/`vitg`) from checkpoint tensor shapes (see `ARCHITECTURE_SIZES.md`).
 
+**Checkpoint auto-selection**: For metric models with both `hypersim` and `vkitti` checkpoints available, `--max-depth` controls which is preferred. `max_depth > 20` (outdoor) → vkitti checkpoint; `max_depth <= 20` (indoor) → hypersim checkpoint. Omitting `--max-depth` when comparing on outdoor datasets (KITTI, Cityscapes, DrivingStereo) risks silently loading the indoor hypersim model.
+
+**Model type detection**: Metric vs basic cannot be determined from state-dict keys alone — the filename/dirname is the authoritative source for official DA2 checkpoints. Trained checkpoints use an embedded `config` block.
+
 ### Testing Results
 
 Run `python tests/run_tests.py` or `pytest tests/` to execute the full test suite. Key test categories:
@@ -207,3 +219,13 @@ Install all: `pip install -r requirements.txt`
 
 See `CHECKPOINT_USAGE.md` for detailed checkpoint loading and inference workflows.
 See `ARCHITECTURE_SIZES.md` for encoder dimension mappings for all ViT sizes.
+
+## graphify
+
+This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
+
+Rules:
+- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
+- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
+- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
+- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

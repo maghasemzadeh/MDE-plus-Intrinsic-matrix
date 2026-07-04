@@ -1,209 +1,187 @@
 ---
 name: gpu
 description: >
-  Offload GPU-intensive model training and evaluation to the lingotube server (RTX 4090).
-  Use this skill whenever the user wants to train a model, run an evaluation, run compare_models,
-  run compare_dataset_results, or do any GPU-heavy inference — even if they just say "train",
-  "run on GPU", "evaluate the model", "test on cityscapes", or ask to check results from a
-  previous run. This skill handles the full cycle: commit & push local changes, SSH to lingotube,
-  pull, launch training in tmux, monitor progress, retrieve logs and output artifacts, analyze
-  results, and send a desktop notification when done. Always use this skill instead of running
-  GPU workloads locally.
+  Run scripts and GPU work on the remote lingotube server (RTX 4090, 24GB VRAM) over SSH.
+  Use this skill for ANYTHING involving the server or GPU: training a model, running any
+  evaluation or inference, running compare_models / compare_dataset_results / train.py or
+  any other Python script that needs a GPU, executing any command or script remotely,
+  copying code/files/checkpoints/datasets to or from the server (scp/rsync), checking on a
+  running or finished remote job, retrieving logs or results, or checking server status and
+  capacity (GPU VRAM, RAM, running processes, whether jobs can run simultaneously). Trigger
+  it even on vague phrasing like "train", "run this", "test the model", "run on GPU",
+  "is the GPU free?", "what's running on the server?", "copy this over", "check the
+  results", "how's the job going?", or "/gpu". The local machine has NO usable GPU — any
+  script that imports torch/CUDA or touches model weights must run on lingotube via this
+  skill, never locally. When in doubt whether a task belongs on the server, use this skill
+  to check server status first.
 ---
 
-# GPU Training on lingotube
+# GPU jobs on lingotube
 
-This skill manages the full lifecycle of GPU training and evaluation on the remote **lingotube**
-server (RTX 4090) via SSH. Use it any time you need to run `train.py`, `compare_models.py`,
-`compare_dataset_results.py`, or any GPU-heavy script.
+Manages the full lifecycle of remote GPU work on **lingotube** via SSH: sync code, check
+capacity, launch jobs in tmux, poll until done, retrieve and analyze results.
 
 ## Server facts
 
 | Item | Value |
 |------|-------|
-| SSH alias | `lingotube` (configured in `~/.ssh/config`, key auth, no password) |
+| SSH alias | `lingotube` (in `~/.ssh/config`: 93.118.171.194, user `ubuntu`, key auth, no password) |
+| GPU | NVIDIA RTX 4090, 24 GB VRAM |
+| RAM | 62 GB |
 | Remote repo | `/home/ubuntu/projects/MDE-plus-Intrinsic-matrix` |
-| tmux session | `lab` (already running; attach to window 0 or create a new named window) |
-| GPU | NVIDIA RTX 4090 |
+| Python env | `source /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/venv/bin/activate` — system python3 has no torch; **always activate the venv** |
+| tmux session | `lab` (create if missing: `tmux new-session -d -s lab`) |
+| Local repo | `/home/mohamadamin.ghasemzade/MDE-plus-Intrinsic-matrix` |
+
+All `ssh`/`scp`/`rsync` commands should use the plain alias, e.g. `ssh lingotube "..."`.
 
 ---
 
-## Workflow overview
+## Step 0 — Check server capacity (always do this first)
 
-1. **Understand the task** — derive the exact command to run from the conversation history
-2. **Commit & push** local changes so the server gets the latest code
-3. **SSH: pull** the latest commit on the server
-4. **Launch** the training/eval script in the tmux session in the background
-5. **Monitor** every few minutes until the process completes
-6. **Retrieve** logs, metrics, and output artifacts (copy to local machine if small enough)
-7. **Analyze** results and advise on next steps
-8. **Notify** the user via a desktop notification
+Before launching anything, check whether the GPU and RAM have room — this decides whether a
+new job can run now, run **concurrently** with an existing one, or must wait:
+
+```bash
+ssh lingotube 'nvidia-smi --query-gpu=memory.total,memory.used,memory.free,utilization.gpu --format=csv,noheader; free -g | sed -n 2p; nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader'
+```
+
+Decision guide (RTX 4090 = 24 576 MiB total):
+
+- **GPU idle** (no compute apps, <1 GB used) → launch freely.
+- **Job already running** → estimate the new job's VRAM need and launch concurrently only if
+  it fits in the *free* VRAM with ~2 GB headroom. Rough needs for this project:
+  vitl training with bs 4 ≈ 20+ GB (never concurrent); vitl inference/eval ≈ 6–9 GB;
+  vits/vitb eval ≈ 2–5 GB. Two evals can usually coexist; training + anything usually cannot.
+- **Not enough room** → tell the user what's running and either queue (wait for the current
+  job by polling, then launch) or ask which job has priority.
+- Also check RAM: if available RAM < ~8 GB, don't add another dataloader-heavy job.
+
+**Known issue**: if `nvidia-smi` reports "couldn't communicate with the NVIDIA driver", the
+kernel module isn't loaded (this happens after server kernel updates — the DKMS module for
+the new kernel is missing). GPU work is impossible until fixed. Tell the user to run
+interactively (needs sudo password):
+`! ssh -t lingotube 'sudo apt install -y nvidia-dkms-595 && sudo dkms autoinstall && sudo modprobe nvidia && nvidia-smi'`
+(check the installed driver series first with `dpkg -l | grep nvidia-driver` — it was 595 as of 2026-07)
+(or reboot into a kernel that has the module).
 
 ---
 
 ## Step 1 — Understand the task
 
-Before touching git, figure out exactly which command to run:
+Derive the exact command from the conversation before touching the server:
 
-- Read the conversation history to extract the dataset, encoder, flags, checkpoint path, etc.
-- If the user said "train da2-revised on cityscapes with vitl", construct the full `python train.py …` invocation.
-- If the user said "compare da2 vs da2-revised on cityscapes", construct the full `python compare_models.py …` invocation.
-- If anything is ambiguous (e.g., which checkpoint to use), ask the user before proceeding.
-- Write out the full command you plan to run and confirm it looks right.
-
-Refer to `CLAUDE.md` in the project root for the canonical flag reference.
+- Extract dataset, encoder, flags, checkpoint paths, etc. `CLAUDE.md` in the project root is
+  the canonical flag reference.
+- If anything is ambiguous (e.g., which checkpoint), ask the user before proceeding.
+- State the full command you plan to run so the user can catch mistakes.
 
 ---
 
-## Step 2 — Commit and push local changes
+## Step 2 — Sync code to the server
+
+Two ways; prefer **git** for real runs (reproducible, keeps histories aligned), use
+**scp/rsync** for quick experiments or files that shouldn't be committed.
+
+### Git sync (default)
 
 ```bash
-# Check for uncommitted changes
-git -C /Users/amin/Desktop/Uni/Arshad/Project/Projects\ Source\ Code/MDE\ plus\ Intrinsic\ matrix status --short
-
-# Stage all tracked changes (never add .env or credentials)
-git -C /Users/amin/Desktop/Uni/Arshad/Project/Projects\ Source\ Code/MDE\ plus\ Intrinsic\ matrix add -u
-
-# Commit if there are staged changes
-git -C /Users/amin/Desktop/Uni/Arshad/Project/Projects\ Source\ Code/MDE\ plus\ Intrinsic\ matrix \
-    commit -m "wip: sync before lingotube training run"
-
-# Push
-git -C /Users/amin/Desktop/Uni/Arshad/Project/Projects\ Source\ Code/MDE\ plus\ Intrinsic\ matrix \
-    push origin main
+cd /home/mohamadamin.ghasemzade/MDE-plus-Intrinsic-matrix
+git status --short
+git add -u        # never add .env, credentials, or large data files
+git commit -m "wip: sync before lingotube run"   # skip if nothing staged
+git push origin main
+ssh lingotube "cd ~/projects/MDE-plus-Intrinsic-matrix && git pull --rebase"
 ```
 
-If there are no changes, skip the commit step but still push to make sure remote is up to date.
+If the pull hits conflicts (the server may have local edits), report them; resolve on the
+server or `git stash` there — never force-reset the server without asking.
+
+### Direct copy (uncommitted/quick changes)
+
+```bash
+# Single file
+scp /home/mohamadamin.ghasemzade/MDE-plus-Intrinsic-matrix/train.py lingotube:~/projects/MDE-plus-Intrinsic-matrix/train.py
+
+# A directory, excluding junk
+rsync -avz --exclude '__pycache__' --exclude '.git' \
+    /home/mohamadamin.ghasemzade/MDE-plus-Intrinsic-matrix/models/ \
+    lingotube:~/projects/MDE-plus-Intrinsic-matrix/models/
+```
+
+Warn the user that direct-copied changes will be clobbered by the next `git pull` on the
+server unless committed.
 
 ---
 
-## Step 3 — Pull on the server
+## Step 3 — Launch the job in tmux
+
+Run inside tmux so the job survives SSH disconnects; tee to a log so it can be polled
+without attaching. Use a unique window name per job so concurrent runs don't collide.
 
 ```bash
-ssh lingotube "cd /home/ubuntu/projects/MDE-plus-Intrinsic-matrix && git pull --rebase"
+JOB_NAME="train-$(date +%Y%m%d-%H%M)"     # or eval-..., compare-...
+LOG_FILE="~/projects/MDE-plus-Intrinsic-matrix/logs/${JOB_NAME}.log"
+
+ssh lingotube "tmux has-session -t lab 2>/dev/null || tmux new-session -d -s lab; tmux new-window -t lab -n $JOB_NAME"
+ssh lingotube "tmux send-keys -t lab:$JOB_NAME 'cd ~/projects/MDE-plus-Intrinsic-matrix && source venv/bin/activate && mkdir -p logs && <YOUR_COMMAND> 2>&1 | tee $LOG_FILE; echo EXIT_CODE=\$?' Enter"
 ```
 
-Check the output — if there are merge conflicts, resolve them locally and re-push before continuing.
+Remember `JOB_NAME` and `LOG_FILE` for monitoring. The trailing `echo EXIT_CODE=$?` makes
+completion and success/failure detectable from the log alone.
 
 ---
 
-## Step 4 — Launch the job in tmux
+## Step 4 — Monitor until done
 
-Create a **new tmux window** named after the job so multiple runs don't collide:
+Poll the log periodically. The job is finished when the log contains `EXIT_CODE=` (0 =
+success). Between polls, report progress to the user: current epoch/step, latest loss or
+metric values, errors.
 
 ```bash
-# Create a timestamp-named window (e.g. train-20260619-1430)
-JOB_NAME="train-$(date +%Y%m%d-%H%M)"
-
-ssh lingotube "tmux new-window -t lab -n $JOB_NAME"
-
-# Run the job inside that window, with stdout+stderr tee'd to a log file
-LOG_FILE="/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/logs/${JOB_NAME}.log"
-CMD="cd /home/ubuntu/projects/MDE-plus-Intrinsic-matrix && mkdir -p logs && <YOUR_COMMAND> 2>&1 | tee ${LOG_FILE}"
-ssh lingotube "tmux send-keys -t lab:${JOB_NAME} '${CMD}' Enter"
+ssh lingotube "tail -40 $LOG_FILE"
+ssh lingotube "nvidia-smi --query-compute-apps=pid,used_memory --format=csv,noheader"   # still running?
 ```
 
-Replace `<YOUR_COMMAND>` with the full Python command derived in Step 1.
+Polling cadence:
+- Short jobs (eval, <30 min): check every ~4 minutes with `ScheduleWakeup` (`delaySeconds=240`, stays cache-warm).
+- Long training runs (hours): poll every 20–30 min (`delaySeconds=1200–1800`); the per-epoch
+  log lines change slowly, so tighter polling is wasted.
+- On OOM/CUDA errors in the log: stop polling, report immediately, suggest lower `--bs` or
+  `--accumulate-grad`.
 
-Store `JOB_NAME` and `LOG_FILE` for use in later steps.
-
-**Important**: always tee to a log file. This lets you poll the log without attaching to tmux interactively.
+If the user just asked to *launch* a long run, offer the choice: keep monitoring in this
+session, or stop here and let them ask "check the gpu job" later (the log file persists).
 
 ---
 
-## Step 5 — Monitor progress
-
-Poll the log file every **5 minutes** until the job ends. A job is finished when:
-- The log contains `Training complete` or `Best model saved` (training)
-- The log contains a final metrics table or `Evaluation complete` (evaluation)
-- The Python process exits (check with `pgrep` or the tmux window exits)
+## Step 5 — Retrieve results
 
 ```bash
-# Poll: tail the last 40 lines of the log
-ssh lingotube "tail -40 /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/logs/${JOB_NAME}.log"
+# Log file
+mkdir -p logs && scp lingotube:$LOG_FILE ./logs/
 
-# Check if the process is still running
-ssh lingotube "pgrep -f 'python train.py' | wc -l"
-# Returns 0 if finished
-```
+# Training checkpoints — check size first, skip if >2 GB and ask the user
+ssh lingotube "du -sh ~/projects/MDE-plus-Intrinsic-matrix/<save-path>"
+rsync -avz lingotube:~/projects/MDE-plus-Intrinsic-matrix/<save-path>/ ./<save-path>/
 
-Tell the user the current status each time you poll: current epoch / step, latest loss values, ETA if visible.
+# Evaluation outputs (metrics.json, arrays.npz, PNGs)
+rsync -avz lingotube:~/projects/MDE-plus-Intrinsic-matrix/output/ ./output/
 
-For very long runs (>2 hours), use `ScheduleWakeup` with `delaySeconds=270` between polls so you stay cache-warm without burning tokens.
-
----
-
-## Step 6 — Retrieve results
-
-Once the job finishes, collect:
-
-### Training runs
-
-```bash
-# Copy the checkpoints directory (may be large — skip if >2GB total)
-REMOTE_CKPT="/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/<save-path>"
-rsync -avz --progress lingotube:${REMOTE_CKPT}/ <local-save-path>/
-
-# Copy the log file
-scp lingotube:/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/logs/${JOB_NAME}.log ./logs/
-
-# Copy tensorboard event files if they exist
-REMOTE_TB="/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/runs/"
-rsync -avz lingotube:${REMOTE_TB} ./runs/ 2>/dev/null || true
-```
-
-### Evaluation runs
-
-```bash
-# Copy the output directory (numpy arrays, PNG visualizations, metrics JSON)
-REMOTE_OUT="/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/output/"
-rsync -avz lingotube:${REMOTE_OUT} ./output/
-```
-
-### Generate visual summaries
-
-If output images are available, read a few representative ones and describe what you see:
-
-```bash
-# List output PNGs (take at most 5 for visual inspection)
-ssh lingotube "find /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/output -name '*.png' | head -5"
-```
-
-If tensorboard logs were retrieved, start tensorboard locally and tell the user the port:
-
-```bash
-tensorboard --logdir ./runs --port 6006 &
-echo "TensorBoard running at http://localhost:6006"
+# Tensorboard events, if any
+rsync -avz lingotube:~/projects/MDE-plus-Intrinsic-matrix/runs/ ./runs/ 2>/dev/null || true
 ```
 
 ---
 
-## Step 7 — Analyze results
+## Step 6 — Analyze and report
 
-After collecting the data:
-
-1. **Parse the log** — extract final metrics (AbsRel, RMSE, SILog, δ1, δ2, δ3) and training curves (loss per epoch).
-2. **Read any `metrics.json` files** from the output directory and summarize them.
-3. **Compare with prior runs** if available in `./output/` or the conversation history.
-4. **Generate a concise report** with:
-   - Final metric values
-   - Whether the run improved over baseline
-   - Notable observations (divergence, plateau, unexpected errors in the log)
-   - Concrete suggestions for the next experiment (learning rate, freeze settings, dataset mix, etc.)
-
----
-
-## Step 8 — Send a desktop notification
-
-When the job completes (or errors out), send a macOS notification:
-
-```bash
-# Success
-osascript -e 'display notification "Training finished on lingotube. Check Claude for results." with title "GPU Job Done" sound name "Glass"'
-
-# On error
-osascript -e 'display notification "Training FAILED on lingotube. Check Claude for error log." with title "GPU Job Error" sound name "Basso"'
-```
+1. Parse the log for final metrics (AbsRel, RMSE, SILog, δ1/δ2/δ3) and loss curves.
+2. Read retrieved `metrics.json` files and summarize.
+3. Compare against baseline/prior runs when available; consider invoking the
+   `mde-results-evaluator` agent for comparison runs.
+4. Report: final numbers, improved-or-not vs baseline, anomalies (divergence, plateau,
+   errors), and a concrete suggestion for the next experiment.
 
 ---
 
@@ -211,36 +189,23 @@ osascript -e 'display notification "Training FAILED on lingotube. Check Claude f
 
 | Situation | Action |
 |-----------|--------|
-| SSH connection refused | Retry once after 30s; if still failing, tell the user |
-| git push rejected (diverged) | Pull and rebase locally, then re-push |
-| tmux session `lab` not found | Create it: `ssh lingotube "tmux new-session -d -s lab"` |
-| OOM / CUDA error in log | Report immediately, suggest reducing `--bs` or enabling `--accumulate-grad` |
-| Process exits with non-zero code | Copy the last 100 lines of the log and include in analysis |
-| Checkpoint file >2GB | Skip rsync; tell user to retrieve manually or inspect on server |
+| SSH connection refused/timeout | Retry once after 30 s; then tell the user (server may be down or IP changed — check `~/.ssh/config`) |
+| `Host key verification failed` | Server IP/keys changed; rerun with `-o StrictHostKeyChecking=accept-new` after confirming the IP with the user |
+| `nvidia-smi` can't reach driver | See Known issue in Step 0 — needs sudo fix, GPU unusable until then |
+| `No module named torch` | venv wasn't activated — every remote python command needs `source venv/bin/activate` |
+| git push rejected | Pull/rebase locally, re-push |
+| tmux session `lab` missing | `ssh lingotube "tmux new-session -d -s lab"` |
+| OOM / CUDA error | Report; suggest smaller `--bs` + `--accumulate-grad`, or wait for the other job to finish |
+| Non-zero EXIT_CODE | Pull last 100 log lines, include in the report |
+| Checkpoint >2 GB | Don't rsync automatically; ask the user |
 
 ---
 
-## Logging
-
-Keep a local session log for each job at `./logs/<JOB_NAME>-session.md`:
-
-```markdown
-# Job: <JOB_NAME>
-- Command: `<full command>`
-- Started: <timestamp>
-- Finished: <timestamp>
-- Final metrics: <key numbers>
-- Artifacts retrieved: <list>
-- Analysis: <summary>
-```
-
----
-
-## Quick reference: common commands
+## Quick reference: common project commands
 
 ```bash
 # Training — intrinsics model on VKITTI
-python train.py --encoder vitl --dataset vkitti --max-depth 80.0 \
+python train.py --encoder vitl --datasets vkitti --max-depth 80.0 \
     --epochs 40 --bs 4 --lr 0.000005 \
     --pretrained-from models/raw_models/DepthAnythingV2-revised/checkpoints/depth_anything_v2_vitl.pth \
     --save-path models/raw_models/DepthAnythingV2-revised/checkpoints/revised \
@@ -248,15 +213,15 @@ python train.py --encoder vitl --dataset vkitti --max-depth 80.0 \
     --head-lr-multiplier 10.0 --grad-clip 1.0 --accumulate-grad 4
 
 # Training — baseline (no intrinsics)
-python train.py --encoder vitl --dataset vkitti --max-depth 80.0 \
+python train.py --encoder vitl --datasets vkitti --max-depth 80.0 \
     --epochs 40 \
     --pretrained-from models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vitl.pth \
     --save-path models/raw_models/DepthAnythingV2/checkpoints/baseline \
     --freeze-dinov2
 
-# Evaluate: compare two models
+# Compare two models (--max-depth >20 selects the vkitti/outdoor checkpoint)
 python compare_models.py --dataset cityscapes \
-    --model1 da2 --model2 da2-revised --encoder vitl --max-items 2000
+    --model1 da2 --model2 da2-revised --encoder vitl --max-depth 80.0 --max-items 2000
 
 # Cross-dataset evaluation
 python compare_dataset_results.py \

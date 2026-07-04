@@ -103,11 +103,12 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
             elif embed_dim == 1536:
                 encoder = 'vitg'
 
-        # Check if it's a metric model (has depth_head)
-        if 'depth_head' in str(state_dict.keys()):
-            model_type = 'metric'
-        else:
-            model_type = 'basic'
+        # NOTE: both metric and basic models have 'depth_head' keys — we cannot
+        # distinguish them from state-dict keys alone.  The filename/dirname
+        # fallback below is authoritative for official DA2 checkpoints.
+        # For trained checkpoints the 'config' block above already returned early.
+        # Leave model_type at its default ('basic') here; the filename check below
+        # will set it to 'metric' when appropriate.
 
         # Check if model has camera intrinsics support (has cam_encoder keys)
         use_camera_intrinsics = any('cam_encoder' in k for k in state_dict.keys())

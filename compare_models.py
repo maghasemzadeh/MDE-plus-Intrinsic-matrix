@@ -77,30 +77,33 @@ def key_from_display_name(display_name: str) -> str:
     return key or "model"
 
 
-def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None, device: Optional[str] = None) -> Tuple[BaseDepthModelWrapper, str]:
+def find_model_by_name(model_name: str, explicit_checkpoint: Optional[str] = None, device: Optional[str] = None, max_depth: Optional[float] = None) -> Tuple[BaseDepthModelWrapper, str]:
     """
     Create model wrapper by name.
-    
+
     Supported model names:
     - da2: DepthAnythingV2 (original)
     - da2-revised: DepthAnythingV2-revised
     - da3: Depth-Anything-3
-    
+
     Args:
         model_name: Model name ('da2', 'da3', 'da2-revised')
         explicit_checkpoint: Optional explicit checkpoint path override
         device: Optional device to use
-    
+        max_depth: Maximum depth hint for checkpoint auto-selection (80.0 = outdoor/vkitti, 20.0 = indoor/hypersim)
+
     Returns:
         Tuple of (model_wrapper, checkpoint_path)
     """
     model_name_lower = model_name.lower()
-    
+
     # Create model config - the wrapper will auto-find checkpoints
     model_config = {
         'checkpoint_path': explicit_checkpoint,
         'device': device
     }
+    if max_depth is not None:
+        model_config['max_depth'] = max_depth
     
     # Create the appropriate wrapper
     if model_name_lower == 'da2':
@@ -483,6 +486,12 @@ Examples:
     parser.add_argument('--model-type', type=str, default=None,
                        choices=['metric', 'basic'],
                        help='Model type: metric (uses abs_rel/rmse) or basic (uses silog). If not specified, auto-detects from model outputs.')
+    parser.add_argument('--max-depth', type=float, default=None,
+                       help='Maximum depth for checkpoint auto-selection and metric evaluation. '
+                            'Use 80.0 for outdoor (KITTI/CityScapes/DrivingStereo) and 20.0 for indoor (NYU). '
+                            'When unset, defaults to the value stored in the checkpoint. '
+                            'IMPORTANT: outdoor datasets require the vkitti checkpoint (max-depth=80); '
+                            'if you have both hypersim and vkitti checkpoints this flag controls which is loaded.')
     parser.add_argument('--outputs-inverse-depth', choices=['auto', 'true', 'false'], default='auto',
                        help="For basic models: use inverse-depth alignment. 'auto' = from model metadata, 'true'/'false' = override.")
     parser.add_argument('--input-size', type=int, default=518,
@@ -501,8 +510,8 @@ Examples:
     # Find models and their configurations
     print(f"\n🔍 Finding models and checkpoints...")
     try:
-        model1, model1_checkpoint = find_model_by_name(args.model1, args.model1_checkpoint, args.device)
-        model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device)
+        model1, model1_checkpoint = find_model_by_name(args.model1, args.model1_checkpoint, args.device, args.max_depth)
+        model2, model2_checkpoint = find_model_by_name(args.model2, args.model2_checkpoint, args.device, args.max_depth)
     except (FileNotFoundError, ValueError) as e:
         print(f"\n❌ Error: {e}")
         sys.exit(1)

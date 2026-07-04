@@ -23,18 +23,21 @@ python prepare_vkitti.py \
 ```
 
 # compare two models
- ```bash 
-  python compare_models.py \
-    --dataset CityScapes \
+```bash
+python compare_models.py \
+    --dataset cityscapes \
     --model1 da2 \
-    --model2 da2-revised
+    --model2 da2-revised \
+    --encoder vitl \
+    --max-depth 80.0 \
+    --max-items 2000
 ```
 
 # train on the vkitti2 dataset
 ```bash
 python train.py \
     --encoder vits \
-    --dataset vkitti \
+    --datasets vkitti \
     --max-depth 80.0 \
     --epochs 40 \
     --bs 4 \

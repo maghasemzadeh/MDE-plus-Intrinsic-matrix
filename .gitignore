@@ -5,4 +5,5 @@ datasets/raw_data/
 results
 **/venv/**
 .DS_Store
-
+.cursor/**
+correctness_check/**

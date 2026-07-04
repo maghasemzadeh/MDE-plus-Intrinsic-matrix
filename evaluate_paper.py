@@ -105,7 +105,9 @@ def build_dataset(args):
     )
     if args.dataset == 'nyu':
         config = DatasetConfig(split=args.split or 'test', **config_kwargs)
-        return NYUDataset(config)
+        ds = NYUDataset(config)
+        ds.depth_field = args.nyu_depth_field
+        return ds
     else:
         if args.kitti_filelist:
             split = f'filelist:{args.kitti_filelist}'
@@ -128,6 +130,9 @@ def main():
     parser.add_argument('--split', default=None,
                         help="Dataset split. NYU default: 'test' (eigen 654). "
                              "KITTI: use --kitti-filelist instead.")
+    parser.add_argument('--nyu-depth-field', default='rawDepths', choices=['rawDepths', 'depths'],
+                        help="NYU GT source: 'rawDepths' (registered raw Kinect depth with holes, "
+                             "standard eigen protocol) or 'depths' (inpainted dense depth)")
     parser.add_argument('--kitti-filelist', default=None,
                         help='Local copy of the DA2 kitti val.txt (652 lines: image_path depth_path)')
     parser.add_argument('--model-type', default='basic', choices=['basic', 'metric'],
@@ -285,6 +290,7 @@ def main():
             'config': {
                 'dataset': args.dataset,
                 'split': args.split,
+                'nyu_depth_field': args.nyu_depth_field if args.dataset == 'nyu' else None,
                 'kitti_filelist': args.kitti_filelist,
                 'model': model.get_model_name(),
                 'checkpoint': model.get_checkpoint_path(),

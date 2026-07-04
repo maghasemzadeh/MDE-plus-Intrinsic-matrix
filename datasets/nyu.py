@@ -70,6 +70,13 @@ class NYUDataset(BaseDataset):
         """
         super().__init__(config)
         self.max_depth = 10.0  # meters (NYU indoor typical max ~10m)
+        # Which depth field of the .mat to evaluate against:
+        # 'depths' = colorization-inpainted dense depth;
+        # 'rawDepths' = registered raw Kinect depth with holes (zeros).
+        # The standard eigen-split evaluation (BTS/ZoeDepth/DA2) uses the raw
+        # depth with invalid pixels masked out; inpainted values are fabricated
+        # (e.g. inside mirrors/glass) and distort metrics there.
+        self.depth_field = 'depths'
         self._images = None
         self._depths = None
         self._mat_loaded = False
@@ -121,7 +128,12 @@ class NYUDataset(BaseDataset):
             # becomes [n_images, width, height, 3] when loaded with h5py
             # We need to transpose to get [n_images, height, width, 3]
             self._images = np.array(f['images'])
-            self._depths = np.array(f['depths'])
+            if self.depth_field not in f:
+                raise KeyError(
+                    f"Depth field '{self.depth_field}' not in {mat_file} "
+                    f"(available: {sorted(f.keys())})"
+                )
+            self._depths = np.array(f[self.depth_field])
         
         # Check the original shape
         original_img_shape = self._images.shape

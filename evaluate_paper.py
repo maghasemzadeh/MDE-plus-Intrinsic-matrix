@@ -36,6 +36,12 @@ Examples:
     # Sanity check the released outdoor metric model on KITTI
     python evaluate_paper.py --dataset kitti --model-type metric --encoder vitl \
         --kitti-filelist datasets/raw_data/kitti/da2_val.txt
+
+    # Our camera-intrinsics-conditioned fine-tune (da2-revised), same protocol.
+    # --model-type/--encoder must match the checkpoint; intrinsics usage is
+    # auto-detected from the checkpoint's saved config.
+    python evaluate_paper.py --dataset nyu --model da2-revised --model-type basic \
+        --encoder vits --checkpoint models/raw_models/DepthAnythingV2-revised/checkpoints/basic_finetuning/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20260305_060010/best.pth
 """
 
 import os
@@ -49,7 +55,7 @@ import cv2
 from tqdm import tqdm
 
 from datasets import DatasetConfig, NYUDataset, KITTIDataset
-from models import DepthAnythingV2Wrapper
+from models import DepthAnythingV2Wrapper, DepthAnythingV2RevisedWrapper
 from src.metrics import compute_depth_metrics
 
 
@@ -139,6 +145,10 @@ def main():
                              "standard eigen protocol) or 'depths' (inpainted dense depth)")
     parser.add_argument('--kitti-filelist', default=None,
                         help='Local copy of the DA2 kitti val.txt (652 lines: image_path depth_path)')
+    parser.add_argument('--model', default='da2', choices=['da2', 'da2-revised'],
+                        help='da2 = original released DepthAnythingV2; '
+                             'da2-revised = our camera-intrinsics-conditioned fine-tune '
+                             '(requires --checkpoint; intrinsics usage auto-detected from it)')
     parser.add_argument('--model-type', default='basic', choices=['basic', 'metric'],
                         help='basic = relative model with affine alignment (paper Table 2); '
                              'metric = released hypersim/vkitti metric model, no alignment')
@@ -180,9 +190,17 @@ def main():
     if args.model_type == 'metric':
         # Steer checkpoint auto-selection: outdoor (vkitti) for KITTI, indoor (hypersim) for NYU
         model_config['max_depth'] = 80.0 if args.dataset == 'kitti' else 20.0
-    model = DepthAnythingV2Wrapper(model_config)
+    if args.model == 'da2-revised':
+        if not args.checkpoint:
+            print("❌ --model da2-revised requires an explicit --checkpoint "
+                  "(there is no single canonical revised checkpoint to auto-select).")
+            sys.exit(1)
+        model = DepthAnythingV2RevisedWrapper(model_config)
+    else:
+        model = DepthAnythingV2Wrapper(model_config)
     is_metric = model.is_metric()
     outputs_inverse_depth = model.outputs_inverse_depth()
+    uses_intrinsics = bool(getattr(model, 'use_camera_intrinsics', False))
 
     if args.model_type == 'basic' and is_metric:
         print("❌ Requested basic model but loaded checkpoint is metric. "
@@ -199,14 +217,20 @@ def main():
         print("❌ No items found — check dataset path/split.")
         sys.exit(1)
 
+    if uses_intrinsics and not (hasattr(dataset, 'has_intrinsics') and dataset.has_intrinsics()):
+        print(f"❌ Model uses camera intrinsics but dataset '{args.dataset}' does not provide them.")
+        sys.exit(1)
+
     print(f"\n{'=' * 78}")
     print(f"DA2 paper-protocol evaluation")
     print(f"  Model:      {model.get_model_name()} ({'metric' if is_metric else 'basic/relative'})")
     print(f"  Checkpoint: {model.get_checkpoint_path()}")
     print(f"  Dataset:    {args.dataset} ({len(items)} items)")
     print(f"  Depth eval range: [{min_depth}, {max_depth}] m | crop: {crop} | clip_pred: {clip_pred}")
+    if args.model == 'da2-revised':
+        print(f"  Camera intrinsics: {'used' if uses_intrinsics else 'NOT used (checkpoint trained without them)'}")
     if not is_metric:
-        print(f"  Alignment:  per-image scale+shift in inverse-depth space "
+        print(f"  Alignment:  per-image scale+shift in {'inverse' if outputs_inverse_depth else 'direct'}-depth space "
               f"(outputs_inverse_depth={outputs_inverse_depth})")
     print(f"{'=' * 78}\n")
 
@@ -225,7 +249,14 @@ def main():
         gt = dataset.load_gt_depth(item.gt_path, item)
         gt = np.squeeze(np.asarray(gt, dtype=np.float32))
 
-        pred = model.infer_image(image, input_size=args.input_size)
+        intrinsics = None
+        if uses_intrinsics:
+            intrinsics = dataset.load_intrinsic(item)
+            if intrinsics is None:
+                skipped += 1
+                continue
+
+        pred = model.infer_image(image, input_size=args.input_size, intrinsics=intrinsics)
         pred = np.squeeze(np.asarray(pred, dtype=np.float32))
         if pred.shape != gt.shape:
             # Model output should already be at image resolution; resize if not
@@ -266,7 +297,7 @@ def main():
     print(f"{'-' * 78}")
 
     target = None
-    if not is_metric and crop == DEFAULT_CROPS[args.dataset]:
+    if args.model == 'da2' and not is_metric and crop == DEFAULT_CROPS[args.dataset]:
         target = PAPER_TARGETS[args.dataset].get(model.encoder)
     if target:
         t_absrel, t_d1 = target
@@ -282,7 +313,8 @@ def main():
     if out_path is None:
         os.makedirs('results/paper_eval', exist_ok=True)
         stamp = datetime.now().strftime('%Y%m%d_%H%M%S')
-        out_path = (f"results/paper_eval/{args.dataset}_{args.model_type}_"
+        model_slug = args.model.replace('-', '_')
+        out_path = (f"results/paper_eval/{args.dataset}_{model_slug}_{args.model_type}_"
                     f"{model.encoder}_crop-{crop}_{stamp}.json")
     else:
         os.makedirs(os.path.dirname(out_path) or '.', exist_ok=True)
@@ -297,9 +329,11 @@ def main():
                 'nyu_depth_field': args.nyu_depth_field if args.dataset == 'nyu' else None,
                 'kitti_filelist': args.kitti_filelist,
                 'model': model.get_model_name(),
+                'model_family': args.model,
                 'checkpoint': model.get_checkpoint_path(),
                 'model_type': args.model_type,
                 'encoder': model.encoder,
+                'uses_camera_intrinsics': uses_intrinsics,
                 'input_size': args.input_size,
                 'min_depth_eval': min_depth,
                 'max_depth_eval': max_depth,

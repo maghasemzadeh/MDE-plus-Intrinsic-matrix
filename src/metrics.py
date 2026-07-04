@@ -3,7 +3,7 @@ Metrics computation for depth estimation evaluation.
 """
 
 import numpy as np
-from typing import Dict
+from typing import Dict, Optional, Tuple
 
 
 def align_non_metric_predictions(
@@ -74,6 +74,7 @@ def compute_depth_metrics(
     gt_depth: np.ndarray,
     is_metric_model: bool = True,
     outputs_inverse_depth: bool = False,
+    pred_clip: Optional[Tuple[float, float]] = None,
 ) -> Dict[str, float]:
     """
     Compute depth estimation metrics for a single image.
@@ -89,6 +90,11 @@ def compute_depth_metrics(
         is_metric_model: If False, apply affine alignment before computing metrics.
         outputs_inverse_depth: If True (and not metric), treat predictions as
             inverse depth (1/z). Only used when is_metric_model is False.
+        pred_clip: Optional (min, max) depth range to clip predictions to
+            after alignment. Standard eigen/MiDaS-protocol evaluation clips
+            predictions to the evaluation depth range; without this, aligned
+            inverse-depth predictions near zero disparity explode to huge
+            depths and dominate per-image AbsRel.
 
     Returns:
         Dictionary with metrics: d1, d2, d3, abs_rel, sq_rel, rmse, rmse_log,
@@ -119,6 +125,9 @@ def compute_depth_metrics(
         pred_valid = align_non_metric_predictions(
             pred_valid, gt_valid, outputs_inverse_depth=outputs_inverse_depth
         )
+
+    if pred_clip is not None:
+        pred_valid = np.clip(pred_valid, pred_clip[0], pred_clip[1])
 
     pred_valid = np.maximum(pred_valid, 1e-8)
     gt_valid = np.maximum(gt_valid, 1e-8)

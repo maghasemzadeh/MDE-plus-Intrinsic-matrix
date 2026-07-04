@@ -139,6 +139,10 @@ def main():
     parser.add_argument('--device', default=None)
     parser.add_argument('--crop', default='auto', choices=['auto', 'none', 'eigen', 'garg'],
                         help="Evaluation crop. auto = garg for KITTI, eigen for NYU")
+    parser.add_argument('--clip-pred', default='auto', choices=['auto', 'true', 'false'],
+                        help="Clip predictions to the eval depth range after alignment "
+                             "(MiDaS/eigen protocol). auto = true for basic, false for metric "
+                             "(matches the official DA2 metric eval which does not clip)")
     parser.add_argument('--min-depth-eval', type=float, default=None)
     parser.add_argument('--max-depth-eval', type=float, default=None)
     parser.add_argument('--max-items', type=int, default=None)
@@ -152,6 +156,10 @@ def main():
     if args.max_depth_eval is not None:
         max_depth = args.max_depth_eval
     crop = DEFAULT_CROPS[args.dataset] if args.crop == 'auto' else args.crop
+    if args.clip_pred == 'auto':
+        clip_pred = args.model_type == 'basic'
+    else:
+        clip_pred = args.clip_pred == 'true'
 
     # Build model
     model_config = {
@@ -187,7 +195,7 @@ def main():
     print(f"  Model:      {model.get_model_name()} ({'metric' if is_metric else 'basic/relative'})")
     print(f"  Checkpoint: {model.get_checkpoint_path()}")
     print(f"  Dataset:    {args.dataset} ({len(items)} items)")
-    print(f"  Depth eval range: [{min_depth}, {max_depth}] m | crop: {crop}")
+    print(f"  Depth eval range: [{min_depth}, {max_depth}] m | crop: {crop} | clip_pred: {clip_pred}")
     if not is_metric:
         print(f"  Alignment:  per-image scale+shift in inverse-depth space "
               f"(outputs_inverse_depth={outputs_inverse_depth})")
@@ -224,6 +232,7 @@ def main():
             pred, gt_eval,
             is_metric_model=is_metric,
             outputs_inverse_depth=outputs_inverse_depth,
+            pred_clip=(min_depth, max_depth) if clip_pred else None,
         )
         if m['n_valid'] < 10 or not np.isfinite(m['abs_rel']):
             skipped += 1
@@ -285,6 +294,7 @@ def main():
                 'min_depth_eval': min_depth,
                 'max_depth_eval': max_depth,
                 'crop': crop,
+                'clip_pred': bool(clip_pred),
                 'outputs_inverse_depth': bool(outputs_inverse_depth),
             },
             'per_image': per_image,

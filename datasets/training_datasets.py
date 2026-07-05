@@ -816,15 +816,23 @@ class NYUTrainingDataset(Dataset):
         
         # Set up indices based on mode if not explicitly provided
         if self.indices is None:
-            # Default 80/20 split
+            # Hold out the standard Eigen 654-image test split entirely, then
+            # do an 80/20 train/val split over the remaining 795 images.
+            # Without this holdout, checkpoints trained on NYU leak ~80% of
+            # the eigen test set and NYU eval results are not publishable.
+            from datasets.nyu import NYUDataset
+            eigen_test = set(NYUDataset.EIGEN_TEST_INDICES)
+            non_test = np.array(sorted(set(range(n_total)) - eigen_test))
             np.random.seed(42)  # Fixed seed for reproducibility
-            all_indices = np.random.permutation(n_total)
-            split_idx = int(0.8 * n_total)
-            
+            permuted = non_test[np.random.permutation(len(non_test))]
+            split_idx = int(0.8 * len(permuted))
+
             if mode == 'train':
-                self.indices = all_indices[:split_idx].tolist()
+                self.indices = permuted[:split_idx].tolist()
             else:
-                self.indices = all_indices[split_idx:].tolist()
+                self.indices = permuted[split_idx:].tolist()
+            print(f"NYU split: {len(eigen_test)} eigen-test images held out; "
+                  f"{len(permuted)} remaining -> {len(self.indices)} for {mode}")
         
         print(f"Loaded NYU Depth V2 {mode} set: {len(self.indices)} samples (from {n_total} total)")
         

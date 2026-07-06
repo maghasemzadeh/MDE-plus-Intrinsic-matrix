@@ -117,11 +117,30 @@ Honest reading:
 - vs **matched control**: the camera-intrinsics input wins significantly on *both*
   AbsRel and RMSE — the improvement is attributable to intrinsics, not just tuning.
 
-### vitl
+### vitl — collapsed; root cause identified (open issue)
 
-Training pair launched 2026-07-05 23:52 (log `logs/train-nyu-vitl-pair.log`,
-tmux `lab:train-vitl`). Results to be appended when done.
-Target: DA2 vitl baseline 0.0425 / 0.9789.
+The same recipe applied to vitl collapsed for **both** the revised and the base
+control run (val metrics frozen at AbsRel 0.346 from epoch 1; checkpoints
+`revised_basic_vitl_nyu_intrinsics_...20260705_235227`,
+`base_basic_vitl_nyu_...20260706_010928`).
+
+Diagnosis (2026-07-06):
+- The trained vitl model outputs **exactly 0 everywhere** (verified by direct
+  inference; no NaN/Inf anywhere in the weights).
+- A constant-zero output makes the scale-shift-invariant training loss depend
+  only on the per-batch GT, so the loss log *looks* normal (fluctuates 0.1–0.8)
+  while nothing is learned — and gradients through the dead final ReLU are zero,
+  so the model can never recover.
+- The February vitl checkpoints (`revised_basic_vitl_nyu+vkitti+diode`, its base
+  control) show the identical signature — this bug predates this session and is
+  why no working vitl fine-tune exists.
+- vits does not collapse with identical settings. Most likely trigger: the
+  10× head LR multiplier (effective 5e-5) drives the larger vitl DPT head's
+  pre-activations negative in the first epoch → dead ReLU.
+
+Suggested fix (not yet run): retrain vitl with `--head-lr-multiplier 1.0`
+(and/or `--warmup-epochs 2`); everything else unchanged.
+Target remains: DA2 vitl baseline 0.0425 / 0.9789.
 
 ## 5. Artifacts
 

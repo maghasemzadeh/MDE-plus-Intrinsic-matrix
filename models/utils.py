@@ -61,6 +61,10 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
                 'use_camera_intrinsics': use_camera_intrinsics,
                 'cam_token_inject_layer': cam_token_inject_layer,
                 'basic_target_space': config.get('basic_target_space'),
+                # train.py checkpoints use the unified ReLU-head dpt class for
+                # BOTH model types; the released metric checkpoints instead use
+                # the sigmoid*max_depth head. Loaders must build the right one.
+                'from_train_py': True,
             }
 
         # Extract state dict for older checkpoint format

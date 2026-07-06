@@ -408,6 +408,9 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
         # Basic checkpoints trained on disparity targets (1/depth) output
         # inverse depth and must be aligned accordingly during evaluation.
         self._basic_target_space = checkpoint_config.get('basic_target_space')
+        # train.py metric checkpoints were trained with the unified ReLU-head
+        # class, not the released sigmoid*max_depth metric head.
+        self._relu_metric_head = bool(checkpoint_config.get('from_train_py'))
     
     def load_model(self) -> None:
         """Load the Depth Anything V2 (revised) model."""
@@ -425,6 +428,12 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
                 f"Expected DepthAnythingV2-revised, but got: {_models_file}"
             )
         
+        extra_kwargs = {}
+        if self._is_metric and getattr(self, '_relu_metric_head', False):
+            # Checkpoint was trained by train.py with the unified ReLU-head
+            # class; loading it into the sigmoid*max_depth metric head would
+            # silently produce ~4x inflated depths.
+            extra_kwargs['relu_head'] = True
         self._model = load_model(
             model_name=self.model_type,
             encoder=self.encoder,
@@ -432,7 +441,8 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
             device=device,
             max_depth=self.max_depth,
             use_camera_intrinsics=self.use_camera_intrinsics,
-            cam_token_inject_layer=self.cam_token_inject_layer
+            cam_token_inject_layer=self.cam_token_inject_layer,
+            **extra_kwargs
         )
         
         # Verify the loaded model class is from the correct path

@@ -25,6 +25,7 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
         device: Optional[str] = None,
         use_camera_intrinsics: bool = False,
         cam_token_inject_layer: Optional[int] = None,
+        relu_head: bool = False,
         **kwargs
     ):
         """
@@ -53,7 +54,10 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
         self.device = device
         self.use_camera_intrinsics = use_camera_intrinsics
         self.cam_token_inject_layer = cam_token_inject_layer
-        
+        # train.py-trained metric checkpoints use the unified ReLU-head dpt
+        # class; the released metric checkpoints use sigmoid*max_depth.
+        self.relu_head = relu_head
+
         # Build model
         model_config = get_model_config(encoder)
         self.model = self._build_model(
@@ -76,7 +80,13 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
     
     def _build_model(self, **kwargs) -> torch.nn.Module:
         """Build the metric Depth Anything V2 model."""
-        # Import metric model (lazy import to avoid conflicts)
+        if self.relu_head:
+            # Unified class used by train.py (F.relu output, max_depth unused
+            # in forward) — required for checkpoints trained with train.py.
+            from ..dpt import DepthAnythingV2
+            return DepthAnythingV2(**kwargs)
+        # Released metric checkpoints: sigmoid*max_depth head
+        # (lazy import to avoid conflicts)
         try:
             from metric_depth.depth_anything_v2.dpt import DepthAnythingV2
         except ImportError:
@@ -84,7 +94,7 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
                 "Metric depth model not available. "
                 "Make sure metric_depth module is accessible."
             )
-        
+
         return DepthAnythingV2(**kwargs)
     
     def _load_checkpoint(self, checkpoint_path: str, **kwargs) -> None:

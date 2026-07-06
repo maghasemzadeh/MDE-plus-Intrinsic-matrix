@@ -42,7 +42,7 @@ GenericDatasetWithIntrinsics = None
 from depth_anything_v2.dpt import DepthAnythingV2 as DepthAnythingV2Metric
 from util.dist_helper import setup_distributed
 from util.loss import SiLogLoss, ScaleShiftInvariantLoss
-from util.metric import eval_depth, eval_depth_scale_aligned
+from util.metric import eval_depth, eval_depth_scale_aligned, compute_scale_and_shift
 from util.utils import init_log
 
 # Path to basic (relative depth) model in the revised DepthAnythingV2
@@ -1118,7 +1118,16 @@ Training Run Summary:
 
             # Standard loss - DepthAnythingV2 handles knowledge distillation internally
             valid_depth_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
-            loss = criterion(pred, depth, valid_depth_mask)
+            if is_metric:
+                loss = criterion(pred, depth, valid_depth_mask)
+            else:
+                # Basic model outputs disparity (inverse depth) — train in that
+                # space. Training against direct depth inverts the relationship:
+                # the SSI loss's positive-scale clamp and its unaligned gradient
+                # term then drive the ReLU head to constant zero (observed as
+                # the vitl collapse; vits only escaped by re-learning depth).
+                target_disp = 1.0 / depth.clamp(min=args.min_depth)
+                loss = criterion(pred, target_disp, valid_depth_mask)
 
             # Scale loss for gradient accumulation
             loss = loss / args.accumulate_grad
@@ -1186,6 +1195,7 @@ Training Run Summary:
                         'use_camera_intrinsics': args.use_camera_intrinsics,
                         'cam_token_inject_layer': args.cam_token_inject_layer,
                         'model_type': args.model_type,
+                        'basic_target_space': None if is_metric else 'disparity',
                     }
                 }
                 for ckpt_name in ['latest.pth', 'best.pth']:
@@ -1266,8 +1276,15 @@ Training Run Summary:
             if is_metric:
                 cur_results = eval_depth(pred[valid_mask], depth[valid_mask])
             else:
-                # Basic model: use scale-aligned evaluation
-                cur_results = eval_depth_scale_aligned(pred[valid_mask], depth[valid_mask])
+                # Basic model outputs disparity: align to inverse GT, invert to
+                # depth, clip to the eval range, then compute standard metrics
+                # (mirrors evaluate_paper.py's protocol for inverse-depth models).
+                pv, dv = pred[valid_mask], depth[valid_mask]
+                inv_gt = 1.0 / dv.clamp(min=1e-6)
+                s, t = compute_scale_and_shift(pv, inv_gt)
+                depth_pred = 1.0 / (s * pv + t).clamp(min=1e-6)
+                depth_pred = depth_pred.clamp(min=args.min_depth, max=args.max_depth)
+                cur_results = eval_depth(depth_pred, dv)
 
             for k in results.keys():
                 if k in cur_results:
@@ -1406,6 +1423,7 @@ Training Run Summary:
                     'use_camera_intrinsics': args.use_camera_intrinsics,
                     'cam_token_inject_layer': args.cam_token_inject_layer,
                     'model_type': args.model_type,
+                    'basic_target_space': None if is_metric else 'disparity',
                 }
             }
             

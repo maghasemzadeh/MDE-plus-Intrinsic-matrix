@@ -405,6 +405,9 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
             self.use_camera_intrinsics = checkpoint_config['use_camera_intrinsics']
         if checkpoint_config.get('cam_token_inject_layer') is not None:
             self.cam_token_inject_layer = checkpoint_config['cam_token_inject_layer']
+        # Basic checkpoints trained on disparity targets (1/depth) output
+        # inverse depth and must be aligned accordingly during evaluation.
+        self._basic_target_space = checkpoint_config.get('basic_target_space')
     
     def load_model(self) -> None:
         """Load the Depth Anything V2 (revised) model."""
@@ -486,8 +489,11 @@ class DepthAnythingV2RevisedWrapper(BaseDepthModelWrapper):
         return self._is_metric
 
     def outputs_inverse_depth(self) -> bool:
-        """Revised basic models are trained with depth targets (scale-shift invariant loss), not inverse depth."""
-        return False
+        """Old revised basic models were trained with depth targets and output
+        direct depth; checkpoints whose config records
+        basic_target_space='disparity' were trained on 1/depth and output
+        inverse depth (like the original DA2 basic model)."""
+        return getattr(self, '_basic_target_space', None) == 'disparity'
 
     def get_model_name(self) -> str:
         """Get model name."""

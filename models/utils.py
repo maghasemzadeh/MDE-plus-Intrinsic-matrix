@@ -60,6 +60,7 @@ def identify_model_from_checkpoint(checkpoint_path: str) -> Dict:
                 'max_depth': max_depth,
                 'use_camera_intrinsics': use_camera_intrinsics,
                 'cam_token_inject_layer': cam_token_inject_layer,
+                'basic_target_space': config.get('basic_target_space'),
             }
 
         # Extract state dict for older checkpoint format

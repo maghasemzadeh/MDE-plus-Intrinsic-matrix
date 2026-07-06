@@ -896,7 +896,7 @@ class NYUTrainingDataset(Dataset):
         if np.random.rand() < 0.2:
             s = 1.0
         else:
-            s = np.random.uniform(1.0, 1.7)
+            s = np.random.uniform(1.0, 2.2)
         win_h, win_w = int(round(H / s)), int(round(W / s))
         y0 = np.random.randint(0, H - win_h + 1)
         x0 = np.random.randint(0, W - win_w + 1)

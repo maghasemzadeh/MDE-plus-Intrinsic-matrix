@@ -117,30 +117,55 @@ Honest reading:
 - vs **matched control**: the camera-intrinsics input wins significantly on *both*
   AbsRel and RMSE — the improvement is attributable to intrinsics, not just tuning.
 
-### vitl — collapsed; root cause identified (open issue)
+### vitl — collapsed twice, root-caused, fixed, and now beats the baseline
 
-The same recipe applied to vitl collapsed for **both** the revised and the base
-control run (val metrics frozen at AbsRel 0.346 from epoch 1; checkpoints
-`revised_basic_vitl_nyu_intrinsics_...20260705_235227`,
-`base_basic_vitl_nyu_...20260706_010928`).
+**The collapse.** The vits recipe applied to vitl collapsed for both the revised
+and control runs (val AbsRel frozen at 0.346 from epoch 1–2), even after
+retrying with `--head-lr-multiplier 1.0` + warmup. The trained model outputs
+**exactly 0 everywhere** (no NaN in weights). The February vitl checkpoints show
+the identical signature — this bug predates this session.
 
-Diagnosis (2026-07-06):
-- The trained vitl model outputs **exactly 0 everywhere** (verified by direct
-  inference; no NaN/Inf anywhere in the weights).
-- A constant-zero output makes the scale-shift-invariant training loss depend
-  only on the per-batch GT, so the loss log *looks* normal (fluctuates 0.1–0.8)
-  while nothing is learned — and gradients through the dead final ReLU are zero,
-  so the model can never recover.
-- The February vitl checkpoints (`revised_basic_vitl_nyu+vkitti+diode`, its base
-  control) show the identical signature — this bug predates this session and is
-  why no working vitl fine-tune exists.
-- vits does not collapse with identical settings. Most likely trigger: the
-  10× head LR multiplier (effective 5e-5) drives the larger vitl DPT head's
-  pre-activations negative in the first epoch → dead ReLU.
+**Root cause (found via an instrumented 18-step reproduction).** The pretrained
+DA2 *basic* model outputs **disparity** (inverse depth, values in the hundreds),
+but `train.py` fed it **direct depth targets** (0–10 m) — an inverted,
+magnitude-mismatched objective. Two details of `ScaleShiftInvariantLoss` turn
+that fatal: (1) it clamps the alignment scale to `min=1e-3` (positive), so it
+*cannot* fit an inverted relationship; (2) its gradient-matching term (α=0.5)
+compares **unaligned raw values**, crushing output magnitude. The loss optimum
+is "constant zero output", and the head's final ReLU makes that state
+unrecoverable (dead-pixel fraction 0.001 → 1.0 within 18 steps). vits survived
+the same trap only because its smaller head managed to re-learn direct-depth
+output — lucky, not principled.
 
-Suggested fix (not yet run): retrain vitl with `--head-lr-multiplier 1.0`
-(and/or `--warmup-epochs 2`); everything else unchanged.
-Target remains: DA2 vitl baseline 0.0425 / 0.9789.
+**The fix (commit `ccca9fa`)** — standard MiDaS/DA2 practice:
+- basic models now train on **disparity targets** (`1/depth`);
+- the in-training val aligns in inverse-depth space (so best.pth selection works);
+- checkpoints record `basic_target_space: 'disparity'` and the evaluation
+  wrapper then treats output as inverse depth, exactly like original DA2.
+Verified with a 150-step instrumented run (loss 20–50× lower, zero dead pixels)
+before committing GPU time.
+
+**Results — vitl, NYU eigen-654, rawDepths, leak-free (654/654 images):**
+
+| Model | AbsRel ↓ | δ1 ↑ | RMSE ↓ | sq_rel ↓ |
+|---|---|---|---|---|
+| Original DA2 vitl (baseline) | 0.0425 | 0.9789 | 0.2119 | 0.0195 |
+| Fine-tune, no intrinsics (control) | 0.0378 | 0.9862 | 0.1922 | 0.0142 |
+| **Fine-tune + camera intrinsics (ours)** | **0.0377** | 0.9861 | **0.1913** | 0.0143 |
+
+Paired per-image significance (n = 654), ours vs original DA2 vitl:
+AbsRel mean diff +0.0048, 95 % CI [+0.0032, +0.0066], Wilcoxon p = 8.9×10⁻⁶;
+RMSE mean diff +0.0205, 95 % CI [+0.0133, +0.0282], Wilcoxon p = 1.1×10⁻⁹.
+**Unambiguously better on both headline metrics.** vs the no-intrinsics control
+the vitl pair is a statistical tie (p = 0.18 / 0.50) — expected on NYU, where a
+single camera means the intrinsics input is constant and carries no
+discriminative signal at this scale; the vits pair (section above) is where the
+intrinsics contribution itself reached significance.
+
+Winning vitl checkpoint:
+`models/raw_models/DepthAnythingV2-revised/checkpoints/basic_finetuning_disp/revised_basic_vitl_nyu_intrinsics_lr5e-6_bs4_20260706_120823/best.pth`
+Eval JSONs: `results/paper_eval/nyu_REVISED_vitl_disp_leakfree.json`,
+`nyu_BASEFT_vitl_disp_leakfree.json`.
 
 ## 5. Artifacts
 

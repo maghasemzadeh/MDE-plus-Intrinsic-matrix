@@ -531,8 +531,14 @@ class NYUTrainingDataset(Dataset):
     INTRINSIC_FY = 519.4696
     INTRINSIC_CX = 325.5824
     INTRINSIC_CY = 253.7362
-    
-    def __init__(self, filelist_path_or_mat_path, mode='train', size=(518, 518)):
+
+    # Fixed network input frame for the intrinsics-aware training path:
+    # full 4:3 frame at lower-bound 518, both dims multiples of 14
+    NET_H = 518
+    NET_W = 686
+
+    def __init__(self, filelist_path_or_mat_path, mode='train', size=(518, 518),
+                 intrinsics_aug=True):
         """
         Initialize NYU Depth V2 training dataset.
         
@@ -541,9 +547,14 @@ class NYUTrainingDataset(Dataset):
                                        or a split file containing indices
             mode: 'train' or 'val' (dataset will be split 80/20 if no split file)
             size: (width, height) for image resizing
+            intrinsics_aug: in train mode, use the geometrically-exact zoom-crop
+                augmentation (varies the true FoV and returns per-sample-correct
+                intrinsics in the network frame) instead of the legacy
+                resize + random-crop path whose crop never updated K.
         """
         self.mode = mode
         self.size = size
+        self.intrinsics_aug = bool(intrinsics_aug) and mode == 'train'
         
         # Get project root
         current_file = os.path.abspath(__file__)
@@ -845,29 +856,81 @@ class NYUTrainingDataset(Dataset):
         
         # Setup transforms
         net_w, net_h = size
-        self.transform = Compose([
-            Resize(
-                width=net_w,
-                height=net_h,
-                resize_target=True if mode == 'train' else False,
-                keep_aspect_ratio=True,
-                ensure_multiple_of=14,
-                resize_method='lower_bound',
-                image_interpolation_method=cv2.INTER_CUBIC,
-            ),
-            NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
-            PrepareForNet(),
-        ] + ([Crop(size[0])] if self.mode == 'train' else []))
-    
+        if self.intrinsics_aug:
+            # Geometry (zoom-crop + resize to the fixed NET_HxNET_W frame) is
+            # done in _geometric_aug with exact intrinsics bookkeeping; the
+            # Compose only normalizes. No random Crop: it would shift the
+            # principal point without updating K.
+            self.transform = Compose([
+                NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                PrepareForNet(),
+            ])
+        else:
+            self.transform = Compose([
+                Resize(
+                    width=net_w,
+                    height=net_h,
+                    resize_target=True if mode == 'train' else False,
+                    keep_aspect_ratio=True,
+                    ensure_multiple_of=14,
+                    resize_method='lower_bound',
+                    image_interpolation_method=cv2.INTER_CUBIC,
+                ),
+                NormalizeImage(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                PrepareForNet(),
+            ] + ([Crop(size[0])] if self.mode == 'train' else []))
+
+    def _geometric_aug(self, image, depth, intrinsic):
+        """
+        Zoom-crop augmentation with exact intrinsics bookkeeping.
+
+        Samples a random 4:3 window (zoom factor 1.0-1.7; 20% of samples are
+        the exact full frame = evaluation geometry), crops image+depth, and
+        resizes to the fixed (NET_H, NET_W) network frame. The returned K is
+        expressed in that frame, so intrinsics_to_encoding(K, (NET_H, NET_W))
+        reflects the true FoV of what the network sees — giving the camera
+        encoder varied AND correct signal from a single-camera dataset.
+        Depth values are unchanged (same scene points).
+        """
+        H, W = image.shape[:2]
+        if np.random.rand() < 0.2:
+            s = 1.0
+        else:
+            s = np.random.uniform(1.0, 1.7)
+        win_h, win_w = int(round(H / s)), int(round(W / s))
+        y0 = np.random.randint(0, H - win_h + 1)
+        x0 = np.random.randint(0, W - win_w + 1)
+
+        image = image[y0:y0 + win_h, x0:x0 + win_w]
+        depth = depth[y0:y0 + win_h, x0:x0 + win_w]
+
+        K = intrinsic.copy()
+        K[0, 2] -= x0
+        K[1, 2] -= y0
+
+        image = cv2.resize(image, (self.NET_W, self.NET_H), interpolation=cv2.INTER_CUBIC)
+        depth = cv2.resize(depth, (self.NET_W, self.NET_H), interpolation=cv2.INTER_NEAREST)
+        sx, sy = self.NET_W / win_w, self.NET_H / win_h
+        K[0, 0] *= sx
+        K[0, 2] *= sx
+        K[1, 1] *= sy
+        K[1, 2] *= sy
+        return image, depth, K
+
     def __getitem__(self, item):
         # Get the actual index from our subset
         idx = self.indices[item]
-        
+
         # Load image and depth from cached arrays
         image = self._images[idx].astype(np.float32) / 255.0  # [H, W, 3] normalized to [0, 1]
         depth = self._depths[idx].astype(np.float32)  # [H, W] in meters
         # Record original resolution before any resizing (Bug 1 fix)
         orig_h, orig_w = image.shape[:2]
+        sample_intrinsic = self.intrinsic
+        if self.intrinsics_aug:
+            image, depth, sample_intrinsic = self._geometric_aug(image, depth, self.intrinsic)
+            # Intrinsics are now expressed in the fixed network frame
+            orig_h, orig_w = self.NET_H, self.NET_W
         
         # Validate image dimensions and shape
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
@@ -933,11 +996,11 @@ class NYUTrainingDataset(Dataset):
         # Create valid mask (NYU max depth is ~10m for indoor scenes)
         sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
         
-        # Store original image dimensions for correct intrinsics normalisation (Bug 1 fix)
+        # Store the dimensions of the frame the intrinsics are expressed in
+        # (original 640x480, or the fixed network frame when intrinsics_aug)
         sample['original_size'] = torch.tensor([orig_h, orig_w], dtype=torch.long)
-        
-        # Intrinsics are for the original (640x480) resolution
-        sample['intrinsics'] = torch.from_numpy(self.intrinsic).float()
+
+        sample['intrinsics'] = torch.from_numpy(np.ascontiguousarray(sample_intrinsic)).float()
         
         # Add image identifier
         sample['image_path'] = f"nyu_depth_v2_labeled.mat::{idx}"

@@ -162,10 +162,55 @@ single camera means the intrinsics input is constant and carries no
 discriminative signal at this scale; the vits pair (section above) is where the
 intrinsics contribution itself reached significance.
 
-Winning vitl checkpoint:
+vitl checkpoint (no augmentation):
 `models/raw_models/DepthAnythingV2-revised/checkpoints/basic_finetuning_disp/revised_basic_vitl_nyu_intrinsics_lr5e-6_bs4_20260706_120823/best.pth`
 Eval JSONs: `results/paper_eval/nyu_REVISED_vitl_disp_leakfree.json`,
 `nyu_BASEFT_vitl_disp_leakfree.json`.
+
+### vitl round 2 — geometrically-exact intrinsics augmentation
+
+**Motivation.** NYU is single-camera: the intrinsics input is constant, so the
+camera encoder gets no discriminative signal. Worse, the legacy training
+pipeline random-cropped the image *without updating K* — the encoder saw
+geometrically wrong values. Fix (commit `3f9…`, `datasets/training_datasets.py`):
+a zoom-crop augmentation (windows at zoom 1.0–1.7, 20 % exact full frame) that
+updates fx/fy/cx/cy exactly and resizes to a fixed 518×686 frame, so
+`intrinsics_to_encoding` reflects the true FoV of every training sample
+(verified: FoV 41°–63°, eval geometry covered). Both pair members train on
+identical augmented images; only the revised model receives K.
+(bs 2 + accumulate 2: bs 4 at 518×686 OOMs on the 4090.)
+
+**Results — vitl, NYU eigen-654, rawDepths (654/654):**
+
+| Model | AbsRel ↓ | δ1 ↑ | RMSE ↓ |
+|---|---|---|---|
+| Original DA2 vitl | 0.0425 | 0.9789 | 0.2119 |
+| Fine-tune + aug, no intrinsics | **0.0359** | **0.9872** | **0.1849** |
+| Fine-tune + aug + intrinsics | 0.0362 | 0.9869 | 0.1881 |
+
+Paired t-tests (n = 654):
+- **The augmentation itself is a clear win** for both models: ours 0.0377→0.0362
+  (p = 1.2×10⁻⁸), control 0.0378→0.0359 (p = 1.2×10⁻¹³). These are the best
+  NYU numbers of the project, both far beyond the released DA2
+  (AbsRel p = 3.9×10⁻¹², δ1 p = 6.9×10⁻⁷, RMSE p = 3.3×10⁻⁹).
+- **The intrinsics input still does not help at vitl** — with varied, correct
+  K the intrinsics model is now marginally *behind* its control (AbsRel
+  +0.0003, p = 0.008; RMSE +0.0031, p = 2×10⁻⁵; δ1 tie).
+
+**Interpretation.** Under the *basic* evaluation protocol, predictions are
+scale-shift aligned per image before scoring. The main information FoV/K
+provides is global metric scale disambiguation — exactly what per-image
+alignment removes. So at vitl capacity, the camera token has nothing left to
+contribute and its extra parameters slightly perturb the small-data fine-tune
+(636 images). The vits-scale significant gain and this vitl-scale null result
+are both consistent with that explanation. **Implication for the thesis:** the
+natural arena for camera-intrinsics conditioning is *metric* depth (no
+alignment at eval), or multi-dataset training where FoV varies across domains;
+NYU-basic is a ceiling-limited testbed for the intrinsics hypothesis.
+
+Checkpoints: `basic_finetuning_aug/revised_basic_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_152237/best.pth`
+(and `base_basic_vitl_nyu_lr5e-6_bs2_20260706_171836/best.pth`).
+Eval JSONs: `nyu_REVISED_vitl_aug_leakfree.json`, `nyu_BASEFT_vitl_aug_leakfree.json`.
 
 ## 5. Artifacts
 

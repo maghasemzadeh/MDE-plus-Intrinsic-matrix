@@ -212,6 +212,54 @@ Checkpoints: `basic_finetuning_aug/revised_basic_vitl_nyu_intrinsics_lr5e-6_bs2_
 (and `base_basic_vitl_nyu_lr5e-6_bs2_20260706_171836/best.pth`).
 Eval JSONs: `nyu_REVISED_vitl_aug_leakfree.json`, `nyu_BASEFT_vitl_aug_leakfree.json`.
 
+## 5. The metric experiment — where intrinsics finally prove themselves (2026-07-06/07)
+
+Prediction from section 4: intrinsics carry global-scale information, which the
+basic protocol's per-image alignment erases — so they should matter for
+**metric** depth (absolute meters, no alignment). Setup: `--model-type metric`
+(SiLog loss, unified ReLU head, init from the basic vitl checkpoint), leak-free
+NYU split, FoV augmentation, identical no-intrinsics control.
+
+**Eval bug fixed on the way (commit `a473217`):** the metric loader built the
+released sigmoid×max_depth class while train.py trains the unified ReLU-head
+class — same weight names, silent load, ~4× inflated depths (eigen AbsRel 2.97
+vs 0.08 real). Trained checkpoints now carry `from_train_py` and route to the
+correct architecture.
+
+**Results — vitl metric, NYU eigen-654, absolute depth, no alignment:**
+
+| Model | AbsRel ↓ | δ1 ↑ | RMSE ↓ |
+|---|---|---|---|
+| Released DA2 metric hypersim vitl | 0.2073 | 0.6919 | 0.6063 |
+| Round 1 (FoV 41–63°): control | 0.0796 | 0.9583 | 0.2919 |
+| Round 1 (FoV 41–63°): **+ intrinsics** | **0.0791** | **0.9593** | **0.2882** |
+| Round 2 (FoV 33–63°): control | 0.0826 | 0.9546 | 0.2998 |
+| Round 2 (FoV 33–63°): **+ intrinsics** | **0.0817** | **0.9569** | **0.2944** |
+
+Paired significance vs the identical control (n = 654):
+
+| Round | AbsRel | RMSE | δ1 |
+|---|---|---|---|
+| 1 (FoV 41–63°) | n.s. (t p=0.26) | **p = 4.9×10⁻³** | n.s. |
+| 2 (FoV 33–63°) | Wilcoxon **p = 0.040** (t p=0.089) | **p = 6.5×10⁻⁵** | t p=0.073 |
+
+Key findings:
+1. **Both fine-tunes beat the released metric model by 2.6×** (AbsRel
+   0.207 → 0.079–0.083, paired t p ≈ 10⁻¹³³) — the strongest baseline win of
+   the project.
+2. **The intrinsics input itself now helps vitl**, significantly on RMSE in
+   both rounds, and the effect **grows with FoV variation** (RMSE p:
+   4.9×10⁻³ → 6.5×10⁻⁵; AbsRel: n.s. → Wilcoxon-significant). This dose-response
+   pattern is exactly what the scale-disambiguation theory predicts, and it
+   replicates across two independently trained pairs.
+3. Trade-off: harder augmentation slightly lowers absolute performance
+   (0.0791 → 0.0817) while widening the intrinsics gap — round 1 is the best
+   *model*, round 2 the strongest *ablation evidence*.
+
+Checkpoints: `metric_finetuning_aug{,2}/{revised,base}_metric_vitl_nyu*/best.pth`;
+eval JSONs `nyu_METRIC_{REVISED,BASEFT}_vitl_aug{,2}.json`,
+baseline `nyu_METRIC_baseline_hypersim_vitl.json`.
+
 ## 5. Artifacts
 
 | What | Where (server) |

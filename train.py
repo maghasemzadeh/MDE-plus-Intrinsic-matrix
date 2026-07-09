@@ -97,6 +97,16 @@ parser.add_argument('--test', action='store_true',
                          'so you can sanity-check training early without waiting for a full epoch.')
 parser.add_argument('--test-save-every', type=int, default=1000,
                     help='When --test: save checkpoints every N training iterations (default: 10)')
+parser.add_argument('--focal-jitter', type=float, default=0.0,
+                    help='Focal-depth rescale augmentation (NYU): per sample draw alpha log-uniform '
+                         'in [1/m, m], scale fx, fy and GT depth by alpha, pixels untouched. '
+                         '0 or 1 disables. Makes scale unresolvable without intrinsics.')
+parser.add_argument('--silog-lambda', type=float, default=0.5,
+                    help='SiLog loss lambda (default 0.5). Lower values forgive less of the '
+                         'global-scale error component, which is what intrinsics inform.')
+parser.add_argument('--seed', type=int, default=None,
+                    help='Seed torch/numpy/random and the train DataLoader so paired runs see '
+                         'identical data order, flips, zoom-crops and focal-jitter draws.')
 
 
 def get_device():
@@ -242,6 +252,12 @@ def main():
     except AttributeError:
         # RankWarning doesn't exist in newer numpy versions, ignore it
         pass
+
+    if args.seed is not None:
+        random.seed(args.seed)
+        np.random.seed(args.seed)
+        torch.manual_seed(args.seed)
+        torch.cuda.manual_seed_all(args.seed)
     
     logger = init_log('global', logging.INFO)
     logger.propagate = 0
@@ -334,7 +350,8 @@ def main():
             if rank == 0:
                 print(f"Initializing NYU Depth V2 training dataset...")
                 sys.stdout.flush()
-            dataset = NYUTrainingDataset(nyu_mat_file, 'train', size=size)
+            dataset = NYUTrainingDataset(nyu_mat_file, 'train', size=size,
+                                         focal_jitter=args.focal_jitter)
             if rank == 0:
                 print(f"NYU training dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
@@ -451,11 +468,25 @@ def main():
         sys.stdout.flush()
         logger.info(f'Creating training DataLoader with num_workers={num_workers}')
     
+    # With --seed, pin the shuffle order and worker RNG streams to the seed so
+    # paired runs (revised vs base) iterate identical samples with identical
+    # augmentation draws, regardless of how much RNG model construction used.
+    train_generator = None
+    worker_init = None
+    if args.seed is not None:
+        train_generator = torch.Generator()
+        train_generator.manual_seed(args.seed)
+
+        def worker_init(worker_id):
+            worker_seed = torch.initial_seed() % 2**32
+            np.random.seed(worker_seed)
+            random.seed(worker_seed)
+
     if world_size > 1:
         trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
-        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, sampler=trainsampler)
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, sampler=trainsampler, worker_init_fn=worker_init)
     else:
-        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, shuffle=True)
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, shuffle=True, generator=train_generator, worker_init_fn=worker_init)
     
     if rank == 0:
         print(f"Loading validation datasets: {dataset_names}...")
@@ -998,12 +1029,12 @@ Training Run Summary:
     # Setup loss function based on model type
     if is_metric:
         # Metric model: use SiLog loss (requires absolute depth values)
-        criterion = SiLogLoss().to(device)
+        criterion = SiLogLoss(lambd=args.silog_lambda).to(device)
         if rank == 0:
             if args.use_distillation:
-                logger.info('Using SiLog loss with teacher-student knowledge distillation')
+                logger.info(f'Using SiLog loss (lambda={args.silog_lambda}) with teacher-student knowledge distillation')
             else:
-                logger.info('Using standard SiLog loss (metric model)')
+                logger.info(f'Using standard SiLog loss (metric model, lambda={args.silog_lambda})')
     else:
         # Basic model: use scale-shift invariant loss (handles relative depth)
         criterion = ScaleShiftInvariantLoss(alpha=0.5).to(device)
@@ -1050,7 +1081,13 @@ Training Run Summary:
     warmup_iters = args.warmup_epochs * len(trainloader)
 
     previous_best = {'d1': 0, 'd2': 0, 'd3': 0, 'abs_rel': 100, 'sq_rel': 100, 'rmse': 100, 'rmse_log': 100, 'log10': 100, 'silog': 100}
-    
+
+    # Re-seed the python-random flip stream after model construction: the
+    # revised model's cam-encoder init consumes RNG the base model doesn't,
+    # so without this the paired runs' flip decisions would diverge.
+    if args.seed is not None:
+        random.seed(args.seed)
+
     for epoch in range(args.epochs):
         if rank == 0:
             logger.info('===========> Epoch: {:}/{:}, d1: {:.3f}, d2: {:.3f}, d3: {:.3f}'.format(epoch, args.epochs, previous_best['d1'], previous_best['d2'], previous_best['d3']))
@@ -1196,6 +1233,9 @@ Training Run Summary:
                         'cam_token_inject_layer': args.cam_token_inject_layer,
                         'model_type': args.model_type,
                         'basic_target_space': None if is_metric else 'disparity',
+                        'focal_jitter': args.focal_jitter,
+                        'silog_lambda': args.silog_lambda,
+                        'seed': args.seed,
                     }
                 }
                 for ckpt_name in ['latest.pth', 'best.pth']:
@@ -1424,9 +1464,12 @@ Training Run Summary:
                     'cam_token_inject_layer': args.cam_token_inject_layer,
                     'model_type': args.model_type,
                     'basic_target_space': None if is_metric else 'disparity',
+                    'focal_jitter': args.focal_jitter,
+                    'silog_lambda': args.silog_lambda,
+                    'seed': args.seed,
                 }
             }
-            
+
             # Always save latest checkpoint
             latest_path = os.path.join(save_path, 'latest.pth')
             try:

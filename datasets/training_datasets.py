@@ -538,10 +538,10 @@ class NYUTrainingDataset(Dataset):
     NET_W = 686
 
     def __init__(self, filelist_path_or_mat_path, mode='train', size=(518, 518),
-                 intrinsics_aug=True):
+                 intrinsics_aug=True, focal_jitter=0.0):
         """
         Initialize NYU Depth V2 training dataset.
-        
+
         Args:
             filelist_path_or_mat_path: Path to the nyu_depth_v2_labeled.mat file
                                        or a split file containing indices
@@ -551,10 +551,21 @@ class NYUTrainingDataset(Dataset):
                 augmentation (varies the true FoV and returns per-sample-correct
                 intrinsics in the network frame) instead of the legacy
                 resize + random-crop path whose crop never updated K.
+            focal_jitter: max focal/depth rescale m (0 or 1 disables). In train
+                mode, per sample draw alpha log-uniform in [1/m, m] and scale
+                fx, fy and GT depth by alpha, pixels untouched. From u = f*X/Z
+                this is geometrically exact: the same image is consistent with
+                (f, Z) and (alpha*f, alpha*Z). A K-blind model faces conflicting
+                labels for identical pixels; a K-aware model resolves alpha
+                exactly by reading f.
         """
         self.mode = mode
         self.size = size
         self.intrinsics_aug = bool(intrinsics_aug) and mode == 'train'
+        if focal_jitter and focal_jitter != 1.0 and focal_jitter < 1.0:
+            raise ValueError(f"focal_jitter must be 0, 1, or > 1, got {focal_jitter}")
+        self.focal_jitter = float(focal_jitter) if (mode == 'train' and focal_jitter
+                                                    and focal_jitter != 1.0) else 0.0
         
         # Get project root
         current_file = os.path.abspath(__file__)
@@ -917,6 +928,23 @@ class NYUTrainingDataset(Dataset):
         K[1, 2] *= sy
         return image, depth, K
 
+    @staticmethod
+    def _apply_focal_jitter(depth, K, m):
+        """
+        Focal-depth rescaling ("focal jitter"): draw alpha log-uniform in
+        [1/m, m], scale fx, fy and depth by alpha, leave pixels (and cx, cy)
+        untouched. Exact under the pinhole model u = f*X/Z, so no resampling
+        artifacts and no label leak. Returns (depth, K, alpha); inputs are
+        not mutated.
+        """
+        log_m = np.log(m)
+        alpha = float(np.exp(np.random.uniform(-log_m, log_m)))
+        K = K.copy()
+        K[0, 0] *= alpha
+        K[1, 1] *= alpha
+        depth = depth * alpha
+        return depth, K, alpha
+
     def __getitem__(self, item):
         # Get the actual index from our subset
         idx = self.indices[item]
@@ -931,6 +959,10 @@ class NYUTrainingDataset(Dataset):
             image, depth, sample_intrinsic = self._geometric_aug(image, depth, self.intrinsic)
             # Intrinsics are now expressed in the fixed network frame
             orig_h, orig_w = self.NET_H, self.NET_W
+        jitter_alpha = 1.0
+        if self.focal_jitter:
+            depth, sample_intrinsic, jitter_alpha = self._apply_focal_jitter(
+                depth, sample_intrinsic, self.focal_jitter)
         
         # Validate image dimensions and shape
         if len(image.shape) < 2 or image.shape[0] <= 0 or image.shape[1] <= 0:
@@ -993,8 +1025,11 @@ class NYUTrainingDataset(Dataset):
         sample['image'] = torch.from_numpy(sample['image']).float()
         sample['depth'] = torch.from_numpy(sample['depth']).float()
         
-        # Create valid mask (NYU max depth is ~10m for indoor scenes)
-        sample['valid_mask'] = (sample['depth'] <= 10.0) & (sample['depth'] > 0)
+        # Create valid mask (NYU max depth is ~10m for indoor scenes).
+        # Validity is a sensor property of the UNSCALED depth, so under focal
+        # jitter the ceiling scales with alpha — clipping alpha-scaled far
+        # points would remove exactly the samples where alpha is informative.
+        sample['valid_mask'] = (sample['depth'] <= 10.0 * jitter_alpha) & (sample['depth'] > 0)
         
         # Store the dimensions of the frame the intrinsics are expressed in
         # (original 640x480, or the fixed network frame when intrinsics_aug)

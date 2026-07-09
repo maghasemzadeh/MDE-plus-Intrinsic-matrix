@@ -260,6 +260,100 @@ Checkpoints: `metric_finetuning_aug{,2}/{revised,base}_metric_vitl_nyu*/best.pth
 eval JSONs `nyu_METRIC_{REVISED,BASEFT}_vitl_aug{,2}.json`,
 baseline `nyu_METRIC_baseline_hypersim_vitl.json`.
 
+## 6. The focal-jitter experiment — the model demonstrably uses K (2026-07-09/10)
+
+Round 2 left a gap: the intrinsics win was small, and a K-sweep diagnostic
+(`tools/k_sweep.py`, new) showed why — scaling fx,fy at inference moved the
+round-2 revised model's predictions with a log-log slope of only **0.06**
+(`cam_encoder.output_gate` ≈ ±0.015): on single-camera NYU, K resolves no
+ambiguity, so the network never learned to read it.
+
+**Fix: make scale unresolvable without K.** From the pinhole equation
+u = f·X/Z, scaling focal length by α and all depths by α produces the
+*identical image*. The new `--focal-jitter m` augmentation
+(`datasets/training_datasets.py`) draws α log-uniform in [1/m, m] per sample,
+multiplies fx,fy and GT depth by α, pixels untouched — geometrically exact,
+zero resampling artifacts. The K-blind control then faces identical pixels
+with conflicting labels (it can only regress the mean over α), while the
+K-aware model resolves α exactly by reading f. The valid mask threshold
+scales with α (validity is a property of the *unscaled* sensor depth).
+Combined with `--silog-lambda 0.3` (λ=0.5 half-forgives exactly the
+global-scale error K informs) and `--seed 42` (new seed-locking: both arms
+see identical batches, flips, zoom-crops and α draws — iter-0 losses matched
+bit-exactly, 1.725 = 1.725).
+
+**Recipe** (both arms identical except variant flags; `--max-depth 20` so the
+jittered ceiling 10×1.6 = 16 m never clips):
+
+```
+python train.py --encoder vitl --datasets nyu --model-type metric \
+  --min-depth 0.001 --max-depth 20 --epochs 40 --bs 2 --accumulate-grad 2 \
+  --lr 5e-6 --freeze-dinov2 --head-lr-multiplier 10.0 --grad-clip 1.0 \
+  --focal-jitter 1.6 --silog-lambda 0.3 --seed 42 \
+  --pretrained-from <basic vitl ckpt> --save-path .../metric_finetuning_focal \
+  [--model-variant revised --use-camera-intrinsics | --model-variant base]
+```
+
+**Result 1 — K-sensitivity (the headline).** `tools/k_sweep.py`, 20 eigen-test
+images, fx,fy × {0.6…1.6}:
+
+| Pair | revised slope | control slope |
+|---|---|---|
+| Round 2 (before) | 0.06 ± 0.01 | −0.00 |
+| **Focal jitter (after)** | **0.93 ± 0.03** | −0.00 |
+
+The revised model now rescales its predicted depth almost exactly ∝ f, as
+u = f·X/Z requires (ideal slope 1.0); the control cannot respond at all.
+Figures: `results/k_sweep/k_sweep_{round2_baseline,focal}.png`.
+
+**Result 2 — standard eigen-654 metric eval** (absolute depth, no alignment,
+`nyu_METRIC_{REVISED,BASEFT}_vitl_focal.json`), paired stats over n=654
+(`tools/paired_stats.py`, bootstrap 95% CI + Wilcoxon):
+
+| Metric | + intrinsics | control | diff | Wilcoxon p |
+|---|---|---|---|---|
+| AbsRel ↓ | **0.0849** | 0.1030 | −0.0182 [−0.0210, −0.0153] | 4.0×10⁻³¹ |
+| RMSE ↓ | **0.3071** | 0.3431 | −0.0361 [−0.0432, −0.0289] | 1.0×10⁻²⁴ |
+| δ1 ↑ | **0.9520** | 0.9226 | +0.0294 [+0.0224, +0.0367] | 2.5×10⁻²⁴ |
+| SILog ↓ | **0.0942** | 0.1045 | −0.0102 | 1.5×10⁻³⁴ |
+
+Every metric, decisively — versus round 2's marginal p = 0.04. The scale-ratio
+histograms (`results/output_diff/scale_ratio_hist_focal.png`) show why: the
+revised model's per-image median(pred)/median(GT) centers at **1.014** while
+the α-noise leaves the control biased and spread (median 1.081).
+
+**Result 3 — FoV-varied eval** (`tools/eval_fov_varied.py`, deterministic
+center zoom-crops with exact K, all 654 images, AbsRel):
+
+| zoom | + intrinsics | control |
+|---|---|---|
+| 1.0 | **0.0924** | 0.1102 |
+| 1.4 | **0.0974** | 0.1100 |
+| 1.8 | **0.1065** | 0.1148 |
+
+(no eigen crop here, hence the offset vs Result 2; comparisons within a row
+are like-for-like.)
+
+**Interpretation.** The focal-jitter arm extends the §5 trade-off to its
+logical end: absolute quality pays a small price for the harder task (AbsRel
+0.0849 vs round 1's 0.0791 — round 1 remains the best raw *model*), but the
+intrinsics evidence goes from marginal (round 2 AbsRel p = 0.04) to
+overwhelming (p = 10⁻³¹ on every metric), and the K-sweep slope 0.06 → 0.93
+is a mechanistic demonstration that the camera encoder went from decorative
+to load-bearing. Note the scalar `output_gate` ended at only
+−0.024 — small gate, large learned signal magnitude behind it, so the gate
+value alone understates K usage; the K-sweep slope is the right diagnostic.
+
+Caveat for the thesis: focal jitter changes two variables vs round 2
+(augmentation + λ). An ablation pair (jitter only, λ=0.5) would cleanly
+attribute the effect; not yet run.
+
+Checkpoints: `metric_finetuning_focal/{revised,base}_metric_vitl_nyu*/best.pth`
+(server); training log `logs/train-focal-pair.log`; eval log
+`logs/eval-focal-all.log`; sanity tooling
+`tools/sanity_check_focal_jitter.py`, `tools/compare_pair_losses.py`;
+unit tests `tests/test_focal_jitter.py` (10 passing).
+
 ## 5. Artifacts
 
 | What | Where (server) |

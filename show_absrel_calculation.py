@@ -27,6 +27,7 @@ Usage:
 
 import os
 import sys
+import json
 import argparse
 import random
 import numpy as np
@@ -451,6 +452,46 @@ def save_visualizations(
     print(f"    - input_image_with_sample_pixels.png  (circle index = table row number)")
 
 
+def save_comparison_json(
+    output_dir: str,
+    args,
+    item,
+    data1: dict,
+    display_name1: str,
+    model1_checkpoint: str,
+    data2: dict | None = None,
+    display_name2: str | None = None,
+    model2_checkpoint: str | None = None,
+) -> None:
+    """Save the same numbers shown in the printed report/table as JSON."""
+
+    def _model_block(data, display_name, checkpoint):
+        return {
+            "name": display_name,
+            "checkpoint": checkpoint,
+            "is_metric": data["is_metric"],
+            "n_valid": data["n_valid"],
+            "abs_rel_image": data["abs_rel_image"],
+            "abs_rel_from_api": data["abs_rel_from_api"],
+            "sample_pixels": data["sample_pixels"],
+        }
+
+    result = {
+        "dataset": args.dataset,
+        "split": args.split,
+        "model_type": args.model_type,
+        "item_id": item.item_id,
+        "model1": _model_block(data1, display_name1, model1_checkpoint),
+    }
+    if data2 is not None:
+        result["model2"] = _model_block(data2, display_name2, model2_checkpoint)
+
+    path = os.path.join(output_dir, "comparison.json")
+    with open(path, "w") as f:
+        json.dump(result, f, indent=2)
+    print(f"    - comparison.json")
+
+
 def main():
     parser = argparse.ArgumentParser(
         description="Show how abs_rel is calculated for a sample image (same args as compare_models.py)",
@@ -613,6 +654,9 @@ def main():
             data2=None,
             display_name2=None,
         )
+        save_comparison_json(
+            args.output_dir, args, item, data1, display_name1, model1_checkpoint,
+        )
         print()
         return
 
@@ -702,6 +746,10 @@ def main():
         pred_depth2=data2["pred_depth"],
         data2=data2,
         display_name2=display_name2,
+    )
+    save_comparison_json(
+        args.output_dir, args, item, data1, display_name1, model1_checkpoint,
+        data2=data2, display_name2=display_name2, model2_checkpoint=model2_checkpoint,
     )
     print()
 

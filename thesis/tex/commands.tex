@@ -101,9 +101,6 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[subfigure]{tocloft}
 % بسته‌ای برای رسم نمودارها و نیز صفحه مالکیت اثر
 \usepackage{tikz}
-\usepackage{pgfplots}
-\pgfplotsset{compat=newest}
-\usetikzlibrary{positioning, arrows.meta, shapes.geometric, trees, fit, backgrounds, calc}
 % بسته‌ای برای ظاهر شدن «مراجع» و «نمایه» در فهرست مطالب
 \usepackage[nottoc]{tocbibind}
 % دستورات مربوط به ایجاد نمایه
@@ -132,9 +129,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 
 % فراخوانی بسته زی‌پرشین (باید آخرین بسته باشد)
 \usepackage[extrafootnotefeatures, displaymathdigits=persian]{xepersian}
-\newcommand{\fafootnote}[1]{\footnote{#1}}
-\newcommand{\enfootnote}[1]{\LTRfootnote{#1}}
-% \paragraphfootnotes
+\paragraphfootnotes
 
 \makeatletter
 % تعریف قلم فارسی و انگلیسی و مکان قلم‌ها

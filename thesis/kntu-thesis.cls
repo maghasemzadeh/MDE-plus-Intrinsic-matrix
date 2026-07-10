@@ -64,8 +64,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 \def\secondlatinadvisor#1{\gdef\@secondlatinadvisor{#1}}
 \def\latinname#1{\gdef\@latinname{#1}}
 \def\latinsurname#1{\gdef\@latinsurname{#1}}
-\long\def\enabstract#1{\gdef\@enabstract{#1}}
-\gdef\@enabstract{}
+\def\en-abstract#1{\gdef\@en-abstract{#1}}
 \def\latinkeywords#1{\gdef\@latinkeywords{#1}}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%
 \newif\if@bscthesis
@@ -546,7 +545,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 	\thispagestyle{empty}
 	\section*{Abstract}
 	% \addcontentsline{toc}{section}{چکیده}
-	\@enabstract
+	\@en-abstract
 	\par
 	\noindent
 	\paragraph{Keywords}

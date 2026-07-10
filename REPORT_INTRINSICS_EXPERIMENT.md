@@ -344,9 +344,37 @@ to load-bearing. Note the scalar `output_gate` ended at only
 −0.024 — small gate, large learned signal magnitude behind it, so the gate
 value alone understates K usage; the K-sweep slope is the right diagnostic.
 
-Caveat for the thesis: focal jitter changes two variables vs round 2
-(augmentation + λ). An ablation pair (jitter only, λ=0.5) would cleanly
-attribute the effect; not yet run.
+**Result 4 — ablation pair (2026-07-10): jitter alone produces the whole
+effect.** A fourth seeded pair trained with focal jitter but λ=0.5 unchanged
+(`metric_finetuning_focal_ablation/`, eval JSONs
+`nyu_METRIC_{REVISED,BASEFT}_vitl_focal_ablation.json`):
+
+| Metric | + intrinsics | control | Wilcoxon p |
+|---|---|---|---|
+| AbsRel ↓ | **0.0834** | 0.1065 | 3.4×10⁻⁴⁵ |
+| RMSE ↓ | **0.2987** | 0.3497 | 7.5×10⁻⁴⁰ |
+| δ1 ↑ | **0.9554** | 0.9173 | 1.2×10⁻³⁹ |
+
+K-sweep slope **0.97 ± 0.03** — even closer to ideal than round 3's 0.93.
+Attribution is clean: the augmentation is the causal driver; λ=0.3 was
+unnecessary and slightly harmful (0.0849 vs 0.0834). The ablation arm is
+also the best focal-jitter model overall.
+
+**Result 5 — K-knockout causal test** (`tools/k_knockout.py`,
+`results/k_knockout/k_knockout_focal.json`, round-3 revised checkpoint,
+n=654, no crop):
+
+| K condition | AbsRel | δ1 |
+|---|---|---|
+| correct | **0.0924** | **0.9339** |
+| withheld | 0.1467 | 0.8449 |
+| f × 0.7 | 0.2887 | 0.1310 |
+| f × 1.4 | 0.4274 | 0.1209 |
+
+Withholding K degrades AbsRel by 59% — the K-path is load-bearing. Wrong K
+hurts by almost exactly the pinhole-predicted amount (|X^0.93 − 1| ≈ 0.28 /
+0.37 for X = 0.7 / 1.4): the model uses K *the way the geometry prescribes*,
+which correlational shortcuts cannot fake.
 
 Checkpoints: `metric_finetuning_focal/{revised,base}_metric_vitl_nyu*/best.pth`
 (server); training log `logs/train-focal-pair.log`; eval log

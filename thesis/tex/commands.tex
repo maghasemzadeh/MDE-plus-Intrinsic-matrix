@@ -129,7 +129,9 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 
 % فراخوانی بسته زی‌پرشین (باید آخرین بسته باشد)
 \usepackage[extrafootnotefeatures, displaymathdigits=persian]{xepersian}
-\paragraphfootnotes
+\newcommand{\fafootnote}[1]{\footnote{#1}}
+\newcommand{\enfootnote}[1]{\LTRfootnote{#1}}
+% \paragraphfootnotes
 
 \makeatletter
 % تعریف قلم فارسی و انگلیسی و مکان قلم‌ها

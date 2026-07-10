@@ -172,14 +172,6 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %\defpersianfont\newfont[Path={./font/}, Scale=2]{newfont}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%
-% وصلهٔ سازگاری: در توزیع‌های خیلی جدید TeX Live (هستهٔ ۲۰۲۵ به بعد)،
-% بستهٔ array فرمان \UseMathForPositioningText را حذف کرده است در حالی که
-% bidi هنوز در بازتعریف tabular از آن استفاده می‌کند. تعریف محافظت‌شدهٔ زیر
-% فقط در صورت تعریف‌نشدن، آن را به‌صورت بی‌اثر تعریف می‌کند (رفتار کلاسیک
-% مبتنی بر حالت ریاضی حفظ می‌شود) و در توزیع‌های قدیمی‌تر هیچ اثری ندارد.
-\ifdefined\UseMathForPositioningText\else
-  \protected\def\UseMathForPositioningText{}
-\fi
 % راستچین شدن todonotes
 \presetkeys{todonotes}{align=right,textdirection=righttoleft}{}
 \makeatletter

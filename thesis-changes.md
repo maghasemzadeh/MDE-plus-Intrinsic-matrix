@@ -9,54 +9,47 @@ committed and reviewed Persian LaTeX draft, and the underlying code) — see §9
 
 ---
 
-## 0. Read this first — the thesis files are currently NOT your real thesis
+## 0. Read this first — current repository state (re-verified 2026-07-10, after commit `88a48a3`)
 
-Before using anything below, understand the current repository state:
+**Update:** the template-overwrite problem described in the original version of this section is now **fixed**.
+A later revert (`88a48a3`, "revert latex to last correct version", on top of this file's own commit `4512682`)
+restored the real thesis base. Re-checked directly against the working tree just now:
 
-**`thesis/tex/chapter1.tex`, `chapter2.tex`, `chapter3.tex`, `chapter4.tex`, `chapter5.tex`, `enTitle.tex`,
-`faTitle.tex`, `words.tex`, `commands.tex`, `MyReferences.bib`, `kntu-thesis.cls` are currently the generic
-`kntu-thesis` template placeholders**, not the user's real thesis. This happened by accident during a chain of
-compile-fix attempts on 2026-07-10 and was not noticed before the final revert commit. Concretely, right now:
+- `thesis/tex/enTitle.tex` / `faTitle.tex` have the real title ("Unsupervised Depth Estimation Using Internal
+  Calibration Parameters as Input" / Persian equivalent), not the template placeholder.
+- `thesis/tex/MyReferences.bib` (201 lines) contains all 10 of the citation keys §5 previously listed as
+  missing, including `DepthAnythingV2` — verified present.
+- `thesis/tex/commands.tex` defines both `\enfootnote` and `\fafootnote`.
+- `thesis/kntu-thesis.cls` still literally defines `\en-abstract` (syntactically invalid as a control-sequence
+  name with a hyphen) rather than `\enabstract` — **this one item from the old list is not fixed** — but
+  `enTitle.tex` no longer calls `\enabstract{...}`; it now uses `\begin{abstract}...\end{abstract}` instead, so
+  this stale macro definition is currently just dead code, not a build blocker. Only worth touching if the
+  `abstract` environment turns out not to render correctly when compiled.
+- Chapters 1–5 are **real, substantive content** (86/197/516/889/465 lines respectively) — not the empty
+  `\section{مقدمه}`/`\section{محتوا}` template skeletons. Diffed against `74bee36` (2026-06-19, the last
+  known-good state *before* the camera-intrinsics campaign was ever written up): chapters 1/3/4/5 are close
+  (55/111/63/21 diff lines against files of 86–889 lines — minor edits, e.g. two placeholder tikz figures
+  removed from chapter 1), chapter 2 was reorganized more substantially but reads as genuine prose throughout
+  (spot-checked, not a placeholder).
+- **However — confirmed by direct search — none of chapters 3/4/5 contain any of the experimental-campaign
+  content** (`grep -i "jitter\|knockout"` → 0 matches in all three, vs. 7/2/3 matches respectively in the
+  fully-reintegrated `a51e35f`/`c743cc8` states). So the current chapters are, in substance, the **pre-campaign
+  base thesis** — real and citable, but everything in §4 below still needs to be written in.
+- One remaining build-system gap: `thesis/tex/commands.tex` loads `tikz` but not `pgfplots`. The existing
+  scale-ambiguity figure in chapter 1 is hand-drawn raw `tikzpicture` (no `pgfplots` needed). If the new K-sweep
+  figure (§4, chapter-4 item 13) is built as a `pgfplots` axis plot, add `\usepackage{pgfplots}` +
+  `\pgfplotsset{compat=1.17}` to `commands.tex`; otherwise draw it with raw tikz coordinates in the same style
+  as the existing figure.
 
-- `thesis/tex/enTitle.tex` has the template's own placeholder title/author ("Mohammad Sina Allahkaram",
-  "Prepared template for writing projects, theses, and dissertations...", "Winter 2023") instead of the real
-  thesis metadata.
-- `thesis/tex/chapter3.tex` / `chapter4.tex` / `chapter5.tex` are 87 / 20 / 55 lines of empty template section
-  skeletons (`\section{مقدمه}`, `\section{محتوا}`, ...) — **all real content, including the base
-  methodology/results/conclusions chapters that existed *before* this experimental campaign, is gone from the
-  working tree.**
-- `thesis/tex/commands.tex` is missing the `\enfootnote`/`\fafootnote` macros used 45+ times in the real
-  chapters 3–4, and is missing `pgfplots`.
-- `thesis/kntu-thesis.cls` defines the syntactically-invalid `\en-abstract` instead of `\enabstract`.
-- `thesis/tex/MyReferences.bib` is missing most of the ~35 real bibliography entries (only `Zhou2017Unsupervised`,
-  `Ranftl2021DPT`, `Eigen2014Depth` of the 13 keys this campaign's writeup cites are present; `DepthAnythingV2`
-  itself is missing).
+**Net effect on how to use this document:** no restoration step is needed before applying §4 — work directly
+on the current `thesis/tex/*` files. The git-history pointers below (`a51e35f`, `c743cc8`,
+`9fea97f:thesis_pending_reintegration.patch`) are kept for reference only, in case the exact previously-written
+Persian prose for the campaign delta is wanted instead of writing fresh text from the English brief in §4 — as
+of this check, `REPORT_INTRINSICS_EXPERIMENT.md` and `thesis_pending_reintegration.patch` are not present in the
+working tree (still only recoverable via `git show <commit>:<path>`, they were never restored to disk).
 
-**How this happened (for context, not action needed):** commit `c290421` ("renew tex files", pulled from
-`origin/main`) silently overwrote chapters 1–5 with the generic template. The merge commit `c743cc8` correctly
-identified this and rejected it, keeping the real content. But the final commit on the branch, `0b66b80`
-("revert latex to last correct version"), reverted everything back to exactly match `c290421` — i.e. back to
-the version that had *already been identified as broken* by the user's own earlier merge. This looks like an
-accidental revert target rather than an intentional choice.
-
-**Recommended fix path, in order, before applying anything from §4 onward:**
-
-1. Restore the real base thesis (chapters 1–5, titles, bib, commands.tex, kntu-thesis.cls) from
-   `git show 74bee36:thesis/tex/chapter1.tex` etc. — this is the last known-good state *before* any of this
-   experimental campaign was written up (2026-06-19), confirmed compiling.
-2. Everything in §4 of this document layers on top of that restored base and adds the experimental-campaign
-   content. If you want the exact previously-written (and already reviewed) Persian LaTeX prose for that
-   layer instead of writing fresh text from the English brief below, it exists in git history:
-   `git show a51e35f:thesis/tex/chapter3.tex` (and `chapter4.tex`, `chapter5.tex`) is the full text with
-   chapters 1-5 in the fully-reintegrated state (base + experimental campaign, no template damage). A patch
-   form of just the campaign delta is at `git show 9fea97f:thesis_pending_reintegration.patch` (applies cleanly
-   on top of `74bee36`). Both were auto-generated in a previous session and match the content in §4 below
-   number-for-number — cross-checked while writing this report.
-3. Whichever path you take, do **not** use `c290421` or the current `HEAD` as a base for chapters 1–5,
-   titles, `commands.tex`, `kntu-thesis.cls`, or `MyReferences.bib`.
-
-The rest of this document (§1–§9) assumes you are working from the *real* thesis base (post-fix), and describes
-only the delta: everything about the camera-intrinsics experimental campaign that needs to be written into it.
+The rest of this document (§1–§9) describes only the delta: everything about the camera-intrinsics experimental
+campaign that needs to be written into the current, already-real chapters 1–5.
 
 ---
 
@@ -625,14 +618,10 @@ that are missing from `MyReferences.bib`** — these need to be present regardle
 
 ## 5. Bibliography entries needed in `MyReferences.bib`
 
-The following citation keys are referenced by the chapter-3/4 content above and were **missing** from the
-current (template-reverted) `MyReferences.bib` as of this report (checked directly against the file). Full,
-correctly-formatted BibTeX for all of these exists in git history and was recovered while writing this report —
-`git show c743cc8:thesis/tex/MyReferences.bib` contains the complete ~35-entry file (only `Zhou2017Unsupervised`,
-`Ranftl2021DPT`, and `Eigen2014Depth` currently exist in the live template-reverted file):
+**Update (re-verified 2026-07-10, post `88a48a3`): no action needed here.** All 10 keys below were checked
+directly against the current `thesis/tex/MyReferences.bib` (201 lines) and are **present**:
 
-- `DepthAnythingV2` — the base model itself; currently missing, this is likely the single most-cited reference
-  in chapters 3–4 and must be restored.
+- `DepthAnythingV2` — the base model itself; the single most-cited reference in chapters 3–4.
 - `Kendall2015GeometryAware`
 - `Chen2022CameraAware`
 - `Guizilini2020SemanticallyGuided`
@@ -643,8 +632,8 @@ correctly-formatted BibTeX for all of these exists in git history and was recove
 - `Godard2019Digging`
 - `Saxena2023FOV`
 
-Do not hand-write new BibTeX for these — reuse the exact entries from `c743cc8`, they're already correct and
-were presumably vetted once already.
+(Kept as a checklist in case a future revert reintroduces the template file again — if any of these ever go
+missing, the correct entries are recoverable via `git show c743cc8:thesis/tex/MyReferences.bib`.)
 
 ---
 
@@ -717,3 +706,24 @@ all three):
 Full commit list touching this campaign (chronological): `d4605ec 139ea43 8b9ad2e cb303e0 7e6908e 76db955
 6018172 852b084 5511e4c f41a859 e3870d8 24083f5 8ed02a9 65a5b2d e81331b ccb27e6 9fea97f c290421 a51e35f c743cc8
 0b66b80`.
+
+### 2026-07-10 re-verification pass (post `88a48a3`)
+
+Before handing this document off, it was re-checked end-to-end against the current repository state (a further
+revert, `88a48a3`, landed on top of this file's own `4512682` commit, so §0/§5 needed re-checking rather than
+being taken on faith):
+- `git log 65a5b2d..HEAD` shows no code/model/training commits after the campaign — only thesis-build/revert
+  churn (`24083f5 e81331b ccb27e6 9fea97f c290421 a51e35f c743cc8 0b66b80 4512682 88a48a3`). Nothing in §1–§4's
+  experimental content is out of date; no new results exist to add.
+- `models/raw_models/DepthAnythingV2-revised/depth_anything_v2/cam_enc.py` was re-read in full: the 9-dim
+  encoding, MLP→4×transformer-block trunk, single camera token, and zero-init `output_gate` described in §4's
+  chapter-3 mapping match the current code exactly (`intrinsics_to_encoding()` lines 10–67, `CameraEncoder`
+  lines 70–169).
+- `train.py` was grepped for every flag cited in §4/§6 (`--cam-token-inject-layer`, `--focal-jitter`,
+  `--silog-lambda`, `--seed`) — all present and wired through exactly as described.
+- All five diagnostic tools cited in §6 (`tools/k_sweep.py`, `tools/k_knockout.py`, `tools/eval_fov_varied.py`,
+  `tools/paired_stats.py`, `tests/test_focal_jitter.py`) confirmed to exist on disk.
+- §0 and §5 were rewritten to reflect the current (fixed) state of `thesis/tex/*`; §1–§4, §6–§8 were left
+  unchanged as their content re-verified clean against code, `train.py` flags, and the four campaign memory
+  records (`nyu-training-split-leaks-eigen-test`, `intrinsics-model-beats-da2-vits`,
+  `vitl-head-collapse-dead-relu`, `focal-jitter-proves-intrinsics-usage`).

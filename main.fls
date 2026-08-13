@@ -1,0 +1,23 @@
+PWD /Users/amin/Desktop/Uni/Arshad/Project/Projects Source Code/MDE plus Intrinsic matrix
+INPUT /usr/local/texlive/2026/texmf.cnf
+INPUT /usr/local/texlive/2026/texmf-dist/web2c/texmf.cnf
+INPUT /usr/local/texlive/2026/texmf-var/web2c/xetex/xelatex.fmt
+INPUT thesis/main.tex
+OUTPUT main.log
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+INPUT ./main.aux
+INPUT ./main.aux
+INPUT main.aux
+OUTPUT main.aux
+INPUT /usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex
+OUTPUT X.tex
+OUTPUT X.tex

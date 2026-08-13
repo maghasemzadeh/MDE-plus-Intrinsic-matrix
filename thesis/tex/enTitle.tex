@@ -3,7 +3,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \latinuniversity{K. N. Toosi University of Technology}
-\latincollege{...}
+\latincollege{Faculty of Computer Engineering}
 \latinfaculty{Faculty of Computer Engineering}
 \latindepartment{Artificial Intelligence Group}
 \latinsubject{Computer Engineering}
@@ -25,12 +25,10 @@ Imaging Geometry,
 Depth Anything V2
 }
 
-\begin{abstract}
-Monocular depth estimation is a fundamental problem in computer vision with broad applications in robotics, autonomous driving, and three-dimensional reconstruction. Despite recent advances driven by deep learning, many existing approaches still suffer from metric scale instability and high sensitivity to camera-specific imaging parameters. In particular, most learning-based models estimate depth in a relative or dataset-dependent manner, without explicitly accounting for imaging geometry.
+\enabstract{
+Monocular depth estimation is intrinsically ambiguous because a single image does not uniquely determine the metric scale of a scene. This thesis investigates whether supplying camera intrinsics explicitly can reduce that ambiguity in a foundation depth model. A camera-aware extension of Depth Anything V2 is developed in which a normalized nine-dimensional camera descriptor is encoded as a gated token and injected into the DINOv2 encoder. The experimental methodology was refined through a sequence of controlled investigations that exposed and corrected data leakage in the NYUv2 split, a silent disparity--depth target mismatch that collapsed ViT-L training, geometrically inconsistent crop augmentation, and a silent metric-head mismatch during evaluation.
 
-In this thesis, the problem of stable metric monocular depth estimation is investigated, with a specific focus on the role of camera intrinsic parameters in improving depth consistency. To this end, a modified version of the Depth Anything V2 model is proposed, in which the camera intrinsic matrix is explicitly and structurally integrated into the depth estimation process. The primary objective is to reduce sensitivity to camera calibration variations and enhance the metric consistency of depth predictions across diverse imaging conditions.
+All final comparisons use the leak-free 654-image NYUv2 Eigen test set and matched camera-aware and camera-blind training arms. Under relative evaluation, the proposed ViT-S model improves over both the released model and the matched control, while the ViT-L camera contribution is not significant because per-image scale-and-shift alignment removes the principal information supplied by the focal length. Under metric evaluation without alignment, the camera-aware ViT-L model consistently improves over its matched control, and the effect grows as field-of-view diversity increases. A geometrically exact focal-jitter augmentation is then introduced to make scale unrecoverable from image pixels alone. With this augmentation, the camera-aware model obtains AbsRel 0.0849 versus 0.1030 for the control and improves every reported metric with Wilcoxon significance of at least $p\leq10^{-24}$.
 
-Extensive experimental evaluations are conducted on multiple benchmark datasets, including VKITTI, NYUv2, DIODE, DrivingStereo, and CityScapes. Quantitative results demonstrate that the proposed model achieves statistically significant improvements over the baseline in metric evaluation criteria such as RMSE and SiLog. Statistical analyses based on two-sample t-tests and bootstrap confidence intervals confirm the significance of these gains. Furthermore, sensitivity analysis reveals that metrics such as AbsRel fail to capture scale-related instabilities, whereas RMSE exhibits a more direct response to geometric variations in camera parameters.
-
-Overall, the results indicate that explicitly incorporating imaging geometry into deep learning models provides an effective and reliable framework for achieving stable metric monocular depth estimation.
-\end{abstract}
+Mechanistic and causal tests confirm that the improvement is genuinely attributable to the intrinsic matrix. The log--log slope of predicted depth versus injected focal scale rises from 0.06 before focal jitter to 0.93--0.97 afterward, close to the pinhole-model ideal of one. Withholding the intrinsic matrix increases AbsRel by 59 percent, while deliberately corrupting focal length produces errors of the magnitude predicted by projective geometry. These results show that camera intrinsics can provide a statistically significant and causally necessary scale signal, while also revealing sensitivity to calibration accuracy and the need for future evaluation on genuinely multi-camera and outdoor data.
+}

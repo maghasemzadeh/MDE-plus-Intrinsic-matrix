@@ -27,7 +27,7 @@
 \usepackage[notransparent]{svg}
 \usepackage[final]{pdfpages}
 \usepackage{tabularray}
-\usepackage{booktabs, makecell, multirow, tabularx}
+\usepackage{booktabs, makecell, multirow, tabularx, longtable}
 % بسته‌ای برای رسم کادر
 \usepackage{framed} 
 % بسته‌‌ای برای چاپ شدن خودکار تعداد صفحات در صفحه «معرفی پایان‌نامه»
@@ -86,6 +86,10 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 
 % بسته‌ لازم برای تنظیم سربرگ‌ها
 \usepackage{fancyhdr}
+\setlength{\headheight}{16.1pt}
+% Give Persian paragraphs a small amount of flexibility so long mixed-script
+% terms do not protrude into the margins.
+\setlength{\emergencystretch}{3em}
 %\usepackage{enumitem}
 \usepackage{setspace}
 % بسته‌های لازم برای نوشتن الگوریتم
@@ -101,6 +105,9 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[subfigure]{tocloft}
 % بسته‌ای برای رسم نمودارها و نیز صفحه مالکیت اثر
 \usepackage{tikz}
+\usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usepackage{pgfplots}
+\pgfplotsset{compat=1.17}
 % بسته‌ای برای ظاهر شدن «مراجع» و «نمایه» در فهرست مطالب
 \usepackage[nottoc]{tocbibind}
 % دستورات مربوط به ایجاد نمایه
@@ -131,6 +138,20 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[extrafootnotefeatures, displaymathdigits=persian]{xepersian}
 \newcommand{\fafootnote}[1]{\footnote{#1}}
 \newcommand{\enfootnote}[1]{\LTRfootnote{#1}}
+% Persian decimal numbers need an LTR direction without switching to the
+% Latin font, whose glyph set does not include Persian digits.
+\newcommand{\fadecimal}[1]{\mbox{\beginL#1\endL}}
+% نام‌های معیار برای مدل‌های اصلی پژوهش؛ ویژگی نسخه‌های خاص (انکودر،
+% پروتکل، مجموعه‌داده یا دور آموزش) پس از این نام ثابت افزوده می‌شود.
+\newcommand{\proposedmodel}{مدل پیشنهادی (دارای \lr{K})}
+\newcommand{\controlmodel}{مدل کنترل (فاقد \lr{K})}
+\newcommand{\basemodel}{مدل پایهٔ \lr{Depth Anything V2}}
+\newcommand{\publishedbasemodel}{\basemodel{}، نسخهٔ منتشرشده}
+% برچسب‌های کوتاه ویژهٔ جدول‌ها. جزئیات پیکربندی (انکودر، پروتکل و
+% دادهٔ آموزش) در ستون‌های مستقل یا عنوان جدول می‌آیند تا ستون «مدل» فشرده بماند.
+\newcommand{\tableproposedmodel}{پیشنهادی}
+\newcommand{\tablecontrolmodel}{کنترل}
+\newcommand{\tablepublishedmodel}{پایهٔ منتشرشده}
 % \paragraphfootnotes
 
 \makeatletter

@@ -1,0 +1,280 @@
+This is XeTeX, Version 3.141592653-2.6-0.999998 (TeX Live 2026) (preloaded format=xelatex 2026.3.22)  31 JUL 2026 16:12
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**thesis/main.tex
+(./thesis/main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-01-19>
+
+! LaTeX Error: File `./kntu-thesis.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: test
+
+! LaTeX Error: File `test.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: test
+
+! LaTeX Error: File `test.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: test
+
+! LaTeX Error: File `test.cls' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: cls)
+
+Enter file name: 
+
+! LaTeX Error: File `./tex/commands.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+
+! LaTeX Error: File `./tex/faTitle.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+
+! LaTeX Error: File `./tex/enTitle.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+
+! LaTeX Error: File `./tex/glossaries-settings.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+
+! LaTeX Error: File `./tex/words.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+
+! LaTeX Error: File `./tex/acronyms.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+(/usr/local/texlive/2026/texmf-dist/tex/latex/l3backend/l3backend-xetex.def
+File: l3backend-xetex.def 2025-10-09 L3 backend support: XeTeX
+\g__graphics_track_int=\count271
+\g__pdfannot_backend_int=\count272
+\g__pdfannot_backend_link_int=\count273
+)
+(./main.aux)
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for TU/lmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 38.
+LaTeX Font Info:    ... okay on input line 38.
+
+
+! LaTeX Error: The font size command \normalsize is not defined:
+               there is probably something wrong with the class file.
+
+See the LaTeX manual or LaTeX Companion for explanation.
+Type  H <return>  for immediate help.
+ ...                                              
+                                                  
+l.38 \begin{document}
+                     
+? 
+
+! LaTeX Error: File `./tex/thesis_preamble.tex' not found.
+
+Type X to quit or <RETURN> to proceed,
+or enter new name. (Default extension: tex)
+
+Enter file name: 
+(/usr/local/texlive/2026/texmf-dist/tex/latex/tools/.tex File ignored)
+! Undefined control sequence.
+<argument> \undefinedpagestyle 
+                               
+l.43 \pagestyle{fancy}
+                      
+? 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدمه
+(Press Enter to retry, or Control-D to exit; default file extension is `.tex')
+Please type another output file name: 
+! I can't write on file `./tex/chapter1.aux'.
+\@include ...mmediate \openout \@partaux "#1.aux" 
+                                                  \immediate \write \@partau...
+l.46 \include{./tex/chapter1}
+                             ^^I^^I% فصل اول: مقدم

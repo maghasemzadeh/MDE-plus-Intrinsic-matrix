@@ -119,7 +119,7 @@ def thesis_rows(chapter: Path) -> dict[str, tuple[float, str]]:
     if not table:
         raise ValueError(f"table {TABLE_LABEL!r} not found")
     pattern = re.compile(
-        r"\\lr\{([^}]+)\}\s*&\s*([+-]?\d+(?:\.\d+)?)\s*&\s*\$([^$]+)\$\s*&"
+        r"\\lr\{([^}]+)\}\s*&\s*\$?([+-]?\d+(?:\.\d+)?)\$?\s*&\s*\$([^$]+)\$\s*&"
     )
     return {
         match.group(1).strip(): (

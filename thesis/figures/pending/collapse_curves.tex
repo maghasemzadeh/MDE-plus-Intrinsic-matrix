@@ -1,0 +1,75 @@
+% =============================================================================
+% منحنی‌های آموزش فروریزش خاموش — خروجی tools/tensorboard_to_thesis.py
+%
+% فایل‌های لازم (هر دو در مخزن نگهداری می‌شوند، پس شکل بدون سرور بازساختنی است):
+%   thesis/figures/curves/train_avg_loss_per_epoch.csv
+%   thesis/figures/curves/eval_abs_rel.csv
+%
+% ستون‌های هر CSV: step collapsed collapsed_control fixed fixed_control
+%   collapsed  = اجرای هدف عمق مستقیم (فروریخته)
+%   fixed      = اجرای هدف عمق معکوس (اصلاح‌شده)
+% ستون‌های *_control بازوی فاقد K همان دو اجرا هستند و در شکل رسم نشده‌اند،
+% چون در اجرای فروریخته با ستون متناظر خود بیت‌به‌بیت یکسان‌اند.
+%
+% محل درج: بخش ۴--۴ (پیش از جدول نتیجهٔ ViT-L)، با دستور:
+%   \input{./figures/pending/collapse_curves}
+% =============================================================================
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}
+    \begin{groupplot}[
+        group style={group size=1 by 2, vertical sep=1.05cm, x descriptions at=edge bottom},
+        thesisplot,
+        width=0.86\textwidth, height=5.0cm,
+        xmin=-1, xmax=40,
+    ]
+
+    % منحنی‌ها مستقیماً برچسب‌گذاری می‌شوند و راهنمای جعبه‌ای حذف شده است، چون
+    % در این دو نمودار جعبهٔ راهنما ناگزیر روی خودِ منحنی‌ها می‌افتد.
+    \nextgroupplot[
+        ymode=log,
+        ymin=0.005, ymax=1.0,
+        ylabel={هزینهٔ آموزش هر دوره},
+    ]
+    \addplot[draw=thControl, mark=none] table[x=step, y=collapsed, col sep=space]
+        {figures/curves/train_avg_loss_per_epoch.csv};
+    \addplot[draw=thIdeal, mark=none] table[x=step, y=fixed, col sep=space]
+        {figures/curves/train_avg_loss_per_epoch.csv};
+    \node[thnote, anchor=west, text=thControl] at (axis cs:1.5,0.155)
+        {اجرای فروریخته --- هدف: عمق مستقیم};
+    \node[thnote, anchor=west, text=thIdeal] at (axis cs:1.5,0.031)
+        {اجرای اصلاح‌شده --- هدف: عمق معکوس};
+
+    \nextgroupplot[
+        ymin=0, ymax=0.46,
+        ylabel={\lr{AbsRel} اعتبارسنجی},
+        xlabel={دورهٔ آموزش},
+    ]
+    \addplot[draw=thControl, mark=none] table[x=step, y=collapsed, col sep=space]
+        {figures/curves/eval_abs_rel.csv};
+    \addplot[draw=thIdeal, mark=none] table[x=step, y=fixed, col sep=space]
+        {figures/curves/eval_abs_rel.csv};
+    \node[thnote, anchor=west, text=thControl] at (axis cs:1.5,0.415)
+        {اجرای فروریخته --- منجمد روی $0.3465$ از دورهٔ نخست};
+    \node[thnote, anchor=west, text=thIdeal] at (axis cs:1.5,0.135)
+        {اجرای اصلاح‌شده --- نزول عادی تا $0.055$};
+
+    \end{groupplot}
+    \end{tikzpicture}
+    \caption[امضای فروریزش خاموش در منحنی‌های آموزش]{امضای \emph{فروریزش
+    خاموش} توضیح‌داده‌شده در بخش~\ref{subsec:disparity_target_space}، در دو
+    اجرای کامل ۴۰ دوره‌ای \lr{ViT-L} که تنها در فضای هدف تفاوت دارند.
+    \textbf{بالا:} هزینهٔ آموزش اجرای فروریخته (قرمز) هموار و نزولی است ---
+    از \fadecimal{۰٫۴۴۲} به \fadecimal{۰٫۴۲۹} --- و اگر تنها همین منحنی پایش
+    شود، آموزش کاملاً سالم به نظر می‌رسد؛ زیرا با خروجی ثابت، مقدار هزینه
+    صرفاً تابع آماره‌های هر دسته است. \textbf{پایین:} معیار اعتبارسنجی همان
+    اجرا از \emph{دورهٔ نخست} روی \fadecimal{۰٫۳۴۶۵} منجمد می‌ماند و تا پایان
+    آموزش حتی در رقم چهارم اعشار تغییر نمی‌کند. نکتهٔ گویا آنکه در این حالت،
+    مقادیر اعتبارسنجی دو بازوی \proposedmodel{} و \controlmodel{}
+    \emph{بیت‌به‌بیت} یکسان است، چون خروجی هر دو شبکه ثابت صفر شده و دیگر به
+    ورودی --- و در نتیجه به $K$ --- وابسته نیست. پس از انتقال هدف به فضای عمق
+    معکوس (سبز)، هر دو منحنی رفتار عادی می‌یابند. این شکل نشان می‌دهد که چرا
+    پایش هزینهٔ آموزش به‌تنهایی برای تشخیص سلامت آموزش کافی نیست.}
+    \label{fig:silent_collapse_curves}
+\end{figure}

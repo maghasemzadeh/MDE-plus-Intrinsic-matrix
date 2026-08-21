@@ -394,7 +394,7 @@ f_x & 0   & c_x \\
     \centering
     \begin{tikzpicture}[font=\scriptsize]
     \tikzset{
-      cm/.style={thblock, fill=white, text width=2.55cm, minimum height=0.62cm,
+      cmbox/.style={thblock, fill=white, text width=2.55cm, minimum height=0.62cm,
                  inner sep=2.5pt, font=\scriptsize},
       hd/.style={font=\scriptsize\bfseries, anchor=north, align=center},
     }
@@ -403,9 +403,9 @@ f_x & 0   & c_x \\
     \begin{scope}[xshift=9.4cm]
         \fill[thPanelGray, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
         \node[hd, text width=3.6cm] at (1.90,0.88) {(الف) الحاق به ورودی};
-        \node[cm] (ai) at (1.90,-0.55) {تصویر + کانال‌های $K$};
-        \node[cm] (an) at (1.90,-1.70) {انکودر};
-        \node[cm] (ad) at (1.90,-2.85) {عمق};
+        \node[cmbox] (ai) at (1.90,-0.55) {تصویر + کانال‌های $K$};
+        \node[cmbox] (an) at (1.90,-1.70) {انکودر};
+        \node[cmbox] (ad) at (1.90,-2.85) {عمق};
         \draw[tharrow] (ai) -- (an);
         \draw[tharrow] (an) -- (ad);
         \node[thnote, anchor=north, text width=3.6cm, text=thControl] at (1.90,-3.20)
@@ -416,10 +416,10 @@ f_x & 0   & c_x \\
     \begin{scope}[xshift=4.75cm]
         \fill[thPanelAlt, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
         \node[hd, text width=3.6cm] at (1.90,0.88) {(ب) تنظیم ویژگی به سبک \lr{FiLM}};
-        \node[cm] (bi) at (1.90,-0.55) {تصویر};
-        \node[cm] (bn) at (1.90,-1.70) {انکودر};
-        \node[cm] (bd) at (1.90,-2.85) {عمق};
-        \node[cm, fill=thPanelAlt, draw=thAccent, text width=1.5cm] (bk) at (-0.95,-1.70)
+        \node[cmbox] (bi) at (1.90,-0.55) {تصویر};
+        \node[cmbox] (bn) at (1.90,-1.70) {انکودر};
+        \node[cmbox] (bd) at (1.90,-2.85) {عمق};
+        \node[cmbox, fill=thPanelAlt, draw=thAccent, text width=1.5cm] (bk) at (-0.95,-1.70)
             {$\gamma,\beta$ از $K$};
         \draw[tharrow] (bi) -- (bn);
         \draw[tharrow] (bn) -- (bd);
@@ -433,10 +433,10 @@ f_x & 0   & c_x \\
         \fill[thPanelGreen, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
         \draw[draw=thIdeal, line width=1.2pt, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
         \node[hd, text width=3.6cm, text=thIdeal] at (1.90,0.88) {(ج) تزریق توکن و توجه};
-        \node[cm] (ci) at (1.90,-0.55) {توکن‌های وصله $+$ توکن $K$};
-        \node[cm, fill=thPanelGreen, draw=thIdeal, line width=1pt] (cn) at (1.90,-1.70)
+        \node[cmbox] (ci) at (1.90,-0.55) {توکن‌های وصله $+$ توکن $K$};
+        \node[cmbox, fill=thPanelGreen, draw=thIdeal, line width=1pt] (cn) at (1.90,-1.70)
             {انکودر بدون تغییر\\ \tiny (سازوکار توجه ترکیب می‌کند)};
-        \node[cm] (cd) at (1.90,-2.85) {عمق متریک};
+        \node[cmbox] (cd) at (1.90,-2.85) {عمق متریک};
         \draw[tharrow] (ci) -- (cn);
         \draw[tharrow] (cn) -- (cd);
         \node[thnote, anchor=north, text width=3.6cm, text=thIdeal] at (1.90,-3.20)
@@ -822,8 +822,8 @@ D^*_{pred} = s \cdot D_{pred} + t,
 \renewcommand{\arraystretch}{1.35}
 \begin{tabularx}{\textwidth}{@{}
   >{\raggedleft\arraybackslash}p{0.125\textwidth}
-  >{\raggedleft\arraybackslash}p{0.165\textwidth}
-  >{\raggedleft\arraybackslash}p{0.185\textwidth}
+  >{\raggedleft\arraybackslash}p{0.215\textwidth}
+  >{\raggedleft\arraybackslash}p{0.170\textwidth}
   >{\raggedleft\arraybackslash}X@{}}
 \toprule
 حالت مدل & فضای هدف آموزش & تابع هزینه & پروتکل ارزیابی و دلالت آن \\ \midrule

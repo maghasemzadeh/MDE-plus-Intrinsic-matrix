@@ -1,0 +1,25 @@
+{
+  "protocol": "pre-registered qualitative sample; ids fixed before any inference",
+  "created": "2026-08-21T15:39:26",
+  "split": "test",
+  "population_size": 654,
+  "seed": 20260821,
+  "num_images": 6,
+  "indices": [
+    73,
+    189,
+    251,
+    399,
+    511,
+    609
+  ],
+  "item_ids": [
+    "nyu_00181",
+    "nyu_00473",
+    "nyu_00611",
+    "nyu_00946",
+    "nyu_01178",
+    "nyu_01363"
+  ],
+  "sha256": "8086cb124e4052c19878d478a753b18e8c715acefc6425738ecfd2b3975c80df"
+}

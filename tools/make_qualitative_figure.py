@@ -119,6 +119,29 @@ def _load_manifest(path):
     return manifest
 
 
+# Deterministic panel geometry, used when the figure carries no text of its own:
+# the LaTeX wrapper places Persian column headers at these exact fractions of the
+# image width, so the labels line up with the panels without manual tuning.
+PANEL_W = 0.2325
+PANEL_GAP = 0.006
+CBAR_W = 0.014
+COLUMN_CENTRES = [j * (PANEL_W + PANEL_GAP) + PANEL_W / 2 for j in range(4)]
+
+
+def _bare_grid(fig, n):
+    """Lay out n rows x 4 panels plus a per-row colorbar axis at fixed positions."""
+    axes, caxes = [], []
+    row_h = 1.0 / n
+    for i in range(n):
+        bottom = 1.0 - (i + 1) * row_h
+        axes.append([fig.add_axes([j * (PANEL_W + PANEL_GAP),
+                                   bottom + 0.010 * row_h,
+                                   PANEL_W, row_h * 0.980]) for j in range(4)])
+        caxes.append(fig.add_axes([4 * (PANEL_W + PANEL_GAP) + 0.004,
+                                   bottom + 0.12 * row_h, CBAR_W, row_h * 0.76]))
+    return axes, caxes
+
+
 def cmd_render(args):
     manifest = _load_manifest(args.manifest)
     checkpoints = {}
@@ -190,7 +213,13 @@ def cmd_render(args):
 
     # --- panel figure: one shared depth range per row, identical for all models ---
     n = len(gts)
-    fig, axes = plt.subplots(n, 4, figsize=(13.5, 2.9 * n), squeeze=False)
+    bare = args.annotate == 'none'
+    if bare:
+        fig = plt.figure(figsize=(13.5, 2.45 * n))
+        axes, caxes = _bare_grid(fig, n)
+    else:
+        fig, axes = plt.subplots(n, 4, figsize=(13.5, 2.9 * n), squeeze=False)
+        caxes = [None] * n
     for i in range(n):
         gt = gts[i]
         valid = np.isfinite(gt) & (gt > MIN_DEPTH) & (gt <= MAX_DEPTH)
@@ -209,17 +238,24 @@ def cmd_render(args):
             else:
                 im = ax.imshow(data, cmap=cmap, vmin=vmin, vmax=vmax)
                 if j == 3:
-                    fig.colorbar(im, ax=ax, fraction=0.046)
-            if i == 0:
+                    if bare:
+                        fig.colorbar(im, cax=caxes[i])
+                        caxes[i].tick_params(labelsize=8)
+                    else:
+                        fig.colorbar(im, ax=ax, fraction=0.046)
+            if i == 0 and args.annotate == 'en':
                 ax.set_title(title, fontsize=10)
             ax.axis('off')
         axes[i][0].set_ylabel(f'#{i + 1}', fontsize=9)
-    fig.suptitle(
-        f'Pre-registered sample, seed {manifest["seed"]}, digest {manifest["sha256"][:12]}  '
-        f'(shared colormap and depth range per row)', fontsize=10)
-    fig.tight_layout()
+    if args.annotate == 'en':
+        fig.suptitle(
+            f'Pre-registered sample, seed {manifest["seed"]}, digest {manifest["sha256"][:12]}  '
+            f'(shared colormap and depth range per row)', fontsize=10)
+        fig.tight_layout(rect=(0, 0, 1, 0.97))
     maps_pdf = os.path.join(args.output_dir, 'qualitative_depth_maps.pdf')
-    fig.savefig(maps_pdf, bbox_inches='tight')
+    # In bare mode the canvas must be kept exactly as laid out, otherwise a tight
+    # bounding box would shift the panels away from COLUMN_CENTRES.
+    fig.savefig(maps_pdf) if bare else fig.savefig(maps_pdf, bbox_inches='tight')
     plt.close(fig)
     print('Saved:', maps_pdf)
 
@@ -248,11 +284,13 @@ def cmd_render(args):
         'encoder': args.encoder,
         'model_type': args.model_type,
         'figures': {'depth_maps': maps_pdf, 'scale_ratio': hist_pdf},
+        'scale_ratio_item_ids': [_item_id(it, i) for i, it in enumerate(ratio_items)],
         'scale_ratio_stats': {
             lab: {
                 'n': len(ratios[lab]),
                 'median': float(np.median(ratios[lab])) if ratios[lab] else None,
                 'mean': float(np.mean(ratios[lab])) if ratios[lab] else None,
+                'ratios': [float(r) for r in ratios[lab]],
             } for lab in labels
         },
     }
@@ -284,6 +322,9 @@ def main():
     render.add_argument('--input-size', type=int, default=518)
     render.add_argument('--num-ratio-images', type=int, default=654,
                         help='images used for the scale-ratio histogram (0 disables it)')
+    render.add_argument('--annotate', default='en', choices=['en', 'none'],
+                        help="'none' omits all in-figure text so the labels can be "
+                             'typeset by LaTeX instead (used for the thesis figure)')
     render.add_argument('--device', default=None)
     render.add_argument('--output-dir', default='results/qualitative')
     render.set_defaults(func=cmd_render)

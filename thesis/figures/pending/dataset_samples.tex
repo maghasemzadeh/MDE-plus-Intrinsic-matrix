@@ -1,0 +1,42 @@
+% =============================================================================
+% نوار تصاویر نمونهٔ مجموعه‌داده‌ها — در انتظار چهار تصویر
+%
+% پیش‌نیاز فایل‌ها (هر کدام یک فریم RGB نماینده، ترجیحاً با نسبت ابعاد ۴:۳):
+%   thesis/figures/samples/nyu.jpg
+%   thesis/figures/samples/kitti.jpg
+%   thesis/figures/samples/cityscapes.jpg
+%   thesis/figures/samples/middlebury.jpg
+%
+% محل درج: بخش ۴--۳--۱ (دیتاست‌های مورد استفاده) در chapter4.tex، بلافاصله پس
+% از فهرست مجموعه‌داده‌ها، با دستور:
+%   \input{./figures/pending/dataset_samples}
+%
+% نکتهٔ حقوقی: تصاویر باید از خود مجموعه‌داده‌ها برداشته شوند (نه از مقالات)،
+% و مجوز هر مجموعه‌داده در متن یا پانویس ذکر شود.
+% =============================================================================
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+    \node[anchor=south west, inner sep=0pt] (s1) at (0,0)
+        {\includegraphics[width=3.35cm]{./figures/samples/middlebury.jpg}};
+    \node[anchor=south west, inner sep=0pt] (s2) at (3.60,0)
+        {\includegraphics[width=3.35cm]{./figures/samples/cityscapes.jpg}};
+    \node[anchor=south west, inner sep=0pt] (s3) at (7.20,0)
+        {\includegraphics[width=3.35cm]{./figures/samples/kitti.jpg}};
+    \node[anchor=south west, inner sep=0pt] (s4) at (10.80,0)
+        {\includegraphics[width=3.35cm]{./figures/samples/nyu.jpg}};
+
+    \node[thnote, anchor=north] at (12.475,-0.10) {\lr{NYUv2}\\ داخلی، $\approx 63^\circ$};
+    \node[thnote, anchor=north] at ( 8.875,-0.10) {\lr{KITTI}\\ بیرونی، لایدار};
+    \node[thnote, anchor=north] at ( 5.275,-0.10) {\lr{Cityscapes}\\ شهری، استریو};
+    \node[thnote, anchor=north] at ( 1.675,-0.10) {\lr{Middlebury}\\ داخلی، دو نمای کالیبره};
+    \end{tikzpicture}
+    \caption[نمونه‌ای از تنوع شرایط تصویربرداری مجموعه‌داده‌ها]{نمونه‌ای از
+    تنوع شرایط تصویربرداری در مجموعه‌داده‌های به‌کاررفته. تفاوت این صحنه‌ها
+    تنها در محتوا نیست: میدان دید، دامنهٔ عمق و سازوکار تولید عمق مرجع در
+    آن‌ها اساساً متفاوت است (جدول~\ref{tab:datasets_overview}). همین ناهمگونی
+    است که ارزیابی با یک مقیاس متریک ثابت را دشوار می‌کند و انگیزهٔ لحاظ
+    صریح پارامترهای درونی دوربین را شکل می‌دهد.}
+    \label{fig:dataset_samples}
+\end{figure}

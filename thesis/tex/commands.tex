@@ -106,8 +106,67 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % بسته‌ای برای رسم نمودارها و نیز صفحه مالکیت اثر
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
+\usetikzlibrary{calc,fit,backgrounds,shapes.misc,shapes.multipart}
+\usetikzlibrary{decorations.pathreplacing,decorations.markings,patterns}
 \usepackage{pgfplots}
 \pgfplotsset{compat=1.17}
+\usepgfplotslibrary{groupplots}
+
+%%% تنظیم پارامترهای جای‌گذاری شناورها.
+%%% با افزایش تعداد شکل‌ها و جدول‌ها، تنظیمات پیش‌فرض لاتک باعث انباشت
+%%% شناورهای جای‌گذاری‌نشده و در نهایت خطای «Too many unprocessed floats» می‌شود.
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.70}
+\renewcommand{\textfraction}{0.12}
+\renewcommand{\floatpagefraction}{0.70}
+\setcounter{topnumber}{3}
+\setcounter{bottomnumber}{2}
+\setcounter{totalnumber}{5}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% پالت رنگ و سبک یکنواخت شکل‌ها و نمودارهای پایان‌نامه.
+%%% هدف: تمام شکل‌ها با یک زبان بصری واحد خوانده شوند؛ هر مدل همیشه
+%%% با یک رنگ ثابت نمایش داده می‌شود تا خواننده نیازی به بازخوانی
+%%% راهنمای هر نمودار نداشته باشد.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{thProposed}{HTML}{1F6FB2} % مدل پیشنهادی (دارای K)
+\definecolor{thControl}{HTML}{C0392B}  % مدل کنترل (فاقد K)
+\definecolor{thBase}{HTML}{78838C}     % مدل پایهٔ منتشرشده
+\definecolor{thIdeal}{HTML}{2E9E5B}    % مرجع/رفتار ایده‌آل هندسی
+\definecolor{thAccent}{HTML}{E08A1E}   % تأکید و حاشیه‌نویسی
+\definecolor{thInk}{HTML}{2B2B2B}      % رنگ خط و متن شکل‌ها
+\definecolor{thPanel}{HTML}{EAF1F8}
+\definecolor{thPanelAlt}{HTML}{FDF0E6}
+\definecolor{thPanelGreen}{HTML}{E7F4EC}
+\definecolor{thPanelGray}{HTML}{F0F1F2}
+\definecolor{thPanelRed}{HTML}{FBEAE8}
+
+\pgfplotsset{
+  thesisplot/.style={
+    width=0.86\textwidth,
+    height=6.4cm,
+    grid=major,
+    grid style={gray!25, very thin},
+    axis line style={gray!55},
+    tick align=outside,
+    label style={font=\small},
+    tick label style={font=\small},
+    title style={font=\small},
+    legend cell align=left,
+    legend style={font=\small, draw=gray!45, fill=white},
+    every axis plot/.append style={thick},
+  },
+}
+
+\tikzset{
+  thblock/.style={draw=thInk!60, thick, rounded corners=2pt, align=center,
+                  inner sep=5pt, font=\small},
+  thdata/.style={draw=thInk!45, thick, rounded corners=9pt, align=center,
+                 inner sep=5pt, font=\small, fill=thPanelGray},
+  thnote/.style={font=\scriptsize, align=center, text=thInk},
+  tharrow/.style={-{Latex[length=2.2mm]}, thick, draw=thInk!75},
+  thdashed/.style={-{Latex[length=2.2mm]}, thick, dashed, draw=thAccent},
+}
 % بسته‌ای برای ظاهر شدن «مراجع» و «نمایه» در فهرست مطالب
 \usepackage[nottoc]{tocbibind}
 % دستورات مربوط به ایجاد نمایه

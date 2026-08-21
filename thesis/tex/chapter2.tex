@@ -5,7 +5,7 @@
 \section{مقدمه}
 تخمین عمق از تصاویر دوبعدی یکی از مسائل بنیادی در بینایی ماشین\enfootnote{Computer Vision}
 و ادراک صحنه محسوب می‌شود که کاربردهای گسترده‌ای در حوزه‌هایی نظیر
-رباتیک، رانندگی خودکار، واقعیت افزوده و بازسازی سه‌بعدی دارد~\cite{Saxena2009Make3D,HartleyZisserman2004}.
+رباتیک، رانندگی خودکار\enfootnote{Autonomous Driving}، واقعیت افزوده\enfootnote{Augmented Reality} و بازسازی سه‌بعدی\enfootnote{3D Reconstruction} دارد~\cite{Saxena2009Make3D,HartleyZisserman2004}.
 در میان شاخه‌های مختلف این مسئله،
 تخمین عمق تک‌دوربینه\enfootnote{Monocular Depth Estimation}
 به‌دلیل نیاز حداقلی به تجهیزات تصویربرداری،
@@ -25,6 +25,64 @@
 در ادامه، تفاوت میان تخمین عمق متریک و غیرمتریک
 و نقش هندسهٔ دوربین در این مسئله مرور می‌شود
 تا جایگاه پژوهش حاضر نسبت به ادبیات موجود به‌روشنی مشخص گردد.
+
+شکل~\ref{fig:mde_taxonomy} نمای کلی این دسته‌بندی و جایگاه پژوهش حاضر
+نسبت به آن را نشان می‌دهد.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+    \tikzset{
+      lvl1/.style={thblock, fill=thPanel, text width=2.85cm, minimum height=0.95cm},
+      lvl2/.style={thblock, fill=white, text width=2.05cm, minimum height=1.25cm},
+      leafhi/.style={thblock, fill=thPanelAlt, draw=thAccent, line width=1pt,
+                     text width=2.05cm, minimum height=1.25cm},
+    }
+
+    % ریشه
+    \node[thblock, fill=thPanelGray, text width=4.4cm, minimum height=0.9cm, font=\small]
+        (root) at (6.0,4.7) {تخمین عمق تک‌دوربینه};
+
+    % شاخه‌های سطح یک (راست به چپ: کلاسیک، یادگیری عمیق، مدل بنیادین)
+    \node[lvl1] (classic) at (10.8,2.9) {روش‌های کلاسیک};
+    \node[lvl1] (deep)    at (6.0,2.9)  {روش‌های یادگیری عمیق};
+    \node[lvl1] (found)   at (1.2,2.9)  {مدل‌های بنیادین ازپیش‌آموخته};
+
+    % برگ‌ها
+    \node[lvl2] (l6) at (12.0,0.9) {نشانه‌های تصویری و قیود هندسی};
+    \node[lvl2] (l5) at (9.6,0.9)  {ویژگی‌های دستی و مدل آماری};
+    \node[lvl2] (l4) at (7.2,0.9)  {آموزش نظارت‌شده با عمق مرجع};
+    \node[lvl2] (l3) at (4.8,0.9)  {آموزش خودنظارتی از استریو یا ویدئو};
+    \node[lvl2] (l2) at (2.4,0.9)  {خروجی نسبی با تراز مقیاس};
+    \node[leafhi] (l1) at (0.0,0.9) {خروجی متریک با فاین‌تیون درون‌دامنه};
+
+    \draw[tharrow] (root) -- (classic);
+    \draw[tharrow] (root) -- (deep);
+    \draw[tharrow] (root) -- (found);
+    \draw[tharrow] (classic) -- (l6);
+    \draw[tharrow] (classic) -- (l5);
+    \draw[tharrow] (deep) -- (l4);
+    \draw[tharrow] (deep) -- (l3);
+    \draw[tharrow] (found) -- (l2);
+    \draw[tharrow] (found) -- (l1);
+
+    % نوار پایانی: خلأ پژوهشی
+    \node[thblock, fill=thPanelGreen, draw=thIdeal, line width=1pt,
+          text width=11.5cm, minimum height=0.95cm, font=\small] (gap) at (6.0,-1.3)
+        {خلأ پژوهشی: در هر سه شاخه، ماتریس مشخصهٔ دوربین $K$ یا نادیده گرفته شده
+         یا تنها در نگاشت هندسی به‌کار رفته است، نه به‌عنوان \emph{ورودی صریح} مدل};
+
+    \draw[thdashed] (l1) -- (gap);
+    \node[thnote, text=thAccent, anchor=west] at (0.15,-0.35) {جایگاه پژوهش حاضر};
+    \end{tikzpicture}
+    \caption[دسته‌بندی روش‌های تخمین عمق تک‌دوربینه]{دسته‌بندی روش‌های
+    تخمین عمق تک‌دوربینه و جایگاه پژوهش حاضر. سه شاخهٔ اصلی --- روش‌های کلاسیک،
+    روش‌های یادگیری عمیق و مدل‌های بنیادین ازپیش‌آموخته --- در بخش‌های بعدی این
+    فصل مرور می‌شوند. نکتهٔ مشترک هر سه شاخه آن است که پارامترهای درونی دوربین
+    به‌صورت ورودی صریح مدل در نظر گرفته نمی‌شوند؛ همین نکته، خلأ پژوهشی
+    مورد هدف این پایان‌نامه است.}
+    \label{fig:mde_taxonomy}
+\end{figure}
 
 \section{روش‌های کلاسیک تخمین عمق تک‌دوربینه}
 پیش از گسترش روش‌های مبتنی بر یادگیری عمیق،
@@ -94,6 +152,141 @@
 اما در کاربردهای نیازمند عمق متریک
 با چالش‌های جدی همراه است.
 
+
+شکل~\ref{fig:mde_timeline} سیر تحول این حوزه را از روش‌های کلاسیک تا
+مدل‌های بنیادین امروزی و ظهور رویکردهای آگاه از هندسهٔ دوربین نشان می‌دهد.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+    \tikzset{
+      ms/.style={thblock, fill=white, text width=8.0cm, anchor=west,
+                 minimum height=0.72cm, inner sep=4pt},
+      msera/.style={thnote, anchor=east, font=\scriptsize\bfseries},
+    }
+    % ستون زمان
+    \draw[line width=1.6pt, thInk!45] (0,0.45) -- (0,-9.15);
+
+    \fill[thProposed] (0,0) circle (2.4pt);
+    \node[msera] at (-0.25,0) {۲۰۰۵};
+    \node[ms] at (0.30,0) {\lr{Hoiem} و همکاران: استنتاج بافت هندسی صحنه از یک تصویر~\cite{Hoiem2005GeometricContext}};
+
+    \fill[thProposed] (0,-1.25) circle (2.4pt);
+    \node[msera] at (-0.25,-1.25) {۲۰۰۹};
+    \node[ms] at (0.30,-1.25) {\lr{Make3D}: یادگیری ساختار سه‌بعدی از یک تصویر ثابت با ویژگی‌های دستی~\cite{Saxena2009Make3D}};
+
+    \fill[thProposed] (0,-2.5) circle (2.4pt);
+    \node[msera] at (-0.25,-2.5) {۲۰۱۴};
+    \node[ms] at (0.30,-2.5) {\lr{Eigen} و همکاران: نخستین شبکهٔ عمیق چندمقیاسی برای تخمین عمق~\cite{Eigen2014Depth}};
+
+    \fill[thProposed] (0,-3.75) circle (2.4pt);
+    \node[msera] at (-0.25,-3.75) {۲۰۱۷};
+    \node[ms] at (0.30,-3.75) {یادگیری خودنظارتی از استریو و ویدئو~\cite{Godard2017Unsupervised,Zhou2017Unsupervised}};
+
+    \fill[thProposed] (0,-5.0) circle (2.4pt);
+    \node[msera] at (-0.25,-5.0) {۲۰۱۹};
+    \node[ms] at (0.30,-5.0) {\lr{MiDaS}: آمیختن مجموعه‌داده‌ها و آموزش در فضای عمق معکوس~\cite{Ranftl2019Robust}};
+
+    \fill[thProposed] (0,-6.25) circle (2.4pt);
+    \node[msera] at (-0.25,-6.25) {۲۰۲۱};
+    \node[ms] at (0.30,-6.25) {\lr{DPT}: دیکودر ترنسفورمری برای پیش‌بینی چگال~\cite{Ranftl2021DPT}};
+
+    \fill[thIdeal] (0,-7.5) circle (3pt);
+    \node[msera] at (-0.25,-7.5) {۲۰۲۳};
+    \node[ms, fill=thPanelGreen, draw=thIdeal] at (0.30,-7.5) {شرطی‌سازی صریح بر میدان دید برای عمق متریک صفرنمونه~\cite{Saxena2023FOV}};
+
+    \fill[thProposed] (0,-8.75) circle (2.4pt);
+    \node[msera] at (-0.25,-8.75) {۲۰۲۴};
+    \node[ms, fill=thPanel] at (0.30,-8.75) {\lr{Depth Anything V2}: مدل بنیادین تخمین عمق تک‌دوربینه، معماری پایهٔ این پژوهش~\cite{DepthAnythingV2}};
+
+    \end{tikzpicture}
+    \caption[سیر تحول تخمین عمق تک‌دوربینه]{سیر تحول روش‌های تخمین عمق
+    تک‌دوربینه. مسیر کلی از قیود هندسی دست‌ساز به سمت مدل‌های داده‌محور بزرگ
+    حرکت کرده است؛ اما بازگشت اطلاعات هندسی صریح دوربین به فرآیند یادگیری
+    تنها در سال‌های اخیر و به‌صورت محدود آغاز شده است.}
+    \label{fig:mde_timeline}
+\end{figure}
+
+شکل~\ref{fig:supervision_paradigms} این سه پارادایم را در کنار هم قرار می‌دهد
+و نشان می‌دهد که سیگنال آموزشی هر یک از کجا می‌آید و ماتریس مشخصهٔ دوربین
+در کدام مرحله --- و آیا اصلاً --- وارد فرآیند می‌شود.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+    \tikzset{
+      pn/.style={thblock, fill=white, text width=3.30cm, minimum height=0.78cm,
+                 inner sep=3pt, font=\scriptsize},
+      hd/.style={font=\small, anchor=north},
+    }
+
+    %%% ================= پنل (الف): نظارت‌شده (سمت راست) =================
+    \begin{scope}[xshift=9.9cm]
+        \fill[thPanel, rounded corners=3pt] (-0.10,-5.35) rectangle (4.55,0.70);
+        \node[hd] at (2.225,0.60) {(الف) نظارت‌شده};
+        \node[pn] (aimg)  at (2.225,-0.60) {تصویر $I$};
+        \node[pn] (anet)  at (2.225,-1.75) {شبکهٔ عمق $f_\theta$};
+        \node[pn] (apred) at (2.225,-2.90) {$D^{\mathrm{pred}}$};
+        \node[pn, fill=thPanelGray] (agt) at (2.225,-4.30) {عمق مرجع $D^{GT}$};
+        \draw[tharrow] (aimg) -- (anet);
+        \draw[tharrow] (anet) -- (apred);
+        \draw[{Latex[length=2mm]}-{Latex[length=2mm]}, thick, draw=thControl]
+            (apred) -- node[midway, right=1mm, font=\scriptsize, text=thControl] {تابع هزینه} (agt);
+        \node[thnote, anchor=north, text width=4.2cm] at (2.225,-4.75)
+            {$K$ در هیچ مرحله‌ای ظاهر نمی‌شود};
+    \end{scope}
+
+    %%% ================= پنل (ب): خودنظارتی استریو (میانه) =================
+    \begin{scope}[xshift=4.95cm]
+        \fill[thPanelAlt, rounded corners=3pt] (-0.10,-5.35) rectangle (4.55,0.70);
+        \node[hd] at (2.225,0.60) {(ب) خودنظارتی استریو};
+        \node[pn] (bimg)  at (2.225,-0.60) {تصویر چپ $I_L$};
+        \node[pn] (bnet)  at (2.225,-1.75) {شبکهٔ عمق $f_\theta$};
+        \node[pn] (bdisp) at (2.225,-2.90) {دیسپاریتی $d$};
+        \node[pn, fill=thPanelGray] (bwarp) at (2.225,-4.30) {بازسازی $\hat{I}_L$ از $I_R$};
+        \draw[tharrow] (bimg) -- (bnet);
+        \draw[tharrow] (bnet) -- (bdisp);
+        \draw[tharrow] (bdisp) -- node[midway, right=1mm, font=\scriptsize] {$Z = f b / d$} (bwarp);
+        \node[thnote, anchor=north, text width=4.2cm] at (2.225,-4.75)
+            {مقیاس از خط پایهٔ \emph{ثابت} $b$ می‌آید، نه از $K$};
+    \end{scope}
+
+    %%% ================= پنل (ج): خودنظارتی ویدئویی (سمت چپ) =================
+    \begin{scope}
+        \fill[thPanelGreen, rounded corners=3pt] (-0.10,-5.35) rectangle (4.55,0.70);
+        \node[hd] at (2.225,0.60) {(ج) خودنظارتی ویدئویی};
+        \node[pn] (cimg)  at (2.225,-0.60) {فریم‌های $I_t$ و $I_{t+1}$};
+        \node[pn] (cnet)  at (2.225,-1.75) {شبکهٔ عمق و شبکهٔ ژست};
+        \node[pn] (cdt)   at (2.225,-2.90) {$D$ و تبدیل $T$};
+        \node[pn, fill=thPanelGray, draw=thAccent, line width=1pt] (cwarp) at (2.225,-4.30)
+            {نگاشت با $K$:\\ $\hat{I}_{t+1}=\pi(K,D,T)$};
+        \draw[tharrow] (cimg) -- (cnet);
+        \draw[tharrow] (cnet) -- (cdt);
+        \draw[tharrow] (cdt) -- (cwarp);
+        \node[thnote, anchor=north, text width=4.2cm, text=thAccent] at (2.225,-4.80)
+            {$K$ فقط در \emph{نگاشت} ظاهر می‌شود، نه در ورودی شبکه};
+    \end{scope}
+
+    %%% ================= نوار جمع‌بندی =================
+    \node[thblock, fill=thPanelRed, draw=thControl, line width=1pt,
+          text width=13.6cm, font=\scriptsize] at (7.2,-6.15)
+        {در هر سه پارادایم، شبکهٔ عمق تنها \emph{تصویر} را می‌بیند؛ هیچ‌یک
+         ماتریس مشخصهٔ دوربین را به‌عنوان ورودی دریافت نمی‌کند.};
+    \end{tikzpicture}
+    \caption[سه پارادایم نظارتی رایج و جایگاه ماتریس مشخصهٔ دوربین در هر یک]{سه
+    پارادایم نظارتی رایج در تخمین عمق تک‌دوربینه و جایگاه ماتریس مشخصهٔ دوربین
+    در هر یک. (الف) در آموزش نظارت‌شده~\cite{Eigen2014Depth}، سیگنال آموزشی از
+    عمق مرجع می‌آید و $K$ اصلاً وارد محاسبات نمی‌شود؛ مقیاس آموخته‌شده در
+    عمل مقیاس دوربینِ دادهٔ آموزش است. (ب) در خودنظارتی
+    استریو~\cite{Godard2017Unsupervised}، مقیاس از خط پایهٔ ثابت دوربین‌های
+    استریو استخراج می‌شود و بنابراین به تنظیم خاص آن مجموعه‌داده گره می‌خورد.
+    (ج) در خودنظارتی ویدئویی~\cite{Zhou2017Unsupervised}، ماتریس $K$ برای
+    نگاشت میان نماها \emph{استفاده} می‌شود، اما شبکهٔ عمق آن را نمی‌بیند و
+    نمی‌تواند خروجی خود را بر اساس آن تنظیم کند. تمایز میان «استفاده از $K$
+    در تابع هزینه» و «دادن $K$ به شبکه» --- که در شکل با رنگ متفاوت مشخص شده
+    است --- نقطهٔ آغاز روش پیشنهادی این پژوهش است.}
+    \label{fig:supervision_paradigms}
+\end{figure}
 
 \section{تخمین عمق متریک و غیرمتریک}
 یکی از تمایزهای اساسی در تخمین عمق تک‌دوربینه، تفاوت میان
@@ -182,9 +375,89 @@ Eigen و Fergus~\cite{Eigen2015Predicting}
 برخی روش‌ها از پارامترهای کالیبراسیون
 در مراحل آموزش یا ارزیابی استفاده کرده‌اند~\cite{Guizilini2020Semantically}.
 با این حال،
-استفادهٔ نظام‌مند و صریح از ماتریس مشخصهٔ دوربین
+استفادهٔ نظام‌مند و صریح از ماتریس مشخصهٔ دوربین\enfootnote{Camera Intrinsic Matrix}
 به‌عنوان ورودی مدل تخمین عمق
 هنوز به‌طور گسترده مورد بررسی قرار نگرفته است.
+
+شکل~\ref{fig:k_strategies} چهار راهبرد ممکن برای برخورد با ماتریس مشخصهٔ
+دوربین را در کنار هم قرار می‌دهد. سه راهبرد نخست، تقریباً تمام ادبیات موجود
+را پوشش می‌دهند و راهبرد چهارم، موضوع پژوهش حاضر است.
+
+\begin{figure}[htbp]
+    \centering
+    \begin{tikzpicture}[font=\scriptsize]
+    \tikzset{
+      mini/.style={thblock, fill=white, text width=2.30cm, minimum height=0.62cm,
+                   inner sep=2.5pt, font=\scriptsize},
+      hd/.style={font=\scriptsize\bfseries, anchor=north, align=center},
+    }
+
+    %%% ---------- راهبرد ۱: نادیده‌گرفتن (سمت راست) ----------
+    \begin{scope}[xshift=10.65cm]
+        \fill[thPanelGray, rounded corners=3pt] (-0.10,-4.15) rectangle (3.45,0.95);
+        \node[hd, text width=3.2cm] at (1.675,0.88) {۱. نادیده‌گرفتن کامل};
+        \node[mini] (s1i) at (1.675,-0.55) {تصویر $I$};
+        \node[mini] (s1n) at (1.675,-1.60) {شبکه};
+        \node[mini] (s1d) at (1.675,-2.65) {عمق $D$};
+        \draw[tharrow] (s1i) -- (s1n);
+        \draw[tharrow] (s1n) -- (s1d);
+        \node[thnote, anchor=north, text width=3.1cm] at (1.675,-3.05)
+            {$K$ اصلاً وجود ندارد};
+    \end{scope}
+
+    %%% ---------- راهبرد ۲: جذب ضمنی ----------
+    \begin{scope}[xshift=7.10cm]
+        \fill[thPanel, rounded corners=3pt] (-0.10,-4.15) rectangle (3.45,0.95);
+        \node[hd, text width=3.2cm] at (1.675,0.88) {۲. جذب ضمنی در وزن‌ها};
+        \node[mini] (s2i) at (1.675,-0.55) {تصویر $I$};
+        \node[mini, draw=thControl] (s2n) at (1.675,-1.60) {شبکه\\ \tiny ($K$ ثابت فرض می‌شود)};
+        \node[mini] (s2d) at (1.675,-2.65) {عمق $D$};
+        \draw[tharrow] (s2i) -- (s2n);
+        \draw[tharrow] (s2n) -- (s2d);
+        \node[thnote, anchor=north, text width=3.1cm] at (1.675,-3.05)
+            {با تغییر دوربین، فرض نقض می‌شود};
+    \end{scope}
+
+    %%% ---------- راهبرد ۳: فقط در تابع هزینه ----------
+    \begin{scope}[xshift=3.55cm]
+        \fill[thPanelAlt, rounded corners=3pt] (-0.10,-4.15) rectangle (3.45,0.95);
+        \node[hd, text width=3.2cm] at (1.675,0.88) {۳. فقط در تابع هزینه};
+        \node[mini] (s3i) at (1.675,-0.55) {تصویر $I$};
+        \node[mini] (s3n) at (1.675,-1.60) {شبکه};
+        \node[mini] (s3d) at (1.675,-2.65) {عمق $D$};
+        \node[mini, fill=thPanelAlt, draw=thAccent] (s3k) at (1.675,-3.62) {نگاشت با $K$};
+        \draw[tharrow] (s3i) -- (s3n);
+        \draw[tharrow] (s3n) -- (s3d);
+        \draw[tharrow, draw=thAccent] (s3d) -- (s3k);
+        \node[thnote, anchor=north, text width=1.7cm, text=thAccent] at (1.675,-4.05) {};
+    \end{scope}
+
+    %%% ---------- راهبرد ۴: شرطی‌سازی صریح (سمت چپ) ----------
+    \begin{scope}
+        \fill[thPanelGreen, rounded corners=3pt] (-0.10,-4.15) rectangle (3.45,0.95);
+        \draw[draw=thIdeal, line width=1.2pt, rounded corners=3pt] (-0.10,-4.15) rectangle (3.45,0.95);
+        \node[hd, text width=3.2cm, text=thIdeal] at (1.675,0.88) {۴. شرطی‌سازی صریح ورودی};
+        \node[mini] (s4i) at (1.675,-0.55) {تصویر $I$};
+        \node[mini, fill=thPanelGreen, draw=thIdeal, line width=1pt] (s4k) at (1.675,-1.60) {شبکه با ورودی $(I,K)$};
+        \node[mini] (s4d) at (1.675,-2.65) {عمق متریک $D$};
+        \draw[tharrow] (s4i) -- (s4k);
+        \draw[tharrow] (s4k) -- (s4d);
+        \node[thnote, anchor=north, text width=3.1cm, text=thIdeal] at (1.675,-3.05)
+            {\textbf{پژوهش حاضر}};
+    \end{scope}
+
+    \node[thnote, anchor=north, text width=3.1cm, text=thAccent] at (5.225,-4.05)
+        {شبکه $K$ را نمی‌بیند};
+    \end{tikzpicture}
+    \caption[چهار راهبرد ممکن برای برخورد با ماتریس مشخصهٔ دوربین]{چهار راهبرد
+    ممکن برای برخورد با ماتریس مشخصهٔ دوربین در یک مدل تخمین عمق. راهبردهای ۱
+    و ۲ در روش‌های نظارت‌شده و بیشتر مدل‌های بنیادین رایج‌اند و راهبرد ۳ در
+    روش‌های خودنظارتی ویدئویی به‌کار می‌رود. نکتهٔ مشترک هر سه آن است که
+    \emph{خود شبکه} هرگز مقدار $K$ را دریافت نمی‌کند و بنابراین نمی‌تواند
+    خروجی خود را متناسب با هندسهٔ دوربینِ تصویر ورودی تنظیم کند. راهبرد ۴،
+    که موضوع این پایان‌نامه است، $K$ را به یک ورودی درجه‌یک مدل تبدیل می‌کند.}
+    \label{fig:k_strategies}
+\end{figure}
 
 این مشاهدات نشان می‌دهد که
 نادیده‌گرفتن هندسهٔ دوربین
@@ -195,3 +468,87 @@ Eigen و Fergus~\cite{Eigen2015Predicting}
 و بررسی تأثیر آن بر پایداری تخمین عمق
 می‌تواند مسیر روشنی
 برای بهبود مدل‌های تخمین عمق تک‌دوربینه فراهم کند.
+
+
+\section{جمع‌بندی فصل و جایگاه پژوهش حاضر}
+\label{sec:chapter2_summary}
+
+مرور ارائه‌شده در این فصل را می‌توان در قالب یک مقایسهٔ ساختاریافته میان
+کارهای شاخص این حوزه خلاصه کرد. جدول~\ref{tab:literature_comparison}
+نمونه‌ای از مهم‌ترین رویکردهای مرور‌شده را از چهار منظر مقایسه می‌کند:
+نوع سیگنال نظارتی، نوع خروجی عمق، نحوهٔ برخورد با پارامترهای درونی دوربین،
+و محدودیت کلیدی هر رویکرد از منظر پایداری مقیاس متریک.
+
+\begin{table}[htbp]
+\centering
+\caption[مقایسهٔ ساختاریافتهٔ رویکردهای شاخص تخمین عمق تک‌دوربینه]{مقایسهٔ
+ساختاریافتهٔ رویکردهای شاخص تخمین عمق تک‌دوربینه از منظر نوع نظارت، نوع خروجی،
+نحوهٔ برخورد با ماتریس مشخصهٔ دوربین $K$ و محدودیت کلیدی. ستون «برخورد با $K$»
+نشان می‌دهد که در بخش عمدهٔ ادبیات، $K$ یا اصلاً حضور ندارد یا تنها در
+نگاشت هندسی تابع هزینه به‌کار می‌رود، نه به‌عنوان ورودی مدل.}
+\label{tab:literature_comparison}
+\footnotesize
+\renewcommand{\arraystretch}{1.25}
+\begin{tabularx}{\textwidth}{@{}
+  >{\raggedleft\arraybackslash}p{0.185\textwidth}
+  c
+  >{\raggedleft\arraybackslash}p{0.135\textwidth}
+  >{\raggedleft\arraybackslash}p{0.115\textwidth}
+  >{\raggedleft\arraybackslash}p{0.135\textwidth}
+  >{\raggedleft\arraybackslash}X@{}}
+\toprule
+رویکرد & سال & نوع نظارت & نوع خروجی & برخورد با $K$ & محدودیت کلیدی \\ \midrule
+\lr{Hoiem} و همکاران~\cite{Hoiem2005GeometricContext} & ۲۰۰۵ & کلاسیک، بدون یادگیری عمیق & نسبی & ندارد & وابستگی شدید به فرض‌های ساختار صحنه \\
+\lr{Make3D}~\cite{Saxena2009Make3D} & ۲۰۰۹ & نظارت‌شده با ویژگی دستی & نسبی & ندارد & تعمیم ضعیف به صحنه‌های جدید \\
+\lr{Eigen} و همکاران~\cite{Eigen2014Depth} & ۲۰۱۴ & نظارت‌شده & متریک درون‌دامنه & ندارد & مقیاس آموخته‌شده مختص دوربین دادهٔ آموزش است \\
+\lr{Eigen} و \lr{Fergus}~\cite{Eigen2015Predicting} & ۲۰۱۵ & نظارت‌شدهٔ چندوظیفه‌ای & متریک درون‌دامنه & ندارد & ارزیابی عمدتاً با معیارهای نرمال‌شده \\
+\lr{Godard} و همکاران~\cite{Godard2017Unsupervised} & ۲۰۱۷ & خودنظارتی استریو & نسبی & ضمنی، از راه خط پایهٔ ثابت & مقیاس وابسته به تنظیم استریوی آموزش \\
+\lr{Zhou} و همکاران~\cite{Zhou2017Unsupervised} & ۲۰۱۷ & خودنظارتی ویدئویی & نسبی & در نگاشت تابع هزینه، نه ورودی شبکه & ابهام مقیاس رفع‌نشده باقی می‌ماند \\
+\lr{Monodepth2}~\cite{Godard2019Digging} & ۲۰۱۹ & خودنظارتی & نسبی & ضمنی & ارزیابی نیازمند تراز مقیاس است \\
+\lr{MiDaS}~\cite{Ranftl2019Robust} & ۲۰۱۹ & نظارت‌شدهٔ آمیخته & نسبی، در فضای عمق معکوس & ندارد & خروجی ذاتاً غیرمتریک است \\
+\lr{PackNet}~\cite{Guizilini2020ThreeDPacking} & ۲۰۲۰ & خودنظارتی & نسبی، با مقیاس از سیگنال کمکی & غیرمستقیم & نیازمند سیگنال خارجی برای بازیابی مقیاس \\
+\lr{DPT}~\cite{Ranftl2021DPT} & ۲۰۲۱ & نظارت‌شدهٔ آمیخته & نسبی و متریک درون‌دامنه & ندارد & حساسیت به تغییر مشخصات دوربین \\
+استریوی چندنمای آگاه از هندسه~\cite{Chen2022CameraAware} & ۲۰۲۲ & چندنما & متریک & صریح، در حجم هزینه & نیازمند چند نما؛ تک‌تصویری نیست \\
+شرطی‌سازی بر میدان دید~\cite{Saxena2023FOV} & ۲۰۲۳ & مدل انتشاری & متریک صفرنمونه & صریح، در سطح میدان دید & هزینهٔ محاسباتی بالای استنتاج \\
+\lr{Depth Anything V2}~\cite{DepthAnythingV2} & ۲۰۲۴ & تقطیر در مقیاس بزرگ & نسبی، به‌همراه شاخهٔ متریک & ندارد & مقیاس متریک به دامنهٔ جدید منتقل نمی‌شود \\ \midrule
+\textbf{پژوهش حاضر} & --- & \textbf{فاین‌تیون نظارتی کنترل‌شده} & \textbf{متریک} & \textbf{ورودی صریح به انکودر} & \textbf{حساسیت به صحت کالیبراسیون} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+بر پایهٔ این مقایسه، خلأ پژوهشی این حوزه را می‌توان در چهار محور صورت‌بندی کرد
+که جدول~\ref{tab:research_gap} آن‌ها را در کنار پاسخ پژوهش حاضر قرار می‌دهد.
+
+\begin{table}[htbp]
+\centering
+\caption[صورت‌بندی خلأ پژوهشی و پاسخ پژوهش حاضر]{صورت‌بندی خلأ پژوهشی
+شناسایی‌شده در ادبیات موضوع و پاسخ متناظر پژوهش حاضر به هر محور.}
+\label{tab:research_gap}
+\small
+\renewcommand{\arraystretch}{1.3}
+\begin{tabularx}{\textwidth}{@{}
+  >{\raggedleft\arraybackslash}p{0.17\textwidth}
+  >{\raggedleft\arraybackslash}X
+  >{\raggedleft\arraybackslash}X@{}}
+\toprule
+محور & وضعیت غالب در ادبیات & پاسخ پژوهش حاضر \\ \midrule
+بازنمایی هندسهٔ دوربین &
+$K$ یا نادیده گرفته می‌شود یا فرض می‌شود شبکه اثر آن را ضمنی می‌آموزد &
+$K$ به یک توکن نهان تبدیل و به‌صورت صریح به دنبالهٔ توکن‌های انکودر تزریق می‌شود \\
+معیار سنجش &
+غلبهٔ معیارهای نرمال‌شده که نسبت به مقیاس مطلق نابینا هستند &
+گزارش هم‌زمان پروتکل نسبی و پروتکل متریک بدون تراز، و تحلیل تفاوت رفتار آن‌ها \\
+طراحی آزمایش &
+مقایسه با مدل‌های منتشرشده، بدون بازوی کنترل هم‌داده &
+زوج‌سازی کامل مدل پیشنهادی و مدل کنترل با داده، ابرپارامتر و بذر تصادفی یکسان \\
+اثبات علیت &
+اکتفا به هم‌بستگی میان افزودن اطلاعات هندسی و بهبود معیارها &
+آزمون‌های سازوکاری جاروی $K$ و حذف و تحریف $K$ برای سنجش مستقیم مصرف اطلاعات دوربین \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+در مجموع، مرور ادبیات نشان می‌دهد که پرسش «آیا ورود صریح ماتریس مشخصهٔ دوربین
+به مدل، عمق متریک پایدارتری تولید می‌کند؟» تاکنون به‌صورت یک آزمایش
+کنترل‌شده و با بازوی هم‌داده پاسخ داده نشده است. فصل سوم، چارچوب روش‌شناختی
+لازم برای طراحی چنین آزمایشی را ارائه می‌کند.

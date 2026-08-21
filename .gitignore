@@ -44,3 +44,6 @@ correctness_check/**
 /thesis/**/*.tdo
 /thesis/**/*.toc
 /thesis/**/*.xdy
+
+# Claude Code scratch: registered git worktrees, never commit these.
+.claude/worktrees/

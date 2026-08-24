@@ -179,6 +179,12 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 
 % بسته زیر باگ ناشی از فراخوانی بسته‌های زیاد را برطرف می‌کند.
 \usepackage{morewrites}
+
+%%% سازگاری با نسخه‌های جدید array/LaTeX:
+%%% وصلهٔ \@tabular در بستهٔ bidi هنوز \UseMathForPositioningText را صدا می‌زند،
+%%% ولی array.sty در توزیع‌های جدید آن را حذف کرده است. تعریف تهی زیر همان چیزی
+%%% است که array نسخهٔ ۲۰۲۴ ارائه می‌کرد؛ در توزیع‌های قدیمی‌تر بی‌اثر است.
+\providecommand\UseMathForPositioningText{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %khodam
 \RequirePackage{zref-perpage}

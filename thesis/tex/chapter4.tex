@@ -131,26 +131,26 @@
 نسبت به تغییر شرایط تصویربرداری را فراهم می‌کنند.
 
 \begin{itemize}
-    \item \textbf{VKITTI:}
+    \item \textbf{VKITTI}~\cite{Gaidon2016VKITTI}\textbf{:}
     دیتاستی مصنوعی\enfootnote{Synthetic Dataset}
-    شامل صحنه‌های بیرونی، تولیدشده بر پایهٔ دیتاست KITTI،
+    شامل صحنه‌های بیرونی، تولیدشده بر پایهٔ دیتاست \lr{KITTI}~\cite{Geiger2012KITTI}،
     با عمق مرجع دقیق و چگال.
-    
-    \item \textbf{\lr{NYUv2:}}
-    دیتاستی واقعی از محیط‌های داخلی\enfootnote{Indoor},
+
+    \item \textbf{\lr{NYUv2}}~\cite{Silberman2012NYUv2}\textbf{:}
+    دیتاستی واقعی از محیط‌های داخلی\enfootnote{Indoor}،
     ثبت‌شده با دوربین RGB،
     که عمق مرجع آن با استفاده از حسگرهای فعال به‌دست آمده است.
-    
-    \item \textbf{DIODE:}
+
+    \item \textbf{DIODE}~\cite{Vasiljevic2019DIODE}\textbf{:}
     دیتاستی ترکیبی شامل صحنه‌های داخلی و خارجی،
-    با تنوع بالا در نوع دوربین و شرایط تصویربرداری.
-    
-    \item \textbf{DrivingStereo:}
+    با تنوع بالا در نوع صحنه و شرایط تصویربرداری.
+
+    \item \textbf{DrivingStereo}~\cite{Yang2019DrivingStereo}\textbf{:}
     دیتاستی واقعی از محیط‌های بیرونی\enfootnote{Outdoor}
     با عمق مرجع متراکم،
     استخراج‌شده از داده‌های استریو با کالیبراسیون دقیق دوربین.
-    
-    \item \textbf{CityScapes:}
+
+    \item \textbf{CityScapes}~\cite{Cordts2016Cityscapes}\textbf{:}
     دیتاستی شهری و واقعی،
     که عمق مرجع آن از طریق تطبیق استریو
     و الگوریتم‌های بازسازی سه‌بعدی به‌دست آمده
@@ -189,14 +189,16 @@
 برای ارزیابی صحت نسبی عمق و ترتیب اجسام در صحنه به‌کار می‌روند
 و نسبت به مقیاس فیزیکی مطلق حساس نیستند.
 در این پژوهش، معیار AbsRel
-به‌عنوان نمایندهٔ این دسته استفاده شده است.
+به‌عنوان نمایندهٔ این دسته استفاده شده است؛
+تعریف این معیار و معیارهای آستانه‌ای $\delta_i$
+به کار \lr{Eigen} و همکاران بازمی‌گردد~\cite{Eigen2014Depth}.
 
 \subsubsection{معیارهای متریک}
 معیارهای متریک\enfootnote{Metric Metrics}
 برای سنجش دقت عمق بر حسب واحدهای فیزیکی واقعی
 (مانند متر) به‌کار می‌روند
 و نسبت به خطاهای مقیاس حساس هستند.
-در این پژوهش، معیار SiLog
+در این پژوهش، معیار SiLog~\cite{Eigen2014Depth}
 به‌عنوان معیار اصلی ارزیابی عمق متریک استفاده شده
 و در برخی تحلیل‌ها، معیار RMSE نیز گزارش می‌شود.
 
@@ -215,14 +217,14 @@
 و معناداری تفاوت میانگین‌ها با آزمون t زوجی\enfootnote{Paired t-test}
 سنجیده می‌شود.
 از آنجا که توزیع خطاهای تک‌تصویری لزوماً نرمال نیست،
-آزمون ناپارامتری علامت‌دار ویلکاکسون\enfootnote{Wilcoxon Signed-rank Test}
+آزمون ناپارامتری علامت‌دار ویلکاکسون\enfootnote{Wilcoxon Signed-rank Test}~\cite{Wilcoxon1945}
 نیز به‌عنوان سنجهٔ استحکام در کنار آن گزارش می‌شود.
 طرح زوجی، واریانس ناشی از دشواری متفاوت تصاویر را حذف کرده
 و توان آماری آزمون را به‌طور قابل توجهی افزایش می‌دهد.
 
 علاوه بر این، به‌منظور برآورد پایداری نتایج
 و کاهش وابستگی به فرضیات توزیعی،
-از بازنمونه‌گیری بوت‌استرپ\enfootnote{Bootstrap Resampling}
+از بازنمونه‌گیری بوت‌استرپ\enfootnote{Bootstrap Resampling}~\cite{Efron1993Bootstrap}
 (با ده هزار بازنمونه بر روی تفاضل‌های زوجی خطا)
 برای محاسبهٔ بازه‌های اطمینان $95\%$ استفاده شده است.
 ترکیب این رویکردهای آماری
@@ -331,17 +333,18 @@ DrivingStereo & $1.399$ & $\mathbf{0.414}$ & $70.42$ & $\ll 0.05$ \\ \hline
         ymin=0, ymax=2.15,
         symbolic x coords={NYUv2, DIODE, CityScapes, DrivingStereo},
         xtick=data,
+        xticklabels={{\lr{NYUv2}},{\lr{DIODE}},{\lr{CityScapes}},{\lr{DrivingStereo}}},
         x tick label style={font=\scriptsize},
         nodes near coords,
         nodes near coords style={font=\scriptsize},
-        ylabel={خطای \lr{SiLog} (کمتر بهتر است)},
+        ylabel={\rl{خطای \lr{SiLog} (کمتر بهتر است)}},
         legend style={at={(0.5,-0.20)}, anchor=north, legend columns=-1},
     ]
     \addplot[draw=thBase, fill=thBase!45]
         coordinates {(NYUv2,1.284) (DIODE,0.833) (CityScapes,1.835) (DrivingStereo,1.399)};
     \addplot[draw=thProposed, fill=thProposed!50]
         coordinates {(NYUv2,0.329) (DIODE,0.377) (CityScapes,0.662) (DrivingStereo,0.414)};
-    \legend{\publishedbasemodel{}, \proposedmodel{}}
+    \legend{\rl{\publishedbasemodel{}}, \rl{\proposedmodel{}}}
     \end{axis}
     \end{tikzpicture}
     \caption[مقایسهٔ بین‌دیتاستی معیار \lr{SiLog}]{مقایسهٔ عملکرد متریک
@@ -536,21 +539,21 @@ AbsRel روی دادهٔ اعتبارسنجی درون‌دامنه‌ای بی�
     }
     %%% فازها (راست به چپ)
     \node[phase, fill=thPanelRed, draw=thControl] (p1) at (10.2,1.6)
-        {\textbf{فاز ۱ --- پاک‌سازی شواهد}\\[2pt] ردیف‌های ۱ تا ۳:
-         نقاط وارسی ناسالم، تخریب تعمیم صفرنمونه، نشت داده};
+        {\rl{\textbf{فاز ۱ --- پاک‌سازی شواهد}}\\[2pt] \rl{ردیف‌های ۱ تا ۳:
+         نقاط وارسی ناسالم، تخریب تعمیم صفرنمونه، نشت داده}};
     \node[phase, fill=thPanelAlt, draw=thAccent] (p2) at (5.1,1.6)
-        {\textbf{فاز ۲ --- اصلاح آموزش و ارزیابی}\\[2pt] ردیف‌های ۴ تا ۷:
-         فضای هدف عمق معکوس، افزونه‌سازی هندسی، گذار به ارزیابی متریک};
+        {\rl{\textbf{فاز ۲ --- اصلاح آموزش و ارزیابی}}\\[2pt] \rl{ردیف‌های ۴ تا ۷:
+         فضای هدف عمق معکوس، افزونه‌سازی هندسی، گذار به ارزیابی متریک}};
     \node[phase, fill=thPanelGreen, draw=thIdeal] (p3) at (0.0,1.6)
-        {\textbf{فاز ۳ --- آزمون مصرف واقعی $K$}\\[2pt] ردیف‌های ۸ و ۹:
-         لرزش کانونی، جاروی $K$، حذف و تحریف $K$};
+        {\rl{\textbf{فاز ۳ --- آزمون مصرف واقعی $K$}}\\[2pt] \rl{ردیف‌های ۸ و ۹:
+         لرزش کانونی، جاروی $K$، حذف و تحریف $K$}};
 
     \node[outc, fill=white] (o1) at (10.2,-0.75)
-        {\textbf{خروجی:} پروتکل درون‌دامنه‌ای بدون نشت و نقاط وارسی سالم};
+        {\rl{\textbf{خروجی:} پروتکل درون‌دامنه‌ای بدون نشت و نقاط وارسی سالم}};
     \node[outc, fill=white] (o2) at (5.1,-0.75)
-        {\textbf{خروجی:} پروتکلی که اطلاعات مقیاس را حذف نمی‌کند};
+        {\rl{\textbf{خروجی:} پروتکلی که اطلاعات مقیاس را حذف نمی‌کند}};
     \node[outc, fill=white] (o3) at (0.0,-0.75)
-        {\textbf{خروجی:} شاهد علّی مصرف $K$، نه صرفاً هم‌بستگی};
+        {\rl{\textbf{خروجی:} شاهد علّی مصرف $K$، نه صرفاً هم‌بستگی}};
 
     \draw[tharrow] (p1) -- (p2);
     \draw[tharrow] (p2) -- (p3);
@@ -748,39 +751,39 @@ $+0.0205$ و $[+0.0133,+0.0282]$ هستند. در مقابل، آزمون‌ها
                  inner sep=3pt, font=\scriptsize},
     }
     \node[thdata, text width=3.6cm, minimum height=0.8cm, font=\scriptsize]
-        (src) at (6.9,1.75) {پیش‌بینی مدل $D^{\mathrm{pred}}$};
+        (src) at (6.9,1.75) {\rl{پیش‌بینی مدل $D^{\mathrm{pred}}$}};
 
     %%% ---------- شاخهٔ راست: پروتکل نسبی ----------
-    \node[st, fill=thPanelAlt] (r1) at (10.6,0.30) {تبدیل به فضای عمق معکوس};
+    \node[st, fill=thPanelAlt] (r1) at (10.6,0.30) {\rl{تبدیل به فضای عمق معکوس}};
     \node[st, fill=thPanelRed, draw=thControl, line width=1.1pt] (r2) at (10.6,-1.15)
-        {برآورد $s$ و $t$ با کمترین مربعات، \emph{به‌ازای هر تصویر}};
-    \node[st, fill=thPanelAlt] (r3) at (10.6,-2.60) {محدودسازی به بازهٔ معتبر ارزیابی};
-    \node[st, fill=thPanelGray] (r4) at (10.6,-4.05) {محاسبهٔ معیارها};
+        {\rl{برآورد $s$ و $t$ با کمترین مربعات، \emph{به‌ازای هر تصویر}}};
+    \node[st, fill=thPanelAlt] (r3) at (10.6,-2.60) {\rl{محدودسازی به بازهٔ معتبر ارزیابی}};
+    \node[st, fill=thPanelGray] (r4) at (10.6,-4.05) {\rl{محاسبهٔ معیارها}};
 
     \draw[tharrow] (src) -| (r1);
     \draw[tharrow] (r1) -- (r2);
     \draw[tharrow] (r2) -- (r3);
     \draw[tharrow] (r3) -- (r4);
-    \node[thnote, anchor=south] at (10.6,0.95) {\textbf{پروتکل نسبی}};
+    \node[thnote, anchor=south] at (10.6,0.95) {\rl{\textbf{پروتکل نسبی}}};
 
     %%% ---------- شاخهٔ چپ: پروتکل متریک ----------
-    \node[st, fill=thPanelGray] (m1) at (3.2,-4.05) {محاسبهٔ معیارها};
+    \node[st, fill=thPanelGray] (m1) at (3.2,-4.05) {\rl{محاسبهٔ معیارها}};
     \node[st, fill=thPanelGreen, draw=thIdeal, line width=1.1pt] (m0) at (3.2,-1.15)
-        {هیچ ترازی اعمال نمی‌شود؛\\ عمق مطلق مستقیماً با مرجع مقایسه می‌شود};
+        {\rl{هیچ ترازی اعمال نمی‌شود؛}\\ \rl{عمق مطلق مستقیماً با مرجع مقایسه می‌شود}};
     \draw[tharrow] (src) -| (m0);
     \draw[tharrow] (m0) -- (m1);
-    \node[thnote, anchor=south] at (3.2,0.95) {\textbf{پروتکل متریک}};
+    \node[thnote, anchor=south] at (3.2,0.95) {\rl{\textbf{پروتکل متریک}}};
 
     %%% ---------- حاشیه‌نویسی‌ها ----------
     \node[thblock, fill=thPanelRed, draw=thControl, text width=3.9cm,
           font=\scriptsize] (note1) at (6.9,-1.15)
-        {در این مرحله، مقیاس مطلق صحنه از ارزیابی حذف می‌شود --- یعنی
-         \emph{دقیقاً} همان کمیتی که $K$ در اختیار مدل می‌گذارد};
+        {\rl{در این مرحله، مقیاس مطلق صحنه از ارزیابی حذف می‌شود --- یعنی
+         \emph{دقیقاً} همان کمیتی که $K$ در اختیار مدل می‌گذارد}};
     \draw[thdashed, draw=thControl] (note1) -- (r2);
 
     \node[thblock, fill=thPanelGreen, draw=thIdeal, text width=3.9cm,
           font=\scriptsize] (note2) at (6.9,-3.40)
-        {تنها مسیری که سهم پارامترهای درونی دوربین در آن قابل مشاهده است};
+        {\rl{تنها مسیری که سهم پارامترهای درونی دوربین در آن قابل مشاهده است}};
     \draw[thdashed, draw=thIdeal] (note2) -- (m0);
     \end{tikzpicture}
     \caption[دو پروتکل ارزیابی و آنچه تراز مقیاس از ارزیابی حذف می‌کند]{دو
@@ -879,16 +882,16 @@ $\log_{10}\downarrow$ & $\mathbf{0.0363}$ & $0.0427$ & $-0.0065\ [-0.0076, -0.00
         ymin=0.085, ymax=0.122,
         xtick={1.0,1.4,1.8},
         xticklabels={{$1.0$},{$1.4$},{$1.8$}},
-        xlabel={ضریب زوم برش مرکزی قطعی (با به‌روزرسانی دقیق $K$)},
+        xlabel={\rl{ضریب زوم برش مرکزی قطعی (با به‌روزرسانی دقیق $K$)}},
         ylabel={\lr{AbsRel}$\downarrow$},
         legend style={at={(0.03,0.97)}, anchor=north west},
     ]
     \addplot[draw=thControl, mark=square*, mark size=2.6pt]
         coordinates {(1.0,0.110) (1.4,0.110) (1.8,0.115)};
-    \addlegendentry{\controlmodel{}}
+    \addlegendentry{\rl{\controlmodel{}}}
     \addplot[draw=thProposed, mark=*, mark size=2.6pt]
         coordinates {(1.0,0.092) (1.4,0.097) (1.8,0.107)};
-    \addlegendentry{\proposedmodel{}}
+    \addlegendentry{\rl{\proposedmodel{}}}
     \end{axis}
     \end{tikzpicture}
     \caption[تعمیم به میدان دیدهای متفاوت]{تعمیم به میدان دیدهای متفاوت:
@@ -971,21 +974,21 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
         width=0.84\textwidth, height=5.0cm,
         xmin=0.55, xmax=4.45,
         xtick={1,2,3,4},
-        xticklabels={{دور ۱},{دور ۲},{دور ۳},{فروکاست}},
+        xticklabels={{\rl{دور ۱}},{\rl{دور ۲}},{\rl{دور ۳}},{\rl{فروکاست}}},
         x tick label style={font=\scriptsize},
     ]
 
     \nextgroupplot[
-        ylabel={\lr{AbsRel} (کمتر بهتر است)},
+        ylabel={\rl{\lr{AbsRel} (کمتر بهتر است)}},
         ymin=0.070, ymax=0.118,
         legend style={at={(0.02,0.98)}, anchor=north west},
     ]
     \addplot[thControl, mark=square*, mark size=2.4pt]
         coordinates {(1,0.0796) (2,0.0826) (3,0.1030) (4,0.1065)};
-    \addlegendentry{\controlmodel{}}
+    \addlegendentry{\rl{\controlmodel{}}}
     \addplot[thProposed, mark=*, mark size=2.4pt]
         coordinates {(1,0.0791) (2,0.0817) (3,0.0849) (4,0.0834)};
-    \addlegendentry{\proposedmodel{}}
+    \addlegendentry{\rl{\proposedmodel{}}}
 
     \nextgroupplot[
         ylabel={$-\log_{10} p$},
@@ -1002,7 +1005,7 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
     \draw[dashed, thick, draw=thControl]
         (axis cs:0.55,1.301) -- (axis cs:4.45,1.301);
     \node[thnote, text=thControl, anchor=south east]
-        at (axis cs:4.40,1.55) {آستانهٔ $p=0.05$};
+        at (axis cs:4.40,1.55) {\rl{آستانهٔ $p=0.05$}};
 
     \end{groupplot}
     \end{tikzpicture}
@@ -1054,7 +1057,7 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
         ytick={0,1,2,3,5,6,7,8,9},
         yticklabels={{\lr{SILog}$\downarrow$},{$\delta_1\uparrow$},{\lr{RMSE}$\downarrow$},{\lr{AbsRel}$\downarrow$},{$\log_{10}\downarrow$},{\lr{SILog}$\downarrow$},{$\delta_1\uparrow$},{\lr{RMSE}$\downarrow$},{\lr{AbsRel}$\downarrow$}},
         y tick label style={font=\scriptsize},
-        xlabel={تفاضل زوجی: \proposedmodel{} منهای \controlmodel{}},
+        xlabel={\rl{تفاضل زوجی: \proposedmodel{} منهای \controlmodel{}}},
         ymajorgrids=false,
         legend style={at={(0.03,0.97)}, anchor=north west},
     ]
@@ -1088,15 +1091,15 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
     \draw[line width=1.1pt, draw=thAccent] (axis cs:-0.0123,-0.16) -- (axis cs:-0.0123,0.16);
     \addplot[only marks, mark=*, mark size=2.6pt, draw=thProposed, fill=thProposed]
         coordinates {(-0.0182,9) (-0.0361,8) (0.0294,7) (-0.0102,6) (-0.0065,5)};
-    \addlegendentry{دور ۳ (لرزش کانونی، $\lambda=0.3$)}
+    \addlegendentry{\rl{دور ۳ (لرزش کانونی، $\lambda=0.3$)}}
     \addplot[only marks, mark=diamond*, mark size=3.0pt, draw=thAccent, fill=thAccent]
         coordinates {(-0.0231,3) (-0.0510,2) (0.0381,1) (-0.0139,0)};
-    \addlegendentry{مطالعهٔ فروکاست (لرزش کانونی، $\lambda=0.5$)}
+    \addlegendentry{\rl{مطالعهٔ فروکاست (لرزش کانونی، $\lambda=0.5$)}}
 
     \node[thnote, anchor=north east] at (axis cs:0.056,4.55)
-        {مطالعهٔ فروکاست};
+        {\rl{مطالعهٔ فروکاست}};
     \node[thnote, anchor=north east] at (axis cs:0.056,10.3)
-        {دور ۳};
+        {\rl{دور ۳}};
     \draw[dotted, draw=thInk!45] (axis cs:-0.070,4.0) -- (axis cs:0.058,4.0);
     \end{axis}
     \end{tikzpicture}
@@ -1159,29 +1162,29 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
         xticklabels={{$0.6$},{$0.8$},{$1.0$},{$1.25$},{$1.6$}},
         ytick={0.6,0.8,1.0,1.25,1.6},
         yticklabels={{$0.6$},{$0.8$},{$1.0$},{$1.25$},{$1.6$}},
-        xlabel={ضریب مقیاس مصنوعی فاصلهٔ کانونی},
-        ylabel={نسبت عمق پیش‌بینی‌شده},
+        xlabel={\rl{ضریب مقیاس مصنوعی فاصلهٔ کانونی}},
+        ylabel={\rl{نسبت عمق پیش‌بینی‌شده}},
         legend style={at={(0.03,0.97)}, anchor=north west},
     ]
     \addplot[draw=thIdeal, dashed, line width=1.1pt, mark=none]
         coordinates {(0.6,0.6) (1.6,1.6)};
-    \addlegendentry{ایده‌آل هندسی، شیب $1$}
+    \addlegendentry{\rl{ایده‌آل هندسی، شیب $1$}}
 
     \addplot[draw=thAccent, mark=diamond*, mark size=2.8pt]
         coordinates {(0.6,0.6092) (0.8,0.8054) (1.0,1.0) (1.25,1.2416) (1.6,1.5776)};
-    \addlegendentry{پیشنهادی --- فروکاست، شیب $0.97$}
+    \addlegendentry{\rl{پیشنهادی --- فروکاست، شیب $0.97$}}
 
     \addplot[draw=thProposed, mark=*, mark size=2.4pt]
         coordinates {(0.6,0.6219) (0.8,0.8126) (1.0,1.0) (1.25,1.2306) (1.6,1.5482)};
-    \addlegendentry{پیشنهادی --- دور ۳، شیب $0.93$}
+    \addlegendentry{\rl{پیشنهادی --- دور ۳، شیب $0.93$}}
 
     \addplot[draw=thBase, mark=triangle*, mark size=2.8pt]
         coordinates {(0.6,0.9698) (0.8,0.9867) (1.0,1.0) (1.25,1.0135) (1.6,1.0286)};
-    \addlegendentry{پیشنهادی --- دور ۲، شیب $0.06$}
+    \addlegendentry{\rl{پیشنهادی --- دور ۲، شیب $0.06$}}
 
     \addplot[draw=thControl, mark=square*, mark size=2.2pt]
         coordinates {(0.6,1.0) (0.8,1.0) (1.0,1.0) (1.25,1.0) (1.6,1.0)};
-    \addlegendentry{کنترل، شیب $0$}
+    \addlegendentry{\rl{کنترل، شیب $0$}}
     \end{axis}
     \end{tikzpicture}
     \caption[آزمون جاروی $K$: پاسخ مقیاس خروجی به فاصلهٔ کانونی ورودی]{آزمون
@@ -1231,23 +1234,23 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
         xmin=0.45, xmax=4.55,
         ymin=0, ymax=0.47,
         xtick={1,2,3,4},
-        xticklabels={{$K$ صحیح},{$K$ حذف‌شده},{$f\times 0.7$},{$f\times 1.4$}},
+        xticklabels={{\rl{$K$ صحیح}},{\rl{$K$ حذف‌شده}},{$f\times 0.7$},{$f\times 1.4$}},
         x tick label style={font=\scriptsize},
         ylabel={\lr{AbsRel}$\downarrow$},
         legend style={at={(0.03,0.97)}, anchor=north west},
     ]
     \addplot[ybar, bar width=20pt, draw=thProposed, fill=thProposed!45]
         coordinates {(1,0.0924) (2,0.1467) (3,0.2887) (4,0.4274)};
-    \addlegendentry{خطای مشاهده‌شده}
+    \addlegendentry{\rl{خطای مشاهده‌شده}}
 
     \addplot[only marks, mark=star, mark size=4.5pt, draw=thControl, line width=1pt]
         coordinates {(3,0.2777) (4,0.3675)};
-    \addlegendentry{پیش‌بینی هندسی $|X^{s}-1|$ با $s=0.93$}
+    \addlegendentry{\rl{پیش‌بینی هندسی $|X^{s}-1|$ با $s=0.93$}}
 
     \draw[dashed, thick, draw=thIdeal]
         (axis cs:0.45,0.0924) -- (axis cs:4.55,0.0924);
     \node[thnote, text=thIdeal, anchor=south west]
-        at (axis cs:0.55,0.098) {خطای پایهٔ مدل با $K$ صحیح};
+        at (axis cs:0.55,0.098) {\rl{خطای پایهٔ مدل با $K$ صحیح}};
     \end{axis}
     \end{tikzpicture}
     \caption[آزمون حذف و تحریف $K$ در برابر پیش‌بینی هندسی]{آزمون حذف و
@@ -1599,10 +1602,11 @@ CityScapes
 را با دقتی استخراج می‌کند که برای بازسازی ساختار نسبی،
 اطلاعات مکمل چندانی از $K$ باقی نمی‌ماند؛
 حال آنکه انکودر کوچک‌تر از هر سیگنال کمکی بهره می‌برد.
-این مشاهده با یافته‌های مربوط به جبران میدان دید در ادبیات
-\cite{Saxena2023FOV}
-هم‌راستا است و مرزهای سودمندی رویکرد پیشنهادی را
-به‌صورت تجربی مشخص می‌کند.
+این تبیین، فرضیه‌ای برخاسته از داده‌های همین پژوهش است و نه یافته‌ای
+نقل‌شده از ادبیات؛ کارهایی که $K$ یا میدان دید را به مدل می‌دهند،
+اثر ظرفیت انکودر را به‌صورت جداگانه گزارش نکرده‌اند~\cite{Facil2019CAMConvs,Saxena2023FOV,Piccinelli2024UniDepth}.
+آزمون این فرضیه در چند اندازهٔ انکودر، در بخش پیشنهادهای پژوهش آتی
+(بخش~\ref{sec:chapter5_future_work}) مطرح شده است.
 
 سوم، نتایج نشان دادند که بخش قابل توجهی از بهبود مطلق
 نسبت به \publishedbasemodel{}،
@@ -1616,27 +1620,33 @@ CityScapes
 \subsection{مقایسهٔ غیرمستقیم با ادبیات موضوع}
 \label{subsec:literature_comparison}
 
-در بسیاری از مطالعات پیشین
-در حوزهٔ تخمین عمق تک‌دوربینه،
-تمرکز اصلی بر بهبود معیارهای غیرمتریک
-یا استفاده از نرمال‌سازی‌های ضمنی
-برای کاهش اثر مقیاس بوده است.
-در این رویکردها،
-اطلاعات دوربین یا نادیده گرفته شده
-یا به‌صورت ضمنی در داده‌ها نهفته فرض شده است.
+مقایسهٔ مستقیم اعداد این فصل با اعداد منتشرشده در ادبیات ممکن نیست، زیرا
+مدل‌های مرجع بر داده و برنامهٔ آموزشی متفاوتی آموزش دیده‌اند. آنچه در ادامه
+می‌آید، مقایسهٔ \emph{جهت‌گیری یافته‌ها} است، نه مقایسهٔ کمی.
 
-در مقابل،
-یافته‌های این پژوهش نشان می‌دهد که
-نادیده گرفتن صریح هندسهٔ دوربین
-می‌تواند منجر به ارزیابی‌های گمراه‌کننده
-در معیارهای نرمال‌شده شود،
-در حالی که خطاهای متریک واقعی پنهان باقی می‌مانند.
-از این منظر،
-نتایج حاضر هم‌راستا با دیدگاه‌هایی است
-که بر لزوم بازگشت به مدل‌های فیزیکی تصویربرداری
-در طراحی شبکه‌های یادگیری عمیق تأکید دارند،
-هرچند مسیر پیاده‌سازی آن‌ها
-در این پژوهش متفاوت و ساده‌تر دنبال شده است.
+در جریان غالب مطالعات پیشین، تمرکز اصلی بر بهبود معیارهای غیرمتریک یا استفاده
+از نرمال‌سازی‌های ضمنی برای کاهش اثر مقیاس بوده و اطلاعات دوربین یا نادیده گرفته
+شده یا به‌صورت ضمنی در داده‌ها نهفته فرض شده است~\cite{Eigen2014Depth,Godard2019Digging,Ranftl2019Robust,DepthAnythingV2}.
+یافتهٔ این فصل مبنی بر اینکه پروتکل نسبیِ دارای تراز مقیاس، نسبت به سهم اصلی
+$K$ نابیناست، همین نکته را از منظر ارزیابی تأیید می‌کند.
+
+در سوی دیگر، سه یافتهٔ اصلی این پژوهش با گزارش‌های موجود در خط پژوهشی
+شرطی‌سازی صریح بر هندسهٔ دوربین هم‌جهت‌اند. نخست، افت عملکرد هنگام تغییر
+فاصلهٔ کانونی، همان پدیده‌ای است که \lr{CAM-Convs} به‌صورت تجربی نشان
+داد~\cite{Facil2019CAMConvs}. دوم، این تحلیل که ابهام مقیاس در آموزش
+چنددوربینه ریشهٔ هندسی دارد و نه ریشهٔ معماری، همان صورت‌بندی است که
+\lr{Metric3D} برای انگیزه‌بخشی به فضای دوربین متعارف ارائه می‌کند~\cite{Yin2023Metric3D}.
+سوم، سودمندی شرطی‌سازی بر میدان دید در بازیابی مقیاس متریک، پیش‌تر در چارچوب
+مدل‌های انتشاری~\cite{Saxena2023FOV} و در \lr{UniDepth} با یک شاخهٔ دوربین
+درون‌مدلی~\cite{Piccinelli2024UniDepth} گزارش شده است.
+
+در عین حال، باید توجه داشت که این هم‌جهتی، ادعای «لزوم» $K$ را اثبات نمی‌کند.
+\lr{Depth Pro} نشان می‌دهد که با مقیاس داده و محاسبهٔ به‌مراتب بزرگ‌تر، می‌توان
+بدون دریافت فراداده‌های دوربین نیز به عمق متریک صفرنمونه رسید و فاصلهٔ کانونی
+را از خود تصویر تخمین زد~\cite{Bochkovskii2025DepthPro}. بنابراین برداشت
+قابل دفاع از نتایج این فصل چنین است: در رژیم دادهٔ محدود و ستون فقرات فریزشده ---
+یعنی رژیمی که این پژوهش در آن کار می‌کند --- ورودی صریح $K$ سیگنالی است که
+مدل در غیاب آن باید با هزینهٔ داده و ظرفیت بسیار بیشتری بازسازی کند.
 
 \subsection{تفسیر نتایج در چارچوب هندسهٔ تصویربرداری}
 \label{subsec:geometric_interpretation}

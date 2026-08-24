@@ -73,8 +73,9 @@ def thesis_rows(chapter: Path) -> dict[str, tuple[float, float, float, str]]:
         raise RuntimeError("section 4.4.2 table was not found")
     pattern = re.compile(
         r"(\\lr\{[^}]+\}|[A-Za-z][A-Za-z0-9]*)\s*&\s*"
-        r"(\d+(?:\.\d+)?)\s*&\s*(\d+(?:\.\d+)?)\s*&\s*"
-        r"(\d+(?:\.\d+)?)\s*&\s*\$([^$]+)\$\s*\\\\"
+        r"\$?(\d+(?:\.\d+)?)\$?\s*&\s*"
+        r"\$?(?:\\mathbf\{)?(\d+(?:\.\d+)?)\}?\$?\s*&\s*"
+        r"\$?(\d+(?:\.\d+)?)\$?\s*&\s*\$([^$]+)\$\s*\\\\"
     )
     rows = {}
     for match in pattern.finditer(table.group(0)):

@@ -1053,10 +1053,14 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
         thesisplot,
         width=0.80\textwidth, height=8.6cm,
         xmin=-0.070, xmax=0.058,
-        ymin=-0.9, ymax=10.4,
+        ymin=-0.9, ymax=11.9,
         ytick={0,1,2,3,5,6,7,8,9},
         yticklabels={{\lr{SILog}$\downarrow$},{$\delta_1\uparrow$},{\lr{RMSE}$\downarrow$},{\lr{AbsRel}$\downarrow$},{$\log_{10}\downarrow$},{\lr{SILog}$\downarrow$},{$\delta_1\uparrow$},{\lr{RMSE}$\downarrow$},{\lr{AbsRel}$\downarrow$}},
         y tick label style={font=\scriptsize},
+        scaled x ticks=false,
+        xtick={-0.06,-0.04,-0.02,0,0.02,0.04},
+        x tick label style={font=\scriptsize, /pgf/number format/fixed,
+                            /pgf/number format/precision=2},
         xlabel={\rl{تفاضل زوجی: \proposedmodel{} منهای \controlmodel{}}},
         ymajorgrids=false,
         legend style={at={(0.03,0.97)}, anchor=north west},
@@ -1098,7 +1102,7 @@ SILog$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$
 
     \node[thnote, anchor=north east] at (axis cs:0.056,4.55)
         {\rl{مطالعهٔ فروکاست}};
-    \node[thnote, anchor=north east] at (axis cs:0.056,10.3)
+    \node[thnote, anchor=north east] at (axis cs:0.056,11.8)
         {\rl{دور ۳}};
     \draw[dotted, draw=thInk!45] (axis cs:-0.070,4.0) -- (axis cs:0.058,4.0);
     \end{axis}

@@ -81,6 +81,7 @@ def main():
         checkpoints[label] = path
 
     dataset = NYUDataset(DatasetConfig(split='test', max_items=args.max_items))
+    dataset.depth_field = 'rawDepths'
     items = dataset.find_items()
     if args.max_items:
         items = items[:args.max_items]

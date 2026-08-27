@@ -43,6 +43,7 @@ correctness_check/**
 /thesis/**/*.synctex.gz
 /thesis/**/*.tdo
 /thesis/**/*.toc
+/thesis/**/*.xdv
 /thesis/**/*.xdy
 
 # Claude Code scratch: registered git worktrees, never commit these.

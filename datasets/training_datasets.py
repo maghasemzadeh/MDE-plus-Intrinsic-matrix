@@ -895,7 +895,7 @@ class NYUTrainingDataset(Dataset):
         """
         Zoom-crop augmentation with exact intrinsics bookkeeping.
 
-        Samples a random 4:3 window (zoom factor 1.0-1.7; 20% of samples are
+        Samples a random 4:3 window (zoom factor 1.0-2.2; 20% of samples are
         the exact full frame = evaluation geometry), crops image+depth, and
         resizes to the fixed (NET_H, NET_W) network frame. The returned K is
         expressed in that frame, so intrinsics_to_encoding(K, (NET_H, NET_W))

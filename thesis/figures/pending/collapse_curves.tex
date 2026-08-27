@@ -30,30 +30,30 @@
     \nextgroupplot[
         ymode=log,
         ymin=0.005, ymax=1.0,
-        ylabel={هزینهٔ آموزش هر دوره},
+        ylabel={\rl{هزینهٔ آموزش هر دوره}},
     ]
     \addplot[draw=thControl, mark=none] table[x=step, y=collapsed, col sep=space]
         {figures/curves/train_avg_loss_per_epoch.csv};
     \addplot[draw=thIdeal, mark=none] table[x=step, y=fixed, col sep=space]
         {figures/curves/train_avg_loss_per_epoch.csv};
     \node[thnote, anchor=west, text=thControl] at (axis cs:1.5,0.155)
-        {اجرای فروریخته --- هدف: عمق مستقیم};
+        {\rl{اجرای فروریخته --- هدف: عمق مستقیم}};
     \node[thnote, anchor=west, text=thIdeal] at (axis cs:1.5,0.031)
-        {اجرای اصلاح‌شده --- هدف: عمق معکوس};
+        {\rl{اجرای اصلاح‌شده --- هدف: عمق معکوس}};
 
     \nextgroupplot[
         ymin=0, ymax=0.46,
-        ylabel={\lr{AbsRel} اعتبارسنجی},
-        xlabel={دورهٔ آموزش},
+        ylabel={\rl{\lr{AbsRel} اعتبارسنجی}},
+        xlabel={\rl{دورهٔ آموزش}},
     ]
     \addplot[draw=thControl, mark=none] table[x=step, y=collapsed, col sep=space]
         {figures/curves/eval_abs_rel.csv};
     \addplot[draw=thIdeal, mark=none] table[x=step, y=fixed, col sep=space]
         {figures/curves/eval_abs_rel.csv};
     \node[thnote, anchor=west, text=thControl] at (axis cs:1.5,0.415)
-        {اجرای فروریخته --- منجمد روی $0.3465$ از دورهٔ نخست};
+        {\rl{اجرای فروریخته --- منجمد روی $0.3465$ از دورهٔ نخست}};
     \node[thnote, anchor=west, text=thIdeal] at (axis cs:1.5,0.135)
-        {اجرای اصلاح‌شده --- نزول عادی تا $0.055$};
+        {\rl{اجرای اصلاح‌شده --- نزول عادی تا $0.055$}};
 
     \end{groupplot}
     \end{tikzpicture}

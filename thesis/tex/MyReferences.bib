@@ -1,201 +1,375 @@
-@article{Saxena2009Make3D,
-  author = {Saxena, Ashutosh and Sun, Min and Ng, Andrew Y.},
-  title = {Make3D: Learning 3D Scene Structure from a Single Still Image},
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  volume = {31},
-  number = {5},
-  pages = {824--840},
-  year = {2009}
-}
+% =====================================================================
+%  کتاب‌نامهٔ پایان‌نامه
+%  همهٔ مدخل‌ها در برابر منبع اصلی (arXiv / صفحهٔ رسمی ناشر) راستی‌آزمایی
+%  شده‌اند: عنوان، فهرست کامل نویسندگان، محل انتشار و سال.
+% =====================================================================
 
-@article{Koch1998IllPosed,
-  author = {Koch, Reinhard},
-  title = {Dynamic 3-D Scene Analysis through Synthesis Feedback Control},
-  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
-  year = {1998}
-}
-
-@article{Hoiem2005GeometricContext,
-  author = {Hoiem, Derek and Efros, Alexei and Hebert, Martial},
-  title = {Geometric Context from a Single Image},
-  journal = {IEEE International Conference on Computer Vision},
-  year = {2005}
-}
-@article{Eigen2014Depth,
-  author = {Eigen, David and Puhrsch, Christian and Fergus, Rob},
-  title = {Depth Map Prediction from a Single Image using a Multi-Scale Deep Network},
-  journal = {Advances in Neural Information Processing Systems},
-  year = {2014}
-}
-
-@article{Eigen2015Predicting,
-  author = {Eigen, David and Fergus, Rob},
-  title = {Predicting Depth, Surface Normals and Semantic Labels with a Common Multi-Scale Convolutional Architecture},
-  journal = {IEEE International Conference on Computer Vision},
-  year = {2015}
-}
-
-@article{Godard2017Unsupervised,
-  author = {Godard, Cl{\'e}ment and Mac Aodha, Oisin and Brostow, Gabriel},
-  title = {Unsupervised Monocular Depth Estimation with Left-Right Consistency},
-  journal = {IEEE Conference on Computer Vision and Pattern Recognition},
-  year = {2017}
-}
-
-@article{Ranftl2021DPT,
-  author = {Ranftl, Ren{\'e} and Bochkovskiy, Alexey and Koltun, Vladlen},
-  title = {Vision Transformers for Dense Prediction},
-  journal = {IEEE International Conference on Computer Vision},
-  year = {2021}
-}
+% ---------------------------------------------------------------
+%  ۱) هندسهٔ دوربین و مبانی کلاسیک
+% ---------------------------------------------------------------
 
 @book{HartleyZisserman2004,
-  author = {Hartley, Richard and Zisserman, Andrew},
-  title = {Multiple View Geometry in Computer Vision},
+  author    = {Hartley, Richard and Zisserman, Andrew},
+  title     = {Multiple View Geometry in Computer Vision},
+  edition   = {2},
   publisher = {Cambridge University Press},
-  year = {2004}
+  address   = {Cambridge, UK},
+  year      = {2004},
+  isbn      = {978-0-521-54051-3}
 }
 
-@article{Zhou2017Unsupervised,
-  author = {Zhou, Tinghui and Brown, Matthew and Snavely, Noah and Lowe, David},
-  title = {Unsupervised Learning of Depth and Ego-Motion from Video},
-  journal = {IEEE Conference on Computer Vision and Pattern Recognition},
-  year = {2017}
+@inproceedings{Hoiem2005GeometricContext,
+  author    = {Hoiem, Derek and Efros, Alexei A. and Hebert, Martial},
+  title     = {Geometric Context from a Single Image},
+  booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  pages     = {654--661},
+  year      = {2005},
+  doi       = {10.1109/ICCV.2005.107}
 }
 
-@article{Guizilini2020Semantically,
-  author = {Guizilini, Vitor and others},
-  title = {Semantically-Guided Representation Learning for Self-Supervised Monocular Depth},
-  journal = {IEEE International Conference on Computer Vision},
-  year = {2020}
+@article{Saxena2009Make3D,
+  author  = {Saxena, Ashutosh and Sun, Min and Ng, Andrew Y.},
+  title   = {Make3D: Learning 3D Scene Structure from a Single Still Image},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {31},
+  number  = {5},
+  pages   = {824--840},
+  year    = {2009},
+  doi     = {10.1109/TPAMI.2008.132}
 }
 
-@article{DepthAnythingV2,
-  title={Depth Anything V2},
-  author={Yang, Lihe and others},
-  journal={arXiv preprint},
-  year={2024}
+% ---------------------------------------------------------------
+%  ۲) تخمین عمق تک‌دوربینه با یادگیری عمیق
+% ---------------------------------------------------------------
+
+@inproceedings{Eigen2014Depth,
+  author    = {Eigen, David and Puhrsch, Christian and Fergus, Rob},
+  title     = {Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {27},
+  pages     = {2366--2374},
+  year      = {2014}
 }
 
-@article{Dosovitskiy2020ViT,
-  title={An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
-  author={Dosovitskiy, Alexey and others},
-  journal={ICLR},
-  year={2021}
+@inproceedings{Eigen2015Predicting,
+  author    = {Eigen, David and Fergus, Rob},
+  title     = {Predicting Depth, Surface Normals and Semantic Labels with a Common Multi-Scale Convolutional Architecture},
+  booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  pages     = {2650--2658},
+  year      = {2015},
+  doi       = {10.1109/ICCV.2015.304}
 }
 
-@article{Saxena2023FOV,
-  title={Zero-shot metric depth with a field-of-view conditioned diffusion model},
-  author={Saxena, Shubham and others},
-  journal={arXiv preprint arXiv:2312.13252},
-  year={2023}
+@inproceedings{Godard2017Unsupervised,
+  author    = {Godard, Cl{\'e}ment and Mac Aodha, Oisin and Brostow, Gabriel J.},
+  title     = {Unsupervised Monocular Depth Estimation with Left-Right Consistency},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {270--279},
+  year      = {2017},
+  doi       = {10.1109/CVPR.2017.699}
 }
 
-@article{Ranftl2019Robust,
-  title={Towards robust monocular depth estimation: Mixing datasets for zero-shot cross-dataset transfer},
-  author={Ranftl, Rene and others},
-  journal={arXiv preprint},
-  year={2019}
+@inproceedings{Zhou2017Unsupervised,
+  author    = {Zhou, Tinghui and Brown, Matthew and Snavely, Noah and Lowe, David G.},
+  title     = {Unsupervised Learning of Depth and Ego-Motion from Video},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {1851--1858},
+  year      = {2017},
+  doi       = {10.1109/CVPR.2017.700}
 }
 
 @inproceedings{Godard2019Digging,
+  author    = {Godard, Cl{\'e}ment and Mac Aodha, Oisin and Firman, Michael and Brostow, Gabriel J.},
   title     = {Digging Into Self-Supervised Monocular Depth Estimation},
-  author    = {Godard, Cl{\'e}ment and Aodha, Oisin Mac and Firman, Michael and Brostow, Gabriel J.},
   booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
-  year      = {2019}
+  pages     = {3828--3838},
+  year      = {2019},
+  doi       = {10.1109/ICCV.2019.00393}
 }
 
 @inproceedings{Casser2019DepthSensors,
+  author    = {Casser, Vincent and Pirk, S{\"o}ren and Mahjourian, Reza and Angelova, Anelia},
   title     = {Depth Prediction Without the Sensors: Leveraging Structure for Unsupervised Learning from Monocular Videos},
-  author    = {Casser, Vincent and Pirk, Soren and Mahjourian, Reza and Angelova, Anelia},
   booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence (AAAI)},
-  year      = {2019}
+  volume    = {33},
+  pages     = {8001--8008},
+  year      = {2019},
+  doi       = {10.1609/aaai.v33i01.33018001}
 }
 
-@inproceedings{Sucar2020ImplicitGeometry,
-  title     = {Implicit Representation of Geometry for Learning Depth},
-  author    = {Sucar, Edgar and Liu, Shichen and Ortiz, Joseph and Davison, Andrew J.},
-  booktitle = {Proceedings of the Conference on Robot Learning (CoRL)},
-  year      = {2020}
-}
-
-@inproceedings{Kendall2015GeometryAware,
-  title     = {Geometry-Aware Learning of Maps for Camera Localization},
-  author    = {Kendall, Alex and Cipolla, Roberto},
-  booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
-  year      = {2015}
-}
-
-@inproceedings{Chen2022CameraAware,
-  title     = {Camera-Aware Multi-View Stereo via Geometry-Aware Cost Volume},
-  author    = {Chen, Rui and others},
+@inproceedings{Guizilini2020ThreeDPacking,
+  author    = {Guizilini, Vitor and Ambrus, Rares and Pillai, Sudeep and Raventos, Allan and Gaidon, Adrien},
+  title     = {3D Packing for Self-Supervised Monocular Depth Estimation},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2022}
+  pages     = {2485--2494},
+  year      = {2020},
+  doi       = {10.1109/CVPR42600.2020.00256}
 }
 
-@inproceedings{Guizilini2020SemanticallyGuided,
-  title     = {Semantically-Guided Representation Learning for Self-Supervised Monocular Depth},
-  author    = {Guizilini, Vitor and Ambrus, Rares and Pillai, Sudeep and Gaidon, Adrien},
+@article{Ranftl2019Robust,
+  author  = {Ranftl, Ren{\'e} and Lasinger, Katrin and Hafner, David and Schindler, Konrad and Koltun, Vladlen},
+  title   = {Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer},
+  journal = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume  = {44},
+  number  = {3},
+  pages   = {1623--1637},
+  year    = {2022},
+  note    = {\rl{نسخهٔ پیش‌چاپ}: arXiv:1907.01341, 2019},
+  doi     = {10.1109/TPAMI.2020.3019967}
+}
+
+@inproceedings{Ranftl2021DPT,
+  author    = {Ranftl, Ren{\'e} and Bochkovskiy, Alexey and Koltun, Vladlen},
+  title     = {Vision Transformers for Dense Prediction},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {12179--12188},
+  year      = {2021},
+  doi       = {10.1109/ICCV48922.2021.01196}
+}
+
+@inproceedings{Yang2024DepthAnything,
+  author    = {Yang, Lihe and Kang, Bingyi and Huang, Zilong and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
+  title     = {Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2020}
+  pages     = {10371--10381},
+  year      = {2024},
+  doi       = {10.1109/CVPR52733.2024.00987}
 }
 
-@inproceedings{Li2021NeuralSceneFlow,
-  title     = {Neural Scene Flow Fields for Space-Time View Synthesis of Dynamic Scenes},
-  author    = {Li, Zhengqi and others},
+@inproceedings{DepthAnythingV2,
+  author    = {Yang, Lihe and Kang, Bingyi and Huang, Zilong and Zhao, Zhen and Xu, Xiaogang and Feng, Jiashi and Zhao, Hengshuang},
+  title     = {Depth Anything V2},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {37},
+  year      = {2024},
+  note      = {arXiv:2406.09414}
+}
+
+% ---------------------------------------------------------------
+%  ۳) عمق متریک با شرطی‌سازی صریح بر پارامترهای دوربین
+% ---------------------------------------------------------------
+
+@inproceedings{Facil2019CAMConvs,
+  author    = {Fac{\'i}l, Jose M. and Ummenhofer, Benjamin and Zhou, Huizhong and Montesano, Luis and Brox, Thomas and Civera, Javier},
+  title     = {CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2021}
+  pages     = {11826--11835},
+  year      = {2019},
+  doi       = {10.1109/CVPR.2019.01210}
 }
 
-@inproceedings{Gaidon2016VKITTI,
-  title     = {Virtual Worlds as Proxy for Multi-Object Tracking Analysis},
-  author    = {Gaidon, Adrien and Wang, Qiao and Cabon, Yohann and Vig, Eleonora},
-  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2016}
-}
-@article{Silberman2012NYUv2,
-  title   = {Indoor Segmentation and Support Inference from RGBD Images},
-  author  = {Silberman, Nathan and Hoiem, Derek and Kohli, Pushmeet and Fergus, Rob},
-  journal = {European Conference on Computer Vision (ECCV)},
-  year    = {2012}
-}
-
-@inproceedings{Vasiljevic2019DIODE,
-  title     = {DIode: A Dense Indoor and Outdoor DEpth Dataset},
-  author    = {Vasiljevic, Igor and Koltun, Vladlen},
-  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2019}
-}
-@article{Oquab2023DINOv2,
-  title   = {DINOv2: Learning Robust Visual Features without Supervision},
-  author  = {Oquab, Maxime and others},
-  journal = {arXiv preprint arXiv:2304.07193},
+@article{Bhat2023ZoeDepth,
+  author  = {Bhat, Shariq Farooq and Birkl, Reiner and Wofk, Diana and Wonka, Peter and M{\"u}ller, Matthias},
+  title   = {ZoeDepth: Zero-Shot Transfer by Combining Relative and Metric Depth},
+  journal = {arXiv preprint arXiv:2302.12288},
   year    = {2023}
 }
 
-@article{Hinton2015Distillation,
-  title   = {Distilling the Knowledge in a Neural Network},
-  author  = {Hinton, Geoffrey and Vinyals, Oriol and Dean, Jeff},
-  journal = {arXiv preprint arXiv:1503.02531},
-  year    = {2015}
+@inproceedings{Yin2023Metric3D,
+  author    = {Yin, Wei and Zhang, Chi and Chen, Hao and Cai, Zhipeng and Yu, Gang and Wang, Kaixuan and Chen, Xiaozhi and Shen, Chunhua},
+  title     = {Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {9043--9053},
+  year      = {2023},
+  doi       = {10.1109/ICCV51070.2023.00830}
 }
-@inproceedings{Guizilini2020ThreeDPacking,
-  title     = {3D Packing for Self-Supervised Monocular Depth Estimation},
-  author    = {Guizilini, Vitor and others},
+
+@article{Saxena2023FOV,
+  author  = {Saxena, Saurabh and Hur, Junhwa and Herrmann, Charles and Sun, Deqing and Fleet, David J.},
+  title   = {Zero-Shot Metric Depth with a Field-of-View Conditioned Diffusion Model},
+  journal = {arXiv preprint arXiv:2312.13252},
+  year    = {2023}
+}
+
+@inproceedings{Piccinelli2024UniDepth,
+  author    = {Piccinelli, Luigi and Yang, Yung-Hsu and Sakaridis, Christos and Segu, Mattia and Li, Siyuan and Van Gool, Luc and Yu, Fisher},
+  title     = {UniDepth: Universal Monocular Metric Depth Estimation},
   booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
-  year      = {2020}
+  pages     = {10106--10116},
+  year      = {2024},
+  doi       = {10.1109/CVPR52733.2024.00963}
+}
+
+@inproceedings{Bochkovskii2025DepthPro,
+  author    = {Bochkovskii, Aleksei and Delaunoy, Ama{\"e}l and Germain, Hugo and Santos, Marcel and Zhou, Yichao and Richter, Stephan R. and Koltun, Vladlen},
+  title     = {Depth Pro: Sharp Monocular Metric Depth in Less Than a Second},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2025},
+  note      = {arXiv:2410.02073}
+}
+
+@inproceedings{Yao2018MVSNet,
+  author    = {Yao, Yao and Luo, Zixin and Li, Shiwei and Fang, Tian and Quan, Long},
+  title     = {MVSNet: Depth Inference for Unstructured Multi-View Stereo},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {767--783},
+  year      = {2018},
+  doi       = {10.1007/978-3-030-01237-3_47}
+}
+
+% ---------------------------------------------------------------
+%  ۴) معماری، شرطی‌سازی و بهینه‌سازی
+% ---------------------------------------------------------------
+
+@inproceedings{Dosovitskiy2020ViT,
+  author    = {Dosovitskiy, Alexey and Beyer, Lucas and Kolesnikov, Alexander and Weissenborn, Dirk and Zhai, Xiaohua and Unterthiner, Thomas and Dehghani, Mostafa and Minderer, Matthias and Heigold, Georg and Gelly, Sylvain and Uszkoreit, Jakob and Houlsby, Neil},
+  title     = {An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale},
+  booktitle = {International Conference on Learning Representations (ICLR)},
+  year      = {2021}
+}
+
+@article{Oquab2023DINOv2,
+  author  = {Oquab, Maxime and Darcet, Timoth{\'e}e and Moutakanni, Th{\'e}o and Vo, Huy V. and Szafraniec, Marc and Khalidov, Vasil and Fernandez, Pierre and Haziza, Daniel and Massa, Francisco and El-Nouby, Alaaeldin and Assran, Mahmoud and Ballas, Nicolas and Galuba, Wojciech and Howes, Russell and Huang, Po-Yao and Li, Shang-Wen and Misra, Ishan and Rabbat, Michael and Sharma, Vasu and Synnaeve, Gabriel and Xu, Hu and Jegou, Herv{\'e} and Mairal, Julien and Labatut, Patrick and Joulin, Armand and Bojanowski, Piotr},
+  title   = {DINOv2: Learning Robust Visual Features without Supervision},
+  journal = {Transactions on Machine Learning Research (TMLR)},
+  year    = {2024},
+  note    = {\rl{نسخهٔ پیش‌چاپ}: arXiv:2304.07193, 2023}
 }
 
 @inproceedings{Perez2018FiLM,
-  title     = {FiLM: Visual Reasoning with a General Conditioning Layer},
   author    = {Perez, Ethan and Strub, Florian and de Vries, Harm and Dumoulin, Vincent and Courville, Aaron},
-  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence},
-  year      = {2018}
+  title     = {FiLM: Visual Reasoning with a General Conditioning Layer},
+  booktitle = {Proceedings of the AAAI Conference on Artificial Intelligence (AAAI)},
+  volume    = {32},
+  pages     = {3942--3951},
+  year      = {2018},
+  doi       = {10.1609/aaai.v32i1.11671}
+}
+
+@inproceedings{Zhang2023ControlNet,
+  author    = {Zhang, Lvmin and Rao, Anyi and Agrawala, Maneesh},
+  title     = {Adding Conditional Control to Text-to-Image Diffusion Models},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {3836--3847},
+  year      = {2023},
+  doi       = {10.1109/ICCV51070.2023.00355}
+}
+
+@inproceedings{Bachlechner2021ReZero,
+  author    = {Bachlechner, Thomas and Majumder, Bodhisattwa Prasad and Mao, Huanru Henry and Cottrell, Garrison W. and McAuley, Julian},
+  title     = {ReZero is All You Need: Fast Convergence at Large Depth},
+  booktitle = {Proceedings of the Conference on Uncertainty in Artificial Intelligence (UAI)},
+  pages     = {1352--1361},
+  year      = {2021}
 }
 
 @inproceedings{Loshchilov2019AdamW,
-  title     = {Decoupled Weight Decay Regularization},
   author    = {Loshchilov, Ilya and Hutter, Frank},
+  title     = {Decoupled Weight Decay Regularization},
   booktitle = {International Conference on Learning Representations (ICLR)},
   year      = {2019}
+}
+
+@article{Hinton2015Distillation,
+  author  = {Hinton, Geoffrey and Vinyals, Oriol and Dean, Jeff},
+  title   = {Distilling the Knowledge in a Neural Network},
+  journal = {arXiv preprint arXiv:1503.02531},
+  year    = {2015}
+}
+
+@inproceedings{Paszke2019PyTorch,
+  author    = {Paszke, Adam and Gross, Sam and Massa, Francisco and Lerer, Adam and Bradbury, James and Chanan, Gregory and Killeen, Trevor and Lin, Zeming and Gimelshein, Natalia and Antiga, Luca and Desmaison, Alban and K{\"o}pf, Andreas and Yang, Edward and DeVito, Zachary and Raison, Martin and Tejani, Alykhan and Chilamkurthy, Sasank and Steiner, Benoit and Fang, Lu and Bai, Junjie and Chintala, Soumith},
+  title     = {PyTorch: An Imperative Style, High-Performance Deep Learning Library},
+  booktitle = {Advances in Neural Information Processing Systems (NeurIPS)},
+  volume    = {32},
+  pages     = {8024--8035},
+  year      = {2019}
+}
+
+% ---------------------------------------------------------------
+%  ۵) مجموعه‌داده‌ها
+% ---------------------------------------------------------------
+
+@inproceedings{Silberman2012NYUv2,
+  author    = {Silberman, Nathan and Hoiem, Derek and Kohli, Pushmeet and Fergus, Rob},
+  title     = {Indoor Segmentation and Support Inference from RGBD Images},
+  booktitle = {Proceedings of the European Conference on Computer Vision (ECCV)},
+  pages     = {746--760},
+  year      = {2012},
+  doi       = {10.1007/978-3-642-33715-4_54}
+}
+
+@inproceedings{Geiger2012KITTI,
+  author    = {Geiger, Andreas and Lenz, Philip and Urtasun, Raquel},
+  title     = {Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {3354--3361},
+  year      = {2012},
+  doi       = {10.1109/CVPR.2012.6248074}
+}
+
+@inproceedings{Gaidon2016VKITTI,
+  author    = {Gaidon, Adrien and Wang, Qiao and Cabon, Yohann and Vig, Eleonora},
+  title     = {Virtual Worlds as Proxy for Multi-Object Tracking Analysis},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {4340--4349},
+  year      = {2016},
+  doi       = {10.1109/CVPR.2016.470}
+}
+
+@inproceedings{Cordts2016Cityscapes,
+  author    = {Cordts, Marius and Omran, Mohamed and Ramos, Sebastian and Rehfeld, Timo and Enzweiler, Markus and Benenson, Rodrigo and Franke, Uwe and Roth, Stefan and Schiele, Bernt},
+  title     = {The Cityscapes Dataset for Semantic Urban Scene Understanding},
+  booktitle = {Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {3213--3223},
+  year      = {2016},
+  doi       = {10.1109/CVPR.2016.350}
+}
+
+@inproceedings{Scharstein2014Middlebury,
+  author    = {Scharstein, Daniel and Hirschm{\"u}ller, Heiko and Kitajima, York and Krathwohl, Greg and Ne{\v{s}}i{\'c}, Nera and Wang, Xi and Westling, Porter},
+  title     = {High-Resolution Stereo Datasets with Subpixel-Accurate Ground Truth},
+  booktitle = {German Conference on Pattern Recognition (GCPR)},
+  pages     = {31--42},
+  year      = {2014},
+  doi       = {10.1007/978-3-319-11752-2_3}
+}
+
+@article{Vasiljevic2019DIODE,
+  author  = {Vasiljevic, Igor and Kolkin, Nick and Zhang, Shanyi and Luo, Ruotian and Wang, Haochen and Dai, Falcon Z. and Daniele, Andrea F. and Mostajabi, Mohammadreza and Basart, Steven and Walter, Matthew R. and Shakhnarovich, Gregory},
+  title   = {DIODE: A Dense Indoor and Outdoor DEpth Dataset},
+  journal = {arXiv preprint arXiv:1908.00463},
+  year    = {2019}
+}
+
+@inproceedings{Yang2019DrivingStereo,
+  author    = {Yang, Guorun and Song, Xiao and Huang, Chaoqin and Deng, Zhidong and Shi, Jianping and Zhou, Bolei},
+  title     = {DrivingStereo: A Large-Scale Dataset for Stereo Matching in Autonomous Driving Scenarios},
+  booktitle = {Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition (CVPR)},
+  pages     = {899--908},
+  year      = {2019},
+  doi       = {10.1109/CVPR.2019.00099}
+}
+
+@inproceedings{Roberts2021Hypersim,
+  author    = {Roberts, Mike and Ramapuram, Jason and Ranjan, Anurag and Kumar, Atulit and Bautista, Miguel Angel and Paczan, Nathan and Webb, Russ and Susskind, Joshua M.},
+  title     = {Hypersim: A Photorealistic Synthetic Dataset for Holistic Indoor Scene Understanding},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {10912--10922},
+  year      = {2021},
+  doi       = {10.1109/ICCV48922.2021.01073}
+}
+
+% ---------------------------------------------------------------
+%  ۶) روش‌های آماری
+% ---------------------------------------------------------------
+
+@article{Wilcoxon1945,
+  author  = {Wilcoxon, Frank},
+  title   = {Individual Comparisons by Ranking Methods},
+  journal = {Biometrics Bulletin},
+  volume  = {1},
+  number  = {6},
+  pages   = {80--83},
+  year    = {1945},
+  doi     = {10.2307/3001968}
+}
+
+@book{Efron1993Bootstrap,
+  author    = {Efron, Bradley and Tibshirani, Robert J.},
+  title     = {An Introduction to the Bootstrap},
+  publisher = {Chapman and Hall/CRC},
+  address   = {New York},
+  year      = {1993},
+  isbn      = {978-0-412-04231-7}
 }

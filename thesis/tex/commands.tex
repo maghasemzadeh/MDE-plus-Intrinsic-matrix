@@ -129,8 +129,8 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %%% با یک رنگ ثابت نمایش داده می‌شود تا خواننده نیازی به بازخوانی
 %%% راهنمای هر نمودار نداشته باشد.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\definecolor{thProposed}{HTML}{1F6FB2} % مدل پیشنهادی (دارای K)
-\definecolor{thControl}{HTML}{C0392B}  % مدل کنترل (فاقد K)
+\definecolor{thProposed}{HTML}{1F6FB2} % مدل پیشنهادی (با ماتریس کالیبراسیون دوربین)
+\definecolor{thControl}{HTML}{C0392B}  % مدل کنترل (بدون ماتریس کالیبراسیون دوربین)
 \definecolor{thBase}{HTML}{78838C}     % مدل پایهٔ منتشرشده
 \definecolor{thIdeal}{HTML}{2E9E5B}    % مرجع/رفتار ایده‌آل هندسی
 \definecolor{thAccent}{HTML}{E08A1E}   % تأکید و حاشیه‌نویسی
@@ -208,10 +208,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \newcommand{\fadecimal}[1]{\mbox{\beginL#1\endL}}
 % نام‌های معیار برای مدل‌های اصلی پژوهش؛ ویژگی نسخه‌های خاص (انکودر،
 % پروتکل، مجموعه‌داده یا دور آموزش) پس از این نام ثابت افزوده می‌شود.
-\newcommand{\proposedmodel}{مدل پیشنهادی (دارای \lr{K})}
-\newcommand{\controlmodel}{مدل کنترل (فاقد \lr{K})}
+\newcommand{\proposedmodel}{مدل پیشنهادی}
+\newcommand{\controlmodel}{مدل کنترل}
 \newcommand{\basemodel}{مدل پایهٔ \lr{Depth Anything V2}}
 \newcommand{\publishedbasemodel}{\basemodel{}، نسخهٔ منتشرشده}
+\newcommand{\calibrationmatrix}{\mbox{\persianfont\rl{ماتریس کالیبراسیون دوربین}}}
 % برچسب‌های کوتاه ویژهٔ جدول‌ها. جزئیات پیکربندی (انکودر، پروتکل و
 % دادهٔ آموزش) در ستون‌های مستقل یا عنوان جدول می‌آیند تا ستون «مدل» فشرده بماند.
 \newcommand{\tableproposedmodel}{پیشنهادی}

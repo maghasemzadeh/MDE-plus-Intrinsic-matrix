@@ -1,0 +1,133 @@
+{
+  "status": "PASS",
+  "protocol": "NYUv2 Eigen-654 rawDepths; metric ViT-L; eigen crop; [0.001, 10] m; no per-image scale/shift alignment; paired by item_id",
+  "checks": {
+    "primary_files": 2,
+    "paired_images": 654,
+    "aggregate_cells": 10,
+    "paired_metrics": 5,
+    "diagnostics_present": [
+      "fov_varied",
+      "k_sweep"
+    ]
+  },
+  "aggregates": [
+    {
+      "arm": "proposed",
+      "abs_rel": 0.08485222376586829,
+      "rmse": 0.30707370469329553,
+      "d1": 0.9520312854161184,
+      "silog": 0.0942175984439591,
+      "log10": 0.03627265403645301,
+      "n_images": 654
+    },
+    {
+      "arm": "control",
+      "abs_rel": 0.10302481883481737,
+      "rmse": 0.3431473220342525,
+      "d1": 0.9225923067192254,
+      "silog": 0.10446280553731896,
+      "log10": 0.04273736096964152,
+      "n_images": 654
+    }
+  ],
+  "paired_tests": [
+    {
+      "metric": "AbsRel",
+      "metric_key": "abs_rel",
+      "proposed_mean": 0.08485222376586829,
+      "control_mean": 0.10302481883481737,
+      "difference_proposed_minus_control": -0.01817259506894908,
+      "ci95": [
+        -0.0210487023668808,
+        -0.015305080727335146
+      ],
+      "wilcoxon_p": 4.009240547642368e-31,
+      "wilcoxon_holm_p": 1.6036962190569472e-30,
+      "benefit_percent_of_control": 17.639045886686507
+    },
+    {
+      "metric": "RMSE",
+      "metric_key": "rmse",
+      "proposed_mean": 0.30707370469329553,
+      "control_mean": 0.3431473220342525,
+      "difference_proposed_minus_control": -0.03607361734095699,
+      "ci95": [
+        -0.04320756194298511,
+        -0.028864517945522836
+      ],
+      "wilcoxon_p": 1.0104962072181559e-24,
+      "wilcoxon_holm_p": 2.0209924144363118e-24,
+      "benefit_percent_of_control": 10.512574344775496
+    },
+    {
+      "metric": "delta_1",
+      "metric_key": "d1",
+      "proposed_mean": 0.9520312854161184,
+      "control_mean": 0.9225923067192254,
+      "difference_proposed_minus_control": 0.02943897869689299,
+      "ci95": [
+        0.02236219061899351,
+        0.03669092625907871
+      ],
+      "wilcoxon_p": 2.527250044822866e-24,
+      "wilcoxon_holm_p": 2.527250044822866e-24,
+      "benefit_percent_of_control": 3.1908979169335536
+    },
+    {
+      "metric": "SILog",
+      "metric_key": "silog",
+      "proposed_mean": 0.0942175984439591,
+      "control_mean": 0.10446280553731896,
+      "difference_proposed_minus_control": -0.010245207093359862,
+      "ci95": [
+        -0.01181124497905647,
+        -0.00868170929087229
+      ],
+      "wilcoxon_p": 1.4996587955614058e-34,
+      "wilcoxon_holm_p": 7.498293977807029e-34,
+      "benefit_percent_of_control": 9.80751669521244
+    },
+    {
+      "metric": "log10",
+      "metric_key": "log10",
+      "proposed_mean": 0.03627265403645301,
+      "control_mean": 0.04273736096964152,
+      "difference_proposed_minus_control": -0.0064647069331885115,
+      "ci95": [
+        -0.007584030876777758,
+        -0.00534736121273443
+      ],
+      "wilcoxon_p": 2.8400131147589153e-27,
+      "wilcoxon_holm_p": 8.520039344276746e-27,
+      "benefit_percent_of_control": 15.126593656030177
+    }
+  ],
+  "diagnostics": {
+    "k_sweep": {
+      "proposed": {
+        "slope_mean": 0.9319660962200373,
+        "slope_std": 0.02858883514983157,
+        "n_images": 20
+      },
+      "control": {
+        "slope_mean": -5.037097699246711e-17,
+        "slope_std": 1.060426524438899e-16,
+        "n_images": 20
+      }
+    },
+    "fov_varied": {
+      "proposed": {
+        "1": 0.09239986869264451,
+        "1.4": 0.09737752754503251,
+        "1.8": 0.10650519077133512
+      },
+      "control": {
+        "1": 0.11019278603067639,
+        "1.4": 0.11004130202787003,
+        "1.8": 0.11483802460703646
+      }
+    }
+  },
+  "validity_caveat": "Per-image pairing establishes a precise test-set difference for these checkpoints, but it does not estimate variation across independent training seeds."
+}

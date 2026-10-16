@@ -156,7 +156,17 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
         
         missing_keys, unexpected_keys = self.model.load_state_dict(filtered_dict, strict=False)
         if missing_keys:
-            print(f"Warning: {len(missing_keys)} keys missing from checkpoint (will use random init)")
+            # Legacy checkpoints predate the gate and trained the camera token
+            # at full strength. Restore that behavior instead of disabling K.
+            if missing_keys == ['cam_encoder.output_gate'] and getattr(self.model, 'cam_encoder', None) is not None:
+                with torch.no_grad():
+                    # Keep legacy behavior by default (the current gate is a
+                    # compatibility addition); allow controlled sweeps via env.
+                    gate = float(os.environ.get('DA2_CAMERA_GATE', '0.0'))
+                    self.model.cam_encoder.output_gate.fill_(gate)
+                print(f"Info: legacy checkpoint has no cam_encoder.output_gate; set output_gate={gate}")
+            else:
+                print(f"Warning: {len(missing_keys)} keys missing from checkpoint (will use random init)")
         if unexpected_keys:
             print(f"Warning: {len(unexpected_keys)} unexpected keys in checkpoint")
     
@@ -215,4 +225,3 @@ class DepthAnythingV2MetricModel(BaseDepthModel):
                 )
         
         return self.model.infer_image(image, input_size, intrinsics=intrinsics)
-

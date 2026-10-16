@@ -343,7 +343,7 @@ avoids permission and attribution problems.
 
 ## 13. Definition of done
 
-- [ ] `thesis/build.sh` completes and `thesis/main.pdf` is regenerated
+- [ ] `thesis/build.sh` completes and `thesis/main-last-reading.pdf` is regenerated
 - [ ] `tools/check_thesis_numbers.py` shows no removed or changed result number
 - [ ] A and B rendered, wired in, and §4.6 rewritten to match (or explicitly reported
       as blocked, with §4.6 left untouched)

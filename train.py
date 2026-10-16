@@ -66,7 +66,7 @@ parser = argparse.ArgumentParser(description='Depth Anything V2 for Metric/Basic
 parser.add_argument('--encoder', default='vitl', choices=['vits', 'vitb', 'vitl', 'vitg'])
 parser.add_argument('--datasets', default='hypersim',
                     help='Comma-separated list of datasets to train on (e.g., "vkitti,diode"). '
-                         'Supported: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes')
+                         'Supported: hypersim, vkitti, vkitti_exp, nyu, diode, middlebury, kitti, kitti_exp, cityscapes')
 parser.add_argument('--model-type', default='basic', choices=['metric', 'basic'],
                     help='Model type: metric (absolute depth in meters) or basic (relative depth with scale ambiguity)')
 parser.add_argument('--img-size', default=518, type=int)
@@ -323,8 +323,15 @@ def main():
         if dataset_name == 'hypersim':
             train_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'train.txt')
             return Hypersim(train_file, 'train', size=size)
-        elif dataset_name == 'vkitti':
-            train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
+        elif dataset_name in ('vkitti', 'vkitti_exp'):
+            if dataset_name == 'vkitti_exp':
+                exp_root = os.environ.get(
+                    'VKITTI_EXP_ROOT',
+                    os.path.join(project_root, 'datasets', 'raw_data', 'vkitti_experiment')
+                )
+                train_file = os.path.join(exp_root, 'splits', 'train.txt')
+            else:
+                train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
             if not os.path.exists(train_file):
                 raise FileNotFoundError(
                     f"VKITTI training file not found: {train_file}\n"
@@ -388,8 +395,17 @@ def main():
                 print(f"Middlebury training dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
-        elif dataset_name == 'kitti':
-            kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
+        elif dataset_name in ('kitti', 'kitti_exp'):
+            # kitti_exp is an isolated file-list dataset used for controlled
+            # experiments.  Its root is supplied through KITTI_EXP_ROOT so
+            # the canonical KITTI tree and prior runs are never modified.
+            if dataset_name == 'kitti_exp':
+                kitti_path = os.environ.get(
+                    'KITTI_EXP_ROOT',
+                    os.path.join(project_root, 'datasets', 'raw_data', 'kitti_experiment')
+                )
+            else:
+                kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
             if not os.path.exists(kitti_path):
                 raise FileNotFoundError(
                     f"KITTI dataset not found: {kitti_path}\n"
@@ -427,7 +443,7 @@ def main():
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
+                    f"Supported datasets: hypersim, vkitti, vkitti_exp, nyu, diode, middlebury, kitti, kitti_exp, cityscapes"
                 )
             train_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'train.txt')
             if os.path.exists(train_filelist):
@@ -435,7 +451,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
+                    f"Supported datasets: hypersim, vkitti, vkitti_exp, nyu, diode, middlebury, kitti, kitti_exp, cityscapes"
                 )
     
     # Create training datasets
@@ -498,9 +514,17 @@ def main():
         if dataset_name == 'hypersim':
             val_file = os.path.join(_metric_depth_path, 'dataset', 'splits', 'hypersim', 'val.txt')
             return Hypersim(val_file, 'val', size=size)
-        elif dataset_name == 'vkitti':
-            vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
-            vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
+        elif dataset_name in ('vkitti', 'vkitti_exp'):
+            if dataset_name == 'vkitti_exp':
+                exp_root = os.environ.get(
+                    'VKITTI_EXP_ROOT',
+                    os.path.join(project_root, 'datasets', 'raw_data', 'vkitti_experiment')
+                )
+                vkitti_val_file = os.path.join(exp_root, 'splits', 'val.txt')
+                vkitti_train_file = os.path.join(exp_root, 'splits', 'train.txt')
+            else:
+                vkitti_val_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'val.txt')
+                vkitti_train_file = os.path.join(project_root, 'datasets', 'raw_data', 'vkitti', 'splits', 'train.txt')
             
             if os.path.exists(vkitti_val_file):
                 if rank == 0:
@@ -557,8 +581,14 @@ def main():
                 print(f"Middlebury validation dataset loaded: {len(dataset)} samples")
                 sys.stdout.flush()
             return dataset
-        elif dataset_name == 'kitti':
-            kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
+        elif dataset_name in ('kitti', 'kitti_exp'):
+            if dataset_name == 'kitti_exp':
+                kitti_path = os.environ.get(
+                    'KITTI_EXP_ROOT',
+                    os.path.join(project_root, 'datasets', 'raw_data', 'kitti_experiment')
+                )
+            else:
+                kitti_path = os.path.join(project_root, 'datasets', 'raw_data', 'kitti')
             if rank == 0:
                 print(f"Initializing KITTI validation dataset...")
                 sys.stdout.flush()
@@ -590,7 +620,7 @@ def main():
             if GenericDatasetWithIntrinsics is None:
                 raise NotImplementedError(
                     f"Unknown dataset: '{dataset_name}'. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
+                    f"Supported datasets: hypersim, vkitti, vkitti_exp, nyu, diode, middlebury, kitti, kitti_exp, cityscapes"
                 )
             val_filelist = os.path.join(_metric_depth_path, 'dataset', 'splits', dataset_name, 'val.txt')
             if os.path.exists(val_filelist):
@@ -598,7 +628,7 @@ def main():
             else:
                 raise NotImplementedError(
                     f"Dataset '{dataset_name}' not found. "
-                    f"Supported datasets: hypersim, vkitti, nyu, diode, middlebury, kitti, cityscapes"
+                    f"Supported datasets: hypersim, vkitti, vkitti_exp, nyu, diode, middlebury, kitti, kitti_exp, cityscapes"
                 )
     
     # Create validation datasets

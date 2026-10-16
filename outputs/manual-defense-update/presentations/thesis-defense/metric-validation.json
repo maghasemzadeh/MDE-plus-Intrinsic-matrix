@@ -1,0 +1,161 @@
+{
+  "status": "PASS_WITH_MULTIPLE_TESTING_CAVEAT",
+  "protocol": "NYUv2 Eigen-654, rawDepths, metric depth, no alignment, eigen crop, [0.001, 10] m",
+  "checks": {
+    "files": 5,
+    "aggregate_cells": 15,
+    "printed_p_values": 12
+  },
+  "aggregates": [
+    {
+      "evaluation": "published",
+      "abs_rel": 0.20730327075455532,
+      "d1": 0.6919499920557431,
+      "rmse": 0.6062938041574911,
+      "n_images": 654
+    },
+    {
+      "evaluation": "round1_control",
+      "abs_rel": 0.07958922412143934,
+      "d1": 0.9583492609980441,
+      "rmse": 0.2918937834213268,
+      "n_images": 654
+    },
+    {
+      "evaluation": "round1_proposed",
+      "abs_rel": 0.0790887717043679,
+      "d1": 0.9592814344493851,
+      "rmse": 0.28823922839961286,
+      "n_images": 654
+    },
+    {
+      "evaluation": "round2_control",
+      "abs_rel": 0.08261212223246465,
+      "d1": 0.9546115063126741,
+      "rmse": 0.2998334157767646,
+      "n_images": 654
+    },
+    {
+      "evaluation": "round2_proposed",
+      "abs_rel": 0.08171075785572467,
+      "d1": 0.9568818057534674,
+      "rmse": 0.2943868322884636,
+      "n_images": 654
+    }
+  ],
+  "paired_tests": [
+    {
+      "comparison": "round1_vs_published",
+      "metric": "AbsRel",
+      "metric_key": "abs_rel",
+      "proposed_mean": 0.0790887717043679,
+      "reference_mean": 0.20730327075455532,
+      "benefit": 0.12821449905018742,
+      "t_p": 4.78541623210389e-133,
+      "wilcoxon_p": 8.444206111287819e-96,
+      "t_holm_p": 4.78541623210389e-133,
+      "wilcoxon_holm_p": 8.444206111287819e-96
+    },
+    {
+      "comparison": "round1_vs_published",
+      "metric": "delta_1",
+      "metric_key": "d1",
+      "proposed_mean": 0.9592814344493851,
+      "reference_mean": 0.6919499920557431,
+      "benefit": 0.2673314423936419,
+      "t_p": 2.805176266181533e-75,
+      "wilcoxon_p": 1.561609257374403e-79,
+      "t_holm_p": 2.805176266181533e-75,
+      "wilcoxon_holm_p": 1.561609257374403e-79
+    },
+    {
+      "comparison": "round1_vs_published",
+      "metric": "RMSE",
+      "metric_key": "rmse",
+      "proposed_mean": 0.28823922839961286,
+      "reference_mean": 0.6062938041574911,
+      "benefit": 0.31805457575787827,
+      "t_p": 6.659382896069311e-100,
+      "wilcoxon_p": 5.633580145510263e-87,
+      "t_holm_p": 6.659382896069311e-100,
+      "wilcoxon_holm_p": 5.633580145510263e-87
+    },
+    {
+      "comparison": "round1_vs_control",
+      "metric": "AbsRel",
+      "metric_key": "abs_rel",
+      "proposed_mean": 0.0790887717043679,
+      "reference_mean": 0.07958922412143934,
+      "benefit": 0.0005004524170714453,
+      "t_p": 0.26190009939499503,
+      "wilcoxon_p": 0.5251393467025055,
+      "t_holm_p": 0.5238001987899901,
+      "wilcoxon_holm_p": 1.0
+    },
+    {
+      "comparison": "round1_vs_control",
+      "metric": "delta_1",
+      "metric_key": "d1",
+      "proposed_mean": 0.9592814344493851,
+      "reference_mean": 0.9583492609980441,
+      "benefit": 0.0009321734513410007,
+      "t_p": 0.35521643897855004,
+      "wilcoxon_p": 0.17877591631612455,
+      "t_holm_p": 0.5238001987899901,
+      "wilcoxon_holm_p": 0.5363277489483737
+    },
+    {
+      "comparison": "round1_vs_control",
+      "metric": "RMSE",
+      "metric_key": "rmse",
+      "proposed_mean": 0.28823922839961286,
+      "reference_mean": 0.2918937834213268,
+      "benefit": 0.0036545550217139677,
+      "t_p": 0.004880430508449653,
+      "wilcoxon_p": 0.00926603077399098,
+      "t_holm_p": 0.024402152542248264,
+      "wilcoxon_holm_p": 0.0463301538699549
+    },
+    {
+      "comparison": "round2_vs_control",
+      "metric": "AbsRel",
+      "metric_key": "abs_rel",
+      "proposed_mean": 0.08171075785572467,
+      "reference_mean": 0.08261212223246465,
+      "benefit": 0.0009013643767399881,
+      "t_p": 0.08918050436422854,
+      "wilcoxon_p": 0.039871352903560725,
+      "t_holm_p": 0.2905699745052179,
+      "wilcoxon_holm_p": 0.1594854116142429
+    },
+    {
+      "comparison": "round2_vs_control",
+      "metric": "delta_1",
+      "metric_key": "d1",
+      "proposed_mean": 0.9568818057534674,
+      "reference_mean": 0.9546115063126741,
+      "benefit": 0.0022702994407932664,
+      "t_p": 0.07264249362630447,
+      "wilcoxon_p": 0.825350093951591,
+      "t_holm_p": 0.2905699745052179,
+      "wilcoxon_holm_p": 1.0
+    },
+    {
+      "comparison": "round2_vs_control",
+      "metric": "RMSE",
+      "metric_key": "rmse",
+      "proposed_mean": 0.2943868322884636,
+      "reference_mean": 0.2998334157767646,
+      "benefit": 0.005446583488301016,
+      "t_p": 6.467585355081438e-05,
+      "wilcoxon_p": 0.0001210437336476979,
+      "t_holm_p": 0.00038805512130488627,
+      "wilcoxon_holm_p": 0.0007262624018861874
+    }
+  ],
+  "interpretation": {
+    "round2_absrel_wilcoxon_raw": 0.039871352903560725,
+    "round2_absrel_wilcoxon_holm": 0.1594854116142429,
+    "round2_rmse_t_holm": 0.00038805512130488627
+  }
+}

@@ -1,0 +1,38 @@
+# Section 4.5.7 focal-jitter validation
+
+Overall status: **PASS**
+
+Protocol: NYUv2 Eigen-654 rawDepths; metric ViT-L; eigen crop; [0.001, 10] m; no per-image scale/shift alignment; paired by item_id
+
+## Recomputed primary results
+
+| Metric | Proposed (+K) | Control | Proposed - control | Bootstrap 95% CI | Wilcoxon p | Holm p | Benefit vs control |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| AbsRel | 0.084852224 | 0.103024819 | -0.018172595 | [-0.021048702, -0.015305081] | 4.009e-31 | 1.604e-30 | 17.64% |
+| RMSE | 0.307073705 | 0.343147322 | -0.036073617 | [-0.043207562, -0.028864518] | 1.010e-24 | 2.021e-24 | 10.51% |
+| delta_1 | 0.952031285 | 0.922592307 | +0.029438979 | [+0.022362191, +0.036690926] | 2.527e-24 | 2.527e-24 | 3.19% |
+| SILog | 0.094217598 | 0.104462806 | -0.010245207 | [-0.011811245, -0.008681709] | 1.500e-34 | 7.498e-34 | 9.81% |
+| log10 | 0.036272654 | 0.042737361 | -0.006464707 | [-0.007584031, -0.005347361] | 2.840e-27 | 8.520e-27 | 15.13% |
+
+All five confidence intervals exclude zero and all five results remain significant after Holm family-wise-error correction.
+
+## K-sweep diagnostic
+
+| Arm | Slope mean | Slope SD | Images |
+|---|---:|---:|---:|
+| proposed | 0.931966 | 0.028589 | 20 |
+| control | -0.000000 | 0.000000 | 20 |
+
+## Field-of-view diagnostic (AbsRel)
+
+| Arm | zoom 1.0 | zoom 1.4 | zoom 1.8 |
+|---|---:|---:|---:|
+| proposed | 0.092399869 | 0.097377528 | 0.106505191 |
+| control | 0.110192786 | 0.110041302 | 0.114838025 |
+
+## Validity conclusion
+
+- The stored summaries exactly equal means recomputed from 654 finite, uniquely paired per-image rows.
+- Every thesis aggregate, paired difference, bootstrap interval, and Wilcoxon p-value reproduces at its displayed precision.
+- The evaluation metadata confirms metric depth with no alignment, the Eigen crop, raw NYU depth, and matched model capacity.
+- Caveat: Per-image pairing establishes a precise test-set difference for these checkpoints, but it does not estimate variation across independent training seeds.

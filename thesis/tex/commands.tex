@@ -203,6 +203,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[extrafootnotefeatures, displaymathdigits=persian]{xepersian}
 \newcommand{\fafootnote}[1]{\footnote{#1}}
 \newcommand{\enfootnote}[1]{\LTRfootnote{#1}}
+% شمارهٔ پاورقی در هر دو جهت متن با رقم فارسی نمایش داده شود.  جهتِ خود
+% پاورقی را xepersian تعیین می‌کند: پاورقی فارسی راست‌به‌چپ و پاورقی انگلیسی
+% چپ‌به‌راست باقی می‌ماند؛ این تعریف فقط قلم رقم را مستقل از جهت متن می‌کند.
+\renewcommand{\thefootnote}{\persianfont\arabic{footnote}}
+\renewcommand{\thempfootnote}{\persianfont\arabic{mpfootnote}}
 % Persian decimal numbers need an LTR direction without switching to the
 % Latin font, whose glyph set does not include Persian digits.
 \newcommand{\fadecimal}[1]{\mbox{\beginL#1\endL}}

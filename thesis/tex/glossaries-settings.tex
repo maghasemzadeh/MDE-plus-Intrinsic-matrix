@@ -104,6 +104,45 @@
 }%
 
 \newcommand{\printacronyms}{\printabbreviation}
+
+% فهرست اختصارات فنی پایان‌نامه.  در این پروژه اختصارات در متن با پاورقی
+% انگلیسی معرفی می‌شوند؛ جدول زیر شکل ثابت و قابل‌خواندن فهرست را مستقل از
+% مرتب‌سازی xindy نگه می‌دارد.
+\newcommand{\printabbreviationmanual}{%
+\clearpage
+\chapter*{\rl{فهرست اختصارات}}
+\addcontentsline{toc}{chapter}{\rl{فهرست اختصارات}}
+\small
+\begin{longtable}{@{}>{\raggedleft\arraybackslash}p{0.31\textwidth} >{\centering\arraybackslash}p{0.13\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}@{}}
+\toprule
+معادل فارسی & اختصار & صورت کامل انگلیسی \\
+\midrule
+\endhead
+بینایی ماشین & \lr{CV} & \lr{Computer Vision} \\
+تخمین عمق تک‌دوربینه & \lr{MDE} & \lr{Monocular Depth Estimation} \\
+شبکهٔ عصبی کانولوشنی & \lr{CNN} & \lr{Convolutional Neural Network} \\
+میدان دید & \lr{FoV} & \lr{Field of View} \\
+سیستم‌های کمک‌رانندهٔ پیشرفته & \lr{ADAS} & \lr{Advanced Driver-Assistance Systems} \\
+ترنسفورمر بینایی & \lr{ViT} & \lr{Vision Transformer} \\
+ترنسفورمر پیش‌بینی چگال & \lr{DPT} & \lr{Dense Prediction Transformer} \\
+قرمز--سبز--آبی & \lr{RGB} & \lr{Red--Green--Blue} \\
+قرمز--سبز--آبی و عمق & \lr{RGB-D} & \lr{Red--Green--Blue--Depth} \\
+پرسپترون چندلایه & \lr{MLP} & \lr{Multi-Layer Perceptron} \\
+تعدیل خطی در سطح ویژگی & \lr{FiLM} & \lr{Feature-wise Linear Modulation} \\
+واحد خطی خطای گاوسی & \lr{GELU} & \lr{Gaussian Error Linear Unit} \\
+واحد خطی یکسوشده & \lr{ReLU} & \lr{Rectified Linear Unit} \\
+واحد پردازش گرافیکی & \lr{GPU} & \lr{Graphics Processing Unit} \\
+قالب تبادل اطلاعات تصویری & \lr{EXIF} & \lr{Exchangeable Image File Format} \\
+ریشهٔ میانگین مربعات خطا & \lr{RMSE} & \lr{Root Mean Squared Error} \\
+خطای نسبی مطلق & \lr{AbsRel} & \lr{Absolute Relative Error} \\
+خطای نسبی مربعی & \lr{SqRel} & \lr{Squared Relative Error} \\
+تابع هزینهٔ لگاریتمی تغییرناپذیر نسبت به مقیاس & \lr{SiLog} & \lr{Scale-Invariant Logarithmic Loss} \\
+عمق متریک صفرنمونه & \lr{DMD} & \lr{Zero-Shot Metric Depth} \\
+\bottomrule
+\end{longtable}
+\normalsize
+\clearpage
+}%
 %%% در این جا محیط هر دو واژه‌نامه را باز تعریف کرده ایم، تا اولا مشکل قرار دادن صفحه اضافی را حل کنیم، ثانیا عنوان واژه‌نامه ها را با دستور addcontentlist وارد فهرست مطالب کرده ایم.
 \let\Oldprintglossary\printglossary
 \renewcommand{\printglossary}{

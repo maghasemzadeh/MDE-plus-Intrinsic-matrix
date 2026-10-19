@@ -4,7 +4,7 @@
 %\makeatletter
 %\def\input@path{{./tex/}}
 %\makeatother
-% در ورژن جدید زی‌پرشین برای تایپ متن‌های ریاضی، این سه بسته، حتماً باید فراخوانی شود
+% در ورژن جدید زی‌پرشین برای تایپ متن‌های ریاضی، این سه بسته، حتما باید فراخوانی شود
 \usepackage{amsthm,amssymb,amsmath}
 % بسته‌ای برای تنطیم حاشیه‌های بالا، پایین، چپ و راست صفحه
 \usepackage[a4paper, top=40mm, bottom=40mm, outer=25mm, inner=35mm]{geometry}
@@ -14,7 +14,7 @@
 
 
 
-% بسته‌های مورد نیاز برای نوشتن کدها، رنگ‌آمیزی آنها و تعیین پوشهٔ کدها
+% بسته‌های مورد نیاز برای نوشتن کدها، رنگ‌آمیزی آنها و تعیین پوشه کدها
 %%man ezafe kardam
 \usepackage{subfig}
 
@@ -29,10 +29,10 @@
 \usepackage{tabularray}
 \usepackage{booktabs, makecell, multirow, tabularx, longtable}
 % بسته‌ای برای رسم کادر
-\usepackage{framed} 
+\usepackage{framed}
 % بسته‌‌ای برای چاپ شدن خودکار تعداد صفحات در صفحه «معرفی پایان‌نامه»
 \usepackage{lastpage}
-% بسته‌ٔ لازم برای: ۱. تغییر شماره‌گذاری صفحات پیوست. ۲. تصحیح باگ آدرس وب حاوی '%' در مراجع
+% بسته‌ لازم برای: ۱. تغییر شماره‌گذاری صفحات پیوست. ۲. تصحیح باگ آدرس وب حاوی '%' در مراجع
 \usepackage{etoolbox}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -52,7 +52,7 @@
 \usepackage{ifdraft}
 \ifdraft
 {%
-	% بسته‌ٔ ایجاد لینک‌های رنگی با امکان جهش
+	% بسته‌ ایجاد لینک‌های رنگی با امکان جهش
 	\usepackage[unicode=true,pagebackref=true,
 colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 	%\usepackage{todonotes}
@@ -60,7 +60,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 	\SetWatermarkText{\ \ \ \rl{پیش‌نویس}}
 	\SetWatermarkScale{1.2}
 }
-{ 
+{
 	\usepackage[pagebackref=false]{hyperref}
 	%\usepackage[disable]{todonotes} % final without TODOs
 }
@@ -103,6 +103,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[export]{adjustbox}
 \usepackage{subfig}
 \usepackage[subfigure]{tocloft}
+% کپشن‌ها و محتوای جدول‌ها اندکی کوچک‌تر از متن اصلی باشند.
+\captionsetup{font=footnotesize,labelfont=bf}
+\AtBeginEnvironment{tabular}{\footnotesize}
+\AtBeginEnvironment{tabularx}{\footnotesize}
+\AtBeginEnvironment{longtable}{\footnotesize}
 % بسته‌ای برای رسم نمودارها و نیز صفحه مالکیت اثر
 \usepackage{tikz}
 \usetikzlibrary{arrows.meta,positioning,shapes.geometric}
@@ -130,11 +135,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %%% راهنمای هر نمودار نداشته باشد.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \definecolor{thProposed}{HTML}{1F6FB2} % مدل پیشنهادی (با ماتریس کالیبراسیون دوربین)
-\definecolor{thControl}{HTML}{C0392B}  % مدل کنترل (بدون ماتریس کالیبراسیون دوربین)
-\definecolor{thBase}{HTML}{78838C}     % مدل پایهٔ منتشرشده
-\definecolor{thIdeal}{HTML}{2E9E5B}    % مرجع/رفتار ایده‌آل هندسی
-\definecolor{thAccent}{HTML}{E08A1E}   % تأکید و حاشیه‌نویسی
-\definecolor{thInk}{HTML}{2B2B2B}      % رنگ خط و متن شکل‌ها
+\definecolor{thControl}{HTML}{C0392B} % مدل کنترل (بدون ماتریس کالیبراسیون دوربین)
+\definecolor{thBase}{HTML}{78838C} % مدل پایه منتشرشده
+\definecolor{thIdeal}{HTML}{2E9E5B} % مرجع/رفتار ایده‌آل هندسی
+\definecolor{thAccent}{HTML}{E08A1E} % تاکید و حاشیه‌نویسی
+\definecolor{thInk}{HTML}{2B2B2B} % رنگ خط و متن شکل‌ها
 \definecolor{thPanel}{HTML}{EAF1F8}
 \definecolor{thPanelAlt}{HTML}{FDF0E6}
 \definecolor{thPanelGreen}{HTML}{E7F4EC}
@@ -142,33 +147,33 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \definecolor{thPanelRed}{HTML}{FBEAE8}
 
 \pgfplotsset{
-  thesisplot/.style={
-    width=0.86\textwidth,
-    height=6.4cm,
-    grid=major,
-    grid style={gray!25, very thin},
-    axis line style={gray!55},
-    tick align=outside,
-    label style={font=\small},
-    tick label style={font=\small},
-    title style={font=\small},
-    legend cell align=left,
-    legend style={font=\small, draw=gray!45, fill=white},
-    every axis plot/.append style={thick},
-  },
+ thesisplot/.style={
+  width=0.86\textwidth,
+  height=6.4cm,
+  grid=major,
+  grid style={gray!25, very thin},
+  axis line style={gray!55},
+  tick align=outside,
+  label style={font=\small},
+  tick label style={font=\small},
+  title style={font=\small},
+  legend cell align=left,
+  legend style={font=\small, draw=gray!45, fill=white},
+  every axis plot/.append style={thick},
+ },
 }
 
 \tikzset{
-  thblock/.style={draw=thInk!60, thick, rounded corners=2pt, align=center,
-                  inner sep=5pt, font=\small},
-  thdata/.style={draw=thInk!45, thick, rounded corners=9pt, align=center,
-                 inner sep=5pt, font=\small, fill=thPanelGray},
-  thnote/.style={font=\scriptsize, align=center, text=thInk},
-  tharrow/.style={-{Latex[length=2.2mm]}, thick, draw=thInk!75},
-  thdashed/.style={-{Latex[length=2.2mm]}, thick, dashed, draw=thAccent},
+ thblock/.style={draw=thInk!60, thick, rounded corners=2pt, align=center,
+         inner sep=5pt, font=\small},
+ thdata/.style={draw=thInk!45, thick, rounded corners=9pt, align=center,
+         inner sep=5pt, font=\small, fill=thPanelGray},
+ thnote/.style={font=\scriptsize, align=center, text=thInk},
+ tharrow/.style={-{Latex[length=2.2mm]}, thick, draw=thInk!75},
+ thdashed/.style={-{Latex[length=2.2mm]}, thick, dashed, draw=thAccent},
 }
 % بسته‌ای برای ظاهر شدن «مراجع» و «نمایه» در فهرست مطالب
-\usepackage[nottoc]{tocbibind}
+\usepackage[nottoc,notlof,notlot]{tocbibind}
 % دستورات مربوط به ایجاد نمایه
 \usepackage{makeidx}
 \makeindex
@@ -181,9 +186,9 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage{morewrites}
 
 %%% سازگاری با نسخه‌های جدید array/LaTeX:
-%%% وصلهٔ \@tabular در بستهٔ bidi هنوز \UseMathForPositioningText را صدا می‌زند،
+%%% وصله \@tabular در بسته bidi هنوز \UseMathForPositioningText را صدا می‌زند،
 %%% ولی array.sty در توزیع‌های جدید آن را حذف کرده است. تعریف تهی زیر همان چیزی
-%%% است که array نسخهٔ ۲۰۲۴ ارائه می‌کرد؛ در توزیع‌های قدیمی‌تر بی‌اثر است.
+%%% است که array نسخه ۲۰۲۴ ارایه می‌کرد؛ در توزیع‌های قدیمی‌تر بی‌اثر است.
 \providecommand\UseMathForPositioningText{}
 %%%%%%%%%%%%%%%%%%%%%%%%%%
 %khodam
@@ -203,7 +208,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \usepackage[extrafootnotefeatures, displaymathdigits=persian]{xepersian}
 \newcommand{\fafootnote}[1]{\footnote{#1}}
 \newcommand{\enfootnote}[1]{\LTRfootnote{#1}}
-% شمارهٔ پاورقی در هر دو جهت متن با رقم فارسی نمایش داده شود.  جهتِ خود
+% شماره پاورقی در هر دو جهت متن با رقم فارسی نمایش داده شود. جهت خود
 % پاورقی را xepersian تعیین می‌کند: پاورقی فارسی راست‌به‌چپ و پاورقی انگلیسی
 % چپ‌به‌راست باقی می‌ماند؛ این تعریف فقط قلم رقم را مستقل از جهت متن می‌کند.
 \renewcommand{\thefootnote}{\persianfont\arabic{footnote}}
@@ -215,14 +220,14 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % پروتکل، مجموعه‌داده یا دور آموزش) پس از این نام ثابت افزوده می‌شود.
 \newcommand{\proposedmodel}{مدل پیشنهادی}
 \newcommand{\controlmodel}{مدل کنترل}
-\newcommand{\basemodel}{مدل پایهٔ \lr{Depth Anything V2}}
-\newcommand{\publishedbasemodel}{\basemodel{}، نسخهٔ منتشرشده}
+\newcommand{\basemodel}{مدل پایه \lr{Depth Anything V2}}
+\newcommand{\publishedbasemodel}{\basemodel{}، نسخه منتشرشده}
 \newcommand{\calibrationmatrix}{\mbox{\persianfont\rl{ماتریس کالیبراسیون دوربین}}}
-% برچسب‌های کوتاه ویژهٔ جدول‌ها. جزئیات پیکربندی (انکودر، پروتکل و
-% دادهٔ آموزش) در ستون‌های مستقل یا عنوان جدول می‌آیند تا ستون «مدل» فشرده بماند.
+% برچسب‌های کوتاه ویژه جدول‌ها. جزییات پیکربندی (انکودر، پروتکل و
+% داده آموزش) در ستون‌های مستقل یا عنوان جدول می‌آیند تا ستون «مدل» فشرده بماند.
 \newcommand{\tableproposedmodel}{پیشنهادی}
 \newcommand{\tablecontrolmodel}{کنترل}
-\newcommand{\tablepublishedmodel}{پایهٔ منتشرشده}
+\newcommand{\tablepublishedmodel}{پایه منتشرشده}
 % \paragraphfootnotes
 
 \makeatletter
@@ -232,7 +237,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % LiberationSerif or FreeSerif as free equivalents of Times New Roman
 \setlatintextfont[Path={./font/}, BoldFont={LiberationSerif-Bold.ttf}, BoldItalicFont={LiberationSerif-BoldItalic.ttf}, ItalicFont={LiberationSerif-Italic.ttf},Scale=1]{LiberationSerif-Regular.ttf}
 % چنانچه می‌خواهید اعداد در فرمول‌ها، انگلیسی باشد، خط زیر را غیرفعال کنید
-% و گزینهٔ displaymathdigits=persian را از خط ۱۰۹ حذف کنید.
+% و گزینه displaymathdigits=persian را از خط ۱۰۹ حذف کنید.
 \setdigitfont[Path={./font/}, Scale=1.2]{IRLotusICEE.ttf}
 % تعریف قلم‌های فارسی و انگلیسی اضافی برای استفاده در بعضی از قسمت‌های متن
 \setiranicfont[Path={./font/}, Scale=1.3]{IRLotusICEE_Iranic.ttf}				% ایرانیک، خوابیده به چپ
@@ -246,7 +251,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \settextfont{XB Niloofar}
 \setlatintextfont{Junicode}
 % چنانچه می‌خواهید اعداد در فرمول‌ها، انگلیسی باشد، خط زیر را غیرفعال کنید
-% و گزینهٔ displaymathdigits=persian را از خط ۱۰۹ حذف کنید.
+% و گزینه displaymathdigits=persian را از خط ۱۰۹ حذف کنید.
 \setdigitfont{XB Niloofar}
 % تعریف قلم‌های فارسی و انگلیسی اضافی برای استفاده در بعضی از قسمت‌های متن
 % \setmathsfdigitfont{XB Titre}
@@ -266,7 +271,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \makeatletter
 \providecommand\@dotsep{5}
 \def\listtodoname{فهرست کارهای باقیمانده}
-\def\listoftodos{\noindent{\Large\vspace{10mm}\textbf{\listtodoname}}\@starttoc{tdo}}
+\def\listoftodos{\noindent{\Large\vspace{10mm}\listtodoname}\@starttoc{tdo}}
 \renewcommand{\@todonotes@MissingFigureText}{شکل}
 \renewcommand{\@todonotes@MissingFigureUp}{شکل}
 \renewcommand{\@todonotes@MissingFigureDown}{جاافتاده}
@@ -276,12 +281,12 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % دستوری برای حذف کلمه «abstract»
 %\renewcommand{\latinabstract}{}
 % دستوری برای تغییر نام کلمه «اثبات» به «برهان»
-\renewcommand\proofname{\textbf{برهان}}
+\renewcommand\proofname{برهان}
 % دستوری برای تغییر نام کلمه «کتاب‌نامه» به «مراجع»
 \renewcommand{\bibname}{مراجع}
 % دستوری برای تعریف واژه‌نامه انگلیسی به فارسی
 \newcommand\persiangloss[2]{#1\dotfill\lr{#2}\\}
-% دستوری برای تعریف واژه‌نامه فارسی به انگلیسی 
+% دستوری برای تعریف واژه‌نامه فارسی به انگلیسی
 \newcommand\englishgloss[2]{#2\dotfill\lr{#1}\\}
 % تعریف دستور جدید «\پ» برای خلاصه‌نویسی جهت نوشتن عبارت «پروژه/پایان‌نامه/رساله»
 \newcommand{\پ}{پروژه/پایان‌نامه/رساله }
@@ -310,39 +315,39 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \def\listfigurename{فهرست تصاویر}
 \def\listtablename{فهرست جداول}
 
-% دستور های لازم برای تعریف ترجمهٔ دستورات الگوریتم
+% دستور های لازم برای تعریف ترجمه دستورات الگوریتم
 \makeatletter
-\renewcommand{\algorithmicrequire}{\if@RTL\textbf{ورودی:}\else\textbf{Require:}\fi}
-\renewcommand{\algorithmicensure}{\if@RTL\textbf{خروجی:}\else\textbf{Ensure:}\fi}
-\renewcommand{\algorithmicend}{\if@RTL\textbf{پایان}\else\textbf{end}\fi}
-\renewcommand{\algorithmicif}{\if@RTL\textbf{اگر}\else\textbf{if}\fi}
-\renewcommand{\algorithmicthen}{\if@RTL\textbf{آنگاه}\else\textbf{then}\fi}
-\renewcommand{\algorithmicelse}{\if@RTL\textbf{وگرنه}\else\textbf{else}\fi}
-\renewcommand{\algorithmicfor}{\if@RTL\textbf{برای}\else\textbf{for}\fi}
-\renewcommand{\algorithmicforall}{\if@RTL\textbf{برای هر}\else\textbf{for all}\fi}
-\renewcommand{\algorithmicdo}{\if@RTL\textbf{انجام بده}\else\textbf{do}\fi}
-\renewcommand{\algorithmicwhile}{\if@RTL\textbf{تا زمانی که}\else\textbf{while}\fi}
-\renewcommand{\algorithmicloop}{\if@RTL\textbf{تکرار کن}\else\textbf{loop}\fi}
-\renewcommand{\algorithmicrepeat}{\if@RTL\textbf{تکرار کن}\else\textbf{repeat}\fi}
-\renewcommand{\algorithmicuntil}{\if@RTL\textbf{تا زمانی که}\else\textbf{until}\fi}
-\renewcommand{\algorithmicprint}{\if@RTL\textbf{چاپ کن}\else\textbf{print}\fi}
-\renewcommand{\algorithmicreturn}{\if@RTL\textbf{بازگردان}\else\textbf{return}\fi}
-\renewcommand{\algorithmicand}{\if@RTL\textbf{و}\else\textbf{and}\fi}
-\renewcommand{\algorithmicor}{\if@RTL\textbf{و یا}\else\textbf{or}\fi} % TODO add better translate
-\renewcommand{\algorithmicxor}{\if@RTL\textbf{یا}\else\textbf{xor}\fi} % TODO add better translate
-\renewcommand{\algorithmicnot}{\if@RTL\textbf{نقیض}\else\textbf{not}\fi}
-\renewcommand{\algorithmicto}{\if@RTL\textbf{تا}\else\textbf{to}\fi}
-\renewcommand{\algorithmicinputs}{\if@RTL\textbf{ورودی‌ها}\else\textbf{inputs}\fi}
-\renewcommand{\algorithmicoutputs}{\if@RTL\textbf{خروجی‌ها}\else\textbf{outputs}\fi}
-\renewcommand{\algorithmicglobals}{\if@RTL\textbf{متغیرهای عمومی}\else\textbf{globals}\fi}
-\renewcommand{\algorithmicbody}{\if@RTL\textbf{انجام بده}\else\textbf{do}\fi}
-\renewcommand{\algorithmictrue}{\if@RTL\textbf{درست}\else\textbf{true}\fi}
-\renewcommand{\algorithmicfalse}{\if@RTL\textbf{نادرست}\else\textbf{false}\fi}
-\renewcommand{\algorithmicendif}{\algorithmicend\textbf{ شرط }\algorithmicif}
-\renewcommand{\algorithmicendfor}{\algorithmicend\textbf{ حلقهٔ }\algorithmicfor}
-\renewcommand{\algorithmicendwhile}{\algorithmicend\textbf{ حلقهٔ }\algorithmicwhile}
-\renewcommand{\algorithmicendloop}{\algorithmicend\textbf{ حلقهٔ }\algorithmicloop}
-\renewcommand{\algorithmiccomment}[1]{\{{\itshape #1}\}}
+\renewcommand{\algorithmicrequire}{\if@RTL{ورودی:}\else Require:\fi}
+\renewcommand{\algorithmicensure}{\if@RTL{خروجی:}\else Ensure:\fi}
+\renewcommand{\algorithmicend}{\if@RTL{پایان}\else end\fi}
+\renewcommand{\algorithmicif}{\if@RTL{اگر}\else if\fi}
+\renewcommand{\algorithmicthen}{\if@RTL{آنگاه}\else then\fi}
+\renewcommand{\algorithmicelse}{\if@RTL{وگرنه}\else else\fi}
+\renewcommand{\algorithmicfor}{\if@RTL{برای}\else for\fi}
+\renewcommand{\algorithmicforall}{\if@RTL{برای هر}\else for all\fi}
+\renewcommand{\algorithmicdo}{\if@RTL{انجام بده}\else do\fi}
+\renewcommand{\algorithmicwhile}{\if@RTL{تا زمانی که}\else while\fi}
+\renewcommand{\algorithmicloop}{\if@RTL{تکرار کن}\else loop\fi}
+\renewcommand{\algorithmicrepeat}{\if@RTL{تکرار کن}\else repeat\fi}
+\renewcommand{\algorithmicuntil}{\if@RTL{تا زمانی که}\else until\fi}
+\renewcommand{\algorithmicprint}{\if@RTL{چاپ کن}\else print\fi}
+\renewcommand{\algorithmicreturn}{\if@RTL{بازگردان}\else return\fi}
+\renewcommand{\algorithmicand}{\if@RTL{و}\else and\fi}
+\renewcommand{\algorithmicor}{\if@RTL{و یا}\else or\fi} % TODO add better translate
+\renewcommand{\algorithmicxor}{\if@RTL{یا}\else xor\fi} % TODO add better translate
+\renewcommand{\algorithmicnot}{\if@RTL{نقیض}\else not\fi}
+\renewcommand{\algorithmicto}{\if@RTL{تا}\else to\fi}
+\renewcommand{\algorithmicinputs}{\if@RTL{ورودی‌ها}\else inputs\fi}
+\renewcommand{\algorithmicoutputs}{\if@RTL{خروجی‌ها}\else outputs\fi}
+\renewcommand{\algorithmicglobals}{\if@RTL{متغیرهای عمومی}\else globals\fi}
+\renewcommand{\algorithmicbody}{\if@RTL{انجام بده}\else do\fi}
+\renewcommand{\algorithmictrue}{\if@RTL{درست}\else true\fi}
+\renewcommand{\algorithmicfalse}{\if@RTL{نادرست}\else false\fi}
+\renewcommand{\algorithmicendif}{\algorithmicend شرط \algorithmicif}
+\renewcommand{\algorithmicendfor}{\algorithmicend حلقه \algorithmicfor}
+\renewcommand{\algorithmicendwhile}{\algorithmicend حلقه \algorithmicwhile}
+\renewcommand{\algorithmicendloop}{\algorithmicend حلقه \algorithmicloop}
+\renewcommand{\algorithmiccomment}[1]{\{{ #1}\}}
 \makeatletter
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -353,12 +358,14 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \pagestyle{fancy}
 %% دستورات زیر سبک صفحات fancy را تغییر می‌دهد:
 % O=Odd, E=Even, L=Left, R=Right
-% در صورت oneside بودن، عنوان فصل، سمت چپ ظاهر می‌شود.
+% در هر دو حالت oneside و twoside، سربرگ بر اساس جای فیزیکی روی صفحه تنظیم می‌شود.
+% سمت چپ: شماره و نام فصل؛ سمت راست: عنوان پایان‌نامه.
 \fancyhead{}
-\fancyhead[OR]{\small\leftmark}
-\fancyhead[ER]{\small\leftmark}
-\fancyhead[OL,EL]{\thepage}
-\fancyfoot{} % حذف محتوای پیش‌فرض پانویس
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\parbox[b]{0.45\textwidth}{\raggedleft\footnotesize\@title}}
+\fancyfoot{}
+\fancyfoot[C]{\thepage}
+\setlength{\headheight}{26pt}
 %\fancyhead[ER]{\small\rightmark}
 %\fancyhead[OR]{\footnotesize}
 %\fancyhead[EL]{\footnotesize\rightmark}
@@ -369,8 +376,8 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %\renewcommand{\rightmark}[1]{\@title}
 %\makeatother
 %}
-% شکل‌دهی سربرگ در صفحات اولیه هر فصل
-\patchcmd{\chapter}{\thispagestyle{plain}}{\thispagestyle{empty}}{}{}
+% در فایل هر فصل، پس از دستور \chapter، صفحه عنوان با
+% «\thispagestyle{fancy}\clearpage» بسته می‌شود تا متن از صفحه بعد آغاز شود.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %\def\MATtextbaseline{1.5}
 %\renewcommand{\baselinestretch}{\MATtextbaseline}
@@ -394,41 +401,41 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \addtolength\mylenapp{\cftchapnumwidth}
 
 \setlength\cftpartnumwidth{\mylenprt}
-\setlength\cftchapnumwidth{\mylenchp}	
+\setlength\cftchapnumwidth{\mylenchp}
 
 \makeatletter
 {\def\thebibliography#1{\chapter*{\refname\@mkboth
-   {\uppercase{\refname}}{\uppercase{\refname}}}\list
-   {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}
-   \rightmargin\labelwidth
-   \advance\rightmargin\labelsep
-   \advance\rightmargin\bibindent
-   \itemindent -\bibindent
+  {\uppercase{\refname}}{\uppercase{\refname}}}\list
+  {[\arabic{enumi}]}{\settowidth\labelwidth{[#1]}
+  \rightmargin\labelwidth
+  \advance\rightmargin\labelsep
+  \advance\rightmargin\bibindent
+  \itemindent -\bibindent
 
-   \listparindent \itemindent
-   \parsep \z@
-   \usecounter{enumi}}
-   \def\newblock{}
-   \sloppy
-   \sfcode`\.=1000\relax}}
-   
-%اگر مایلید در شماره گذاری حرفی و ابجد به جای آ از الف استفاده شود دستورات زیر را فعال کنید.   
+  \listparindent \itemindent
+  \parsep \z@
+  \usecounter{enumi}}
+  \def\newblock{}
+  \sloppy
+  \sfcode`\.=1000\relax}}
+
+%اگر مایلید در شماره گذاری حرفی و ابجد به جای آ از الف استفاده شود دستورات زیر را فعال کنید.
 %\def\@Abjad#1{%
-%  \ifcase#1\or الف\or ب\or ج\or د%
-%           \or هـ\or و\or ز\or ح\or ط%
-%           \or ی\or ک\or ل\or م\or ن%
-%           \or س\or ع\or ف\or ص%
-%           \or ق\or ر\or ش\or ت\or ث%
-%            \or خ\or ذ\or ض\or ظ\or غ%
-%            \else\@ctrerr\fi}
+% \ifcase#1\or الف\or ب\or ج\or د%
+% \or هـ\or و\or ز\or ح\or ط%
+% \or ی\or ک\or ل\or م\or ن%
+% \or س\or ع\or ف\or ص%
+% \or ق\or ر\or ش\or ت\or ث%
+% \or خ\or ذ\or ض\or ظ\or غ%
+% \else\@ctrerr\fi}
 %
 % \def\abj@num@i#1{%
-%   \ifcase#1\or الف\or ب\or ج\or د%
-%            \or هـ‍\or و\or ز\or ح\or ط\fi
+% \ifcase#1\or الف\or ب\or ج\or د%
+% \or هـ‍\or و\or ز\or ح\or ط\fi
 
-%   \ifnum#1=\z@\abjad@zero\fi}   
-%  
-%   \def\@harfi#1{\ifcase#1\or الف\or ب\or پ\or ت\or ث\or
+% \ifnum#1=\z@\abjad@zero\fi}
+%
+% \def\@harfi#1{\ifcase#1\or الف\or ب\or پ\or ت\or ث\or
 
 % ج\or چ\or ح\or خ\or د\or ذ\or ر\or ز\or ژ\or س\or ش\or ص\or ض\or ط\or ظ\or ع\or غ\or
 
@@ -438,10 +445,10 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \makeatother
 
 %%% امکان درج کد در سند
-% در این قسمت رنگ، قلم و قالب‌بندی قسمت‌های مختلف یک کد تعیین می‌شود. 
+% در این قسمت رنگ، قلم و قالب‌بندی قسمت‌های مختلف یک کد تعیین می‌شود.
 \lstdefinestyle{myStyle}{
 	basicstyle=\ttfamily, % whole listing /w verbatim font
-	keywordstyle=\color{blue}\bfseries, % bold black keywords
+	keywordstyle=\color{blue}, % bold black keywords
 	identifierstyle=, % nothing happens
 	commentstyle=\color{LimeGreen}, % green comments
 	stringstyle=\ttfamily\color{red}, % red typewriter font for strings
@@ -456,7 +463,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 	captiondirection=RTL
 }
 \lstset{style=myStyle} % command to set default style
-\def\lstlistingname{\rl{برنامهٔ}}
+\def\lstlistingname{\rl{برنامه}}
 \def\lstlistlistingname{\rl{فهرست برنامه‌ها}}
 
 

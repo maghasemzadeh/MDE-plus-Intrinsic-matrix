@@ -140,7 +140,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		{\huge\titlefont\bf \@title}\par
 		\vskip 1cm
 		\par
-		{\Large\bfseries{\@name\ \ \@surname}}
+		{\Large\bfseries{\@name\space\@surname}}
 		\par
 		\vskip 15mm
 		\large
@@ -234,7 +234,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		\vskip 1cm
 		\par
 		{\Large نگارش}\par
-		{\Large\bfseries{\@name\ \ \@surname}}
+		{\Large\bfseries{\@name\space\@surname}}
 		\par
 		\vskip 15mm
 		\large
@@ -308,9 +308,9 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		}
 	\end{center}
 	%\vspace{.5cm}
-هیأت داوران پس از مطالعه‌ی \@projectLabel{}ٔ  و شرکت در جلسه‌ی دفاع از پایان‌نامه‌ٔ تهیه‌شده با عنوان 
+هیأت داوران پس از مطالعه‌ی \@projectLabel{}ٔ و شرکت در جلسه‌ی دفاع از پایان‌نامه‌ٔ تهیه‌شده با عنوان
 «\@title{}»
-توسط  آقای~/~خانم \@name{} \@surname{} صحت و کفایت تحقیق انجام شده را برای اخذ درجه‌ی
+توسط آقای~/~خانم \@name{} \@surname{} صحت و کفایت تحقیق انجام شده را برای اخذ درجه‌ی
 \@degree{}
 در رشته‌ی 
 \@subject{}
@@ -532,7 +532,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 	% \addcontentsline{toc}{section}{چکیده}
 	\@faabstract
 	\par\noindent
-	\paragraph{واژگان کلیدی}
+	\paragraph*{واژگان کلیدی}
 	\@keywords
 }
 
@@ -548,7 +548,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 	\@enabstract
 	\par
 	\noindent
-	\paragraph{Keywords}
+	\paragraph*{Keywords}
 	\@latinkeywords
 }
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -604,7 +604,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		\vskip 15mm
 		{\bfseries\latinby}\par
 		{\large %\supervisorfont
-			\rm \Large\bfseries \@latinname \; \@latinsurname}\par
+			\rm \Large\bfseries \@latinname\space\@latinsurname}\par
 		
 		\vskip 15mm
 		
@@ -657,7 +657,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 	\fi}
 
 \def\onvan{عنوان}
-\def\writtenfor{دوره  }
+\def\writtenfor{دوره }
 \def\by{پژوهشگر}
 \def\latinby{By:}
 \def\cleardoublepage{\clearpage\if@twoside \ifodd\c@page\else

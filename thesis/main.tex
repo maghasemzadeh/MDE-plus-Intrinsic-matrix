@@ -50,6 +50,16 @@ twoside
 \include{./tex/chapter4}		% فصل چهارم: نتایج
 \include{./tex/chapter5}		% فصل پنجم: بحث و نتیجه‌گیری
 
+% فهرست‌های اصلی در انتهای متن می‌آیند تا فهرست مطالب با فصل اول آغاز شود.
+\cleardoublepage
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\addcontentsline{toc}{chapter}{فهرست اختصارات}
+% فهرست اختصارات در این پایان‌نامه به‌صورت جدول دستی چاپ می‌شود.
+\printabbreviationmanual
+
 % مراجع
 % اگر از استیل‌های natbib استفاده می‌کنید باید دو خط را در فایل commands.tex تغییر دهید.
 \pagestyle{empty}

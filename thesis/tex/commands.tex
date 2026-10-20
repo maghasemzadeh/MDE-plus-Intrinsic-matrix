@@ -317,36 +317,36 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 
 % دستور های لازم برای تعریف ترجمه دستورات الگوریتم
 \makeatletter
-\renewcommand{\algorithmicrequire}{\if@RTL{ورودی:}\else Require:\fi}
-\renewcommand{\algorithmicensure}{\if@RTL{خروجی:}\else Ensure:\fi}
-\renewcommand{\algorithmicend}{\if@RTL{پایان}\else end\fi}
-\renewcommand{\algorithmicif}{\if@RTL{اگر}\else if\fi}
-\renewcommand{\algorithmicthen}{\if@RTL{آنگاه}\else then\fi}
-\renewcommand{\algorithmicelse}{\if@RTL{وگرنه}\else else\fi}
-\renewcommand{\algorithmicfor}{\if@RTL{برای}\else for\fi}
-\renewcommand{\algorithmicforall}{\if@RTL{برای هر}\else for all\fi}
-\renewcommand{\algorithmicdo}{\if@RTL{انجام بده}\else do\fi}
-\renewcommand{\algorithmicwhile}{\if@RTL{تا زمانی که}\else while\fi}
-\renewcommand{\algorithmicloop}{\if@RTL{تکرار کن}\else loop\fi}
-\renewcommand{\algorithmicrepeat}{\if@RTL{تکرار کن}\else repeat\fi}
-\renewcommand{\algorithmicuntil}{\if@RTL{تا زمانی که}\else until\fi}
-\renewcommand{\algorithmicprint}{\if@RTL{چاپ کن}\else print\fi}
-\renewcommand{\algorithmicreturn}{\if@RTL{بازگردان}\else return\fi}
-\renewcommand{\algorithmicand}{\if@RTL{و}\else and\fi}
-\renewcommand{\algorithmicor}{\if@RTL{و یا}\else or\fi} % TODO add better translate
-\renewcommand{\algorithmicxor}{\if@RTL{یا}\else xor\fi} % TODO add better translate
-\renewcommand{\algorithmicnot}{\if@RTL{نقیض}\else not\fi}
-\renewcommand{\algorithmicto}{\if@RTL{تا}\else to\fi}
-\renewcommand{\algorithmicinputs}{\if@RTL{ورودی‌ها}\else inputs\fi}
-\renewcommand{\algorithmicoutputs}{\if@RTL{خروجی‌ها}\else outputs\fi}
-\renewcommand{\algorithmicglobals}{\if@RTL{متغیرهای عمومی}\else globals\fi}
-\renewcommand{\algorithmicbody}{\if@RTL{انجام بده}\else do\fi}
-\renewcommand{\algorithmictrue}{\if@RTL{درست}\else true\fi}
-\renewcommand{\algorithmicfalse}{\if@RTL{نادرست}\else false\fi}
-\renewcommand{\algorithmicendif}{\algorithmicend شرط \algorithmicif}
-\renewcommand{\algorithmicendfor}{\algorithmicend حلقه \algorithmicfor}
-\renewcommand{\algorithmicendwhile}{\algorithmicend حلقه \algorithmicwhile}
-\renewcommand{\algorithmicendloop}{\algorithmicend حلقه \algorithmicloop}
+\renewcommand{\algorithmicrequire}{\if@RTL{Require:}\else Require:\fi}
+\renewcommand{\algorithmicensure}{\if@RTL{Ensure:}\else Ensure:\fi}
+\renewcommand{\algorithmicend}{\if@RTL{end}\else end\fi}
+\renewcommand{\algorithmicif}{\if@RTL{if}\else if\fi}
+\renewcommand{\algorithmicthen}{\if@RTL{then}\else then\fi}
+\renewcommand{\algorithmicelse}{\if@RTL{else}\else else\fi}
+\renewcommand{\algorithmicfor}{\if@RTL{for}\else for\fi}
+\renewcommand{\algorithmicforall}{\if@RTL{for all}\else for all\fi}
+\renewcommand{\algorithmicdo}{\if@RTL{do}\else do\fi}
+\renewcommand{\algorithmicwhile}{\if@RTL{while}\else while\fi}
+\renewcommand{\algorithmicloop}{\if@RTL{loop}\else loop\fi}
+\renewcommand{\algorithmicrepeat}{\if@RTL{repeat}\else repeat\fi}
+\renewcommand{\algorithmicuntil}{\if@RTL{until}\else until\fi}
+\renewcommand{\algorithmicprint}{\if@RTL{print}\else print\fi}
+\renewcommand{\algorithmicreturn}{\if@RTL{return}\else return\fi}
+\renewcommand{\algorithmicand}{\if@RTL{and}\else and\fi}
+\renewcommand{\algorithmicor}{\if@RTL{or}\else or\fi} % TODO add better translate
+\renewcommand{\algorithmicxor}{\if@RTL{xor}\else xor\fi} % TODO add better translate
+\renewcommand{\algorithmicnot}{\if@RTL{not}\else not\fi}
+\renewcommand{\algorithmicto}{\if@RTL{to}\else to\fi}
+\renewcommand{\algorithmicinputs}{\if@RTL{inputs}\else inputs\fi}
+\renewcommand{\algorithmicoutputs}{\if@RTL{outputs}\else outputs\fi}
+\renewcommand{\algorithmicglobals}{\if@RTL{globals}\else globals\fi}
+\renewcommand{\algorithmicbody}{\if@RTL{do}\else do\fi}
+\renewcommand{\algorithmictrue}{\if@RTL{true}\else true\fi}
+\renewcommand{\algorithmicfalse}{\if@RTL{false}\else false\fi}
+\renewcommand{\algorithmicendif}{\algorithmicend \algorithmicif}
+\renewcommand{\algorithmicendfor}{\algorithmicend \algorithmicfor}
+\renewcommand{\algorithmicendwhile}{\algorithmicend \algorithmicwhile}
+\renewcommand{\algorithmicendloop}{\algorithmicend \algorithmicloop}
 \renewcommand{\algorithmiccomment}[1]{\{{ #1}\}}
 \makeatletter
 

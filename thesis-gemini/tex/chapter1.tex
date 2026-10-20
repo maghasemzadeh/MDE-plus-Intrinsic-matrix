@@ -56,77 +56,7 @@
 بازیابی عمق متریک تنها بر اساس شدت پیکسل‌ها ذاتاً نامعین است~\cite{HartleyZisserman2004}. اگرچه برخی روش‌ها با اعمال نرمال‌سازی یا استفاده از معیارهای نسبی، عملکرد مناسبی در سنجش‌های غیرمتریک نشان می‌دهند، اما این رویکردها تضمینی برای پایداری مقیاس فیزیکی عمق فراهم نمی‌کنند. در نتیجه، تغییر شرایط تصویربرداری، از جمله تفاوت در نوع دوربین یا پارامترهای آن، می‌تواند منجر به تغییرات معنادار در کیفیت تخمین عمق شود.
 
 
-\begin{figure}[htbp]
-    \centering
-    \begin{tikzpicture}[font=\small]
 
-    %%% ---------- پنل (الف): ابهام مقیاس روی یک پرتو دید (سمت راست) ----------
-    \begin{scope}[xshift=7.7cm]
-        \fill[thPanel, rounded corners=3pt] (-0.55,-2.35) rectangle (6.35,2.45);
-
-        % بدنهٔ دوربین و مرکز نوری
-        \draw[thick, draw=thInk, fill=white] (-0.10,-0.30) rectangle (0.50,0.30);
-        \fill[thInk] (0.50,0) circle (1.6pt);
-        \node[thnote, below=2pt] at (0.20,-0.32) {$C$};
-
-        % صفحهٔ تصویر
-        \draw[line width=1.4pt, thProposed] (1.35,-0.95) -- (1.35,0.95);
-        \node[thnote, text=thProposed, anchor=south] at (1.35,1.00) {\rl{صفحهٔ تصویر}};
-
-        % پرتوهای حاشیهٔ میدان دید
-        \draw[dashed, thInk!65] (0.50,0) -- (5.90,1.45);
-        \draw[dashed, thInk!65] (0.50,0) -- (5.90,-1.45);
-
-        % تصویر مشترک هر دو جسم روی صفحهٔ تصویر
-        \draw[line width=2pt, thAccent] (1.35,-0.228) -- (1.35,0.228);
-
-        % جسم نزدیک و کوچک
-        \fill[thControl, opacity=0.9] (2.28,-0.51) rectangle (2.52,0.51);
-        \node[thnote, text=thControl, anchor=north, align=center] at (2.40,-0.60)
-            {\rl{جسم نزدیک}\\ \rl{و کوچک}};
-
-        % جسم دور و بزرگ
-        \fill[thIdeal, opacity=0.9] (4.88,-1.21) rectangle (5.12,1.21);
-        \node[thnote, text=thIdeal, anchor=north, align=center] at (5.00,-1.30)
-            {\rl{جسم دور}\\ \rl{و بزرگ}};
-
-        \node[font=\small, anchor=south] at (2.90,1.95) {\rl{(الف) ابهام مقیاس روی یک پرتو دید}};
-    \end{scope}
-
-    %%% ---------- پنل (ب): هم‌ارزی $(f,Z)$ و $(\alpha f, \alpha Z)$ (سمت چپ) ----------
-    \begin{scope}
-        \fill[thPanelAlt, rounded corners=3pt] (-0.55,-2.35) rectangle (6.35,2.45);
-
-        \node[thblock, fill=white, text width=2.55cm] (camA) at (1.15,1.05)
-            {\rl{دوربین ۱}\\[1pt] \rl{کانون $f$}\\ \rl{عمق صحنه $Z$}};
-        \node[thblock, fill=white, text width=2.55cm] (camB) at (1.15,-1.05)
-            {\rl{دوربین ۲}\\[1pt] \rl{کانون $\alpha f$}\\ \rl{عمق صحنه $\alpha Z$}};
-
-        \node[thdata, fill=white, text width=1.9cm] (img) at (4.75,0)
-            {\rl{تصویر ثبت‌شدهٔ یکسان}};
-
-        \draw[tharrow] (camA) -- (img);
-        \draw[tharrow] (camB) -- (img);
-
-        \node[thnote, anchor=north, text width=5.7cm] at (2.90,-1.75)
-            {$u=\dfrac{f X}{Z}=\dfrac{\alpha f X}{\alpha Z}$};
-
-        \node[font=\small, anchor=south] at (2.90,1.95) {\rl{(ب) هم‌ارزی دقیق کانون و مقیاس}};
-    \end{scope}
-
-    \end{tikzpicture}
-    \caption[ماهیت هندسی ابهام مقیاس در تخمین عمق تک‌دوربینه]{ماهیت
-    هندسی ابهام مقیاس در تخمین عمق تک‌دوربینه.
-    (الف) دو جسم با اندازه و فاصلهٔ متفاوت که روی یک پرتو دید قرار دارند،
-    تصویر کاملاً یکسانی تولید می‌کنند؛ بنابراین شدت پیکسل‌ها به‌تنهایی
-    مقیاس مطلق صحنه را تعیین نمی‌کند.
-    (ب) صورت کمی همین ابهام: اگر فاصلهٔ کانونی و تمام عمق‌های صحنه
-    هم‌زمان در ضریب $\alpha$ ضرب شوند، تصویر حاصل بدون هیچ تغییری باقی می‌ماند.
-    رفع این ابهام تنها با دانستن فاصلهٔ کانونی --- یعنی بخشی از ماتریس
-    مشخصهٔ دوربین $K$ --- ممکن است. همین هم‌ارزی، در فصل سوم مبنای
-    افزونه‌سازی «لرزش کانونی» قرار می‌گیرد.}
-    \label{fig:scale_ambiguity}
-\end{figure}
 
 \section{سوالات تحقیق}
 بر این اساس، سوالات اصلی تحقیق به‌صورت زیر مطرح می‌شوند:

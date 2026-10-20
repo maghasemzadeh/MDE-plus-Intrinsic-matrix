@@ -11,6 +11,7 @@ correctness_check/**
 # LaTeX build output. `thesis/build.sh` keeps only thesis/main.pdf for viewing.
 /.build/
 /thesis/main-past.pdf
+/thesis/build/
 
 # Also ignore LaTeX by-products if a TeX editor bypasses latexmkrc.
 /thesis/**/*.acn
@@ -45,6 +46,41 @@ correctness_check/**
 /thesis/**/*.toc
 /thesis/**/*.xdv
 /thesis/**/*.xdy
+
+# The Gemini thesis variant uses the same clean out-of-tree build policy.
+/thesis-gemini/**/*.acn
+/thesis-gemini/**/*.acr
+/thesis-gemini/**/*.alg
+/thesis-gemini/**/*.aux
+/thesis-gemini/**/*.bbl
+/thesis-gemini/**/*.bcf
+/thesis-gemini/**/*.blg
+/thesis-gemini/**/*.blo
+/thesis-gemini/**/*.bls
+/thesis-gemini/**/*.brf
+/thesis-gemini/**/*.fdb_latexmk
+/thesis-gemini/**/*.fls
+/thesis-gemini/**/*.glo
+/thesis-gemini/**/*.glg
+/thesis-gemini/**/*.gls
+/thesis-gemini/**/*.idx
+/thesis-gemini/**/*.ilg
+/thesis-gemini/**/*.ind
+/thesis-gemini/**/*.ist
+/thesis-gemini/**/*.loa
+/thesis-gemini/**/*.lof
+/thesis-gemini/**/*.log
+/thesis-gemini/**/*.lol
+/thesis-gemini/**/*.lot
+/thesis-gemini/**/*.mw
+/thesis-gemini/**/*.out
+/thesis-gemini/**/*.run.xml
+/thesis-gemini/**/*.synctex.gz
+/thesis-gemini/**/*.tdo
+/thesis-gemini/**/*.toc
+/thesis-gemini/**/*.xdv
+/thesis-gemini/**/*.xdy
+/thesis-gemini/main.pdf
 
 # Claude Code scratch: registered git worktrees, never commit these.
 .claude/worktrees/

@@ -362,7 +362,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % سمت چپ: شماره و نام فصل؛ سمت راست: عنوان پایان‌نامه.
 \fancyhead{}
 \fancyhead[L]{\small\leftmark}
-\fancyhead[R]{\parbox[b]{0.45\textwidth}{\raggedleft\footnotesize\@title}}
+\fancyhead[R]{\raggedleft\footnotesize\@title}
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{26pt}
@@ -372,6 +372,29 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \renewcommand{\headrulewidth}{0.75pt}
 % شکل‌دهی شماره و عنوان فصل در سربرگ
 \renewcommand{\chaptermark}[1]{\markboth{\@chapapp~\thechapter:\ #1}{}}
+% صفحه آغاز فصل: عنوان فصل در وسط عمودی صفحه قرار می‌گیرد.
+\def\@makechapterhead#1{%
+  \vspace*{\fill}
+  {\parindent \z@ \centering \normalfont
+    \ifnum \c@secnumdepth >\m@ne
+      \if@mainmatter
+        \huge\bfseries \@chapapp\space \thechapter
+        \par\nobreak
+        \vskip 20\p@
+      \fi
+    \fi
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+  }
+  \vspace*{\fill}}
+\def\@makeschapterhead#1{%
+  \vspace*{\fill}
+  {\parindent \z@ \centering
+    \normalfont
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+  }
+  \vspace*{\fill}}
 \makeatletter
 %\renewcommand{\rightmark}[1]{\@title}
 %\makeatother

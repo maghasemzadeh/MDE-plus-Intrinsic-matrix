@@ -95,14 +95,12 @@ twoside
 \onehalfspacing
 \cleardoublepage
 % برگرداندن شماره‌بندی صفحات فصول
-\let\chapter\Chapter
 \pagenumbering{tartibi} % اول، دوم، ...
 \baselineskip=.75cm
 
 % چاپ واژه‌نامه‌ها و نمایه: در صورتی که نمی‌خواهید واژه‌نامه‌ها و نمایه نمایش داده شوند سه خط زیر را کامنت نمایید.
-\printglossary
-\cleardoublepage
-\printindex
+% واژه‌نامه‌ها از مدخل‌های words.tex چاپ می‌شوند. نمایه حذف شده است، چون در متن مدخل نمایه‌ای تعریف نشده است.
+\printglossarymanual
 
 \begin{latin}
 \baselineskip=.6cm

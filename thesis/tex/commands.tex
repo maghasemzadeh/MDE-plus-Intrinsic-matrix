@@ -117,6 +117,8 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \pgfplotsset{compat=1.17}
 \usepgfplotslibrary{groupplots}
 
+\usepackage{float}
+
 %%% تنظیم پارامترهای جای‌گذاری شناورها.
 %%% با افزایش تعداد شکل‌ها و جدول‌ها، تنظیمات پیش‌فرض لاتک باعث انباشت
 %%% شناورهای جای‌گذاری‌نشده و در نهایت خطای «Too many unprocessed floats» می‌شود.
@@ -361,8 +363,8 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % در هر دو حالت oneside و twoside، سربرگ بر اساس جای فیزیکی روی صفحه تنظیم می‌شود.
 % سمت چپ: شماره و نام فصل؛ سمت راست: عنوان پایان‌نامه.
 \fancyhead{}
-\fancyhead[L]{\small\leftmark}
-\fancyhead[R]{\raggedleft\footnotesize\@title}
+\fancyhead[L]{\small\rl{\leftmark}}
+\fancyhead[R]{\footnotesize\rl{\@title}}
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{26pt}

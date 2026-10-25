@@ -1,93 +1,45 @@
-%%%% A
-\newword{Gloss}{Glossary}{واژه‌نامه}{واژه‌نامه‌ها}
+% واژه‌نامه فارسی/انگلیسی اصطلاحات فنی به‌کاررفته در پایان‌نامه.
+% هر مدخل با \newword{کلید}{معادل انگلیسی}{معادل فارسی}{جمع} تعریف می‌شود و
+% با \glsaddall در main.tex به‌صورت کامل در واژه‌نامه‌ها چاپ می‌شود.
 
-\newword{Acronym}{Acronym}{اختصار}{اختصارات}
-
-\newword{Description}{Description}{توصیف}{توصیف‌ها}
-
-\newword{Draft}{Draft}{پیش‌نویس}{پیش‌نویس‌ها}
-
-\newword{Absorption}{Absorption}{جذب}{جذب‌ها}
-
-\newword{RandomVariable}{Random Variable}
-{متغیر تصادفی}{متغیرهای تصادفی}
-
-\newword{Action}{Action}
-{کنش}{کنش‌ها}
-
-\newword{Optimization}{Optimization}{بهینه‌سازی}{بهینه‌سازی‌ها}
-
-\newword{Online}{Online}{برخط}{برخط}
-
-\newword{Platform}{Platform}{سکو}{سکوها}
-
-\newword{Upload}{Upload}{بارگذاری}{بارگذاری‌ها}
-
-%%%% D
-\newword{DepthEstimation}{Depth Estimation}
-{تخمین عمق}{تخمین‌های عمق}
-
-\newword{MetricDepth}{Metric Depth Estimation}
-{تخمین عمق متریک}{تخمین‌های عمق متریک}
-
-\newword{RelativeDepth}{Relative Depth Estimation}
-{تخمین عمق نسبی}{تخمین‌های عمق نسبی}
-
-\newword{Dataset}{Dataset}
-{مجموعه‌داده}{مجموعه‌داده‌ها}
-
-%%%% C
-\newword{CameraIntrinsics}{Camera Intrinsics}
-{پارامترهای درونی دوربین}{پارامترهای درونی دوربین}
-
-\newword{Calibration}{Calibration}
-{کالیبراسیون}{کالیبراسیون‌ها}
-
-\newword{IntrinsicMatrix}{Intrinsic Matrix}
-{ماتریس درونی}{ماتریس‌های درونی}
-
-%%%% L
-\newword{LossFunction}{Loss Function}
-{تابع هزینه}{توابع هزینه}
-
-%%%% N
-\newword{NeuralNetwork}{Neural Network}
-{شبکه عصبی}{شبکه‌های عصبی}
-
-%%%% T
-\newword{Transformer}{Transformer}
-{ترنسفورمر}{ترنسفورمرها}
-
-
-
-
-
-
-
-\newword{واژه‌نامه}{Glossary}{Glossary}{Glossaries}
-
-\newword{اختصار}{Acronym}{Acronym}{Acronyms}
-
-\newword{تخمین عمق}{Depth Estimation}
-{Depth Estimation}{Depth Estimations}
-
-\newword{تخمین عمق متریک}{Metric Depth Estimation}
-{Metric Depth Estimation}{Metric Depth Estimations}
-
-\newword{تخمین عمق نسبی}{Relative Depth Estimation}
-{Relative Depth Estimation}{Relative Depth Estimations}
-
-\newword{پارامترهای درونی دوربین}{Camera Intrinsics}
-{Camera Intrinsics}{Camera Intrinsics}
-
-\newword{ماتریس درونی}{Intrinsic Matrix}
-{Intrinsic Matrix}{Intrinsic Matrices}
-
-\newword{تابع هزینه}{Loss Function}
-{Loss Function}{Loss Functions}
-
-\newword{شبکه عصبی}{Neural Network}
-{Neural Network}{Neural Networks}
-
-\newword{بهینه‌سازی}{Optimization}
-{Optimization}{Optimizations}
+\newword{CameraCalibrationMatrix}{Camera Calibration Matrix}{ماتریس کالیبراسیون دوربین}{ماتریس کالیبراسیون دوربین}
+\newword{CameraIntrinsics}{Camera Intrinsics}{پارامترهای درونی دوربین}{پارامترهای درونی دوربین}
+\newword{CameraEncoder}{Camera Encoder}{کدگذار دوربین}{کدگذار دوربین}
+\newword{FocalLength}{Focal Length}{فاصله کانونی}{فاصله کانونی}
+\newword{PrincipalPoint}{Principal Point}{نقطه اصلی}{نقطه اصلی}
+\newword{FieldOfView}{Field of View}{میدان دید}{میدان دید}
+\newword{PinholeCamera}{Pinhole Camera}{دوربین سوراخ‌سوزنی}{دوربین سوراخ‌سوزنی}
+\newword{Distortion}{Distortion}{اعوجاج}{اعوجاج}
+\newword{ScaleAmbiguity}{Scale Ambiguity}{ابهام مقیاس}{ابهام مقیاس}
+\newword{IllPosed}{Ill-posed}{بدساخت}{بدساخت}
+\newword{MonocularDepthEstimation}{Monocular Depth Estimation}{تخمین عمق تک‌دوربینه}{تخمین عمق تک‌دوربینه}
+\newword{MetricDepth}{Metric Depth}{عمق متریک}{عمق متریک}
+\newword{RelativeDepth}{Relative Depth}{عمق نسبی}{عمق نسبی}
+\newword{InverseDepth}{Inverse Depth (Disparity)}{عمق معکوس (دیسپاریتی)}{عمق معکوس (دیسپاریتی)}
+\newword{DepthMap}{Depth Map}{نقشه عمق}{نقشه عمق}
+\newword{FoundationModel}{Foundation Model}{مدل بنیادین}{مدل بنیادین}
+\newword{ZeroShot}{Zero-shot}{صفرنمونه}{صفرنمونه}
+\newword{Transformer}{Transformer}{ترنسفورمر}{ترنسفورمر}
+\newword{Token}{Token}{توکن}{توکن}
+\newword{Gate}{Gate}{دروازه}{دروازه}
+\newword{Head}{Head Layers}{سر شبکه}{سر شبکه}
+\newword{Pretraining}{Pre-training}{پیش‌آموزش}{پیش‌آموزش}
+\newword{FineTuning}{Fine-tuning}{تنظیم دقیق}{تنظیم دقیق}
+\newword{SelfSupervised}{Self-supervised Learning}{یادگیری خودنظارتی}{یادگیری خودنظارتی}
+\newword{LossFunction}{Loss Function}{تابع هزینه}{تابع هزینه}
+\newword{LearningRate}{Learning Rate}{نرخ یادگیری}{نرخ یادگیری}
+\newword{GradientAccumulation}{Gradient Accumulation}{تجمع گرادیان}{تجمع گرادیان}
+\newword{GradientClipping}{Gradient Clipping}{محدودسازی گرادیان}{محدودسازی گرادیان}
+\newword{Overfitting}{Overfitting}{بیش‌برازش}{بیش‌برازش}
+\newword{Augmentation}{Augmentation}{افزونه‌سازی}{افزونه‌سازی}
+\newword{RandomCrop}{Random Crop}{برش تصادفی}{برش تصادفی}
+\newword{RandomSeed}{Random Seed}{بذر تصادفی}{بذر تصادفی}
+\newword{Checkpoint}{Checkpoint}{نقطه وارسی}{نقطه وارسی}
+\newword{Generalization}{Generalization}{تعمیم}{تعمیم}
+\newword{ControlModel}{Control Model}{مدل کنترل}{مدل کنترل}
+\newword{ProposedModel}{Proposed Model}{مدل پیشنهادی}{مدل پیشنهادی}
+\newword{Bootstrap}{Bootstrap Resampling}{بازنمونه‌گیری بوت‌استرپ}{بازنمونه‌گیری بوت‌استرپ}
+\newword{Wilcoxon}{Wilcoxon Signed-rank Test}{آزمون ویلکاکسون}{آزمون ویلکاکسون}
+\newword{Indoor}{Indoor}{محیط‌های داخلی}{محیط‌های داخلی}
+\newword{Outdoor}{Outdoor}{محیط‌های بیرونی}{محیط‌های بیرونی}
+\newword{SyntheticDataset}{Synthetic Dataset}{مجموعه‌داده مصنوعی}{مجموعه‌داده مصنوعی}

@@ -136,7 +136,7 @@
 خطای نسبی مطلق & \lr{AbsRel} & \lr{Absolute Relative Error} \\
 خطای نسبی مربعی & \lr{SqRel} & \lr{Squared Relative Error} \\
 تابع هزینه لگاریتمی تغییرناپذیر نسبت به مقیاس & \lr{SiLog} & \lr{Scale-Invariant Logarithmic Loss} \\
-عمق متریک صفرنمونه & \lr{DMD} & \lr{Zero-Shot Metric Depth} \\
+عمق مطلق صفرنمونه & \lr{DMD} & \lr{Zero-Shot Metric Depth} \\
 \bottomrule
 \end{longtable}
 \normalsize
@@ -176,6 +176,7 @@
 ابهام مقیاس & \lr{Scale Ambiguity} \\
 اعوجاج & \lr{Distortion} \\
 افزونه‌سازی & \lr{Augmentation} \\
+انکودر دوربین & \lr{Camera Encoder} \\
 بازنمونه‌گیری بوت‌استرپ & \lr{Bootstrap Resampling} \\
 بدساخت & \lr{Ill-posed} \\
 بذر تصادفی & \lr{Random Seed} \\
@@ -190,15 +191,15 @@
 تعمیم & \lr{Generalization} \\
 تنظیم دقیق & \lr{Fine-tuning} \\
 توکن & \lr{Token} \\
-دروازه & \lr{Gate} \\
+توکن با گیت یادگیری‌پذیر & \lr{Learnable-gated Token} \\
 دوربین سوراخ‌سوزنی & \lr{Pinhole Camera} \\
 سر شبکه & \lr{Head Layers} \\
 صفرنمونه & \lr{Zero-shot} \\
-عمق متریک & \lr{Metric Depth} \\
+ضریب کنترلی & \lr{Control Coefficient} \\
+عمق مطلق & \lr{Absolute Depth} \\
 عمق معکوس (دیسپاریتی) & \lr{Inverse Depth (Disparity)} \\
 عمق نسبی & \lr{Relative Depth} \\
 فاصله کانونی & \lr{Focal Length} \\
-کدگذار دوربین & \lr{Camera Encoder} \\
 ماتریس کالیبراسیون دوربین & \lr{Camera Calibration Matrix} \\
 مجموعه‌داده مصنوعی & \lr{Synthetic Dataset} \\
 محدودسازی گرادیان & \lr{Gradient Clipping} \\
@@ -212,7 +213,7 @@
 نرخ یادگیری & \lr{Learning Rate} \\
 نقشه عمق & \lr{Depth Map} \\
 نقطه اصلی & \lr{Principal Point} \\
-نقطه وارسی & \lr{Checkpoint} \\
+نقطهٔ وارسی & \lr{Checkpoint} \\
 یادگیری خودنظارتی & \lr{Self-supervised Learning} \\
 \bottomrule
 \end{longtable}
@@ -227,20 +228,22 @@
 معادل انگلیسی & معادل فارسی \\
 \midrule
 \endhead
+\lr{Absolute Depth} & عمق مطلق \\
 \lr{Augmentation} & افزونه‌سازی \\
 \lr{Bootstrap Resampling} & بازنمونه‌گیری بوت‌استرپ \\
 \lr{Camera Calibration Matrix} & ماتریس کالیبراسیون دوربین \\
-\lr{Camera Encoder} & کدگذار دوربین \\
+\lr{Camera Encoder} & انکودر دوربین \\
 \lr{Camera Intrinsics} & پارامترهای درونی دوربین \\
-\lr{Checkpoint} & نقطه وارسی \\
+\lr{Checkpoint} & نقطهٔ وارسی \\
+\lr{Control Coefficient} & ضریب کنترلی \\
 \lr{Control Model} & مدل کنترل \\
+\lr{Learnable-gated Token} & توکن با گیت یادگیری‌پذیر \\
 \lr{Depth Map} & نقشه عمق \\
 \lr{Distortion} & اعوجاج \\
 \lr{Field of View} & میدان دید \\
 \lr{Fine-tuning} & تنظیم دقیق \\
 \lr{Focal Length} & فاصله کانونی \\
 \lr{Foundation Model} & مدل بنیادین \\
-\lr{Gate} & دروازه \\
 \lr{Generalization} & تعمیم \\
 \lr{Gradient Accumulation} & تجمع گرادیان \\
 \lr{Gradient Clipping} & محدودسازی گرادیان \\
@@ -250,7 +253,6 @@
 \lr{Inverse Depth (Disparity)} & عمق معکوس (دیسپاریتی) \\
 \lr{Learning Rate} & نرخ یادگیری \\
 \lr{Loss Function} & تابع هزینه \\
-\lr{Metric Depth} & عمق متریک \\
 \lr{Monocular Depth Estimation} & تخمین عمق تک‌دوربینه \\
 \lr{Outdoor} & محیط‌های بیرونی \\
 \lr{Overfitting} & بیش‌برازش \\

@@ -1,0 +1,22 @@
+{
+  "latex-workshop.latex.outDir": "%DIR%/../.build/thesis",
+  "latex-workshop.latex.autoBuild.run": "onSave",
+  "latex-workshop.latex.rootFile.doNotPrompt": true,
+  "latex-workshop.latex.recipe.default": "thesis build.sh",
+  "latex-workshop.latex.tools": [
+    {
+      "name": "thesis build.sh",
+      "command": "bash",
+      "args": ["%WORKSPACE_FOLDER%/build.sh"],
+      "env": {}
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "thesis build.sh",
+      "tools": ["thesis build.sh"]
+    }
+  ],
+  "latex-workshop.view.pdf.viewer": "browser",
+  "latex-workshop.view.pdf.internal.synctex.keybinding": "double-click"
+}

@@ -363,11 +363,13 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % در هر دو حالت oneside و twoside، سربرگ بر اساس جای فیزیکی روی صفحه تنظیم می‌شود.
 % سمت چپ: شماره و نام فصل؛ سمت راست: عنوان پایان‌نامه.
 \fancyhead{}
-\fancyhead[L]{\small\rl{\leftmark}}
+% عنوان پایان‌نامه تک‌سطری می‌ماند و نام فصل در پهنای باقی‌مانده قرار می‌گیرد
+% تا عنوان‌های بلند فصل به‌جای هم‌پوشانی، در چند سطر شکسته شوند.
+\fancyhead[L]{\settowidth{\@tempdima}{\footnotesize\rl{\@title}}\parbox[b]{\dimexpr\headwidth-\@tempdima-2em\relax}{\setstretch{1}\raggedleft\small\rl{\leftmark}}}
 \fancyhead[R]{\footnotesize\rl{\@title}}
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
-\setlength{\headheight}{26pt}
+\setlength{\headheight}{28pt}
 %\fancyhead[ER]{\small\rightmark}
 %\fancyhead[OR]{\footnotesize}
 %\fancyhead[EL]{\footnotesize\rightmark}

@@ -107,6 +107,40 @@ parser.add_argument('--silog-lambda', type=float, default=0.5,
 parser.add_argument('--seed', type=int, default=None,
                     help='Seed torch/numpy/random and the train DataLoader so paired runs see '
                          'identical data order, flips, zoom-crops and focal-jitter draws.')
+parser.add_argument('--multidomain', type=str, default=None,
+                    help='Mixed-domain training through datasets/multidomain.py (shared exact-K '
+                         'augmentation, true per-dataset intrinsics, domain-balanced sampling): '
+                         'comma-separated domain:samples_per_epoch, e.g. '
+                         '"nyu:2000,kitti:2000,vkitti:2000,cityscapes:2000". Replaces --datasets.')
+parser.add_argument('--zoom-max', type=float, default=1.0,
+                    help='(--multidomain) max zoom-crop factor of the K-exact FoV augmentation; 1 disables')
+parser.add_argument('--val-per-domain', type=int, default=50,
+                    help='(--multidomain) held-out validation images per domain')
+parser.add_argument('--aspect-max', type=float, default=0.0,
+                    help='(--multidomain) random window aspect in [1, aspect-max] so the camera '
+                         "encoder's aspect feature stops identifying the dataset; 0 disables")
+parser.add_argument('--res-jitter', type=float, default=0.0,
+                    help='(--multidomain) virtual-resolution jitter: K and image size scaled by '
+                         'r in [1/m, m] (pixels untouched), so the image-area feature is '
+                         'uninformative; 0 disables')
+parser.add_argument('--jpeg-aug', action='store_true',
+                    help='(--multidomain) re-compress half of all training images as JPEG '
+                         '(quality 70-95) so compression cannot identify the dataset')
+parser.add_argument('--canonical-focal', type=float, default=0.0,
+                    help='(camera-aware models) predict depth in a canonical camera: the output '
+                         'is multiplied by f_net / F, f_net = fy * (network-input short side) / '
+                         '(image short side), so focal jitter leaves targets unchanged and zoom '
+                         'matches appearance (Metric3D-style). 0 disables')
+parser.add_argument('--num-workers', type=int, default=4)
+parser.add_argument('--amp', action='store_true',
+                    help='bf16 autocast for model forward passes (loss stays fp32)')
+
+
+def canonical_scale(intrinsics, size_hw, net_short, canonical_focal):
+    """(B, 1, 1) factor f_net / F mapping canonical-camera depth to metric depth."""
+    fy = intrinsics[:, 1, 1]
+    short = torch.minimum(size_hw[:, 0], size_hw[:, 1]).to(fy.dtype)
+    return (fy * net_short / short / canonical_focal)[:, None, None]
 
 
 def get_device():
@@ -241,6 +275,8 @@ def main():
             "The base model does not have a camera encoder. "
             "Use --model-variant revised to enable camera intrinsics support."
         )
+    if args.canonical_focal and not args.use_camera_intrinsics:
+        raise ValueError("--canonical-focal rescales by the focal length and needs --use-camera-intrinsics")
     # Ensure base variant never receives intrinsics (safety guard)
     if args.model_variant == 'base':
         args.use_camera_intrinsics = False
@@ -310,9 +346,25 @@ def main():
     
     size = (args.img_size, args.img_size)
     
+    md_trainset = md_sampler = md_valset = None
+    if args.multidomain:
+        from datasets.multidomain import build_multidomain
+        md_trainset, md_sampler, md_valset, md_names = build_multidomain(
+            args.multidomain, net=args.img_size, zoom_max=args.zoom_max,
+            focal_jitter=args.focal_jitter, seed=args.seed or 0,
+            val_per_domain=args.val_per_domain, aspect_max=args.aspect_max,
+            res_jitter=args.res_jitter, jpeg_aug=args.jpeg_aug)
+        args.datasets = ','.join(md_names)
+        if rank == 0:
+            for r, n in zip(md_trainset.readers, md_sampler.per_domain):
+                print(f"  multidomain train: {r.name}: {len(r)} records, {n} samples/epoch")
+            print(f"  multidomain val: {len(md_valset)} images; zoom_max={args.zoom_max}, "
+                  f"focal_jitter={args.focal_jitter}")
+            sys.stdout.flush()
+
     # Parse datasets (comma-separated list)
     dataset_names = [d.strip().lower() for d in args.datasets.split(',')]
-    
+
     if rank == 0:
         print(f"Loading training datasets: {dataset_names}...")
         sys.stdout.flush()
@@ -456,11 +508,13 @@ def main():
     
     # Create training datasets
     train_datasets = []
-    for dataset_name in dataset_names:
+    for dataset_name in ([] if args.multidomain else dataset_names):
         train_datasets.append(create_train_dataset(dataset_name))
-    
+
     # Combine datasets if multiple
-    if len(train_datasets) == 1:
+    if args.multidomain:
+        trainset = md_trainset
+    elif len(train_datasets) == 1:
         trainset = train_datasets[0]
     else:
         from torch.utils.data import ConcatDataset
@@ -477,8 +531,8 @@ def main():
     # pin_memory only works with CUDA
     # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
     pin_memory = (device.type == 'cuda')
-    num_workers = 0 if sys.platform == 'darwin' else 4
-    
+    num_workers = 0 if sys.platform == 'darwin' else args.num_workers
+
     if rank == 0:
         print(f"Creating training DataLoader (num_workers={num_workers})...")
         sys.stdout.flush()
@@ -498,7 +552,13 @@ def main():
             np.random.seed(worker_seed)
             random.seed(worker_seed)
 
-    if world_size > 1:
+    if md_sampler is not None:
+        # (index, aug_seed) pairs: augmentation is a function of the sampled
+        # seed only, so paired runs match regardless of worker scheduling
+        trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers,
+                                 drop_last=True, sampler=md_sampler, worker_init_fn=worker_init,
+                                 persistent_workers=num_workers > 0)
+    elif world_size > 1:
         trainsampler = torch.utils.data.distributed.DistributedSampler(trainset)
         trainloader = DataLoader(trainset, batch_size=args.bs, pin_memory=pin_memory, num_workers=num_workers, drop_last=True, sampler=trainsampler, worker_init_fn=worker_init)
     else:
@@ -633,11 +693,13 @@ def main():
     
     # Create validation datasets
     val_datasets = []
-    for dataset_name in dataset_names:
+    for dataset_name in ([] if args.multidomain else dataset_names):
         val_datasets.append(create_val_dataset(dataset_name))
-    
+
     # Combine datasets if multiple
-    if len(val_datasets) == 1:
+    if args.multidomain:
+        valset = md_valset
+    elif len(val_datasets) == 1:
         valset = val_datasets[0]
     else:
         from torch.utils.data import ConcatDataset
@@ -652,8 +714,8 @@ def main():
     # pin_memory only works with CUDA
     # On macOS, use num_workers=0 to avoid multiprocessing issues (spawn vs fork)
     pin_memory = (device.type == 'cuda')
-    num_workers = 0 if sys.platform == 'darwin' else 4
-    
+    num_workers = 0 if sys.platform == 'darwin' else args.num_workers
+
     if rank == 0:
         print(f"Creating validation DataLoader (num_workers={num_workers})...")
         sys.stdout.flush()
@@ -917,7 +979,12 @@ Training Run Summary:
                     pretrained_max_depth = 20.0
                 elif 'vkitti' in ckpt_basename:
                     pretrained_max_depth = 80.0
-            if pretrained_max_depth is not None and abs(pretrained_max_depth - args.max_depth) > 0.1:
+            # Only meaningful for a sigmoid * max_depth head; the unified class
+            # train.py builds ends in ReLU, where subtracting log(ratio) from the
+            # bias would just shift every initial prediction down.
+            head_is_sigmoid = isinstance(model.depth_head.scratch.output_conv2[-1], torch.nn.Sigmoid)
+            if (head_is_sigmoid and pretrained_max_depth is not None
+                    and abs(pretrained_max_depth - args.max_depth) > 0.1):
                 ratio = args.max_depth / pretrained_max_depth
                 bias_correction = math.log(ratio)
 
@@ -1126,7 +1193,9 @@ Training Run Summary:
                             epoch, args.epochs, previous_best['abs_rel'], previous_best['sq_rel'], previous_best['rmse'], 
                             previous_best['rmse_log'], previous_best['log10'], previous_best['silog']))
         
-        if world_size > 1 and hasattr(trainloader, 'sampler') and hasattr(trainloader.sampler, 'set_epoch'):
+        if md_sampler is not None:
+            md_sampler.set_epoch(epoch)
+        elif world_size > 1 and hasattr(trainloader, 'sampler') and hasattr(trainloader.sampler, 'set_epoch'):
             trainloader.sampler.set_epoch(epoch + 1)
         
         model.train()
@@ -1150,7 +1219,8 @@ Training Run Summary:
             if original_size is not None:
                 original_size = original_size.to(device)  # (B, 2)  [H, W]
 
-            if random.random() < 0.5:
+            # (--multidomain flips per sample inside the dataset, with cx mirrored)
+            if not args.multidomain and random.random() < 0.5:
                 img = img.flip(-1)
                 depth = depth.flip(-1)
                 valid_mask = valid_mask.flip(-1)
@@ -1163,10 +1233,10 @@ Training Run Summary:
 
             # Bug 1 fix: use the original image dimensions (matching the intrinsics'
             # resolution) so the camera encoder's normalisation is consistent with
-            # inference.  All images in a batch from the same dataset share the same
-            # original resolution, so using the first item's size is correct.
+            # inference. Passed per sample ((B, 2) tensor): mixed-domain batches hold
+            # images whose intrinsics refer to different image sizes.
             if original_size is not None:
-                image_size_for_cam = (original_size[0, 0].item(), original_size[0, 1].item())
+                image_size_for_cam = original_size
             else:
                 image_size_for_cam = (img.shape[-2], img.shape[-1])
 
@@ -1181,7 +1251,13 @@ Training Run Summary:
             # Student prediction (with intrinsics)
             # Note: If teacher_pred is needed, it should be passed to model.forward()
             # or handled by the model architecture itself
-            pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
+            with torch.autocast('cuda', dtype=torch.bfloat16, enabled=args.amp):
+                pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
+            pred = pred.float()
+            if args.canonical_focal:
+                # the window was resized so its short side is args.img_size
+                pred = pred * canonical_scale(intrinsics, original_size.float(), args.img_size,
+                                              args.canonical_focal)
 
             # Standard loss - DepthAnythingV2 handles knowledge distillation internally
             valid_depth_mask = (valid_mask == 1) & (depth >= args.min_depth) & (depth <= args.max_depth)
@@ -1266,6 +1342,12 @@ Training Run Summary:
                         'focal_jitter': args.focal_jitter,
                         'silog_lambda': args.silog_lambda,
                         'seed': args.seed,
+                        'multidomain': args.multidomain,
+                        'zoom_max': args.zoom_max,
+                        'aspect_max': args.aspect_max,
+                        'res_jitter': args.res_jitter,
+                        'canonical_focal': args.canonical_focal,
+                        'jpeg_aug': args.jpeg_aug,
                     }
                 }
                 for ckpt_name in ['latest.pth', 'best.pth']:
@@ -1293,7 +1375,8 @@ Training Run Summary:
         # Store first validation sample for visualization
         first_val_sample = None
         first_val_pred = None
-        
+        domain_results = {}
+
         for i, sample in enumerate(valloader):
             
             img, depth, valid_mask = sample['image'].to(device).float(), sample['depth'].to(device)[0], sample['valid_mask'].to(device)[0]
@@ -1306,12 +1389,17 @@ Training Run Summary:
             original_size = sample.get('original_size', None)
             if original_size is not None:
                 original_size = original_size.to(device)
-                image_size_for_cam = (original_size[0, 0].item(), original_size[0, 1].item())
+                image_size_for_cam = original_size
             else:
                 image_size_for_cam = (img.shape[-2], img.shape[-1])
-            
+
             with torch.no_grad():
-                pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
+                with torch.autocast('cuda', dtype=torch.bfloat16, enabled=args.amp):
+                    pred = model(img, intrinsics=intrinsics, image_size=image_size_for_cam)
+                pred = pred.float()
+                if args.canonical_focal:
+                    pred = pred * canonical_scale(intrinsics, original_size.float(),
+                                                  min(img.shape[-2:]), args.canonical_focal)
                 # Handle both 3D (B, H, W) and 4D (B, 1, H, W) model outputs
                 if pred.dim() == 4:
                     # Already has channel dimension, just interpolate and take first sample
@@ -1360,7 +1448,13 @@ Training Run Summary:
                 if k in cur_results:
                     results[k] += cur_results[k]
             nsamples += 1
-        
+            if 'domain' in sample:
+                dom = int(sample['domain'][0])
+                acc = domain_results.setdefault(dom, {'abs_rel': 0.0, 'd1': 0.0, 'rmse': 0.0, 'n': 0})
+                for k in ('abs_rel', 'd1', 'rmse'):
+                    acc[k] += float(cur_results[k])
+                acc['n'] += 1
+
         if world_size > 1 and device.type == 'cuda':
             torch.distributed.barrier()
             for k in results.keys():
@@ -1377,6 +1471,13 @@ Training Run Summary:
             else:
                 logger.info('{:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}, {:>8}'.format(*tuple(results.keys())))
                 logger.info('{:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}, {:8.3f}'.format(*tuple([(v / nsamples).item() for v in results.values()])))
+                for dom, acc in sorted(domain_results.items()):
+                    dname = md_names[dom] if args.multidomain else str(dom)
+                    logger.info(f"  val[{dname}] n={acc['n']} abs_rel={acc['abs_rel'] / acc['n']:.4f} "
+                                f"d1={acc['d1'] / acc['n']:.4f} rmse={acc['rmse'] / acc['n']:.4f}")
+                    if writer is not None:
+                        writer.add_scalar(f'eval_{dname}/abs_rel', acc['abs_rel'] / acc['n'], epoch)
+                        writer.add_scalar(f'eval_{dname}/d1', acc['d1'] / acc['n'], epoch)
                 logger.info('==========================================================================================')
                 print()
             
@@ -1456,7 +1557,16 @@ Training Run Summary:
         
         # Track if this epoch improved any metric (only if we have valid samples)
         improved = False
-        if nsamples.item() > 0:
+        if args.multidomain and domain_results:
+            # one criterion: mean over domains of per-domain AbsRel
+            dom_absrel = float(np.mean([a['abs_rel'] / a['n'] for a in domain_results.values()]))
+            improved = dom_absrel < previous_best.get('domain_mean_abs_rel', float('inf'))
+            if improved:
+                previous_best['domain_mean_abs_rel'] = dom_absrel
+            if rank == 0:
+                logger.info(f'domain-mean val abs_rel: {dom_absrel:.4f} (best '
+                            f'{previous_best["domain_mean_abs_rel"]:.4f})')
+        elif nsamples.item() > 0:
             for k in results.keys():
                 current_value = (results[k] / nsamples).item()
                 if k in ['d1', 'd2', 'd3']:
@@ -1497,6 +1607,12 @@ Training Run Summary:
                     'focal_jitter': args.focal_jitter,
                     'silog_lambda': args.silog_lambda,
                     'seed': args.seed,
+                    'multidomain': args.multidomain,
+                    'zoom_max': args.zoom_max,
+                    'aspect_max': args.aspect_max,
+                    'res_jitter': args.res_jitter,
+                        'canonical_focal': args.canonical_focal,
+                        'jpeg_aug': args.jpeg_aug,
                 }
             }
 

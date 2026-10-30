@@ -1,0 +1,136 @@
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+
+================================================================================
+  AbsRel calculation sample (same inputs as compare_models.py)
+================================================================================
+
+📐 Camera intrinsics (dataset side)
+  Dataset 'nyu' provides intrinsics: True
+Loading NYU Depth V2 dataset from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/nyu/nyu_depth_v2_labeled.mat...
+(This may take a moment for the first load)
+NYU .mat file - Original image shape: (1449, 3, 640, 480), depth shape: (1449, 640, 480)
+Transposed images using order (0, 3, 2, 1)
+Transposed depths using order (0, 2, 1)
+Loaded 1449 image pairs from NYU Depth V2 dataset
+Final image shape: (1449, 480, 640, 3), depth shape: (1449, 480, 640)
+Found 654 NYU Depth V2 image pairs (split: eigen-test-654)
+
+  Using item index 88: nyu_00196
+
+  Loading model(s)...
+
+📐 Camera intrinsics (model side)
+  Model 1 ('da2-revised') uses intrinsics: True
+  Model 2 ('da2-revised') uses intrinsics: False
+
+  Basic model alignment: outputs_inverse_depth (model1) = False
+  (model2) = False
+
+  Running model 1: revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730
+
+  Running model 2: base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717
+
+────────────────────────────────────────────────────────────────────────────────
+  Model: revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730
+  Image: nyu_00196
+  Valid pixels: 307200  (metric type: metric)
+────────────────────────────────────────────────────────────────────────────────
+
+  Formula: abs_rel (per pixel) = |pred - gt| / gt   (all in meters)
+           abs_rel (image)      = mean( abs_rel (per pixel) ) over all valid pixels
+  (Index = circle number in saved image input_image_with_sample_pixels.png)
+
+  Sample pixels:
+   idx    row    col     pred (m)       gt (m)   |pred-gt|/gt
+  ----------------------------------------------------------
+     1     41    162     1.091555     0.859369       0.270182
+     2     42    537     1.134553     0.879337       0.290237
+     3     45    131     1.083779     0.855107       0.267419
+     4     96    451     1.104711     0.881316       0.253479
+     5    207    540     1.438069     1.222785       0.176060
+     6    210    420     1.420129     1.224568       0.159698
+     7    314    119     1.409927     1.180888       0.193955
+     8    334    470     1.523475     1.197018       0.272726
+     9    371    313     1.395956     1.072767       0.301267
+    10    412     77     1.149905     0.818408       0.405050
+  ------------------------------------------------------
+
+  Image-level abs_rel (from this script): 0.263435
+  Image-level abs_rel (from compute_depth_metrics): 0.263435
+  (Fraction; as percent: 26.3435%)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  Model: base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717
+  Image: nyu_00196
+  Valid pixels: 307200  (metric type: metric)
+────────────────────────────────────────────────────────────────────────────────
+
+  Formula: abs_rel (per pixel) = |pred - gt| / gt   (all in meters)
+           abs_rel (image)      = mean( abs_rel (per pixel) ) over all valid pixels
+  (Index = circle number in saved image input_image_with_sample_pixels.png)
+
+  Sample pixels:
+   idx    row    col     pred (m)       gt (m)   |pred-gt|/gt
+  ----------------------------------------------------------
+     1     41    162     1.100678     0.859369       0.280798
+     2     42    537     1.151785     0.879337       0.309834
+     3     45    131     1.099556     0.855107       0.285869
+     4     96    451     1.123748     0.881316       0.275079
+     5    207    540     1.504612     1.222785       0.230479
+     6    210    420     1.507015     1.224568       0.230650
+     7    314    119     1.497895     1.180888       0.268448
+     8    334    470     1.639714     1.197018       0.369833
+     9    371    313     1.439053     1.072767       0.341441
+    10    412     77     1.182542     0.818408       0.444929
+  ------------------------------------------------------
+
+  Image-level abs_rel (from this script): 0.303153
+  Image-level abs_rel (from compute_depth_metrics): 0.303153
+  (Fraction; as percent: 30.3153%)
+
+
+────────────────────────────────────────────────────────────────────────────────
+  Per-pixel comparison (same pixels for both models)
+────────────────────────────────────────────────────────────────────────────────
+  Columns:
+    - better: which model is closer to GT at that pixel (1, 2, or = for tie)
+
+   idx    row    col       gt (m)      pred1 (m)   |p1-gt|/gt      pred2 (m)   |p2-gt|/gt   better
+  ------------------------------------------------------------------------------------------------
+     1     41    162     0.859369      1.091555*     0.270182       1.100678     0.280798        1
+     2     42    537     0.879337      1.134553*     0.290237       1.151785     0.309834        1
+     3     45    131     0.855107      1.083779*     0.267419       1.099556     0.285869        1
+     4     96    451     0.881316      1.104711*     0.253479       1.123748     0.275079        1
+     5    207    540     1.222785      1.438069*     0.176060       1.504612     0.230479        1
+     6    210    420     1.224568      1.420129*     0.159698       1.507015     0.230650        1
+     7    314    119     1.180888      1.409927*     0.193955       1.497895     0.268448        1
+     8    334    470     1.197018      1.523475*     0.272726       1.639714     0.369833        1
+     9    371    313     1.072767      1.395956*     0.301267       1.439053     0.341441        1
+    10    412     77     0.818408      1.149905*     0.405050       1.182542     0.444929        1
+  ------------------------------------------------------------------------------------------------
+
+================================================================================
+  Summary (same image, same formula)
+================================================================================
+  Model 1 (revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730): abs_rel = 0.263435 (26.3435%)
+  Model 2 (base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717): abs_rel = 0.303153 (30.3153%)
+================================================================================
+
+  Depth color scale: same for all images (0 - 1.6 m). Blue = near, red = far.
+  Depth ranges (if one image is mostly blue and another mostly red, ranges differ):
+    GT:     0.71 - 1.27 m  (mean 1.00)
+    revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730: 0.85 - 1.74 m  (mean 1.26)
+    base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717: 0.85 - 1.88 m  (mean 1.30)
+
+  Saved visualizations to correctness_check_metric_round2:
+    - depth_ground_truth.png
+    - depth_revised_metric_vitl_nyu_intrinsics_lr5e-.png
+    - depth_base_metric_vitl_nyu_lr5e-6_bs2_20260707.png
+    - input_image_with_sample_pixels.png  (circle index = table row number)
+    - comparison.json
+
+EXIT_CODE=0

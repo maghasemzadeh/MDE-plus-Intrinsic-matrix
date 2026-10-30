@@ -13,8 +13,10 @@ def intrinsics_to_encoding(intrinsics, image_size_hw):
     
     Args:
         intrinsics: Camera intrinsics matrix (B, 3, 3) or (B, 1, 3, 3)
-        image_size_hw: Image size as (H, W) tuple
-    
+        image_size_hw: Image size as (H, W); each entry is a scalar shared by
+            the batch or a (B,) tensor of per-sample sizes (mixed-dataset
+            batches, where every sample's K refers to its own image size)
+
     Returns:
         Encoding tensor of shape (B, 9) containing:
         - fx, fy, cx, cy (4 values)
@@ -25,10 +27,11 @@ def intrinsics_to_encoding(intrinsics, image_size_hw):
     # Handle batch dimension
     if intrinsics.dim() == 4:
         intrinsics = intrinsics.squeeze(1)  # (B, 3, 3)
-    
+
     B = intrinsics.shape[0]
-    H, W = image_size_hw
-    
+    H, W = (torch.as_tensor(v, device=intrinsics.device, dtype=intrinsics.dtype).expand(B)
+            for v in image_size_hw)
+
     # Extract intrinsic parameters
     fx = intrinsics[:, 0, 0]  # (B,)
     fy = intrinsics[:, 1, 1]  # (B,)
@@ -40,9 +43,9 @@ def intrinsics_to_encoding(intrinsics, image_size_hw):
     fov_w = 2 * torch.atan((W / 2.0) / torch.clamp(fx, min=1e-6))  # (B,)
     
     # Additional features
-    aspect_ratio = W / H  # scalar, broadcasted
+    aspect_ratio = W / H  # (B,)
     focal_length_avg = (fx + fy) / 2.0  # (B,)
-    image_area = H * W  # scalar, broadcasted
+    image_area = H * W  # (B,)
     
     # Normalize values for better training stability
     # Normalize focal lengths by image size
@@ -59,9 +62,9 @@ def intrinsics_to_encoding(intrinsics, image_size_hw):
         cy_norm,
         fov_h / math.pi,  # Normalize to [0, 1] range
         fov_w / math.pi,
-        torch.full((B,), aspect_ratio, device=intrinsics.device, dtype=intrinsics.dtype),
-        focal_length_avg / max(H, W),
-        torch.full((B,), image_area / (1920 * 1080), device=intrinsics.device, dtype=intrinsics.dtype),  # Normalize by typical image size
+        aspect_ratio,
+        focal_length_avg / torch.maximum(H, W),
+        image_area / (1920 * 1080),  # Normalize by typical image size
     ], dim=-1)  # (B, 9)
     
     return encoding
@@ -138,14 +141,17 @@ class CameraEncoder(nn.Module):
         
         Args:
             intrinsics: Camera intrinsics (B, 3, 3) or (B, 1, 3, 3)
-            image_size: Image size as (H, W) tuple or tensor
-        
+            image_size: Image size as (H, W) tuple or tensor, or a (B, 2)
+                tensor of per-sample [H, W] sizes
+
         Returns:
             Camera tokens of shape (B, 1, dim_out) - single token per image
         """
         # Convert to encoding
         if isinstance(image_size, tuple):
             H, W = image_size
+        elif torch.is_tensor(image_size) and image_size.dim() == 2:
+            H, W = image_size[:, 0], image_size[:, 1]
         else:
             H, W = image_size[0], image_size[1]
         

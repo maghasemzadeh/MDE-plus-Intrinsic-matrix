@@ -440,9 +440,31 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \subsection{راستی‌آزمایی زنجیره ارزیابی: بازتولید نتایج \basemodel{}}
 \label{subsec:pipeline_verification}
 
-\begin{edited}
-پیش از هرگونه مقایسه، صحت زنجیره ارزیابی از طریق بازتولید نتایج گزارش‌شده مقاله مرجع راستی‌آزمایی شد. نسخه نسبی \publishedbasemodel{} با زنجیره ارزیابی این پژوهش بر \lr{NYUv2} به \lr{AbsRel} برابر \fadecimal{۰٫۰۵۱} و $\delta_1$ برابر \fadecimal{۰٫۹۷۳} با انکودر \lr{ViT-S}، و به \fadecimal{۰٫۰۴۳} و \fadecimal{۰٫۹۷۹} با انکودر \lr{ViT-L} رسید؛ مقادیر متناظر در جدول ۲ مقاله مرجع \fadecimal{۰٫۰۵۳} و \fadecimal{۰٫۹۷۳} و \fadecimal{۰٫۰۴۵} و \fadecimal{۰٫۹۷۹} هستند. بر \lr{KITTI} نیز با انکودر \lr{ViT-S} مقادیر \fadecimal{۰٫۰۸۳} و \fadecimal{۰٫۹۳۴} و با انکودر \lr{ViT-L} مقادیر \fadecimal{۰٫۰۷۶} و \fadecimal{۰٫۹۴۸} به‌دست آمد، در برابر \fadecimal{۰٫۰۷۸} و \fadecimal{۰٫۹۳۶} و \fadecimal{۰٫۰۷۴} و \fadecimal{۰٫۹۴۶} در مقاله. بنابراین نتایج زنجیره ارزیابی این پژوهش با دقت مطلوبی بر مقادیر مقاله منطبق است و اختلاف‌های جزیی در محدوده تلورانس متعارف بازتولید نتایج این مجموعه‌داده‌ها قرار دارند. مقادیر خام بازتولید پیش از گردکردن نیز برای ممیزی ثبت شدند: در \lr{KITTI}، مدل \lr{ViT-S} برابر \lr{0.0829}/\lr{0.9341} و مدل \lr{ViT-L} برابر \lr{0.0758}/\lr{0.9477} (\lr{AbsRel}/$\delta_1$) به‌دست آورد.
-\end{edited}
+پیش از هرگونه مقایسه، صحت زنجیره ارزیابی از طریق بازتولید نتایج گزارش‌شده مقاله مرجع راستی‌آزمایی شد. جدول~\ref{tab:paper_reproduction} نشان می‌دهد که نتایج به‌دست‌آمده با زنجیره ارزیابی این پژوهش، با دقت مطلوبی بر مقادیر مقاله منطبق است؛ اختلاف‌های جزیی در محدوده تلورانس متعارف بازتولید نتایج این مجموعه‌داده‌ها قرار دارند.
+
+\begin{table}[htbp]
+\centering
+\caption{راستی‌آزمایی زنجیره ارزیابی}
+\label{tab:paper_reproduction}
+\begin{tabular}{rrcccc}
+\toprule
+\multirow{2}{*}{مجموعه‌داده} & \multirow{2}{*}{انکودر}
+& \multicolumn{2}{c}{مقاله مرجع (جدول ۲)}
+& \multicolumn{2}{c}{ارزیابی این پژوهش} \\
+\cmidrule(lr){3-4}\cmidrule(lr){5-6}
+& & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$
+& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ \\ \midrule
+\lr{NYUv2} & \lr{ViT-S} & $0.053$ & $0.973$ & $0.051$ & $0.973$ \\
+\lr{NYUv2} & \lr{ViT-L} & $0.045$ & $0.979$ & $0.043$ & $0.979$ \\
+\lr{KITTI} & \lr{ViT-S} & $0.078$ & $0.936$ & $0.083$ & $0.934$ \\
+\lr{KITTI} & \lr{ViT-L} & $0.074$ & $0.946$ & $0.076$ & $0.948$ \\ \bottomrule
+\end{tabular}
+\end{table}
+
+مقادیر خام بازتولید پیش از گردکردن نیز برای ممیزی ثبت شدند: در \lr{KITTI}،
+مدل \lr{ViT-S} برابر \lr{0.0829}/\lr{0.9341} و مدل \lr{ViT-L} برابر
+\lr{0.0758}/\lr{0.9477} (\lr{AbsRel}/$\delta_1$) به‌دست آورد؛ جدول بالا این دو
+زوج را به‌ترتیب با چهار و سه رقم معنادار نمایش می‌دهد.
 
 \subsection{ناکارآمدی تنظیم دقیق‌پارامترها برای ارزیابی برون‌دامنه‌ای}
 \label{subsec:zeroshot_failure}
@@ -589,22 +611,38 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 
 در این مرحله، زوج مدل \lr{ViT-L} در حالت مطلق (تابع هزینه \lr{SiLog} بر عمق مطلق، مطابق فصل سوم) با افزونه‌سازی هندسی زوم‌ـ‌برش (بخش~\ref{subsec:fov_augmentation}) در بازه میدان دید ۳۱ تا ۶۳ درجه (ضریب بزرگ‌نمایی ۱ تا \fadecimal{۲٫۲}) آموزش دیده و بر روی مجموعه آزمون استاندارد، بدون هیچ‌گونه تراز مقیاس، ارزیابی شد. این زوج آموزشی در ادامه «\zoomcropconfig{}» نامیده می‌شود.\fafootnote{در این فصل، منظور از «پیکربندی آموزشی» (\lr{Training Configuration}) مجموعه تنظیمات یک دستور آموزشی است، شامل نوع و شدت افزونه‌سازی، ضریب $\lambda$ در تابع هزینه \lr{SiLog} و قفل‌بودن یا نبودن بذر تصادفی. هر پیکربندی به یک زوج مدل اشاره دارد: \proposedmodel{} و \controlmodel{} که هر دو با همان تنظیمات آموزش دیده‌اند.} مرجع مقایسه در این حالت، \publishedbasemodel{}، نسخه مطلق (که با تنظیم دقیق‌پارامترها بر \lr{Hypersim} برای صحنه‌های داخلی آموزش دیده است) است. در کوشش اولیه، همین زوج با بازه باریک‌تر میدان دید (۴۰ تا ۶۳ درجه) و بدون هیچ تفاوت دیگری آموزش داده شده بود؛ گسترش بازه میدان دید، فاصله \proposedmodel{} از \controlmodel{} را در همه معیارها افزایش داد و به همین دلیل، نتایج با بازه وسیع‌تر به‌عنوان \zoomcropconfig{} گزارش می‌شوند.
 
+\begin{edited}
+جدول~\ref{tab:multidomain_main} نتیجه نهایی ارزیابی مطلق این پژوهش را نشان می‌دهد: \proposedmodel{}، \controlmodel{} و \publishedbasemodel{}، همه با انکودر \lr{ViT-L}، پس از آموزش چندمجموعه‌ای بخش~\ref{sec:multidomain_results}، بر چهار مجموعه آزمون داخلی و شهری. \proposedmodel{} در هر چهار مجموعه و در هر سه معیار، بهترین مدل است. نتایج \zoomcropconfig{} در مطالعه کنترل‌شده \lr{NYUv2} پس از جدول آمده است.
+\end{edited}
+
 \begin{table}[htbp]
 \centering
-\caption{نتایج ارزیابی مطلق در \zoomcropconfig{}}
-\label{tab:nyu_absolute_results}
-\begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{rrccc}
+\edhlbox{%
+\caption{نتایج ارزیابی مطلق با انکودر \lr{ViT-L} پس از آموزش چندمجموعه‌ای}
+\label{tab:multidomain_main}
+\setlength{\tabcolsep}{4pt}
+\begin{adjustbox}{max width=\linewidth}
+\begin{tabular}{rcccccccccccc}
 \hline
-مدل & داده آموزش & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
-\tablepublishedmodel{} (\lr{NYUv2} ارزیابی شده) & \lr{Hypersim} & $0.2073$ & $0.6919$ & $0.6063$ \\ \hline
-\tablecontrolmodel{} & \lr{NYUv2} & $0.0826$ & $0.9546$ & $0.2998$ \\
-\tableproposedmodel{} & \lr{NYUv2} & $\mathbf{0.0817}$ & $\mathbf{0.9569}$ & $\mathbf{0.2944}$ \\ \hline
+\multirow{2}{*}{مدل}
+& \multicolumn{3}{c}{\lr{NYUv2}}
+& \multicolumn{3}{c}{\lr{Cityscapes}}
+& \multicolumn{3}{c}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v1}}}
+& \multicolumn{3}{c}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v2}}} \\ \cline{2-13}
+& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$
+& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$
+& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$
+& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
+\tableproposedmodel{} & $\mathbf{0.088}$ & $\mathbf{0.945}$ & $\mathbf{0.309}$ & $\mathbf{0.109}$ & $\mathbf{0.894}$ & $\mathbf{5.417}$ & $\mathbf{0.169}$ & $\mathbf{0.766}$ & $\mathbf{0.369}$ & $\mathbf{0.104}$ & $\mathbf{0.906}$ & $\mathbf{0.351}$ \\
+\tablecontrolmodel{} & $0.133$ & $0.856$ & $0.395$ & $0.136$ & $0.851$ & $5.938$ & $0.314$ & $0.478$ & $0.532$ & $0.209$ & $0.677$ & $0.470$ \\
+\tablepublishedmodel{} & $0.207$ & $0.692$ & $0.600$ & $0.243$ & $0.577$ & $7.569$ & $0.196$ & $0.749$ & $0.396$ & $0.246$ & $0.524$ & $0.616$ \\ \hline
 \end{tabular}
-\end{adjustbox}
+\end{adjustbox}}
 \end{table}
 
-نتایج جدول~\ref{tab:nyu_absolute_results} سه یافته کلیدی دارند:
+\begin{edited}
+در \zoomcropconfig{} مطالعه کنترل‌شده \lr{NYUv2}، مقادیر \lr{AbsRel}، $\delta_1$ و \lr{RMSE} برای \proposedmodel{} برابر \fadecimal{۰٫۰۸۱۷}، \fadecimal{۰٫۹۵۶۹} و \fadecimal{۰٫۲۹۴۴} و برای \controlmodel{} برابر \fadecimal{۰٫۰۸۲۶}، \fadecimal{۰٫۹۵۴۶} و \fadecimal{۰٫۲۹۹۸} است. \publishedbasemodel{}، نسخه مطلق \lr{Hypersim}، بر همین مجموعه آزمون به \lr{AbsRel} برابر \fadecimal{۰٫۲۰۷۳}، $\delta_1$ برابر \fadecimal{۰٫۶۹۱۹} و \lr{RMSE} برابر \fadecimal{۰٫۶۰۶۳} می‌رسد. این نتایج سه یافته کلیدی دارند:
+\end{edited}
 
 نخست، هر دو مدلی که با تنظیم دقیق‌پارامترها آموزش دیده‌اند، \publishedbasemodel{}، نسخه مطلق را با فاصله بسیار زیاد پشت سر می‌گذارند (کاهش \lr{AbsRel} از \fadecimal{۰٫۲۰۷} به حدود \fadecimal{۰٫۰۸}، معادل بهبود \fadecimal{۲٫۵} برابری)؛ این نتیجه هم‌راستا با گزارش خود مقاله مرجع است که مقیاس مطلق مدل \lr{Hypersim} به صحنه‌های واقعی به‌خوبی منتقل نمی‌شود. دوم، برخلاف پروتکل نسبی، در ارزیابی مطلق \proposedmodel{} در تمامی معیارها از \controlmodel{} هم‌داده پیشی می‌گیرد و بیشترین فاصله در معیار \lr{RMSE} دیده می‌شود (\fadecimal{۰٫۲۹۴۴} در برابر \fadecimal{۰٫۲۹۹۸}). سوم، اختلاف دو مدل در \lr{AbsRel} بسیار کوچک است (\fadecimal{۰٫۰۰۰۹})؛ یعنی در \zoomcropconfig{} سهم پارامترهای درونی دوربین واقعی اما مرزی است. زیربخش بعد نشان می‌دهد که با رساندن ابهام هندسی به حد نهایی خود، این سهم از یک برتری مرزی به یک اثر قاطع و همه‌جانبه تبدیل می‌شود.
 
@@ -1077,40 +1115,17 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
 \begin{edited}
 مطالعه کنترل‌شده بخش~\ref{sec:controlled_nyu_study} سهم ماتریس کالیبراسیون دوربین را با یک دوربین واحد (حسگر \lr{Kinect} در \lr{NYUv2}) و با تغییر شبیه‌سازی‌شده فاصله کانونی نشان داد. پرسش این بخش آن است که آیا این برتری، هنگامی که یک مدل واحد بر صحنه‌های داخلی و بیرونی چند دوربین واقعی آموزش می‌بیند، نیز باقی می‌ماند یا خیر. برای این منظور، زوج \proposedmodel{}/\controlmodel{} با انکودر \lr{ViT-L} و مطابق زیربخش~\ref{subsec:multidomain_training} بر ترکیب \lr{NYUv2}، \lr{KITTI}، \lr{Virtual KITTI 2} و \lr{Cityscapes} آموزش داده شد. دو بازو جز در دسترسی به ماتریس کالیبراسیون دوربین، در داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی یکسان بودند. با دقت ممیز شناور ترکیبی و ورودی $518\times518$، اندازه دسته ۴ بدون تجمع گرادیان در حافظه کارت جای گرفت و آموزش هر بازو حدود سه ساعت طول کشید.
 
-مرجع سوم، \publishedbasemodel{}، نسخه مطلق \lr{ViT-L} است؛ برای صحنه‌های داخلی نقطهٔ وارسی \lr{Hypersim} و برای \lr{Cityscapes} نقطهٔ وارسی \lr{Virtual KITTI 2} آن به‌کار رفت. هر سه مدل با یک زنجیره ارزیابی و بر تصاویر یکسان، به‌صورت مطلق و بدون هیچ ترازی ارزیابی شدند. این زنجیره همان \lr{AbsRel} برابر \fadecimal{۰٫۲۰۷} را که در جدول~\ref{tab:nyu_absolute_results} برای نقطهٔ وارسی \lr{Hypersim} بر \lr{NYUv2} گزارش شد، بازتولید می‌کند.
+مرجع سوم، \publishedbasemodel{}، نسخه مطلق \lr{ViT-L} است؛ برای صحنه‌های داخلی نقطهٔ وارسی \lr{Hypersim} و برای \lr{Cityscapes} نقطهٔ وارسی \lr{Virtual KITTI 2} آن به‌کار رفت. هر سه مدل با یک زنجیره ارزیابی و بر تصاویر یکسان، به‌صورت مطلق و بدون هیچ ترازی ارزیابی شدند. این زنجیره همان \lr{AbsRel} برابر \fadecimal{۰٫۲۰۷} را که مطالعه کنترل‌شده برای نقطهٔ وارسی \lr{Hypersim} بر \lr{NYUv2} به‌دست آورد (زیربخش~\ref{subsec:absolute_protocol_results})، بازتولید می‌کند.
 
-جدول~\ref{tab:multidomain_main} نتایج را بر چهار مجموعه آزمون نشان می‌دهد: بخش آزمون استاندارد \lr{NYUv2} (۶۵۴ تصویر، داخلی)، بخش اعتبارسنجی رسمی \lr{Cityscapes} (۵۰۰ تصویر، شهری) و دو حسگر \lr{Kinect v1} و \lr{Kinect v2} از \lr{SUN RGB-D} (هر یک ۲۰۰ تصویر، داخلی) که در آموزش دیده نشده‌اند. \proposedmodel{} در هر هشت ستون جدول بهترین مقدار را دارد، یعنی در هر چهار مجموعه آزمون کمترین \lr{AbsRel} و بیشترین $\delta_1$ را به‌دست می‌آورد.
+جدول~\ref{tab:multidomain_main} نتایج را بر چهار مجموعه آزمون نشان می‌دهد: بخش آزمون استاندارد \lr{NYUv2} (۶۵۴ تصویر، داخلی)، بخش اعتبارسنجی رسمی \lr{Cityscapes} (۵۰۰ تصویر، شهری) و دو حسگر \lr{Kinect v1} و \lr{Kinect v2} از \lr{SUN RGB-D} (هر یک ۲۰۰ تصویر، داخلی) که در آموزش دیده نشده‌اند. \proposedmodel{} در هر دوازده ستون جدول بهترین مقدار را دارد، یعنی در هر چهار مجموعه آزمون کمترین \lr{AbsRel} و \lr{RMSE} و بیشترین $\delta_1$ را به‌دست می‌آورد.
 \end{edited}
 
-\begin{table}[htbp]
-\centering
-\edhlbox{%
-\caption{مقایسه مدل‌ها با انکودر \lr{ViT-L} پس از آموزش چندمجموعه‌ای}
-\label{tab:multidomain_main}
-\begin{tabular}{rcccccccc}
-\toprule
-\multirow{2}{*}{مدل}
-& \multicolumn{2}{c}{\lr{NYUv2}}
-& \multicolumn{2}{c}{\lr{Cityscapes}}
-& \multicolumn{2}{c}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v1}}}
-& \multicolumn{2}{c}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v2}}} \\
-\cmidrule(lr){2-3}\cmidrule(lr){4-5}\cmidrule(lr){6-7}\cmidrule(lr){8-9}
-& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$
-& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$
-& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$
-& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ \\ \midrule
-\tableproposedmodel{} & $\mathbf{0.088}$ & $\mathbf{0.945}$ & $\mathbf{0.109}$ & $\mathbf{0.894}$ & $\mathbf{0.169}$ & $\mathbf{0.766}$ & $\mathbf{0.104}$ & $\mathbf{0.906}$ \\
-\tablecontrolmodel{} & $0.133$ & $0.856$ & $0.136$ & $0.851$ & $0.314$ & $0.478$ & $0.209$ & $0.677$ \\
-\tablepublishedmodel{} & $0.207$ & $0.692$ & $0.243$ & $0.577$ & $0.196$ & $0.749$ & $0.246$ & $0.524$ \\ \bottomrule
-\end{tabular}}
-\end{table}
-
 \begin{edited}
-کاهش \lr{AbsRel} \proposedmodel{} نسبت به \controlmodel{} بر \lr{NYUv2}، \lr{Cityscapes}، \lr{Kinect v1} و \lr{Kinect v2} به‌ترتیب ۳۴، ۲۰، ۴۶ و ۵۰ درصد است و نسبت به \publishedbasemodel{} به‌ترتیب ۵۸، ۵۵، ۱۴ و ۵۸ درصد. در آزمون زوجی ویلکاکسون، برتری بر \controlmodel{} در هر هشت ستون معنادار است ($p<10^{-21}$). برتری بر \publishedbasemodel{} نیز در هفت ستون از هشت ستون معنادار است ($p<10^{-3}$) و تنها تفاوت $\delta_1$ در \lr{Kinect v1} (\fadecimal{۰٫۷۶۶} در برابر \fadecimal{۰٫۷۴۹}) معنادار نیست.
+کاهش \lr{AbsRel} \proposedmodel{} نسبت به \controlmodel{} بر \lr{NYUv2}، \lr{Cityscapes}، \lr{Kinect v1} و \lr{Kinect v2} به‌ترتیب ۳۴، ۲۰، ۴۶ و ۵۰ درصد است و نسبت به \publishedbasemodel{} به‌ترتیب ۵۸، ۵۵، ۱۴ و ۵۸ درصد. در آزمون زوجی ویلکاکسون، برتری بر \controlmodel{} در هر دوازده ستون معنادار است ($p<10^{-11}$). برتری بر \publishedbasemodel{} نیز در یازده ستون از دوازده ستون معنادار است ($p<0.05$) و تنها تفاوت $\delta_1$ در \lr{Kinect v1} (\fadecimal{۰٫۷۶۶} در برابر \fadecimal{۰٫۷۴۹}) معنادار نیست.
 
 این نتایج دو جنبه از تعمیم را هم‌زمان نشان می‌دهند. نخست، یک مدل واحد هم در صحنه‌های داخلی \lr{NYUv2} و هم در صحنه‌های شهری \lr{Cityscapes}، که دوربین‌هایشان میدان دید افقی ۶۳ و ۴۹ درجه دارند، از هر دو مدل مرجع دقیق‌تر است. دوم، این برتری به دو حسگری که در آموزش دیده نشده‌اند نیز منتقل می‌شود. حسگر \lr{Kinect v2} با $f_y/H\approx1.00$ میدان دید عمودی بازتری از همه دوربین‌های آموزشی دارد و در همین حسگر، \lr{AbsRel} از \fadecimal{۰٫۲۰۹} برای \controlmodel{} و \fadecimal{۰٫۲۴۶} برای \publishedbasemodel{} به \fadecimal{۰٫۱۰۴} می‌رسد.
 
-برتری \proposedmodel{} با تغییر دوربین نیز حفظ می‌شود. در آزمون جابه‌جایی دوربین، از مرکز هر تصویر آزمون پنجره‌ای با ابعاد $1/1.5$ تصویر برداشته و ماتریس کالیبراسیون دوربین متناظر با آن به‌روز شد؛ این کار همان صحنه‌ها را از نگاه دوربینی با فاصله کانونی \fadecimal{۱٫۵} برابر نشان می‌دهد. در این آزمون، \lr{AbsRel} \proposedmodel{} بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2} به‌ترتیب \fadecimal{۰٫۰۹۷}، \fadecimal{۰٫۰۸۷} و \fadecimal{۰٫۱۰۶} است، در برابر \fadecimal{۰٫۱۱۸}، \fadecimal{۰٫۱۰۸} و \fadecimal{۰٫۱۱۳} برای \controlmodel{} و \fadecimal{۰٫۱۶۴}، \fadecimal{۰٫۱۷۸} و \fadecimal{۰٫۱۴۲} برای \publishedbasemodel{}. بر \lr{NYUv2} و \lr{Cityscapes}، برتری بر هر دو مدل مرجع معنادار است ($p<10^{-28}$).
+بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2}، برتری \proposedmodel{} با تغییر دوربین نیز حفظ می‌شود. در آزمون جابه‌جایی دوربین، از مرکز هر تصویر آزمون پنجره‌ای با ابعاد $1/1.5$ تصویر برداشته و ماتریس کالیبراسیون دوربین متناظر با آن به‌روز شد؛ این کار همان صحنه‌ها را از نگاه دوربینی با فاصله کانونی \fadecimal{۱٫۵} برابر نشان می‌دهد. در این آزمون، \lr{AbsRel} \proposedmodel{} بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2} به‌ترتیب \fadecimal{۰٫۰۹۷}، \fadecimal{۰٫۰۸۷} و \fadecimal{۰٫۱۰۶} است، در برابر \fadecimal{۰٫۱۱۸}، \fadecimal{۰٫۱۰۸} و \fadecimal{۰٫۱۱۳} برای \controlmodel{} و \fadecimal{۰٫۱۶۴}، \fadecimal{۰٫۱۷۸} و \fadecimal{۰٫۱۴۲} برای \publishedbasemodel{}. بر \lr{NYUv2} و \lr{Cityscapes}، برتری بر هر دو مدل مرجع معنادار است ($p<10^{-28}$).
 
 سرانجام، آزمون‌های سازوکاری بخش~\ref{sec:camera_sensitivity} نشان می‌دهند که این مدل نیز واقعا از ماتریس کالیبراسیون دوربین استفاده می‌کند. در آزمون پیمایش فاصله کانونی بر \lr{NYUv2}، با ضرب $f_x$ و $f_y$ در \fadecimal{۰٫۷} و \fadecimal{۱٫۴}، عمق پیش‌بینی‌شده هر تصویر نسبت به حالت ماتریس صحیح، با میانه \fadecimal{۰٫۷۱۵} و \fadecimal{۱٫۴۱۸} مقیاس می‌شود؛ یعنی شیب پیمایش \fadecimal{۰٫۹۹} است که به مقدار ایده‌آل ۱ بسیار نزدیک است. حذف ماتریس کالیبراسیون دوربین نیز \lr{AbsRel} را از \fadecimal{۰٫۰۸۸} به \fadecimal{۱٫۳۱} می‌رساند. بنابراین دقت گزارش‌شده در جدول~\ref{tab:multidomain_main} از مسیر ورودی دوربین به‌دست می‌آید.
 \end{edited}
@@ -1303,7 +1318,7 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
 مقیاس مطلق آن نیز به دامنه‌ای غیر از دامنه آموزش منتقل نمی‌شود:
 نسخه مطلق آموزش‌دیده بر \lr{Hypersim}، روی \lr{NYUv2} به \lr{AbsRel}
 برابر \fadecimal{۰٫۲۰۷} می‌رسد، در حالی که تنظیم دقیق‌پارامترها درون‌دامنه‌ای
-این مقدار را به حدود \fadecimal{۰٫۰۸} کاهش می‌دهد (جدول~\ref{tab:nyu_absolute_results}).
+این مقدار را به حدود \fadecimal{۰٫۰۸} کاهش می‌دهد \edhl{(زیربخش~\ref{subsec:absolute_protocol_results})}.
 پاسخ سوال اول برای \basemodel{} مثبت است. بااین‌حال، مقایسه‌های بین‌دیتاستی
 اثر دیتاست و اثر دوربین را از هم جدا نمی‌کنند؛ سهم جداگانه دوربین
 در مطالعه کنترل‌شده و با تغییر مصنوعی فاصله کانونی سنجیده شد.
@@ -1312,7 +1327,7 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
 در پروتکل نسبی \lr{ViT-L}، \proposedmodel{} بر \controlmodel{} برتری نمی‌یابد
 (جدول~\ref{tab:nyu_basic_vitl})، اما همین زوج در ارزیابی مطلق بدون تراز،
 در تمامی معیارها از \controlmodel{} بهتر است و برتری آن در \lr{RMSE}
-معنادار است (جدول~\ref{tab:nyu_absolute_results}).
+معنادار است \edhl{(زیربخش~\ref{subsec:absolute_protocol_results})}.
 تراز مقیاس و جابه‌جایی برای هر تصویر، همان مولفه‌ای را حذف می‌کند
 که \calibrationmatrix{} در اختیار مدل می‌گذارد، یعنی مقیاس مطلق صحنه.
 از این رو، ارزیابی صرفا نسبی تفاوت مدل‌ها در مقیاس فیزیکی عمق و سهم
@@ -1340,7 +1355,7 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
 اختلاف خطا میان دوربین‌ها از این شواهد نتیجه نمی‌شود.
 
 \begin{edited}
-بخشی از قید دوم با آزمایش چندمجموعه‌ای بخش~\ref{sec:multidomain_results} برطرف شده است. \proposedmodel{} آموزش‌دیده بر چهار دوربین واقعی و مصنوعی، بر \lr{NYUv2}، \lr{Cityscapes} و دو حسگر دیده‌نشده \lr{SUN RGB-D} در هر دو معیار \lr{AbsRel} و $\delta_1$ از \controlmodel{} و \publishedbasemodel{} دقیق‌تر است (جدول~\ref{tab:multidomain_main}) و در آزمون جابه‌جایی دوربین نیز بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2} دقیق‌ترین مدل باقی می‌ماند. بنابراین سودمندی ماتریس کالیبراسیون دوربین به تغییر مصنوعی فاصله کانونی در یک مجموعه‌داده محدود نیست و بر دوربین‌های واقعی متفاوت نیز دیده می‌شود.
+بخشی از قید دوم با آزمایش چندمجموعه‌ای بخش~\ref{sec:multidomain_results} برطرف شده است. \proposedmodel{} آموزش‌دیده بر چهار دوربین واقعی و مصنوعی، بر \lr{NYUv2}، \lr{Cityscapes} و دو حسگر دیده‌نشده \lr{SUN RGB-D} در هر سه معیار \lr{AbsRel}، $\delta_1$ و \lr{RMSE} از \controlmodel{} و \publishedbasemodel{} دقیق‌تر است (جدول~\ref{tab:multidomain_main}) و در آزمون جابه‌جایی دوربین نیز بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2} دقیق‌ترین مدل باقی می‌ماند. بنابراین سودمندی ماتریس کالیبراسیون دوربین به تغییر مصنوعی فاصله کانونی در یک مجموعه‌داده محدود نیست و بر دوربین‌های واقعی متفاوت نیز دیده می‌شود.
 \end{edited}
 
 این داوری‌ها در جدول جمع‌بندی فصل پنجم (جدول~\ref{tab:hypothesis_verdicts})
@@ -1532,7 +1547,7 @@ $f \times 1.4$ & $0.4274$ & $0.1209$ & $1.2118$ \\ \hline
 درک دقیق‌تری از شرایط سودمندی اطلاعات هندسی دوربین به‌دست می‌دهند.
 
 \begin{edited}
-آزمایش چندمجموعه‌ای بخش~\ref{sec:multidomain_results} این یافته‌ها را از یک دوربین به چند دوربین و از صحنه‌های داخلی به صحنه‌های بیرونی گسترش داد. \proposedmodel{} \lr{ViT-L} که هم‌زمان بر \lr{NYUv2}، \lr{KITTI}، \lr{Virtual KITTI 2} و \lr{Cityscapes} آموزش دید، بر \lr{NYUv2}، \lr{Cityscapes} و دو حسگر دیده‌نشده \lr{SUN RGB-D} در هر دو معیار \lr{AbsRel} و $\delta_1$ از \controlmodel{} هم‌داده و \publishedbasemodel{} بهتر بود. برای نمونه، \lr{AbsRel} این مدل بر \lr{NYUv2} برابر \fadecimal{۰٫۰۸۸} است، در برابر \fadecimal{۰٫۱۳۳} برای \controlmodel{} و \fadecimal{۰٫۲۰۷} برای \publishedbasemodel{}، و شیب پیمایش فاصله کانونی آن \fadecimal{۰٫۹۹} است.
+آزمایش چندمجموعه‌ای بخش~\ref{sec:multidomain_results} این یافته‌ها را از یک دوربین به چند دوربین و از صحنه‌های داخلی به صحنه‌های بیرونی گسترش داد. \proposedmodel{} \lr{ViT-L} که هم‌زمان بر \lr{NYUv2}، \lr{KITTI}، \lr{Virtual KITTI 2} و \lr{Cityscapes} آموزش دید، بر \lr{NYUv2}، \lr{Cityscapes} و دو حسگر دیده‌نشده \lr{SUN RGB-D} در هر سه معیار \lr{AbsRel}، $\delta_1$ و \lr{RMSE} از \controlmodel{} هم‌داده و \publishedbasemodel{} بهتر بود. برای نمونه، \lr{AbsRel} این مدل بر \lr{NYUv2} برابر \fadecimal{۰٫۰۸۸} است، در برابر \fadecimal{۰٫۱۳۳} برای \controlmodel{} و \fadecimal{۰٫۲۰۷} برای \publishedbasemodel{}، و شیب پیمایش فاصله کانونی آن \fadecimal{۰٫۹۹} است.
 \end{edited}
 
 در مجموع،

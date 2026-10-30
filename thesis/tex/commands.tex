@@ -148,6 +148,35 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \definecolor{thPanelGray}{HTML}{F0F1F2}
 \definecolor{thPanelRed}{HTML}{FBEAE8}
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% برجسته‌سازی زرد ویرایش‌های تازه (آموزش چندمجموعه‌ای).
+%%% برای حذف همه برجسته‌سازی‌ها، \showeditstrue را به \showeditsfalse تغییر
+%%% دهید؛ متن ویرایش‌شده بدون هیچ تغییر دیگری باقی می‌ماند.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\definecolor{thEditHL}{HTML}{FFF176}
+\newif\ifshowedits
+\showeditstrue
+\ifshowedits
+ % عبارت کوتاه یک‌سطری، مانند عنوان بخش
+ \newcommand{\edhl}[1]{\colorbox{thEditHL}{#1}}
+ % بند کوتاهی که میان دو صفحه شکسته نمی‌شود (چکیده، بند فهرست)
+ \newcommand{\edpar}[1]{\noindent\colorbox{thEditHL}{\parbox[t]{\dimexpr\linewidth-2\fboxsep\relax}{#1}}}
+ % بندهای بلند؛ با بسته framed میان صفحه‌ها شکسته می‌شود
+ \newenvironment{edited}{\colorlet{shadecolor}{thEditHL}\begin{shaded}}{\end{shaded}}
+ % جدول تازه: عنوان و بدنه جدول روی زمینه زرد
+ \newcommand{\edhlbox}[1]{\colorbox{thEditHL}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ % ردیف یا خانه ویرایش‌شده در جدول‌های موجود
+ \newcommand{\edrow}{\rowcolor{thEditHL}}
+ \newcommand{\edcell}{\cellcolor{thEditHL}}
+\else
+ \newcommand{\edhl}[1]{#1}
+ \newcommand{\edpar}[1]{#1}
+ \newenvironment{edited}{}{}
+ \newcommand{\edhlbox}[1]{#1}
+ \newcommand{\edrow}{}
+ \newcommand{\edcell}{}
+\fi
+
 \pgfplotsset{
  thesisplot/.style={
   width=0.86\textwidth,

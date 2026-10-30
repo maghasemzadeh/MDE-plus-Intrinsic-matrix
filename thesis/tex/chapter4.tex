@@ -54,9 +54,9 @@
 \small
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{@{}
- >{\raggedleft\arraybackslash}p{0.26\textwidth}
+ >{\raggedright\arraybackslash}p{0.26\textwidth}
  >{\centering\arraybackslash}p{0.27\textwidth}
- >{\raggedleft\arraybackslash}X@{}}
+ >{\raggedright\arraybackslash}X@{}}
 \toprule
 مولفه & مقدار & توضیح \\
 \midrule
@@ -168,7 +168,7 @@ python train.py --encoder vitl --datasets nyu --model-type absolute \
 \centering
 \caption{مقایسه معیار \lr{SiLog} \publishedbasemodel{} در دیتاست‌های مختلف}
 \label{tab:basic_model_silog}
-\begin{tabular}{lccc}
+\begin{tabular}{rccc}
 \hline
 مقایسه دیتاست‌ها & اختلاف میانگین & \lr{p-value} & نتیجه \\ \hline
 \lr{VKITTI vs DrivingStereo} & $0.039$ & $<0.05$ & معنادار \\
@@ -214,7 +214,7 @@ python train.py --encoder vitl --datasets nyu --model-type absolute \
 \caption{مقایسه تاریخی و موقت عملکرد \publishedbasemodel{} و \proposedmodel{} بر اساس معیار \lr{SiLog}}
 \label{tab:da2_revised_comparison}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcccc}
+\begin{tabular}{rcccc}
 \hline
 دیتاست & \tablepublishedmodel{} & \tableproposedmodel{} & بهبود (\%) & $p$-value \\ \hline
 \lr{NYUv2} & $1.284$ & $\mathbf{0.329}$ & $74.38$ & $\ll 0.05$ \\
@@ -319,7 +319,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \small
 \renewcommand{\arraystretch}{1.25}
 \phantomsection
-\begin{longtable}{@{}>{\raggedleft\arraybackslash}p{0.14\textwidth}>{\raggedleft\arraybackslash}p{0.25\textwidth}>{\raggedleft\arraybackslash}p{0.25\textwidth}>{\raggedleft\arraybackslash}p{0.25\textwidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.14\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}>{\raggedright\arraybackslash}p{0.25\textwidth}@{}}
 \caption{مسیر تصمیم‌گیری آزمایش‌ها}
 \label{tab:experiment_journey}\\
 \toprule
@@ -330,7 +330,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 گام & چه چیزی مشاهده شد؟ & این مشاهده چه معنایی داشت؟ & اقدام بعدی چه بود؟ \\ \midrule
 \endhead
 \midrule
-\multicolumn{4}{l}{ادامه در صفحه بعد}\\
+\multicolumn{4}{@{}r}{ادامه در صفحه بعد}\\
 \endfoot
 \bottomrule
 \endlastfoot
@@ -434,7 +434,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \centering
 \caption{راستی‌آزمایی زنجیره ارزیابی}
 \label{tab:paper_reproduction}
-\begin{tabular}{llcccc}
+\begin{tabular}{rrcccc}
 \toprule
 \multirow{2}{*}{مجموعه‌داده} & \multirow{2}{*}{انکودر}
 & \multicolumn{2}{c}{مقاله مرجع (جدول ۲)}
@@ -465,7 +465,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \label{tab:zeroshot_failure}
 \small
 \renewcommand{\arraystretch}{1.12}
-\begin{tabularx}{\textwidth}{ll>{\raggedleft\arraybackslash}Xcc}
+\begin{tabularx}{\textwidth}{rr>{\raggedright\arraybackslash}Xcc}
 \toprule
 مجموعه‌داده & مدل & داده تنظیم دقیق‌پارامترها & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ \\ \midrule
 \lr{KITTI} & \tableproposedmodel{} & چندمجموعه‌ای & $0.2139$ & $0.6189$ \\
@@ -491,7 +491,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \caption{مقایسه مدل‌ها در پروتکل نسبی ViT-S}
 \label{tab:nyu_basic_vits}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llccccc}
+\begin{tabular}{rrccccc}
 \hline
 مدل & داده تنظیم دقیق‌پارامترها & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ & \lr{SqRel}$\downarrow$ & $\log_{10}\downarrow$ \\ \hline
 مقاله مرجع (جدول ۲) & & $0.053$ & $0.973$ & & & \\\
@@ -511,7 +511,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \caption{مقایسه مدل‌ها در پروتکل نسبی ViT-L}
 \label{tab:nyu_basic_vitl}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llcccc}
+\begin{tabular}{rrcccc}
 \hline
 مدل & داده تنظیم دقیق‌پارامترها & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ & \lr{SqRel}$\downarrow$ \\ \hline
 مقاله مرجع (جدول ۲) & & $0.045$ & $0.979$ & & \\\
@@ -525,14 +525,14 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \subsection{اثر افزونه‌سازی هندسی و یک نتیجه منفی آموزنده}
 \label{subsec:aug_basic_results}
 
-فرضیه محتمل برای عدم مشاهده سهم پارامترهای دوربین در \lr{ViT-L}، ثابت‌بودن بردار $\mathbf{d}_{\mathrm{cam}}$ در مجموعه‌داده تک‌دوربینه \lr{NYUv2} بود. برای آزمون این فرضیه، زوج مدل \lr{ViT-L} با افزونه‌سازی هندسی آگاه از دوربین (بخش ۳ تا ۷، بازه میدان دید ۴۰ تا ۶۳ درجه) بازآموزی شد. نتایج (جدول~\ref{tab:nyu_basic_aug}) دو یافته به همراه داشت: نخست، خود افزونه‌سازی هندسی برای هر دو مدل سودمندی چشمگیری دارد (کاهش \lr{AbsRel} \controlmodel{} از \fadecimal{۰٫۰۳۷۸} به \fadecimal{۰٫۰۳۵۹} با $p=1.2\times10^{-13}$ و \proposedmodel{} از \fadecimal{۰٫۰۳۷۷} به \fadecimal{۰٫۰۳۶۲} با $p=1.2\times10^{-8}$) و بهترین نتایج این پژوهش در پروتکل نسبی را رقم می‌زند. دوم، حتی با وجود سیگنال هندسی متنوع و صحیح، \proposedmodel{} در پروتکل نسبی بر \controlmodel{} برتری نیافت (و در \lr{AbsRel} با اختلاف بسیار جزیی \fadecimal{۰٫۰۰۰۳} ولی معنادار، $p=8.1\times10^{-3}$، پشت سر آن قرار گرفت؛ اختلاف \lr{RMSE} برابر \fadecimal{۰٫۰۰۳۱} با $p\approx2.0\times10^{-5}$ بود).
+فرضیه محتمل برای عدم مشاهده سهم پارامترهای دوربین در \lr{ViT-L}، ثابت‌بودن بردار $\mathbf{d}_{\mathrm{cam}}$ در مجموعه‌داده تک‌دوربینه \lr{NYUv2} بود. برای آزمون این فرضیه، زوج مدل \lr{ViT-L} با افزونه‌سازی هندسی آگاه از دوربین (بخش ۳ تا ۷، بازه میدان دید ۴۰ تا ۶۳ درجه) بازآموزی شد. نتایج (جدول~\ref{tab:nyu_basic_aug}) دو یافته به همراه داشت: نخست، خود افزونه‌سازی هندسی برای هر دو مدل سودمندی چشمگیری دارد (کاهش \lr{AbsRel} \controlmodel{} از \fadecimal{۰٫۰۳۷۸} به \fadecimal{۰٫۰۳۵۹} و \proposedmodel{} از \fadecimal{۰٫۰۳۷۷} به \fadecimal{۰٫۰۳۶۲}) و بهترین نتایج این پژوهش در پروتکل نسبی را رقم می‌زند. دوم، حتی با وجود سیگنال هندسی متنوع و صحیح، \proposedmodel{} در پروتکل نسبی بر \controlmodel{} برتری نیافت (و در \lr{AbsRel} با اختلاف بسیار جزیی \fadecimal{۰٫۰۰۰۳} ولی معنادار، $p=8.1\times10^{-3}$، پشت سر آن قرار گرفت؛ اختلاف \lr{RMSE} برابر \fadecimal{۰٫۰۰۳۱} با $p\approx2.0\times10^{-5}$ بود).
 
 \begin{table}[htbp]
 \centering
 \caption{اثر افزونه‌سازی هندسی در پروتکل نسبی}
 \label{tab:nyu_basic_aug}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lccc}
+\begin{tabular}{rccc}
 \hline
 مدل & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
 \tablecontrolmodel{} & $\mathbf{0.0359}$ & $\mathbf{0.9872}$ & $\mathbf{0.1849}$ \\
@@ -604,7 +604,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \caption{نتایج ارزیابی مطلق}
 \label{tab:nyu_absolute_results}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lllccc}
+\begin{tabular}{rrrccc}
 \hline
 مدل & داده آموزش & دور & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
 \tablepublishedmodel{} (\lr{NYUv2} ارزیابی شده) & \lr{Hypersim} & & $0.2073$ & $0.6919$ & $0.6063$ \\ \hline
@@ -624,7 +624,7 @@ $1.284\rightarrow0.329$. بنابراین این جدول فقط یک مقایس
 \label{tab:nyu_absolute_significance}
 \small
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{llccc}
+\begin{tabular}{rrccc}
 \hline
 دور & مدل مرجع & معیار & $p$ (\lr{t} زوجی) & $p$ (ویلکاکسون) \\ \hline
 ۱ & \tablepublishedmodel{} & \lr{AbsRel} & $4.8\times10^{-133}$ & $8.4\times10^{-96}$ \\
@@ -662,7 +662,7 @@ $p=3.88\times10^{-4}$ و $p=7.26\times10^{-4}$ هستند. برای $\delta_1$ �
 \label{tab:nyu_absolute_focal}
 \small
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcccc}
+\begin{tabular}{rcccc}
 \hline
 معیار & \tableproposedmodel{} & \tablecontrolmodel{} & تفاضل [بازه اطمینان ۹۵٪] & $p$ (ویلکاکسون) \\ \hline
 \lr{AbsRel}$\downarrow$ & $\mathbf{0.0849}$ & $0.1030$ & $-0.0182\ [-0.0210, -0.0153]$ & $4.0\times10^{-31}$ \\
@@ -731,7 +731,7 @@ $\delta_1$، \lr{0.9520} و \lr{0.9226} با تفاضل \lr{+0.0294}؛
 \label{tab:nyu_absolute_focal_isolation}
 \small
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcccc}
+\begin{tabular}{rcccc}
 \hline
 معیار & \tableproposedmodel{} & \tablecontrolmodel{} & تفاضل [بازه اطمینان ۹۵٪] & $p$ (ویلکاکسون) \\ \hline
 \lr{AbsRel}$\downarrow$ & $\mathbf{0.0834}$ & $0.1065$ & $-0.0231\ [-0.0260, -0.0202]$ & $3.4\times10^{-45}$ \\
@@ -759,7 +759,7 @@ $\delta_1\uparrow$ & $\mathbf{0.9554}$ & $0.9173$ & $+0.0381\ [+0.0310, +0.0453]
 \small
 \renewcommand{\arraystretch}{1.3}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lccccccc}
+\begin{tabular}{rccccccc}
 \toprule
 زوج آموزشی & افزونه‌سازی هندسی & $\lambda$
 & \multicolumn{2}{c}{\lr{AbsRel}$\downarrow$}
@@ -939,7 +939,7 @@ $\delta_1\uparrow$ & $\mathbf{0.9554}$ & $0.9173$ & $+0.0381\ [+0.0310, +0.0453]
 \caption{شیب پیمایش فاصله کانونی}
 \label{tab:k_sweep_slopes}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{lcc}
+\begin{tabular}{rcc}
 \hline
 زوج آموزشی & \tableproposedmodel{} & \tablecontrolmodel{} \\ \hline
 دور ۲ (افزونه‌سازی هندسی) & $0.06 \pm 0.01$ & $0.00$ \\
@@ -1006,7 +1006,7 @@ $\delta_1\uparrow$ & $\mathbf{0.9554}$ & $0.9173$ & $+0.0381\ [+0.0310, +0.0453]
 \centering
 \caption{آزمون حذف و تحریف ماتریس دوربین}
 \label{tab:k_knockout}
-\begin{tabular}{lccc}
+\begin{tabular}{rccc}
 \hline
 شرایط ورودی ماتریس کالیبراسیون دوربین & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
 ماتریس کالیبراسیون دوربین صحیح & $\mathbf{0.0924}$ & $\mathbf{0.9339}$ & $\mathbf{0.3455}$ \\

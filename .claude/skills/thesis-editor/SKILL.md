@@ -1,6 +1,6 @@
 ---
 name: thesis-editor
-description: Edit the Persian LaTeX thesis source (without rendering the PDF) when the user requests a thesis change, an academic or professional revision, or a thesis update based on project outputs or results. Apply the relevant LaTeX, academic-writing, and figure-making skills, while making only the requested thesis changes. Read project evidence as needed, but write only under thesis/; never edit thesis-gemini/ or other project folders.
+description: Edit the Persian LaTeX thesis source (without rendering the PDF) when the user requests a thesis change, an academic or professional revision, or a thesis update based on project outputs or results. Apply the relevant LaTeX, academic-writing, and figure-making skills, while making only the requested thesis changes. Read project evidence as needed, but write only under thesis/; never edit thesis-gemini/ or other project folders. Every edit is written as visible review markup (green added, yellow new words, red struck removals, red-highlighted struck deletions), then the user is asked to finalize or revert it.
 ---
 
 # Thesis editor
@@ -77,6 +77,193 @@ the user's request and the narrowest task-specific constraint take precedence.
   accidental unrelated hunk before building. Preserve unrelated pre-existing
   changes and never use reset, clean, or forceful overwrite commands to conceal
   them.
+
+## Change-tracking markup (mandatory for every thesis edit)
+
+Every change this skill makes to thesis prose, headings, captions, tables, or
+figures is written as **visible review markup**, never as a silent edit. The user
+reads the marked-up PDF, then tells you to finalize or revert. The markup applies
+to every update, including small wording fixes, unless the user explicitly asks for
+an unmarked edit in that message.
+
+### Colour code
+
+| Kind of change | How it must look | Macro / environment |
+|---|---|---|
+| New paragraph, section, sentence, caption, table, or figure | Green highlight | `\edadd{...}`, `edadded` env, `\edaddbox{...}`, `\edaddrow`, `\edaddcell` |
+| Edited paragraph — words removed | Red text with line-through (no highlight) | old half of `\edrep{old}{new}` |
+| Edited paragraph — words inserted | Yellow highlight | new half of `\edrep{old}{new}`, or `\edins{...}` for a pure insertion inside an edited sentence |
+| Deleted part (sentence, paragraph, section, row) | Line-through **and** red highlight | `\eddel{...}`, `eddeleted` env, `\eddelbox{...}`, `\eddelrow` |
+
+Rules for choosing the kind:
+
+- A paragraph or section that did not exist before is **added** (green) as a whole;
+  do not mix yellow into it.
+- A paragraph that existed and is partly rewritten is **edited**: mark only the
+  changed words/phrases with `\edrep{old}{new}` (or `\edins{}` for pure insertions,
+  `\edrep{old}{}` for pure removals inside the paragraph). Keep unchanged words
+  outside the macros. Mark at phrase granularity — do not wrap a whole paragraph in
+  one `\edrep` unless nearly every word changed.
+- Content removed as a whole unit (a sentence, paragraph, list item, section,
+  table row, figure) is **deleted**: keep it in the source wrapped in `\eddel{}` /
+  `eddeleted` so the user can see it in the PDF. Never actually remove text until
+  the user finalizes.
+- Numbers changed inside an existing table cell or sentence are edits:
+  `\edrep{\fadecimal{0.081}}{\fadecimal{0.079}}`.
+- Section headings: wrap the heading text, e.g. `\section{\edadd{...}}` or
+  `\section{...\edrep{old}{new}...}`. Because headings also feed the table of
+  contents and bookmarks, use the optional short argument with the plain text:
+  `\section[plain new title]{\edadd{plain new title}}`.
+- Labels, `\cite` keys, and `\ref`s stay functional: never put a `\label` inside a
+  deleted block that is still referenced elsewhere — move the `\label` or mark the
+  referencing text too.
+
+### Markup macros
+
+The macros live in `thesis/tex/commands.tex`. Before the first marked-up edit,
+check whether `\edadd` is already defined there; if it is not, insert the block
+below **once**, directly after the existing `\showedits` block (the legacy yellow
+`\edhl`/`\edpar`/`edited`/`\edhlbox`/`\edrow`/`\edcell` macros) and before
+`xepersian` is loaded. `ulem` is loaded with `normalem` so `\emph` is unchanged.
+Adding this block is a direct compile dependency of the requested edit and is
+allowed under the template rules; do not reorder other packages.
+
+```latex
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% نشانه‌گذاری بازبینی: سبز = افزوده، زرد = واژه تازه، قرمز خط‌خورده = حذف
+%%% \showreviewfalse همه نشانه‌ها را پنهان می‌کند (متن تازه می‌ماند، متن حذفی نه)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[normalem]{ulem}
+\definecolor{thRevAdd}{HTML}{B9F6CA}  % افزوده: سبز
+\definecolor{thRevNew}{HTML}{FFF176}  % واژه تازه در بند ویرایش‌شده: زرد
+\definecolor{thRevDel}{HTML}{D32F2F}  % متن حذفی: قرمز
+\definecolor{thRevDelBG}{HTML}{FFCDD2}% زمینه بخش حذف‌شده: قرمز روشن
+\newif\ifshowreview
+\showreviewtrue
+\ifshowreview
+ % برجسته‌سازی شکست‌پذیر میان سطرها (ulem رنگ را پشت متن می‌کشد)
+ \newcommand{\edhlwith}[2]{\bgroup\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
+ \newcommand{\edadd}[1]{\edhlwith{thRevAdd}{#1}}
+ \newcommand{\edins}[1]{\edhlwith{thRevNew}{#1}}
+ \newcommand{\edold}[1]{{\color{thRevDel}\sout{#1}}}
+ \newcommand{\edrep}[2]{\edold{#1}\ifx\relax#2\relax\else\ \edins{#2}\fi}
+ % زمینه قرمز روشن + خط قرمز روی متن در یک نشانه (ulem تودرتو پشتیبانی نمی‌شود)
+ \newcommand{\eddel}[1]{{\color{thRevDel}\bgroup\markoverwith{\rlap{\textcolor{thRevDelBG}{\rule[-0.55ex]{2pt}{2.6ex}}}\textcolor{thRevDel}{\rule[0.55ex]{2pt}{0.7pt}}}\ULon{#1}}}
+ % بندها و بخش‌های افزوده/حذف‌شده؛ میان صفحه‌ها شکسته می‌شوند
+ \newenvironment{edadded}{\colorlet{shadecolor}{thRevAdd}\begin{shaded}}{\end{shaded}}
+ \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}\color{thRevDel}}{\end{shaded}}
+ % جدول یا شکل کامل افزوده/حذف‌شده (درون محیط شناور)
+ \newcommand{\edaddbox}[1]{\colorbox{thRevAdd}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ \newcommand{\eddelbox}[1]{\colorbox{thRevDelBG}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ % ردیف/خانه جدول
+ \newcommand{\edaddrow}{\rowcolor{thRevAdd}}
+ \newcommand{\edaddcell}{\cellcolor{thRevAdd}}
+ \newcommand{\ednewcell}{\cellcolor{thRevNew}}
+ \newcommand{\eddelrow}{\rowcolor{thRevDelBG}}
+\else
+ \newcommand{\edadd}[1]{#1}
+ \newcommand{\edins}[1]{#1}
+ \newcommand{\edold}[1]{}
+ \newcommand{\edrep}[2]{#2}
+ \newcommand{\eddel}[1]{}
+ \newenvironment{edadded}{}{}
+ \newenvironment{eddeleted}{\setbox0\vbox\bgroup}{\egroup}
+ \newcommand{\edaddbox}[1]{#1}
+ \newcommand{\eddelbox}[1]{}
+ \newcommand{\edaddrow}{}
+ \newcommand{\edaddcell}{}
+ \newcommand{\ednewcell}{}
+ \newcommand{\eddelrow}{}
+\fi
+```
+
+Usage notes:
+
+- `\edadd`, `\edins`, `\edrep`, `\eddel` are for text **within one paragraph**
+  (they line-break but cannot contain `\par`, blank lines, `\begin…\end`, or
+  display math). For whole paragraphs/sections use the `edadded` / `eddeleted`
+  environments; inside `eddeleted`, also wrap each paragraph's text in `\eddel{}`
+  so it is struck through. For whole floats use `\edaddbox` / `\eddelbox` inside
+  the `figure`/`table` environment around the body and caption (do not put
+  `shaded` inside a float).
+- Never nest the inline review macros inside each other (`ulem` cannot nest
+  underlines); split the text into adjacent macro calls instead.
+- Inside the `ulem` macros, wrap fragile or boxed content — `\lr{...}`, `\cite`,
+  `\ref`, inline math, `\fadecimal{}` — as a single braced unit, e.g.
+  `\edadd{متن {\lr{DA2}} متن}`; braces keep `ulem` from splitting it.
+- A deleted table row keeps its cells: `\eddelrow \eddel{a} & \eddel{b} \\`.
+  An added row: `\edaddrow a & b \\`.
+- Display equations: wrap the whole `equation` in `\edaddbox{...}`/`\eddelbox{...}`
+  or, for an edited equation, show old and new versions as one deleted box plus
+  one added box.
+- If a source-level check shows `ulem` is incompatible with a particular construct,
+  fall back to colour only (`\textcolor{thRevDel}{...}` for removals) for that
+  construct and mention it in the report; never drop the marking silently.
+- The legacy yellow macros (`\edhl`, `\edpar`, `edited`, `\edhlbox`, `\edrow`,
+  `\edcell`, toggle `\showedits`) belong to the earlier 2026-10-30 update. Leave
+  them as they are unless the user asks to finalize/revert that update too; do not
+  use them for new edits.
+
+### Pending-review ledger
+
+Record every marked-up update in `thesis/REVIEW_PENDING.md` (create it if absent).
+Each update gets an ID (`R1`, `R2`, … continuing the highest existing number) and
+an entry listing: date, short description, and every file + section/label +
+approximate line touched, with the kind of each change (added / edited / deleted).
+Also put the ID in a LaTeX comment on the line before each marked region,
+`% REVIEW R3`, so finalize/revert can find every region with `grep -n 'REVIEW R3'`
+even after other edits shift line numbers. Several updates may be pending at once;
+never mix markup of different IDs inside one macro.
+
+### Ask the user after every update
+
+After each marked-up update (and after the completion report), ask the user — with
+`AskUserQuestion` when available — whether they have read the marked sections,
+naming the update ID and the sections. Offer:
+
+1. **Read — make final** (finalize),
+2. **Not accepted — revert** (revert),
+3. **Not read yet — keep highlighted** (leave markup and ledger entry pending).
+
+Never finalize or revert on your own initiative, and never treat silence or an
+unrelated reply as approval. If the user starts a new thesis request while updates
+are pending, keep the old markup and ledger entries, mark the new update with a new
+ID, and ask about all pending IDs at the end.
+
+### Finalize (user read and accepted)
+
+For the chosen ID(s), in every region tagged `% REVIEW Rn`:
+
+- `\edadd{X}` → `X`; `\edins{X}` → `X`; `\edrep{old}{new}` → `new`;
+- `\begin{edadded}` … `\end{edadded}` → keep the body, drop the environment lines;
+- `\edaddbox{X}` → `X`; delete `\edaddrow`, `\edaddcell`, `\ednewcell` tokens;
+- `\eddel{X}` → removed entirely (with surrounding whitespace tidied);
+  `eddeleted` blocks, `\eddelbox{...}`, and rows starting with `\eddelrow` →
+  removed entirely, **permanently**;
+- remove the `% REVIEW Rn` comment lines and the ledger entry (delete
+  `thesis/REVIEW_PENDING.md` when it becomes empty).
+
+### Revert (user did not accept)
+
+For the chosen ID(s), restore the pre-update text exactly:
+
+- `\edadd{X}`, `\edins{X}`, `edadded` blocks, `\edaddbox{X}`, and rows starting with
+  `\edaddrow` → removed entirely;
+- `\edrep{old}{new}` → `old`; `\eddel{X}` → `X`; `eddeleted` block → its body with
+  the inner `\eddel{}` wrappers unwrapped; `\eddelbox{X}` → `X`; `\eddelrow` row →
+  the row with its cell `\eddel{}` wrappers unwrapped;
+- also revert any compile dependency added for that update (new glossary entry,
+  label, bibliography key, figure asset) unless another pending or final change
+  still uses it;
+- remove the `% REVIEW Rn` comments and the ledger entry.
+
+For both finalize and revert: use exact, region-by-region edits (not a blind global
+regex), keep the macro definitions in `commands.tex` for future updates, check
+`grep -n 'REVIEW Rn\|\\edadd\|\\edins\|\\edrep\|\\eddel\|edadded\|eddeleted' thesis/`
+afterwards to confirm no markup of that ID remains, and inspect `git diff -- thesis`
+so that only that ID's regions changed. A revert must leave the affected regions
+byte-identical to their state before the update (compare with
+`git show <commit-before-update>:<file>` when the update was committed).
 
 ## Academic and professional editing
 
@@ -171,3 +358,8 @@ End every task with a concise, formal English report that lists:
 
 If concurrent edits were detected, identify which pre-existing or concurrent changes
 were preserved and distinguish them clearly from this task's changes.
+
+Also state the review ID of this update, the colour legend (green = added,
+yellow = new words, red struck = removed words, red highlight + strike = deleted),
+then ask the finalize / revert / keep-pending question described in
+"Ask the user after every update".

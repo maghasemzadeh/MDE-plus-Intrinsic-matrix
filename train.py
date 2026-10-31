@@ -409,7 +409,10 @@ def main():
             if rank == 0:
                 print(f"Initializing NYU Depth V2 training dataset...")
                 sys.stdout.flush()
+            # The zoom-crop frame (518x686) cannot be batched with the square
+            # crops of the other legacy datasets, so mixed runs use NYU's square crop.
             dataset = NYUTrainingDataset(nyu_mat_file, 'train', size=size,
+                                         intrinsics_aug=len(dataset_names) == 1,
                                          focal_jitter=args.focal_jitter)
             if rank == 0:
                 print(f"NYU training dataset loaded: {len(dataset)} samples")

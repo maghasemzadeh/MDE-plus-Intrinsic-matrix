@@ -147,7 +147,12 @@ class VKITTI2TrainingDataset(Dataset):
     
     If intrinsics_path is provided, it should be a .npy file containing a 3x3 numpy array.
     """
-    
+
+    # True VKITTI2 camera at 1242x375 (same for all scenes, variations and cameras)
+    VKITTI2_K = np.array([[725.0087, 0.0, 620.5],
+                          [0.0, 725.0087, 187.0],
+                          [0.0, 0.0, 1.0]])
+
     def __init__(self, filelist_path, mode='train', size=(518, 518)):
         """
         Initialize VKITTI2 training dataset.
@@ -471,6 +476,11 @@ class VKITTI2TrainingDataset(Dataset):
                 if intrinsics_path.endswith('.npy'):
                     intrinsics = np.load(intrinsics_path)
                     if intrinsics is not None and intrinsics.shape == (3, 3):
+                        if intrinsics[0, 0] <= 0 or intrinsics[1, 1] <= 0:
+                            # The prepared splits/intrinsics/*.npy are all-zero
+                            # placeholders; use the true VKITTI2 camera (identical
+                            # for every scene/camera, from vkitti_2.0.3_textgt intrinsic.txt).
+                            intrinsics = self.VKITTI2_K.copy()
                         sample['intrinsics'] = torch.from_numpy(intrinsics).float()
                 else:
                     # Try to load from text file (intrinsic.txt)

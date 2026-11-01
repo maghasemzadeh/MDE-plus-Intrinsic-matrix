@@ -177,6 +177,53 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  \newcommand{\edcell}{}
 \fi
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% نشانه‌گذاری بازبینی: سبز = افزوده، زرد = واژه تازه، قرمز خط‌خورده = حذف
+%%% \showreviewfalse همه نشانه‌ها را پنهان می‌کند (متن تازه می‌ماند، متن حذفی نه)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\usepackage[normalem]{ulem}
+\definecolor{thRevAdd}{HTML}{B9F6CA}  % افزوده: سبز
+\definecolor{thRevNew}{HTML}{FFF176}  % واژه تازه در بند ویرایش‌شده: زرد
+\definecolor{thRevDel}{HTML}{D32F2F}  % متن حذفی: قرمز
+\definecolor{thRevDelBG}{HTML}{FFCDD2}% زمینه بخش حذف‌شده: قرمز روشن
+\newif\ifshowreview
+\showreviewtrue
+\ifshowreview
+ % برجسته‌سازی شکست‌پذیر میان سطرها (ulem رنگ را پشت متن می‌کشد)
+ \newcommand{\edhlwith}[2]{\bgroup\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
+ \newcommand{\edadd}[1]{\edhlwith{thRevAdd}{#1}}
+ \newcommand{\edins}[1]{\edhlwith{thRevNew}{#1}}
+ \newcommand{\edold}[1]{{\color{thRevDel}\sout{#1}}}
+ \newcommand{\edrep}[2]{\edold{#1}\ifx\relax#2\relax\else\ \edins{#2}\fi}
+ % زمینه قرمز روشن + خط قرمز روی متن در یک نشانه (ulem تودرتو پشتیبانی نمی‌شود)
+ \newcommand{\eddel}[1]{{\color{thRevDel}\bgroup\markoverwith{\rlap{\textcolor{thRevDelBG}{\rule[-0.55ex]{2pt}{2.6ex}}}\textcolor{thRevDel}{\rule[0.55ex]{2pt}{0.7pt}}}\ULon{#1}}}
+ % بندها و بخش‌های افزوده/حذف‌شده؛ میان صفحه‌ها شکسته می‌شوند
+ \newenvironment{edadded}{\colorlet{shadecolor}{thRevAdd}\begin{shaded}}{\end{shaded}}
+ \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}\color{thRevDel}}{\end{shaded}}
+ % جدول یا شکل کامل افزوده/حذف‌شده (درون محیط شناور)
+ \newcommand{\edaddbox}[1]{\colorbox{thRevAdd}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ \newcommand{\eddelbox}[1]{\colorbox{thRevDelBG}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ % ردیف/خانه جدول
+ \newcommand{\edaddrow}{\rowcolor{thRevAdd}}
+ \newcommand{\edaddcell}{\cellcolor{thRevAdd}}
+ \newcommand{\ednewcell}{\cellcolor{thRevNew}}
+ \newcommand{\eddelrow}{\rowcolor{thRevDelBG}}
+\else
+ \newcommand{\edadd}[1]{#1}
+ \newcommand{\edins}[1]{#1}
+ \newcommand{\edold}[1]{}
+ \newcommand{\edrep}[2]{#2}
+ \newcommand{\eddel}[1]{}
+ \newenvironment{edadded}{}{}
+ \newenvironment{eddeleted}{\setbox0\vbox\bgroup}{\egroup}
+ \newcommand{\edaddbox}[1]{#1}
+ \newcommand{\eddelbox}[1]{}
+ \newcommand{\edaddrow}{}
+ \newcommand{\edaddcell}{}
+ \newcommand{\ednewcell}{}
+ \newcommand{\eddelrow}{}
+\fi
+
 \pgfplotsset{
  thesisplot/.style={
   width=0.86\textwidth,
@@ -255,10 +302,9 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \newcommand{\publishedbasemodel}{\basemodel{}، نسخه منتشرشده}
 \newcommand{\calibrationmatrix}{\mbox{\persianfont\rl{ماتریس کالیبراسیون دوربین}}}
 % نام‌های ثابت پیکربندی‌های آموزش مطلق در مطالعه کنترل‌شده فصل چهارم
-% (تعریف در زیربخش‌های subsec:absolute_protocol_results تا subsec:focal_isolation).
+% (تعریف در زیربخش‌های subsec:absolute_protocol_results و subsec:focal_jitter_results).
 \newcommand{\zoomcropconfig}{پیکربندی زوم‌ـ‌برش}
 \newcommand{\focaljitterconfig}{پیکربندی لرزش کانونی}
-\newcommand{\isolationconfig}{پیکربندی تفکیک اثر}
 % برچسب‌های کوتاه ویژه جدول‌ها. جزییات پیکربندی (انکودر، پروتکل و
 % داده آموزش) در ستون‌های مستقل یا عنوان جدول می‌آیند تا ستون «مدل» فشرده بماند.
 \newcommand{\tableproposedmodel}{پیشنهادی}

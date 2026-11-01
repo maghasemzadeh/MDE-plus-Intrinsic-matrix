@@ -126,6 +126,9 @@ parser.add_argument('--res-jitter', type=float, default=0.0,
 parser.add_argument('--jpeg-aug', action='store_true',
                     help='(--multidomain) re-compress half of all training images as JPEG '
                          '(quality 70-95) so compression cannot identify the dataset')
+parser.add_argument('--kitti-rgb', choices=['jpg', 'png'], default='jpg',
+                    help='(--multidomain) KITTI training RGB: JPEG-95 copies (jpg) or the '
+                         'original lossless PNGs (png), which match the PNG test images')
 parser.add_argument('--canonical-focal', type=float, default=0.0,
                     help='(camera-aware models) predict depth in a canonical camera: the output '
                          'is multiplied by f_net / F, f_net = fy * (network-input short side) / '
@@ -353,7 +356,7 @@ def main():
             args.multidomain, net=args.img_size, zoom_max=args.zoom_max,
             focal_jitter=args.focal_jitter, seed=args.seed or 0,
             val_per_domain=args.val_per_domain, aspect_max=args.aspect_max,
-            res_jitter=args.res_jitter, jpeg_aug=args.jpeg_aug)
+            res_jitter=args.res_jitter, jpeg_aug=args.jpeg_aug, kitti_rgb=args.kitti_rgb)
         args.datasets = ','.join(md_names)
         if rank == 0:
             for r, n in zip(md_trainset.readers, md_sampler.per_domain):
@@ -1351,6 +1354,7 @@ Training Run Summary:
                         'res_jitter': args.res_jitter,
                         'canonical_focal': args.canonical_focal,
                         'jpeg_aug': args.jpeg_aug,
+                        'kitti_rgb': args.kitti_rgb,
                     }
                 }
                 for ckpt_name in ['latest.pth', 'best.pth']:

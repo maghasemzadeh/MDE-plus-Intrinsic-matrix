@@ -138,7 +138,9 @@ class KITTIReader(Reader):
     """KITTI with annotated (densified-LiDAR) GT and per-date rectified K.
 
     train/val: drive-disjoint frames from tools/multidomain/kitti_frames_*.txt
-    (every eigen-test drive excluded), RGB as JPEG-95 copies of the raw PNGs.
+    (every eigen-test drive excluded), RGB as JPEG-95 copies of the raw PNGs
+    (rgb='jpg', kitti_rgb_jpg/) or the original lossless PNGs (rgb='png',
+    kitti_rgb_png/, fetched with fetch_kitti_rgb.py --lossless).
     test: the DA2 652-image eigen list (raw PNG RGB), no crop, 1e-3..80 m.
     """
     name = 'kitti'
@@ -146,9 +148,12 @@ class KITTIReader(Reader):
     eval_range = (1e-3, 80.0)
     DRIVE_RE = re.compile(r'(\d{4}_\d{2}_\d{2})_drive_\d+_sync')
 
-    def __init__(self, split='train', frames_file=None, jpg_root=None, eval_list=None):
+    def __init__(self, split='train', frames_file=None, jpg_root=None, eval_list=None, rgb='jpg'):
         root = os.path.join(RAW, 'kitti')
-        self.jpg_root = jpg_root or os.path.join(root, 'kitti_rgb_jpg')
+        if rgb not in ('jpg', 'png'):
+            raise ValueError(f"KITTI rgb must be 'jpg' or 'png', got {rgb!r}")
+        self.rgb_ext = rgb
+        self.jpg_root = jpg_root or os.path.join(root, f'kitti_rgb_{rgb}')
         self._K = {}
         self.records = []
         if split == 'test':
@@ -167,7 +172,8 @@ class KITTIReader(Reader):
                 sp, date, drive, frame, gt = line.split()
                 if sp != split:
                     continue
-                img = os.path.join(self.jpg_root, date, drive, 'image_02', 'data', f'{frame}.jpg')
+                img = os.path.join(self.jpg_root, date, drive, 'image_02', 'data',
+                                   f'{frame}.{self.rgb_ext}')
                 if os.path.exists(img):
                     self.records.append((img, os.path.join(PROJECT_ROOT, gt), date))
 
@@ -355,6 +361,39 @@ class MiddleburyReader(Reader):
         rgb = cv2.resize(rgb, (w2, h2), interpolation=cv2.INTER_AREA)
         depth = np.ascontiguousarray(depth[:2 * h2:2, :2 * w2:2])
         return rgb, depth, make_K(f0 / 2, f0 / 2, (cx0 + 0.5) / 2 - 0.5, (cy0 + 0.5) / 2 - 0.5)
+
+
+# ---------------------------------------------------------------------- Hypersim
+class HypersimReader(Reader):
+    """Hypersim (synthetic indoor, 1024x768), scenes with the standard 60-degree
+    pinhole camera only (M_cam_from_uv diagonal; tilt-shift scenes are skipped so
+    K is exact). Subset fetched by tools/multidomain/fetch_hypersim.py: the
+    tonemapped JPEG and planar depth converted from Hypersim's Euclidean
+    distance, stored as uint16 millimetres (0 = invalid). The train / val split
+    follows Hypersim's official scene split."""
+    name = 'hypersim'
+    max_depth = 20.0
+    eval_range = (1e-3, 20.0)
+    K = make_K(886.81, 886.81, 511.5, 383.5)
+
+    def __init__(self, split='train'):
+        root = os.path.join(RAW, 'hypersim', 'subset', split)
+        self.records = sorted(os.path.join(root, f) for f in os.listdir(root)
+                              if os.path.exists(os.path.join(root, f, 'depth.png')))
+
+    def item_id(self, i):
+        return os.path.basename(self.records[i])
+
+    def load(self, i):
+        d = self.records[i]
+        rgb = read_rgb(os.path.join(d, 'image.jpg'))
+        p = cv2.imread(os.path.join(d, 'depth.png'), cv2.IMREAD_UNCHANGED)
+        if p is None:
+            raise OSError(f"cannot read depth {d}")
+        depth = p.astype(np.float32) / 1000.0
+        if depth.shape != rgb.shape[:2]:
+            raise ValueError(f"Hypersim size mismatch {d}: {rgb.shape} vs {depth.shape}")
+        return rgb, depth, self.K.copy()
 
 
 # ----------------------------------------------------------------- training set
@@ -552,15 +591,16 @@ class MultiDomainValSet(Dataset):
 
 
 TRAIN_READERS = {
-    'nyu': lambda split: NYUReader(split),
-    'kitti': lambda split: KITTIReader(split),
-    'vkitti': lambda split: VKITTIReader(split, max_items=None if split == 'train' else 400),
-    'cityscapes': lambda split: CityscapesReader(split),
+    'nyu': lambda split, **kw: NYUReader(split),
+    'kitti': lambda split, **kw: KITTIReader(split, rgb=kw.get('kitti_rgb', 'jpg')),
+    'vkitti': lambda split, **kw: VKITTIReader(split, max_items=None if split == 'train' else 400),
+    'cityscapes': lambda split, **kw: CityscapesReader(split),
+    'hypersim': lambda split, **kw: HypersimReader(split),
 }
 
 
 def build_multidomain(spec, net=518, zoom_max=1.0, focal_jitter=0.0, seed=0, val_per_domain=50,
-                      aspect_max=0.0, res_jitter=0.0, jpeg_aug=False):
+                      aspect_max=0.0, res_jitter=0.0, jpeg_aug=False, kitti_rgb='jpg'):
     """spec: 'nyu:4000,kitti:4000,...' (domain:samples-per-epoch).
     Returns (trainset, sampler, valset, domain_names)."""
     names, counts = [], []
@@ -568,8 +608,8 @@ def build_multidomain(spec, net=518, zoom_max=1.0, focal_jitter=0.0, seed=0, val
         name, n = part.split(':')
         names.append(name.strip())
         counts.append(int(n))
-    train_readers = [TRAIN_READERS[n]('train') for n in names]
-    val_readers = [TRAIN_READERS[n]('val') for n in names]
+    train_readers = [TRAIN_READERS[n]('train', kitti_rgb=kitti_rgb) for n in names]
+    val_readers = [TRAIN_READERS[n]('val', kitti_rgb=kitti_rgb) for n in names]
     trainset = MultiDomainTrainSet(train_readers, net=net, zoom_max=zoom_max,
                                    focal_jitter=focal_jitter, aspect_max=aspect_max,
                                    res_jitter=res_jitter, jpeg_aug=jpeg_aug)

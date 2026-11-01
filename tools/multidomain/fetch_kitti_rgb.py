@@ -4,12 +4,13 @@
 Runs on a machine that can reach the KITTI S3 bucket. Each drive's sync zip
 is read with HTTP range requests (remotezip), so only the listed PNG members
 are transferred. Frames are re-encoded as JPEG (quality 95) to keep the
-upload to the GPU server small; per-date calib_cam_to_cam.txt files are
-fetched alongside so the loader can use the true rectified K per date.
+upload to the GPU server small, or kept as the original PNG bytes with
+--lossless; per-date calib_cam_to_cam.txt files are fetched alongside so the
+loader can use the true rectified K per date.
 
 Output tree (mirrors KITTI raw):
     <out>/<date>/calib_cam_to_cam.txt
-    <out>/<date>/<drive>/image_02/data/<frame>.jpg
+    <out>/<date>/<drive>/image_02/data/<frame>.jpg   (.png with --lossless)
 """
 import argparse
 import io
@@ -25,21 +26,25 @@ from remotezip import RemoteZip
 BASE = 'https://s3.eu-central-1.amazonaws.com/avg-kitti/raw_data'
 
 
-def fetch_drive(date, drive, frames, out, quality):
+def fetch_drive(date, drive, frames, out, quality, lossless=False):
     url = f"{BASE}/{drive[:-5]}/{drive}.zip"
     dst = out / date / drive / 'image_02' / 'data'
     dst.mkdir(parents=True, exist_ok=True)
-    todo = [f for f in frames if not (dst / f"{f}.jpg").exists()]
+    ext = 'png' if lossless else 'jpg'
+    todo = [f for f in frames if not (dst / f"{f}.{ext}").exists()]
     if not todo:
         return drive, 0, len(frames)
     n = 0
     with RemoteZip(url) as z:
         for f in todo:
             member = f"{date}/{drive}/image_02/data/{f}.png"
-            img = Image.open(io.BytesIO(z.read(member))).convert('RGB')
-            tmp = dst / f"{f}.jpg.tmp"
-            img.save(tmp, format='JPEG', quality=quality)
-            tmp.rename(dst / f"{f}.jpg")
+            data = z.read(member)
+            tmp = dst / f"{f}.{ext}.tmp"
+            if lossless:
+                tmp.write_bytes(data)  # original PNG, untouched
+            else:
+                Image.open(io.BytesIO(data)).convert('RGB').save(tmp, format='JPEG', quality=quality)
+            tmp.rename(dst / f"{f}.{ext}")
             n += 1
     return drive, n, len(frames)
 
@@ -59,6 +64,8 @@ def main():
     p.add_argument('--out', type=Path, required=True)
     p.add_argument('--workers', type=int, default=8)
     p.add_argument('--quality', type=int, default=95)
+    p.add_argument('--lossless', action='store_true',
+                   help='keep the original PNG files instead of re-encoding as JPEG')
     a = p.parse_args()
 
     by_drive = defaultdict(list)
@@ -77,7 +84,7 @@ def main():
     total = sum(len(v) for v in by_drive.values())
     done = 0
     with ThreadPoolExecutor(a.workers) as ex:
-        futs = {ex.submit(fetch_drive, d, dr, fr, a.out, a.quality): dr
+        futs = {ex.submit(fetch_drive, d, dr, fr, a.out, a.quality, a.lossless): dr
                 for (d, dr), fr in sorted(by_drive.items())}
         for fut in as_completed(futs):
             try:

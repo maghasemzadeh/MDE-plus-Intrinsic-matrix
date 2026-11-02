@@ -54,3 +54,32 @@ because yellow is invisible on that background. There, a replacement is written
 
 No compile dependency was added (all labels new to this update are defined in
 it; all cited keys already exist in MyReferences.bib).
+
+## R2 — 2026-11-02 — §4.3.3 rewritten: cross-dataset stability of the proposed model
+
+Requested by the author: rewrite §4.3.3 (`subsec:revised_cross_dataset`)
+completely with enough data, and remove stale or duplicated cross-dataset /
+zero-shot statements elsewhere. The per-set numbers are not repeated: they stay
+in `tab:multidomain_all` (R1); §4.3.3 adds only set-level aggregates and tests.
+
+Evidence: `results/multidomain/` on lingotube — main pair `md1_P`, `md1_C`,
+released DA2 (`released_mix` = hypersim for indoor sets, vkitti for outdoor,
+as in `tab:multidomain_all`) and `_zoom1.5` camera-shift counterparts;
+supplementary K-blind arm `md1_C0`. Statistics from
+`tools/multidomain/stability.py` (geometric-mean AbsRel ratio over the 10 sets
+with a 5000-resample bootstrap over sets then paired images; per-set paired
+Wilcoxon, alpha 0.01, uncorrected); outputs
+`results/multidomain/stability_md1_final.json`. Paired Wilcoxon/bootstrap per
+set from `tools/multidomain/compare_runs.py`.
+
+| File | Location (approx. line) | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §4.3.3 body after the heading (~286) | old two paragraphs (t-test / "historical, cannot be judged") | deleted |
+| chapter4.tex | §4.3.3 (~306–380) | scope, method, `tab:stability_summary`, `tab:stability_paired`, results vs control/base, dispersion, camera shift, supplementary K-blind arm, verdict | added |
+| chapter4.tex | discussion chapter, quantitative-summary subsection (~1481) | "significant reduction of sensitivity to dataset change" → accuracy gain without more uniform error | edited words |
+| chapter4.tex | discussion chapter, answers to research questions (~1539) | "cross-dataset comparison not yet reproduced" → reproduced only in the multi-domain experiment | edited words |
+| chapter5.tex | summary (~146) | "absolute stability maintained across indoor/outdoor" → mean accuracy gain, error not more uniform | edited words |
+
+Not touched (reported to the author instead): the R1 restatements of the
+SUN RGB-D / NYUv2 numbers in the ch4 discussion and chapter summaries, ch5
+summary/contributions and the abstracts.

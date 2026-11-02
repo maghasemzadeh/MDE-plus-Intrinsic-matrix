@@ -1,0 +1,166 @@
+{
+  "dataset": "nyu",
+  "split": "test",
+  "model_type": "metric",
+  "item_id": "nyu_00196",
+  "model1": {
+    "name": "revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730",
+    "checkpoint": "/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/metric_finetuning_aug2/revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730/best.pth",
+    "is_metric": true,
+    "n_valid": 307200,
+    "abs_rel_image": 0.26343491673469543,
+    "abs_rel_from_api": 0.26343491673469543,
+    "sample_pixels": [
+      {
+        "row": 41,
+        "col": 162,
+        "pred_m": 1.0915546417236328,
+        "gt_m": 0.8593688607215881,
+        "abs_rel_pixel": 0.2701817480413297
+      },
+      {
+        "row": 42,
+        "col": 537,
+        "pred_m": 1.1345528364181519,
+        "gt_m": 0.8793365359306335,
+        "abs_rel_pixel": 0.2902373437917187
+      },
+      {
+        "row": 45,
+        "col": 131,
+        "pred_m": 1.0837793350219727,
+        "gt_m": 0.8551074862480164,
+        "abs_rel_pixel": 0.26741883617147055
+      },
+      {
+        "row": 96,
+        "col": 451,
+        "pred_m": 1.1047114133834839,
+        "gt_m": 0.8813161849975586,
+        "abs_rel_pixel": 0.2534790943236157
+      },
+      {
+        "row": 207,
+        "col": 540,
+        "pred_m": 1.4380693435668945,
+        "gt_m": 1.2227853536605835,
+        "abs_rel_pixel": 0.17606032756430023
+      },
+      {
+        "row": 210,
+        "col": 420,
+        "pred_m": 1.4201292991638184,
+        "gt_m": 1.2245680093765259,
+        "abs_rel_pixel": 0.15969818604591848
+      },
+      {
+        "row": 314,
+        "col": 119,
+        "pred_m": 1.4099266529083252,
+        "gt_m": 1.1808879375457764,
+        "abs_rel_pixel": 0.19395465740682977
+      },
+      {
+        "row": 334,
+        "col": 470,
+        "pred_m": 1.5234750509262085,
+        "gt_m": 1.1970176696777344,
+        "abs_rel_pixel": 0.2727256159354475
+      },
+      {
+        "row": 371,
+        "col": 313,
+        "pred_m": 1.3959559202194214,
+        "gt_m": 1.0727670192718506,
+        "abs_rel_pixel": 0.3012666265289717
+      },
+      {
+        "row": 412,
+        "col": 77,
+        "pred_m": 1.1499048471450806,
+        "gt_m": 0.8184084296226501,
+        "abs_rel_pixel": 0.4050501015431574
+      }
+    ]
+  },
+  "model2": {
+    "name": "base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717",
+    "checkpoint": "/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/metric_finetuning_aug2/base_metric_vitl_nyu_lr5e-6_bs2_20260707_004717/best.pth",
+    "is_metric": true,
+    "n_valid": 307200,
+    "abs_rel_image": 0.30315253138542175,
+    "abs_rel_from_api": 0.30315253138542175,
+    "sample_pixels": [
+      {
+        "row": 41,
+        "col": 162,
+        "pred_m": 1.1006783246994019,
+        "gt_m": 0.8593688607215881,
+        "abs_rel_pixel": 0.28079847316691564
+      },
+      {
+        "row": 42,
+        "col": 537,
+        "pred_m": 1.1517850160598755,
+        "gt_m": 0.8793365359306335,
+        "abs_rel_pixel": 0.309834140851318
+      },
+      {
+        "row": 45,
+        "col": 131,
+        "pred_m": 1.09955632686615,
+        "gt_m": 0.8551074862480164,
+        "abs_rel_pixel": 0.28586913873331865
+      },
+      {
+        "row": 96,
+        "col": 451,
+        "pred_m": 1.1237478256225586,
+        "gt_m": 0.8813161849975586,
+        "abs_rel_pixel": 0.2750790746293529
+      },
+      {
+        "row": 207,
+        "col": 540,
+        "pred_m": 1.504611849784851,
+        "gt_m": 1.2227853536605835,
+        "abs_rel_pixel": 0.23047912315974303
+      },
+      {
+        "row": 210,
+        "col": 420,
+        "pred_m": 1.5070151090621948,
+        "gt_m": 1.2245680093765259,
+        "abs_rel_pixel": 0.23065039877162355
+      },
+      {
+        "row": 314,
+        "col": 119,
+        "pred_m": 1.4978950023651123,
+        "gt_m": 1.1808879375457764,
+        "abs_rel_pixel": 0.26844805060687427
+      },
+      {
+        "row": 334,
+        "col": 470,
+        "pred_m": 1.6397138833999634,
+        "gt_m": 1.1970176696777344,
+        "abs_rel_pixel": 0.3698326473671966
+      },
+      {
+        "row": 371,
+        "col": 313,
+        "pred_m": 1.4390531778335571,
+        "gt_m": 1.0727670192718506,
+        "abs_rel_pixel": 0.3414405476506225
+      },
+      {
+        "row": 412,
+        "col": 77,
+        "pred_m": 1.1825422048568726,
+        "gt_m": 0.8184084296226501,
+        "abs_rel_pixel": 0.4449291601286614
+      }
+    ]
+  }
+}

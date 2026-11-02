@@ -285,6 +285,59 @@ byte-identical to their state before the update (compare with
    `\label`/`\ref` links for equations, figures, and tables. Keep formulas in LaTeX
    rather than substituting Unicode operators or prose approximations.
 
+## Running evaluations for a thesis update (GPU)
+
+When a thesis update needs a new evaluation, inference, or any other GPU run, do it
+on lingotube through the `gpu` skill (the local machine has no usable GPU). The
+server's RTX 4090 is normally occupied by an LLM container from the `~/llm` stack
+(`llm-qwen`, or `llm-gemma` / `llm-nemotron`, ~22.7 GB VRAM), so free it first and
+bring it back afterwards:
+
+1. **Check what holds the GPU** before launching anything:
+
+   ```bash
+   ssh lingotube 'docker ps --filter "name=^llm-" --format "{{.Names}}"; nvidia-smi --query-compute-apps=pid,process_name,used_memory --format=csv,noheader'
+   ```
+
+   Record the exact names of the running `llm-*` containers (there may be none).
+   If the GPU is held by something other than an `llm-*` container (for example a
+   training job), do **not** stop it; report it and wait or ask the user.
+2. **Stop only those `llm-*` containers**, then confirm the VRAM is free:
+
+   ```bash
+   ssh lingotube 'docker stop llm-qwen && sleep 5 && nvidia-smi --query-gpu=memory.used,memory.free --format=csv,noheader'
+   ```
+
+   Use `docker stop`/`docker start` on the existing container. Do not use
+   `docker compose down`, `docker rm`, or `--profile ... up` (they recreate or
+   remove containers), and never stop the other stack services (`open-webui`,
+   `gateway`, `docgen`, `nginx-tls`, `docling`, `searxng`).
+3. **Run the evaluation** in tmux as the `gpu` skill describes, and chain the
+   restart onto the same tmux command so the container comes back even if the
+   evaluation fails or this session disconnects:
+
+   ```bash
+   <EVAL_COMMAND> 2>&1 | tee $LOG_FILE; echo EXIT_CODE=$?; docker start llm-qwen
+   ```
+
+   (List every container you stopped in that `docker start`.)
+4. **Verify the LLM is back** after the run finishes: the container should be
+   `Up` and, once the model has loaded (allow a few minutes), `healthy`:
+
+   ```bash
+   ssh lingotube 'docker ps --filter "name=^llm-" --format "{{.Names}} {{.Status}}"'
+   ```
+
+   If the restart failed or the container is not healthy after ~5 minutes, run
+   `docker start <name>` again and check `docker logs --tail 50 <name>`; if it
+   still fails, tell the user explicitly rather than leaving it down silently.
+5. If the evaluation is cancelled or abandoned before it runs, restart the stopped
+   containers immediately; never end the task with an `llm-*` container that was
+   running before left stopped.
+
+In the completion report, state which `llm-*` container was stopped (or that none
+was running), and that it was restarted and confirmed up/healthy.
+
 ## Figures and diagrams
 
 When the requested change needs a new or revised figure, create or edit it with the
@@ -351,6 +404,8 @@ End every task with a concise, formal English report that lists:
 1. each file changed and the exact requested item addressed there;
 2. any evidence, figure source, or supporting skill used;
 3. source-level verification results (no PDF build was run), plus commit/push status when applicable;
+   if a GPU evaluation was run, which `llm-*` container was stopped and confirmation
+   that it was restarted and is up/healthy again;
 4. this explicit scope statement, filled with the actual itemized list:
 
    > **I changed only the items you requested:** [itemized list]. **No unrelated

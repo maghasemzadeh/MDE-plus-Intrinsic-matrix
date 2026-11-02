@@ -1,0 +1,1138 @@
+2026-10-31 20:57:17.499877: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+2026-10-31 20:57:17.530979: I tensorflow/core/platform/cpu_feature_guard.cc:210] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 AVX_VNNI FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2026-10-31 20:57:23.905256: I tensorflow/core/util/port.cc:153] oneDNN custom operations are on. You may see slightly different numerical results due to floating-point round-off errors from different computation orders. To turn them off, set the environment variable `TF_ENABLE_ONEDNN_OPTS=0`.
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+Starting training script...
+Detected device: cuda
+[2026-10-31 20:57:29,193][    INFO] Detected device: cuda
+Using single GPU: cuda
+[2026-10-31 20:57:29,193][    INFO] Using device: cuda (single GPU, distributed training not initialized)
+Loading training datasets: ['vkitti', 'cityscapes', 'diode', 'nyu']...
+[2026-10-31 20:57:29,193][    INFO] Loading training datasets: ['vkitti', 'cityscapes', 'diode', 'nyu']
+Initializing VKITTI training dataset...
+Loaded 42520 valid entries from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/vkitti/splits/train.txt
+VKITTI training dataset loaded: 42520 samples
+Initializing Cityscapes training dataset...
+Cityscapes training dataset loaded: 2975 samples
+Initializing DIODE training dataset...
+Loaded DIODE train set: 616 samples
+DIODE training dataset loaded: 616 samples
+Initializing NYU Depth V2 training dataset...
+Loading NYU Depth V2 dataset from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/nyu/nyu_depth_v2_labeled.mat...
+(This may take a moment for the first load)
+Loaded NYU data - Images shape: (1449, 3, 640, 480), Depths shape: (1449, 640, 480)
+  Identified image dimensions: n_images=0, height=3, width=2, channels=1
+  Applying transpose: (0, 3, 2, 1)
+  Identified depth dimensions: n_images=0, height=2, width=1
+  Applied depth transpose: (0, 2, 1)
+After transpose - Images shape: (1449, 480, 640, 3), Depths shape: (1449, 480, 640)
+After transpose - Images shape: (1449, 480, 640, 3), Depths shape: (1449, 480, 640)
+NYU split: 654 eigen-test images held out; 795 remaining -> 636 for train
+Loaded NYU Depth V2 train set: 636 samples (from 1449 total)
+NYU training dataset loaded: 636 samples
+Combined training dataset: 46747 samples from 4 datasets
+[2026-10-31 20:57:56,288][    INFO] Combined training dataset: 46747 samples from 4 datasets
+Creating training DataLoader (num_workers=4)...
+[2026-10-31 20:57:56,289][    INFO] Creating training DataLoader with num_workers=4
+Loading validation datasets: ['vkitti', 'cityscapes', 'diode', 'nyu']...
+[2026-10-31 20:57:56,289][    INFO] Loading validation datasets: ['vkitti', 'cityscapes', 'diode', 'nyu']
+Initializing VKITTI validation dataset from train.txt...
+[2026-10-31 20:57:56,289][ WARNING] VKITTI val.txt not found, using train.txt for validation
+Loaded 42520 valid entries from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/vkitti/splits/train.txt
+VKITTI validation dataset loaded: 42520 samples
+Initializing Cityscapes validation dataset...
+Cityscapes validation dataset loaded: 500 samples
+Initializing DIODE validation dataset...
+Loaded DIODE val set: 155 samples
+DIODE validation dataset loaded: 155 samples
+Initializing NYU Depth V2 validation dataset...
+Loading NYU Depth V2 dataset from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/nyu/nyu_depth_v2_labeled.mat...
+(This may take a moment for the first load)
+Loaded NYU data - Images shape: (1449, 3, 640, 480), Depths shape: (1449, 640, 480)
+  Identified image dimensions: n_images=0, height=3, width=2, channels=1
+  Applying transpose: (0, 3, 2, 1)
+  Identified depth dimensions: n_images=0, height=2, width=1
+  Applied depth transpose: (0, 2, 1)
+After transpose - Images shape: (1449, 480, 640, 3), Depths shape: (1449, 480, 640)
+After transpose - Images shape: (1449, 480, 640, 3), Depths shape: (1449, 480, 640)
+NYU split: 654 eigen-test images held out; 795 remaining -> 159 for val
+Loaded NYU Depth V2 val set: 159 samples (from 1449 total)
+NYU validation dataset loaded: 159 samples
+Combined validation dataset: 43334 samples from 4 datasets
+[2026-10-31 20:58:08,658][    INFO] Combined validation dataset: 43334 samples from 4 datasets
+Creating validation DataLoader (num_workers=4)...
+[2026-10-31 20:58:08,658][    INFO] Creating validation DataLoader with num_workers=4
+[2026-10-31 20:58:08,658][    INFO] Using device: cuda
+[2026-10-31 20:58:08,684][    INFO] Checkpoint encoder matches specified encoder: vits
+Training run name: revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808
+Checkpoints and logs will be saved to: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808
+To view all runs in TensorBoard, run: tensorboard --logdir /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn
+[2026-10-31 20:58:08,685][    INFO] {'accumulate_grad': 1,
+ 'amp': True,
+ 'aspect_max': 0.0,
+ 'bs': 2,
+ 'cam_token_inject_layer': None,
+ 'canonical_focal': 0.0,
+ 'datasets': 'vkitti,cityscapes,diode,nyu',
+ 'encoder': 'vits',
+ 'encoder_used': 'vits',
+ 'epochs': 4,
+ 'focal_jitter': 0.0,
+ 'freeze_dinov2': True,
+ 'grad_clip': 1.0,
+ 'head_lr_multiplier': 10.0,
+ 'img_size': 518,
+ 'jpeg_aug': False,
+ 'local_rank': 0,
+ 'lr': 5e-06,
+ 'max_depth': 20.0,
+ 'min_depth': 0.001,
+ 'model_type': 'basic',
+ 'model_variant': 'revised',
+ 'multidomain': None,
+ 'ngpus': 1,
+ 'num_workers': 4,
+ 'port': None,
+ 'pretrained_from': 'models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vits.pth',
+ 'res_jitter': 0.0,
+ 'run_name': 'revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808',
+ 'save_path': '/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808',
+ 'seed': 42,
+ 'silog_lambda': 0.5,
+ 'teacher_checkpoint': None,
+ 'test': False,
+ 'test_save_every': 1000,
+ 'unfreeze_dinov2': False,
+ 'use_camera_intrinsics': True,
+ 'use_distillation': False,
+ 'val_per_domain': 50,
+ 'warmup_epochs': 0,
+ 'zoom_max': 1.0}
+
+[2026-10-31 20:58:08,685][    INFO] Training run name: revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808
+[2026-10-31 20:58:08,685][    INFO] Using encoder: vits
+[2026-10-31 20:58:08,685][    INFO] To view all runs in TensorBoard, run: tensorboard --logdir /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn
+Model type: basic (relative depth with scale ambiguity)
+[2026-10-31 20:58:08,685][    INFO] Model type: basic
+Initializing model (encoder: vits, type: basic)...
+[2026-10-31 20:58:08,685][    INFO] Initializing model with encoder: vits, type: basic
+Model initialized successfully
+[2026-10-31 20:58:10,256][    INFO] Model initialized successfully
+Loading checkpoint from: models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vits.pth...
+[2026-10-31 20:58:10,256][    INFO] Loading checkpoint from: models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vits.pth
+Loading checkpoint file (this may take a while for large checkpoints)...
+Checkpoint loaded, processing state dict...
+Loading 239 parameters into model...
+Checkpoint loaded successfully
+[2026-10-31 20:58:10,302][    INFO] Loaded checkpoint from /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_vits.pth
+[2026-10-31 20:58:10,302][    INFO] Successfully loaded 239 parameters
+[2026-10-31 20:58:10,302][    INFO] Missing keys (will use random init): 65 keys
+[2026-10-31 20:58:10,302][    INFO] DINOv2 backbone is FROZEN (not trainable)
+Moving model to device: cuda...
+[2026-10-31 20:58:10,302][    INFO] Moving model to device: cuda
+Model moved to device successfully
+[2026-10-31 20:58:10,444][    INFO] Using Scale-Shift Invariant loss (basic model)
+Starting training...
+================================================================================
+[2026-10-31 20:58:10,445][    INFO] Optimizer: Only training depth_head and cam_encoder (DINOv2 frozen)
+[2026-10-31 20:58:10,445][    INFO] Learning rate: 0.0000500 (base: 5e-06, multiplier: 10.0)
+[2026-10-31 20:58:10,445][    INFO] ===========> Epoch: 0/4, d1: 0.000, d2: 0.000, d3: 0.000
+[2026-10-31 20:58:10,445][    INFO] ===========> Epoch: 0/4, abs_rel: 100.000, sq_rel: 100.000, rmse: 100.000, rmse_log: 100.000, log10: 100.000, silog: 100.000
+[2026-10-31 20:58:29,473][    INFO] Iter: 0/23373, LR: 0.0000500, Loss: 0.002
+[2026-10-31 20:58:38,353][    INFO] Iter: 100/23373, LR: 0.0000500, Loss: 0.001
+[2026-10-31 20:58:47,627][    INFO] Iter: 200/23373, LR: 0.0000499, Loss: 0.004
+[2026-10-31 20:58:57,433][    INFO] Iter: 300/23373, LR: 0.0000499, Loss: 0.001
+[2026-10-31 20:59:07,161][    INFO] Iter: 400/23373, LR: 0.0000498, Loss: 0.001
+[2026-10-31 20:59:16,234][    INFO] Iter: 500/23373, LR: 0.0000498, Loss: 0.002
+[2026-10-31 20:59:31,306][    INFO] Iter: 600/23373, LR: 0.0000497, Loss: 0.001
+[2026-10-31 20:59:41,348][    INFO] Iter: 700/23373, LR: 0.0000497, Loss: 0.001
+[2026-10-31 20:59:52,382][    INFO] Iter: 800/23373, LR: 0.0000496, Loss: 0.001
+[2026-10-31 21:00:04,260][    INFO] Iter: 900/23373, LR: 0.0000496, Loss: 0.002
+[2026-10-31 21:00:14,863][    INFO] Iter: 1000/23373, LR: 0.0000495, Loss: 0.002
+[2026-10-31 21:00:25,168][    INFO] Iter: 1100/23373, LR: 0.0000495, Loss: 0.001
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42598: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000078_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 21:00:33,776][    INFO] Iter: 1200/23373, LR: 0.0000494, Loss: 0.058
+[2026-10-31 21:00:44,053][    INFO] Iter: 1300/23373, LR: 0.0000494, Loss: 0.002
+[2026-10-31 21:00:57,057][    INFO] Iter: 1400/23373, LR: 0.0000493, Loss: 0.001
+[2026-10-31 21:01:09,757][    INFO] Iter: 1500/23373, LR: 0.0000493, Loss: 0.002
+[2026-10-31 21:01:24,813][    INFO] Iter: 1600/23373, LR: 0.0000492, Loss: 0.001
+[2026-10-31 21:01:39,314][    INFO] Iter: 1700/23373, LR: 0.0000492, Loss: 0.005
+[2026-10-31 21:01:50,515][    INFO] Iter: 1800/23373, LR: 0.0000491, Loss: 0.001
+[2026-10-31 21:02:03,013][    INFO] Iter: 1900/23373, LR: 0.0000491, Loss: 0.006
+[2026-10-31 21:02:11,941][    INFO] Iter: 2000/23373, LR: 0.0000490, Loss: 0.004
+[2026-10-31 21:02:20,904][    INFO] Iter: 2100/23373, LR: 0.0000490, Loss: 0.002
+[2026-10-31 21:02:30,655][    INFO] Iter: 2200/23373, LR: 0.0000489, Loss: 0.003
+[2026-10-31 21:02:40,279][    INFO] Iter: 2300/23373, LR: 0.0000489, Loss: 0.001
+[2026-10-31 21:02:49,895][    INFO] Iter: 2400/23373, LR: 0.0000488, Loss: 0.001
+[2026-10-31 21:02:57,957][    INFO] Iter: 2500/23373, LR: 0.0000488, Loss: 0.001
+[2026-10-31 21:03:09,724][    INFO] Iter: 2600/23373, LR: 0.0000487, Loss: 0.000
+[2026-10-31 21:03:17,621][    INFO] Iter: 2700/23373, LR: 0.0000487, Loss: 0.001
+[2026-10-31 21:03:26,481][    INFO] Iter: 2800/23373, LR: 0.0000487, Loss: 0.001
+[2026-10-31 21:03:35,025][    INFO] Iter: 2900/23373, LR: 0.0000486, Loss: 0.001
+[2026-10-31 21:03:45,464][    INFO] Iter: 3000/23373, LR: 0.0000486, Loss: 0.002
+[2026-10-31 21:03:55,008][    INFO] Iter: 3100/23373, LR: 0.0000485, Loss: 0.001
+[2026-10-31 21:04:03,206][    INFO] Iter: 3200/23373, LR: 0.0000485, Loss: 0.001
+[2026-10-31 21:04:11,716][    INFO] Iter: 3300/23373, LR: 0.0000484, Loss: 0.002
+[2026-10-31 21:04:21,329][    INFO] Iter: 3400/23373, LR: 0.0000484, Loss: 0.001
+[2026-10-31 21:04:30,813][    INFO] Iter: 3500/23373, LR: 0.0000483, Loss: 0.002
+[2026-10-31 21:04:39,805][    INFO] Iter: 3600/23373, LR: 0.0000483, Loss: 0.003
+[2026-10-31 21:04:49,416][    INFO] Iter: 3700/23373, LR: 0.0000482, Loss: 0.001
+[2026-10-31 21:05:03,136][    INFO] Iter: 3800/23373, LR: 0.0000482, Loss: 0.003
+[2026-10-31 21:05:12,289][    INFO] Iter: 3900/23373, LR: 0.0000481, Loss: 0.002
+[2026-10-31 21:05:19,935][    INFO] Iter: 4000/23373, LR: 0.0000481, Loss: 0.001
+[2026-10-31 21:05:29,862][    INFO] Iter: 4100/23373, LR: 0.0000480, Loss: 0.005
+[2026-10-31 21:05:38,769][    INFO] Iter: 4200/23373, LR: 0.0000480, Loss: 0.004
+[2026-10-31 21:05:47,379][    INFO] Iter: 4300/23373, LR: 0.0000479, Loss: 0.002
+[2026-10-31 21:05:56,107][    INFO] Iter: 4400/23373, LR: 0.0000479, Loss: 0.001
+[2026-10-31 21:06:05,800][    INFO] Iter: 4500/23373, LR: 0.0000478, Loss: 0.001
+[2026-10-31 21:06:13,917][    INFO] Iter: 4600/23373, LR: 0.0000478, Loss: 0.001
+[2026-10-31 21:06:23,339][    INFO] Iter: 4700/23373, LR: 0.0000477, Loss: 0.004
+[2026-10-31 21:06:32,377][    INFO] Iter: 4800/23373, LR: 0.0000477, Loss: 0.002
+[2026-10-31 21:06:41,882][    INFO] Iter: 4900/23373, LR: 0.0000476, Loss: 0.000
+[2026-10-31 21:06:50,244][    INFO] Iter: 5000/23373, LR: 0.0000476, Loss: 0.002
+[2026-10-31 21:06:58,804][    INFO] Iter: 5100/23373, LR: 0.0000475, Loss: 0.002
+[2026-10-31 21:07:07,752][    INFO] Iter: 5200/23373, LR: 0.0000475, Loss: 0.001
+[2026-10-31 21:07:17,595][    INFO] Iter: 5300/23373, LR: 0.0000474, Loss: 0.001
+[2026-10-31 21:07:26,369][    INFO] Iter: 5400/23373, LR: 0.0000474, Loss: 0.001
+[2026-10-31 21:07:34,263][    INFO] Iter: 5500/23373, LR: 0.0000473, Loss: 0.001
+[2026-10-31 21:07:42,762][    INFO] Iter: 5600/23373, LR: 0.0000473, Loss: 0.002
+[2026-10-31 21:07:53,085][    INFO] Iter: 5700/23373, LR: 0.0000472, Loss: 0.002
+[2026-10-31 21:08:02,575][    INFO] Iter: 5800/23373, LR: 0.0000472, Loss: 0.002
+[2026-10-31 21:08:10,998][    INFO] Iter: 5900/23373, LR: 0.0000472, Loss: 0.001
+[2026-10-31 21:08:19,563][    INFO] Iter: 6000/23373, LR: 0.0000471, Loss: 0.001
+[2026-10-31 21:08:30,163][    INFO] Iter: 6100/23373, LR: 0.0000471, Loss: 0.001
+[2026-10-31 21:08:38,755][    INFO] Iter: 6200/23373, LR: 0.0000470, Loss: 0.001
+[2026-10-31 21:08:47,732][    INFO] Iter: 6300/23373, LR: 0.0000470, Loss: 0.002
+[2026-10-31 21:08:56,286][    INFO] Iter: 6400/23373, LR: 0.0000469, Loss: 0.001
+[2026-10-31 21:09:06,153][    INFO] Iter: 6500/23373, LR: 0.0000469, Loss: 0.003
+[2026-10-31 21:09:15,212][    INFO] Iter: 6600/23373, LR: 0.0000468, Loss: 0.002
+[2026-10-31 21:09:23,646][    INFO] Iter: 6700/23373, LR: 0.0000468, Loss: 0.002
+[2026-10-31 21:09:32,148][    INFO] Iter: 6800/23373, LR: 0.0000467, Loss: 0.001
+[2026-10-31 21:09:40,963][    INFO] Iter: 6900/23373, LR: 0.0000467, Loss: 0.001
+[2026-10-31 21:09:49,889][    INFO] Iter: 7000/23373, LR: 0.0000466, Loss: 0.002
+[2026-10-31 21:09:58,212][    INFO] Iter: 7100/23373, LR: 0.0000466, Loss: 0.001
+[2026-10-31 21:10:06,171][    INFO] Iter: 7200/23373, LR: 0.0000465, Loss: 0.001
+[2026-10-31 21:10:16,428][    INFO] Iter: 7300/23373, LR: 0.0000465, Loss: 0.004
+[2026-10-31 21:10:24,941][    INFO] Iter: 7400/23373, LR: 0.0000464, Loss: 0.002
+[2026-10-31 21:10:33,077][    INFO] Iter: 7500/23373, LR: 0.0000464, Loss: 0.000
+[2026-10-31 21:10:41,217][    INFO] Iter: 7600/23373, LR: 0.0000463, Loss: 0.001
+[2026-10-31 21:10:50,411][    INFO] Iter: 7700/23373, LR: 0.0000463, Loss: 0.001
+[2026-10-31 21:11:03,747][    INFO] Iter: 7800/23373, LR: 0.0000462, Loss: 0.002
+[2026-10-31 21:11:21,240][    INFO] Iter: 7900/23373, LR: 0.0000462, Loss: 0.001
+[2026-10-31 21:11:47,319][    INFO] Iter: 8000/23373, LR: 0.0000461, Loss: 0.000
+[2026-10-31 21:11:56,000][    INFO] Iter: 8100/23373, LR: 0.0000461, Loss: 0.002
+[2026-10-31 21:12:05,152][    INFO] Iter: 8200/23373, LR: 0.0000460, Loss: 0.001
+[2026-10-31 21:12:15,089][    INFO] Iter: 8300/23373, LR: 0.0000460, Loss: 0.001
+[2026-10-31 21:12:24,499][    INFO] Iter: 8400/23373, LR: 0.0000459, Loss: 0.001
+[2026-10-31 21:12:33,299][    INFO] Iter: 8500/23373, LR: 0.0000459, Loss: 0.001
+[2026-10-31 21:12:43,727][    INFO] Iter: 8600/23373, LR: 0.0000458, Loss: 0.001
+[2026-10-31 21:12:52,837][    INFO] Iter: 8700/23373, LR: 0.0000458, Loss: 0.002
+[2026-10-31 21:13:01,228][    INFO] Iter: 8800/23373, LR: 0.0000457, Loss: 0.001
+[2026-10-31 21:13:10,917][    INFO] Iter: 8900/23373, LR: 0.0000457, Loss: 0.002
+[2026-10-31 21:13:19,791][    INFO] Iter: 9000/23373, LR: 0.0000456, Loss: 0.001
+[2026-10-31 21:13:28,903][    INFO] Iter: 9100/23373, LR: 0.0000456, Loss: 0.001
+[2026-10-31 21:13:37,963][    INFO] Iter: 9200/23373, LR: 0.0000455, Loss: 0.001
+[2026-10-31 21:13:46,392][    INFO] Iter: 9300/23373, LR: 0.0000455, Loss: 0.001
+[2026-10-31 21:13:56,936][    INFO] Iter: 9400/23373, LR: 0.0000455, Loss: 0.001
+[2026-10-31 21:14:05,904][    INFO] Iter: 9500/23373, LR: 0.0000454, Loss: 0.001
+[2026-10-31 21:14:15,131][    INFO] Iter: 9600/23373, LR: 0.0000454, Loss: 0.001
+[2026-10-31 21:14:25,216][    INFO] Iter: 9700/23373, LR: 0.0000453, Loss: 0.001
+[2026-10-31 21:14:35,424][    INFO] Iter: 9800/23373, LR: 0.0000453, Loss: 0.001
+[2026-10-31 21:14:43,810][    INFO] Iter: 9900/23373, LR: 0.0000452, Loss: 0.001
+[2026-10-31 21:14:53,228][    INFO] Iter: 10000/23373, LR: 0.0000452, Loss: 0.001
+[2026-10-31 21:15:03,828][    INFO] Iter: 10100/23373, LR: 0.0000451, Loss: 0.001
+[2026-10-31 21:15:13,145][    INFO] Iter: 10200/23373, LR: 0.0000451, Loss: 0.002
+[2026-10-31 21:15:21,618][    INFO] Iter: 10300/23373, LR: 0.0000450, Loss: 0.000
+[2026-10-31 21:15:29,669][    INFO] Iter: 10400/23373, LR: 0.0000450, Loss: 0.001
+[2026-10-31 21:15:39,407][    INFO] Iter: 10500/23373, LR: 0.0000449, Loss: 0.001
+[2026-10-31 21:15:48,137][    INFO] Iter: 10600/23373, LR: 0.0000449, Loss: 0.001
+[2026-10-31 21:15:56,877][    INFO] Iter: 10700/23373, LR: 0.0000448, Loss: 0.000
+[2026-10-31 21:16:06,331][    INFO] Iter: 10800/23373, LR: 0.0000448, Loss: 0.002
+[2026-10-31 21:16:16,147][    INFO] Iter: 10900/23373, LR: 0.0000447, Loss: 0.003
+[2026-10-31 21:16:24,217][    INFO] Iter: 11000/23373, LR: 0.0000447, Loss: 0.001
+[2026-10-31 21:16:32,593][    INFO] Iter: 11100/23373, LR: 0.0000446, Loss: 0.001
+[2026-10-31 21:16:41,640][    INFO] Iter: 11200/23373, LR: 0.0000446, Loss: 0.001
+[2026-10-31 21:16:51,054][    INFO] Iter: 11300/23373, LR: 0.0000445, Loss: 0.001
+[2026-10-31 21:16:59,248][    INFO] Iter: 11400/23373, LR: 0.0000445, Loss: 0.001
+[2026-10-31 21:17:07,440][    INFO] Iter: 11500/23373, LR: 0.0000444, Loss: 0.001
+[2026-10-31 21:17:16,291][    INFO] Iter: 11600/23373, LR: 0.0000444, Loss: 0.001
+[2026-10-31 21:17:24,056][    INFO] Iter: 11700/23373, LR: 0.0000443, Loss: 0.008
+[2026-10-31 21:17:33,446][    INFO] Iter: 11800/23373, LR: 0.0000443, Loss: 0.001
+[2026-10-31 21:17:42,240][    INFO] Iter: 11900/23373, LR: 0.0000442, Loss: 0.003
+[2026-10-31 21:17:50,444][    INFO] Iter: 12000/23373, LR: 0.0000442, Loss: 0.001
+[2026-10-31 21:18:00,926][    INFO] Iter: 12100/23373, LR: 0.0000441, Loss: 0.001
+[2026-10-31 21:18:10,556][    INFO] Iter: 12200/23373, LR: 0.0000441, Loss: 0.002
+[2026-10-31 21:18:20,033][    INFO] Iter: 12300/23373, LR: 0.0000440, Loss: 0.000
+[2026-10-31 21:18:30,151][    INFO] Iter: 12400/23373, LR: 0.0000440, Loss: 0.001
+[2026-10-31 21:18:40,309][    INFO] Iter: 12500/23373, LR: 0.0000439, Loss: 0.001
+[2026-10-31 21:18:48,433][    INFO] Iter: 12600/23373, LR: 0.0000439, Loss: 0.000
+[2026-10-31 21:18:56,977][    INFO] Iter: 12700/23373, LR: 0.0000438, Loss: 0.001
+[2026-10-31 21:19:10,053][    INFO] Iter: 12800/23373, LR: 0.0000438, Loss: 0.002
+[2026-10-31 21:19:19,480][    INFO] Iter: 12900/23373, LR: 0.0000437, Loss: 0.006
+[2026-10-31 21:19:31,818][    INFO] Iter: 13000/23373, LR: 0.0000437, Loss: 0.001
+[2026-10-31 21:19:51,838][    INFO] Iter: 13100/23373, LR: 0.0000436, Loss: 0.001
+[2026-10-31 21:20:07,225][    INFO] Iter: 13200/23373, LR: 0.0000436, Loss: 0.001
+[2026-10-31 21:20:18,451][    INFO] Iter: 13300/23373, LR: 0.0000436, Loss: 0.001
+[2026-10-31 21:20:39,140][    INFO] Iter: 13400/23373, LR: 0.0000435, Loss: 0.001
+[2026-10-31 21:20:50,034][    INFO] Iter: 13500/23373, LR: 0.0000435, Loss: 0.002
+[2026-10-31 21:20:59,067][    INFO] Iter: 13600/23373, LR: 0.0000434, Loss: 0.001
+[2026-10-31 21:21:07,917][    INFO] Iter: 13700/23373, LR: 0.0000434, Loss: 0.002
+[2026-10-31 21:21:18,248][    INFO] Iter: 13800/23373, LR: 0.0000433, Loss: 0.001
+[2026-10-31 21:21:30,249][    INFO] Iter: 13900/23373, LR: 0.0000433, Loss: 0.001
+[2026-10-31 21:21:39,211][    INFO] Iter: 14000/23373, LR: 0.0000432, Loss: 0.001
+[2026-10-31 21:21:47,146][    INFO] Iter: 14100/23373, LR: 0.0000432, Loss: 0.001
+[2026-10-31 21:21:55,705][    INFO] Iter: 14200/23373, LR: 0.0000431, Loss: 0.001
+[2026-10-31 21:22:04,918][    INFO] Iter: 14300/23373, LR: 0.0000431, Loss: 0.004
+[2026-10-31 21:22:15,280][    INFO] Iter: 14400/23373, LR: 0.0000430, Loss: 0.001
+[2026-10-31 21:22:25,302][    INFO] Iter: 14500/23373, LR: 0.0000430, Loss: 0.001
+[2026-10-31 21:22:35,746][    INFO] Iter: 14600/23373, LR: 0.0000429, Loss: 0.003
+[2026-10-31 21:22:47,149][    INFO] Iter: 14700/23373, LR: 0.0000429, Loss: 0.002
+[2026-10-31 21:22:57,046][    INFO] Iter: 14800/23373, LR: 0.0000428, Loss: 0.012
+[2026-10-31 21:23:07,599][    INFO] Iter: 14900/23373, LR: 0.0000428, Loss: 0.002
+[2026-10-31 21:23:20,040][    INFO] Iter: 15000/23373, LR: 0.0000427, Loss: 0.001
+[2026-10-31 21:23:30,404][    INFO] Iter: 15100/23373, LR: 0.0000427, Loss: 0.001
+[2026-10-31 21:23:40,394][    INFO] Iter: 15200/23373, LR: 0.0000426, Loss: 0.001
+[2026-10-31 21:23:51,238][    INFO] Iter: 15300/23373, LR: 0.0000426, Loss: 0.002
+[2026-10-31 21:24:01,827][    INFO] Iter: 15400/23373, LR: 0.0000425, Loss: 0.001
+[2026-10-31 21:24:09,790][    INFO] Iter: 15500/23373, LR: 0.0000425, Loss: 0.001
+[2026-10-31 21:24:18,197][    INFO] Iter: 15600/23373, LR: 0.0000424, Loss: 0.001
+[2026-10-31 21:24:27,667][    INFO] Iter: 15700/23373, LR: 0.0000424, Loss: 0.001
+[2026-10-31 21:24:36,758][    INFO] Iter: 15800/23373, LR: 0.0000423, Loss: 0.002
+[2026-10-31 21:24:44,853][    INFO] Iter: 15900/23373, LR: 0.0000423, Loss: 0.001
+[2026-10-31 21:24:53,391][    INFO] Iter: 16000/23373, LR: 0.0000422, Loss: 0.001
+[2026-10-31 21:25:02,647][    INFO] Iter: 16100/23373, LR: 0.0000422, Loss: 0.001
+[2026-10-31 21:25:11,337][    INFO] Iter: 16200/23373, LR: 0.0000421, Loss: 0.002
+[2026-10-31 21:25:19,639][    INFO] Iter: 16300/23373, LR: 0.0000421, Loss: 0.003
+[2026-10-31 21:25:27,928][    INFO] Iter: 16400/23373, LR: 0.0000420, Loss: 0.001
+[2026-10-31 21:25:37,408][    INFO] Iter: 16500/23373, LR: 0.0000420, Loss: 0.009
+[2026-10-31 21:25:45,521][    INFO] Iter: 16600/23373, LR: 0.0000419, Loss: 0.001
+[2026-10-31 21:25:53,730][    INFO] Iter: 16700/23373, LR: 0.0000419, Loss: 0.002
+[2026-10-31 21:26:02,298][    INFO] Iter: 16800/23373, LR: 0.0000418, Loss: 0.002
+[2026-10-31 21:26:11,917][    INFO] Iter: 16900/23373, LR: 0.0000418, Loss: 0.001
+[2026-10-31 21:26:20,373][    INFO] Iter: 17000/23373, LR: 0.0000417, Loss: 0.002
+[2026-10-31 21:26:28,387][    INFO] Iter: 17100/23373, LR: 0.0000417, Loss: 0.001
+libpng error: IDAT: CRC error
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42540: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000020_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 21:26:37,494][    INFO] Iter: 17200/23373, LR: 0.0000416, Loss: 0.003
+[2026-10-31 21:26:46,377][    INFO] Iter: 17300/23373, LR: 0.0000416, Loss: 0.001
+[2026-10-31 21:26:55,241][    INFO] Iter: 17400/23373, LR: 0.0000415, Loss: 0.002
+[2026-10-31 21:27:04,227][    INFO] Iter: 17500/23373, LR: 0.0000415, Loss: 0.001
+[2026-10-31 21:27:13,222][    INFO] Iter: 17600/23373, LR: 0.0000414, Loss: 0.001
+[2026-10-31 21:27:22,330][    INFO] Iter: 17700/23373, LR: 0.0000414, Loss: 0.000
+[2026-10-31 21:27:31,215][    INFO] Iter: 17800/23373, LR: 0.0000413, Loss: 0.001
+[2026-10-31 21:27:42,750][    INFO] Iter: 17900/23373, LR: 0.0000413, Loss: 0.001
+[2026-10-31 21:27:54,470][    INFO] Iter: 18000/23373, LR: 0.0000412, Loss: 0.002
+[2026-10-31 21:28:03,555][    INFO] Iter: 18100/23373, LR: 0.0000412, Loss: 0.000
+[2026-10-31 21:28:14,437][    INFO] Iter: 18200/23373, LR: 0.0000411, Loss: 0.007
+[2026-10-31 21:28:31,386][    INFO] Iter: 18300/23373, LR: 0.0000411, Loss: 0.001
+[2026-10-31 21:28:40,764][    INFO] Iter: 18400/23373, LR: 0.0000410, Loss: 0.000
+[2026-10-31 21:28:56,821][    INFO] Iter: 18500/23373, LR: 0.0000410, Loss: 0.001
+[2026-10-31 21:29:12,063][    INFO] Iter: 18600/23373, LR: 0.0000410, Loss: 0.001
+[2026-10-31 21:29:25,075][    INFO] Iter: 18700/23373, LR: 0.0000409, Loss: 0.002
+[2026-10-31 21:29:36,096][    INFO] Iter: 18800/23373, LR: 0.0000409, Loss: 0.003
+[2026-10-31 21:29:52,733][    INFO] Iter: 18900/23373, LR: 0.0000408, Loss: 0.000
+[2026-10-31 21:30:01,447][    INFO] Iter: 19000/23373, LR: 0.0000408, Loss: 0.001
+[2026-10-31 21:30:14,320][    INFO] Iter: 19100/23373, LR: 0.0000407, Loss: 0.001
+[2026-10-31 21:30:35,376][    INFO] Iter: 19200/23373, LR: 0.0000407, Loss: 0.006
+[2026-10-31 21:30:51,375][    INFO] Iter: 19300/23373, LR: 0.0000406, Loss: 0.000
+[2026-10-31 21:31:12,157][    INFO] Iter: 19400/23373, LR: 0.0000406, Loss: 0.001
+[2026-10-31 21:31:31,049][    INFO] Iter: 19500/23373, LR: 0.0000405, Loss: 0.009
+[2026-10-31 21:31:47,922][    INFO] Iter: 19600/23373, LR: 0.0000405, Loss: 0.001
+[2026-10-31 21:32:07,020][    INFO] Iter: 19700/23373, LR: 0.0000404, Loss: 0.000
+[2026-10-31 21:32:26,477][    INFO] Iter: 19800/23373, LR: 0.0000404, Loss: 0.001
+[2026-10-31 21:32:44,113][    INFO] Iter: 19900/23373, LR: 0.0000403, Loss: 0.001
+[2026-10-31 21:33:02,222][    INFO] Iter: 20000/23373, LR: 0.0000403, Loss: 0.001
+[2026-10-31 21:33:22,558][    INFO] Iter: 20100/23373, LR: 0.0000402, Loss: 0.003
+[2026-10-31 21:33:40,537][    INFO] Iter: 20200/23373, LR: 0.0000402, Loss: 0.000
+[2026-10-31 21:33:57,163][    INFO] Iter: 20300/23373, LR: 0.0000401, Loss: 0.002
+[2026-10-31 21:34:17,188][    INFO] Iter: 20400/23373, LR: 0.0000401, Loss: 0.001
+[2026-10-31 21:34:33,344][    INFO] Iter: 20500/23373, LR: 0.0000400, Loss: 0.001
+[2026-10-31 21:34:53,468][    INFO] Iter: 20600/23373, LR: 0.0000400, Loss: 0.001
+[2026-10-31 21:35:09,853][    INFO] Iter: 20700/23373, LR: 0.0000399, Loss: 0.001
+[2026-10-31 21:35:23,906][    INFO] Iter: 20800/23373, LR: 0.0000399, Loss: 0.002
+[2026-10-31 21:35:39,022][    INFO] Iter: 20900/23373, LR: 0.0000398, Loss: 0.000
+[2026-10-31 21:36:00,406][    INFO] Iter: 21000/23373, LR: 0.0000398, Loss: 0.001
+[2026-10-31 21:36:19,196][    INFO] Iter: 21100/23373, LR: 0.0000397, Loss: 0.001
+[2026-10-31 21:36:35,019][    INFO] Iter: 21200/23373, LR: 0.0000397, Loss: 0.001
+[2026-10-31 21:36:50,376][    INFO] Iter: 21300/23373, LR: 0.0000396, Loss: 0.002
+[2026-10-31 21:37:05,610][    INFO] Iter: 21400/23373, LR: 0.0000396, Loss: 0.000
+[2026-10-31 21:37:20,225][    INFO] Iter: 21500/23373, LR: 0.0000395, Loss: 0.001
+[2026-10-31 21:37:37,493][    INFO] Iter: 21600/23373, LR: 0.0000395, Loss: 0.002
+[2026-10-31 21:37:52,596][    INFO] Iter: 21700/23373, LR: 0.0000394, Loss: 0.001
+[2026-10-31 21:38:09,895][    INFO] Iter: 21800/23373, LR: 0.0000394, Loss: 0.001
+[2026-10-31 21:38:24,517][    INFO] Iter: 21900/23373, LR: 0.0000393, Loss: 0.001
+[2026-10-31 21:38:40,385][    INFO] Iter: 22000/23373, LR: 0.0000393, Loss: 0.003
+[2026-10-31 21:38:56,195][    INFO] Iter: 22100/23373, LR: 0.0000392, Loss: 0.001
+[2026-10-31 21:39:12,264][    INFO] Iter: 22200/23373, LR: 0.0000392, Loss: 0.001
+[2026-10-31 21:39:30,714][    INFO] Iter: 22300/23373, LR: 0.0000391, Loss: 0.002
+[2026-10-31 21:39:47,388][    INFO] Iter: 22400/23373, LR: 0.0000391, Loss: 0.002
+[2026-10-31 21:40:05,589][    INFO] Iter: 22500/23373, LR: 0.0000390, Loss: 0.000
+[2026-10-31 21:40:21,419][    INFO] Iter: 22600/23373, LR: 0.0000390, Loss: 0.001
+[2026-10-31 21:40:35,603][    INFO] Iter: 22700/23373, LR: 0.0000389, Loss: 0.004
+[2026-10-31 21:40:51,102][    INFO] Iter: 22800/23373, LR: 0.0000389, Loss: 0.001
+[2026-10-31 21:41:06,362][    INFO] Iter: 22900/23373, LR: 0.0000388, Loss: 0.001
+[2026-10-31 21:41:20,824][    INFO] Iter: 23000/23373, LR: 0.0000388, Loss: 0.000
+[2026-10-31 21:41:36,820][    INFO] Iter: 23100/23373, LR: 0.0000387, Loss: 0.001
+[2026-10-31 21:41:53,302][    INFO] Iter: 23200/23373, LR: 0.0000387, Loss: 0.001
+[2026-10-31 21:42:10,613][    INFO] Iter: 23300/23373, LR: 0.0000386, Loss: 0.001
+[2026-10-31 22:12:59,672][    INFO] ==========================================================================================
+[2026-10-31 22:12:59,676][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2026-10-31 22:12:59,692][    INFO]    0.969,    0.996,    0.999,    0.063,    0.106,    1.050,    0.085,    0.027,    0.085
+[2026-10-31 22:12:59,692][    INFO] ==========================================================================================
+[2026-10-31 22:13:13,520][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/latest.pth
+[2026-10-31 22:13:13,899][    INFO] Best checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/best.pth
+[2026-10-31 22:13:13,899][    INFO] New best checkpoint saved! Metrics: {'d1': 0.969019889831543, 'd2': 0.9964995980262756, 'd3': 0.9992043375968933, 'abs_rel': 0.06315306574106216, 'sq_rel': 0.10622219741344452, 'rmse': 1.0503491163253784, 'rmse_log': 0.0849619135260582, 'log10': 0.02719123475253582, 'silog': 0.08490709215402603}
+[2026-10-31 22:13:13,899][    INFO] ===========> Epoch: 1/4, d1: 0.969, d2: 0.996, d3: 0.999
+[2026-10-31 22:13:13,899][    INFO] ===========> Epoch: 1/4, abs_rel: 0.063, sq_rel: 0.106, rmse: 1.050, rmse_log: 0.085, log10: 0.027, silog: 0.085
+
+[2026-10-31 22:13:14,925][    INFO] Iter: 0/23373, LR: 0.0000386, Loss: 0.000
+[2026-10-31 22:13:18,963][    INFO] Iter: 100/23373, LR: 0.0000385, Loss: 0.002
+[2026-10-31 22:13:21,550][    INFO] Iter: 200/23373, LR: 0.0000385, Loss: 0.000
+[2026-10-31 22:13:24,026][    INFO] Iter: 300/23373, LR: 0.0000384, Loss: 0.001
+[2026-10-31 22:13:26,877][    INFO] Iter: 400/23373, LR: 0.0000384, Loss: 0.001
+[2026-10-31 22:13:29,422][    INFO] Iter: 500/23373, LR: 0.0000383, Loss: 0.001
+[2026-10-31 22:13:31,912][    INFO] Iter: 600/23373, LR: 0.0000383, Loss: 0.002
+[2026-10-31 22:13:34,464][    INFO] Iter: 700/23373, LR: 0.0000382, Loss: 0.001
+[2026-10-31 22:13:36,925][    INFO] Iter: 800/23373, LR: 0.0000382, Loss: 0.002
+[2026-10-31 22:13:39,376][    INFO] Iter: 900/23373, LR: 0.0000381, Loss: 0.001
+[2026-10-31 22:13:41,834][    INFO] Iter: 1000/23373, LR: 0.0000381, Loss: 0.001
+[2026-10-31 22:13:44,335][    INFO] Iter: 1100/23373, LR: 0.0000380, Loss: 0.001
+[2026-10-31 22:13:49,310][    INFO] Iter: 1200/23373, LR: 0.0000380, Loss: 0.001
+[2026-10-31 22:13:52,365][    INFO] Iter: 1300/23373, LR: 0.0000379, Loss: 0.001
+[2026-10-31 22:13:54,882][    INFO] Iter: 1400/23373, LR: 0.0000379, Loss: 0.001
+[2026-10-31 22:13:58,508][    INFO] Iter: 1500/23373, LR: 0.0000379, Loss: 0.000
+[2026-10-31 22:14:01,536][    INFO] Iter: 1600/23373, LR: 0.0000378, Loss: 0.001
+[2026-10-31 22:14:04,283][    INFO] Iter: 1700/23373, LR: 0.0000378, Loss: 0.001
+[2026-10-31 22:14:07,187][    INFO] Iter: 1800/23373, LR: 0.0000377, Loss: 0.000
+[2026-10-31 22:14:09,703][    INFO] Iter: 1900/23373, LR: 0.0000377, Loss: 0.006
+[2026-10-31 22:14:12,117][    INFO] Iter: 2000/23373, LR: 0.0000376, Loss: 0.001
+[2026-10-31 22:14:14,837][    INFO] Iter: 2100/23373, LR: 0.0000376, Loss: 0.004
+[2026-10-31 22:14:18,596][    INFO] Iter: 2200/23373, LR: 0.0000375, Loss: 0.001
+[2026-10-31 22:14:21,785][    INFO] Iter: 2300/23373, LR: 0.0000375, Loss: 0.001
+[2026-10-31 22:14:25,204][    INFO] Iter: 2400/23373, LR: 0.0000374, Loss: 0.001
+[2026-10-31 22:14:28,799][    INFO] Iter: 2500/23373, LR: 0.0000374, Loss: 0.001
+[2026-10-31 22:14:32,380][    INFO] Iter: 2600/23373, LR: 0.0000373, Loss: 0.001
+[2026-10-31 22:14:35,970][    INFO] Iter: 2700/23373, LR: 0.0000373, Loss: 0.008
+[2026-10-31 22:14:39,533][    INFO] Iter: 2800/23373, LR: 0.0000372, Loss: 0.000
+[2026-10-31 22:14:43,073][    INFO] Iter: 2900/23373, LR: 0.0000372, Loss: 0.002
+[2026-10-31 22:14:46,605][    INFO] Iter: 3000/23373, LR: 0.0000371, Loss: 0.002
+[2026-10-31 22:14:50,744][    INFO] Iter: 3100/23373, LR: 0.0000371, Loss: 0.002
+[2026-10-31 22:14:54,761][    INFO] Iter: 3200/23373, LR: 0.0000370, Loss: 0.001
+[2026-10-31 22:14:58,812][    INFO] Iter: 3300/23373, LR: 0.0000370, Loss: 0.001
+[2026-10-31 22:15:02,895][    INFO] Iter: 3400/23373, LR: 0.0000369, Loss: 0.000
+[2026-10-31 22:15:07,126][    INFO] Iter: 3500/23373, LR: 0.0000369, Loss: 0.001
+[2026-10-31 22:15:11,247][    INFO] Iter: 3600/23373, LR: 0.0000368, Loss: 0.001
+[2026-10-31 22:15:15,463][    INFO] Iter: 3700/23373, LR: 0.0000368, Loss: 0.010
+[2026-10-31 22:15:19,833][    INFO] Iter: 3800/23373, LR: 0.0000367, Loss: 0.015
+[2026-10-31 22:15:23,996][    INFO] Iter: 3900/23373, LR: 0.0000367, Loss: 0.001
+[2026-10-31 22:15:28,103][    INFO] Iter: 4000/23373, LR: 0.0000366, Loss: 0.001
+[2026-10-31 22:15:32,176][    INFO] Iter: 4100/23373, LR: 0.0000366, Loss: 0.002
+[2026-10-31 22:15:36,239][    INFO] Iter: 4200/23373, LR: 0.0000365, Loss: 0.001
+[2026-10-31 22:15:39,853][    INFO] Iter: 4300/23373, LR: 0.0000365, Loss: 0.001
+[2026-10-31 22:15:42,905][    INFO] Iter: 4400/23373, LR: 0.0000364, Loss: 0.000
+[2026-10-31 22:15:45,856][    INFO] Iter: 4500/23373, LR: 0.0000364, Loss: 0.002
+[2026-10-31 22:15:49,716][    INFO] Iter: 4600/23373, LR: 0.0000363, Loss: 0.000
+[2026-10-31 22:15:52,774][    INFO] Iter: 4700/23373, LR: 0.0000363, Loss: 0.001
+[2026-10-31 22:15:55,875][    INFO] Iter: 4800/23373, LR: 0.0000362, Loss: 0.002
+[2026-10-31 22:15:58,818][    INFO] Iter: 4900/23373, LR: 0.0000362, Loss: 0.001
+[2026-10-31 22:16:02,407][    INFO] Iter: 5000/23373, LR: 0.0000361, Loss: 0.001
+[2026-10-31 22:16:05,346][    INFO] Iter: 5100/23373, LR: 0.0000361, Loss: 0.001
+[2026-10-31 22:16:08,425][    INFO] Iter: 5200/23373, LR: 0.0000360, Loss: 0.001
+[2026-10-31 22:16:11,431][    INFO] Iter: 5300/23373, LR: 0.0000360, Loss: 0.001
+[2026-10-31 22:16:14,388][    INFO] Iter: 5400/23373, LR: 0.0000359, Loss: 0.003
+[2026-10-31 22:16:17,612][    INFO] Iter: 5500/23373, LR: 0.0000359, Loss: 0.001
+[2026-10-31 22:16:20,568][    INFO] Iter: 5600/23373, LR: 0.0000358, Loss: 0.000
+[2026-10-31 22:16:23,597][    INFO] Iter: 5700/23373, LR: 0.0000358, Loss: 0.002
+[2026-10-31 22:16:26,551][    INFO] Iter: 5800/23373, LR: 0.0000357, Loss: 0.002
+[2026-10-31 22:16:29,609][    INFO] Iter: 5900/23373, LR: 0.0000357, Loss: 0.000
+[2026-10-31 22:16:32,646][    INFO] Iter: 6000/23373, LR: 0.0000356, Loss: 0.001
+[2026-10-31 22:16:35,639][    INFO] Iter: 6100/23373, LR: 0.0000356, Loss: 0.002
+[2026-10-31 22:16:38,474][    INFO] Iter: 6200/23373, LR: 0.0000355, Loss: 0.001
+[2026-10-31 22:16:41,834][    INFO] Iter: 6300/23373, LR: 0.0000355, Loss: 0.001
+[2026-10-31 22:16:45,085][    INFO] Iter: 6400/23373, LR: 0.0000354, Loss: 0.001
+[2026-10-31 22:17:38,085][    INFO] Iter: 6500/23373, LR: 0.0000354, Loss: 0.015
+[2026-10-31 22:17:41,592][    INFO] Iter: 6600/23373, LR: 0.0000353, Loss: 0.002
+[2026-10-31 22:17:45,030][    INFO] Iter: 6700/23373, LR: 0.0000353, Loss: 0.001
+[2026-10-31 22:17:48,600][    INFO] Iter: 6800/23373, LR: 0.0000352, Loss: 0.000
+[2026-10-31 22:17:53,316][    INFO] Iter: 6900/23373, LR: 0.0000352, Loss: 0.001
+[2026-10-31 22:17:58,497][    INFO] Iter: 7000/23373, LR: 0.0000351, Loss: 0.001
+[2026-10-31 22:18:02,990][    INFO] Iter: 7100/23373, LR: 0.0000351, Loss: 0.001
+[2026-10-31 22:18:06,645][    INFO] Iter: 7200/23373, LR: 0.0000350, Loss: 0.001
+[2026-10-31 22:18:09,955][    INFO] Iter: 7300/23373, LR: 0.0000350, Loss: 0.001
+[2026-10-31 22:18:13,789][    INFO] Iter: 7400/23373, LR: 0.0000349, Loss: 0.001
+[2026-10-31 22:18:17,765][    INFO] Iter: 7500/23373, LR: 0.0000349, Loss: 0.003
+[2026-10-31 22:18:21,714][    INFO] Iter: 7600/23373, LR: 0.0000348, Loss: 0.000
+[2026-10-31 22:18:25,914][    INFO] Iter: 7700/23373, LR: 0.0000348, Loss: 0.001
+[2026-10-31 22:18:30,904][    INFO] Iter: 7800/23373, LR: 0.0000347, Loss: 0.000
+[2026-10-31 22:18:35,367][    INFO] Iter: 7900/23373, LR: 0.0000347, Loss: 0.001
+[2026-10-31 22:18:40,402][    INFO] Iter: 8000/23373, LR: 0.0000346, Loss: 0.001
+[2026-10-31 22:18:44,106][    INFO] Iter: 8100/23373, LR: 0.0000346, Loss: 0.001
+[2026-10-31 22:18:47,916][    INFO] Iter: 8200/23373, LR: 0.0000345, Loss: 0.000
+[2026-10-31 22:18:52,206][    INFO] Iter: 8300/23373, LR: 0.0000345, Loss: 0.002
+[2026-10-31 22:18:56,983][    INFO] Iter: 8400/23373, LR: 0.0000344, Loss: 0.002
+[2026-10-31 22:19:01,234][    INFO] Iter: 8500/23373, LR: 0.0000344, Loss: 0.001
+[2026-10-31 22:19:06,589][    INFO] Iter: 8600/23373, LR: 0.0000343, Loss: 0.002
+[2026-10-31 22:19:10,966][    INFO] Iter: 8700/23373, LR: 0.0000343, Loss: 0.009
+[2026-10-31 22:19:15,460][    INFO] Iter: 8800/23373, LR: 0.0000342, Loss: 0.001
+[2026-10-31 22:19:20,177][    INFO] Iter: 8900/23373, LR: 0.0000342, Loss: 0.003
+[2026-10-31 22:19:24,596][    INFO] Iter: 9000/23373, LR: 0.0000341, Loss: 0.001
+[2026-10-31 22:19:29,203][    INFO] Iter: 9100/23373, LR: 0.0000341, Loss: 0.001
+[2026-10-31 22:19:34,174][    INFO] Iter: 9200/23373, LR: 0.0000340, Loss: 0.001
+[2026-10-31 22:19:38,638][    INFO] Iter: 9300/23373, LR: 0.0000340, Loss: 0.002
+[2026-10-31 22:19:43,145][    INFO] Iter: 9400/23373, LR: 0.0000339, Loss: 0.001
+[2026-10-31 22:19:47,751][    INFO] Iter: 9500/23373, LR: 0.0000339, Loss: 0.001
+[2026-10-31 22:19:51,939][    INFO] Iter: 9600/23373, LR: 0.0000338, Loss: 0.001
+[2026-10-31 22:19:56,238][    INFO] Iter: 9700/23373, LR: 0.0000338, Loss: 0.001
+[2026-10-31 22:20:00,571][    INFO] Iter: 9800/23373, LR: 0.0000337, Loss: 0.001
+[2026-10-31 22:20:04,764][    INFO] Iter: 9900/23373, LR: 0.0000337, Loss: 0.001
+[2026-10-31 22:20:09,566][    INFO] Iter: 10000/23373, LR: 0.0000336, Loss: 0.001
+[2026-10-31 22:20:13,572][    INFO] Iter: 10100/23373, LR: 0.0000336, Loss: 0.001
+[2026-10-31 22:20:18,119][    INFO] Iter: 10200/23373, LR: 0.0000335, Loss: 0.001
+[2026-10-31 22:20:22,101][    INFO] Iter: 10300/23373, LR: 0.0000335, Loss: 0.001
+[2026-10-31 22:20:26,349][    INFO] Iter: 10400/23373, LR: 0.0000334, Loss: 0.000
+[2026-10-31 22:20:32,083][    INFO] Iter: 10500/23373, LR: 0.0000334, Loss: 0.002
+[2026-10-31 22:20:46,306][    INFO] Iter: 10600/23373, LR: 0.0000333, Loss: 0.002
+[2026-10-31 22:20:56,750][    INFO] Iter: 10700/23373, LR: 0.0000333, Loss: 0.001
+[2026-10-31 22:21:07,227][    INFO] Iter: 10800/23373, LR: 0.0000332, Loss: 0.001
+[2026-10-31 22:21:17,087][    INFO] Iter: 10900/23373, LR: 0.0000332, Loss: 0.001
+[2026-10-31 22:21:21,350][    INFO] Iter: 11000/23373, LR: 0.0000331, Loss: 0.000
+[2026-10-31 22:21:25,295][    INFO] Iter: 11100/23373, LR: 0.0000330, Loss: 0.001
+[2026-10-31 22:21:29,688][    INFO] Iter: 11200/23373, LR: 0.0000330, Loss: 0.001
+[2026-10-31 22:21:33,388][    INFO] Iter: 11300/23373, LR: 0.0000329, Loss: 0.002
+[2026-10-31 22:21:37,409][    INFO] Iter: 11400/23373, LR: 0.0000329, Loss: 0.000
+[2026-10-31 22:21:41,268][    INFO] Iter: 11500/23373, LR: 0.0000328, Loss: 0.003
+[2026-10-31 22:21:45,532][    INFO] Iter: 11600/23373, LR: 0.0000328, Loss: 0.002
+[2026-10-31 22:21:49,583][    INFO] Iter: 11700/23373, LR: 0.0000327, Loss: 0.001
+[2026-10-31 22:21:52,994][    INFO] Iter: 11800/23373, LR: 0.0000327, Loss: 0.002
+[2026-10-31 22:21:56,883][    INFO] Iter: 11900/23373, LR: 0.0000326, Loss: 0.001
+[2026-10-31 22:22:00,850][    INFO] Iter: 12000/23373, LR: 0.0000326, Loss: 0.001
+[2026-10-31 22:22:05,130][    INFO] Iter: 12100/23373, LR: 0.0000325, Loss: 0.001
+[2026-10-31 22:22:08,685][    INFO] Iter: 12200/23373, LR: 0.0000325, Loss: 0.001
+[2026-10-31 22:22:12,555][    INFO] Iter: 12300/23373, LR: 0.0000324, Loss: 0.001
+[2026-10-31 22:22:16,752][    INFO] Iter: 12400/23373, LR: 0.0000324, Loss: 0.001
+[2026-10-31 22:22:20,805][    INFO] Iter: 12500/23373, LR: 0.0000323, Loss: 0.001
+[2026-10-31 22:22:24,656][    INFO] Iter: 12600/23373, LR: 0.0000323, Loss: 0.001
+[2026-10-31 22:22:28,558][    INFO] Iter: 12700/23373, LR: 0.0000322, Loss: 0.000
+[2026-10-31 22:22:32,843][    INFO] Iter: 12800/23373, LR: 0.0000322, Loss: 0.001
+[2026-10-31 22:22:36,824][    INFO] Iter: 12900/23373, LR: 0.0000321, Loss: 0.001
+[2026-10-31 22:22:40,931][    INFO] Iter: 13000/23373, LR: 0.0000321, Loss: 0.001
+[2026-10-31 22:22:45,065][    INFO] Iter: 13100/23373, LR: 0.0000320, Loss: 0.001
+[2026-10-31 22:22:48,889][    INFO] Iter: 13200/23373, LR: 0.0000320, Loss: 0.001
+[2026-10-31 22:22:52,538][    INFO] Iter: 13300/23373, LR: 0.0000319, Loss: 0.001
+[2026-10-31 22:22:56,485][    INFO] Iter: 13400/23373, LR: 0.0000319, Loss: 0.003
+[2026-10-31 22:23:00,554][    INFO] Iter: 13500/23373, LR: 0.0000318, Loss: 0.000
+[2026-10-31 22:23:04,422][    INFO] Iter: 13600/23373, LR: 0.0000318, Loss: 0.001
+[2026-10-31 22:23:08,370][    INFO] Iter: 13700/23373, LR: 0.0000317, Loss: 0.002
+[2026-10-31 22:23:14,638][    INFO] Iter: 13800/23373, LR: 0.0000317, Loss: 0.001
+[2026-10-31 22:23:18,824][    INFO] Iter: 13900/23373, LR: 0.0000316, Loss: 0.001
+[2026-10-31 22:23:22,629][    INFO] Iter: 14000/23373, LR: 0.0000316, Loss: 0.002
+[2026-10-31 22:23:27,036][    INFO] Iter: 14100/23373, LR: 0.0000315, Loss: 0.002
+[2026-10-31 22:23:30,433][    INFO] Iter: 14200/23373, LR: 0.0000315, Loss: 0.001
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42598: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000078_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 22:23:34,486][    INFO] Iter: 14300/23373, LR: 0.0000314, Loss: 0.001
+[2026-10-31 22:23:38,968][    INFO] Iter: 14400/23373, LR: 0.0000314, Loss: 0.001
+[2026-10-31 22:23:42,824][    INFO] Iter: 14500/23373, LR: 0.0000313, Loss: 0.001
+[2026-10-31 22:23:46,813][    INFO] Iter: 14600/23373, LR: 0.0000313, Loss: 0.001
+[2026-10-31 22:23:51,968][    INFO] Iter: 14700/23373, LR: 0.0000312, Loss: 0.001
+[2026-10-31 22:23:56,265][    INFO] Iter: 14800/23373, LR: 0.0000312, Loss: 0.001
+[2026-10-31 22:24:00,450][    INFO] Iter: 14900/23373, LR: 0.0000311, Loss: 0.004
+[2026-10-31 22:24:04,434][    INFO] Iter: 15000/23373, LR: 0.0000311, Loss: 0.000
+[2026-10-31 22:24:08,330][    INFO] Iter: 15100/23373, LR: 0.0000310, Loss: 0.001
+[2026-10-31 22:24:12,808][    INFO] Iter: 15200/23373, LR: 0.0000310, Loss: 0.001
+[2026-10-31 22:24:16,996][    INFO] Iter: 15300/23373, LR: 0.0000309, Loss: 0.001
+[2026-10-31 22:24:20,707][    INFO] Iter: 15400/23373, LR: 0.0000309, Loss: 0.001
+[2026-10-31 22:24:24,575][    INFO] Iter: 15500/23373, LR: 0.0000308, Loss: 0.000
+[2026-10-31 22:24:28,848][    INFO] Iter: 15600/23373, LR: 0.0000308, Loss: 0.001
+[2026-10-31 22:24:32,802][    INFO] Iter: 15700/23373, LR: 0.0000307, Loss: 0.001
+[2026-10-31 22:24:37,185][    INFO] Iter: 15800/23373, LR: 0.0000307, Loss: 0.002
+[2026-10-31 22:24:41,205][    INFO] Iter: 15900/23373, LR: 0.0000306, Loss: 0.000
+[2026-10-31 22:24:44,882][    INFO] Iter: 16000/23373, LR: 0.0000306, Loss: 0.003
+[2026-10-31 22:24:49,011][    INFO] Iter: 16100/23373, LR: 0.0000305, Loss: 0.002
+[2026-10-31 22:24:53,007][    INFO] Iter: 16200/23373, LR: 0.0000305, Loss: 0.000
+[2026-10-31 22:24:57,085][    INFO] Iter: 16300/23373, LR: 0.0000304, Loss: 0.002
+[2026-10-31 22:25:01,441][    INFO] Iter: 16400/23373, LR: 0.0000304, Loss: 0.000
+[2026-10-31 22:25:05,602][    INFO] Iter: 16500/23373, LR: 0.0000303, Loss: 0.000
+[2026-10-31 22:25:09,808][    INFO] Iter: 16600/23373, LR: 0.0000303, Loss: 0.013
+[2026-10-31 22:25:13,870][    INFO] Iter: 16700/23373, LR: 0.0000302, Loss: 0.000
+[2026-10-31 22:25:17,842][    INFO] Iter: 16800/23373, LR: 0.0000302, Loss: 0.002
+[2026-10-31 22:25:21,593][    INFO] Iter: 16900/23373, LR: 0.0000301, Loss: 0.001
+[2026-10-31 22:25:25,604][    INFO] Iter: 17000/23373, LR: 0.0000301, Loss: 0.001
+[2026-10-31 22:25:30,073][    INFO] Iter: 17100/23373, LR: 0.0000300, Loss: 0.001
+[2026-10-31 22:25:33,967][    INFO] Iter: 17200/23373, LR: 0.0000300, Loss: 0.003
+[2026-10-31 22:25:38,401][    INFO] Iter: 17300/23373, LR: 0.0000299, Loss: 0.001
+[2026-10-31 22:25:42,227][    INFO] Iter: 17400/23373, LR: 0.0000299, Loss: 0.001
+[2026-10-31 22:25:47,303][    INFO] Iter: 17500/23373, LR: 0.0000298, Loss: 0.001
+[2026-10-31 22:25:53,751][    INFO] Iter: 17600/23373, LR: 0.0000298, Loss: 0.002
+[2026-10-31 22:25:58,775][    INFO] Iter: 17700/23373, LR: 0.0000297, Loss: 0.001
+[2026-10-31 22:26:03,854][    INFO] Iter: 17800/23373, LR: 0.0000297, Loss: 0.001
+[2026-10-31 22:26:09,298][    INFO] Iter: 17900/23373, LR: 0.0000296, Loss: 0.001
+[2026-10-31 22:26:14,660][    INFO] Iter: 18000/23373, LR: 0.0000296, Loss: 0.001
+[2026-10-31 22:26:19,854][    INFO] Iter: 18100/23373, LR: 0.0000295, Loss: 0.001
+[2026-10-31 22:26:24,255][    INFO] Iter: 18200/23373, LR: 0.0000294, Loss: 0.006
+[2026-10-31 22:26:28,350][    INFO] Iter: 18300/23373, LR: 0.0000294, Loss: 0.001
+[2026-10-31 22:26:32,219][    INFO] Iter: 18400/23373, LR: 0.0000293, Loss: 0.009
+[2026-10-31 22:26:36,417][    INFO] Iter: 18500/23373, LR: 0.0000293, Loss: 0.001
+[2026-10-31 22:26:40,375][    INFO] Iter: 18600/23373, LR: 0.0000292, Loss: 0.000
+[2026-10-31 22:26:44,063][    INFO] Iter: 18700/23373, LR: 0.0000292, Loss: 0.001
+[2026-10-31 22:26:47,828][    INFO] Iter: 18800/23373, LR: 0.0000291, Loss: 0.001
+[2026-10-31 22:26:53,376][    INFO] Iter: 18900/23373, LR: 0.0000291, Loss: 0.001
+[2026-10-31 22:26:57,879][    INFO] Iter: 19000/23373, LR: 0.0000290, Loss: 0.001
+[2026-10-31 22:27:06,375][    INFO] Iter: 19100/23373, LR: 0.0000290, Loss: 0.000
+[2026-10-31 22:27:14,173][    INFO] Iter: 19200/23373, LR: 0.0000289, Loss: 0.006
+[2026-10-31 22:27:21,854][    INFO] Iter: 19300/23373, LR: 0.0000289, Loss: 0.001
+[2026-10-31 22:27:29,587][    INFO] Iter: 19400/23373, LR: 0.0000288, Loss: 0.002
+[2026-10-31 22:27:34,741][    INFO] Iter: 19500/23373, LR: 0.0000288, Loss: 0.002
+[2026-10-31 22:27:39,361][    INFO] Iter: 19600/23373, LR: 0.0000287, Loss: 0.000
+[2026-10-31 22:27:47,294][    INFO] Iter: 19700/23373, LR: 0.0000287, Loss: 0.000
+[2026-10-31 22:27:52,339][    INFO] Iter: 19800/23373, LR: 0.0000286, Loss: 0.001
+[2026-10-31 22:27:57,480][    INFO] Iter: 19900/23373, LR: 0.0000286, Loss: 0.002
+[2026-10-31 22:28:02,733][    INFO] Iter: 20000/23373, LR: 0.0000285, Loss: 0.001
+[2026-10-31 22:28:09,973][    INFO] Iter: 20100/23373, LR: 0.0000285, Loss: 0.001
+[2026-10-31 22:28:19,507][    INFO] Iter: 20200/23373, LR: 0.0000284, Loss: 0.001
+[2026-10-31 22:28:30,551][    INFO] Iter: 20300/23373, LR: 0.0000284, Loss: 0.003
+[2026-10-31 22:28:41,424][    INFO] Iter: 20400/23373, LR: 0.0000283, Loss: 0.001
+[2026-10-31 22:28:52,280][    INFO] Iter: 20500/23373, LR: 0.0000283, Loss: 0.001
+[2026-10-31 22:29:03,255][    INFO] Iter: 20600/23373, LR: 0.0000282, Loss: 0.002
+[2026-10-31 22:29:14,815][    INFO] Iter: 20700/23373, LR: 0.0000282, Loss: 0.001
+[2026-10-31 22:29:24,899][    INFO] Iter: 20800/23373, LR: 0.0000281, Loss: 0.001
+[2026-10-31 22:29:37,911][    INFO] Iter: 20900/23373, LR: 0.0000281, Loss: 0.001
+libpng error: IDAT: CRC error
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42540: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000020_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 22:29:53,843][    INFO] Iter: 21000/23373, LR: 0.0000280, Loss: 0.001
+[2026-10-31 22:30:05,567][    INFO] Iter: 21100/23373, LR: 0.0000280, Loss: 0.001
+[2026-10-31 22:30:17,375][    INFO] Iter: 21200/23373, LR: 0.0000279, Loss: 0.003
+[2026-10-31 22:30:30,170][    INFO] Iter: 21300/23373, LR: 0.0000279, Loss: 0.001
+[2026-10-31 22:30:42,949][    INFO] Iter: 21400/23373, LR: 0.0000278, Loss: 0.001
+[2026-10-31 22:30:52,035][    INFO] Iter: 21500/23373, LR: 0.0000278, Loss: 0.001
+[2026-10-31 22:31:00,267][    INFO] Iter: 21600/23373, LR: 0.0000277, Loss: 0.002
+[2026-10-31 22:31:13,202][    INFO] Iter: 21700/23373, LR: 0.0000277, Loss: 0.008
+[2026-10-31 22:31:25,622][    INFO] Iter: 21800/23373, LR: 0.0000276, Loss: 0.005
+[2026-10-31 22:31:41,908][    INFO] Iter: 21900/23373, LR: 0.0000276, Loss: 0.001
+[2026-10-31 22:31:54,569][    INFO] Iter: 22000/23373, LR: 0.0000275, Loss: 0.001
+[2026-10-31 22:32:06,865][    INFO] Iter: 22100/23373, LR: 0.0000275, Loss: 0.001
+[2026-10-31 22:32:22,276][    INFO] Iter: 22200/23373, LR: 0.0000274, Loss: 0.001
+[2026-10-31 22:32:35,544][    INFO] Iter: 22300/23373, LR: 0.0000273, Loss: 0.001
+[2026-10-31 22:32:49,849][    INFO] Iter: 22400/23373, LR: 0.0000273, Loss: 0.002
+[2026-10-31 22:33:05,390][    INFO] Iter: 22500/23373, LR: 0.0000272, Loss: 0.001
+[2026-10-31 22:33:19,099][    INFO] Iter: 22600/23373, LR: 0.0000272, Loss: 0.001
+[2026-10-31 22:33:33,817][    INFO] Iter: 22700/23373, LR: 0.0000271, Loss: 0.001
+[2026-10-31 22:33:47,162][    INFO] Iter: 22800/23373, LR: 0.0000271, Loss: 0.001
+[2026-10-31 22:34:02,902][    INFO] Iter: 22900/23373, LR: 0.0000270, Loss: 0.001
+[2026-10-31 22:34:16,990][    INFO] Iter: 23000/23373, LR: 0.0000270, Loss: 0.002
+[2026-10-31 22:34:30,299][    INFO] Iter: 23100/23373, LR: 0.0000269, Loss: 0.001
+[2026-10-31 22:34:44,687][    INFO] Iter: 23200/23373, LR: 0.0000269, Loss: 0.001
+[2026-10-31 22:34:57,809][    INFO] Iter: 23300/23373, LR: 0.0000268, Loss: 0.000
+[2026-10-31 22:57:20,819][    INFO] ==========================================================================================
+[2026-10-31 22:57:20,819][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2026-10-31 22:57:20,819][    INFO]    0.972,    0.997,    0.999,    0.061,    0.098,    1.015,    0.081,    0.026,    0.081
+[2026-10-31 22:57:20,819][    INFO] ==========================================================================================
+[2026-10-31 22:57:24,919][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/latest.pth
+[2026-10-31 22:57:30,672][    INFO] Best checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/best.pth
+[2026-10-31 22:57:30,672][    INFO] New best checkpoint saved! Metrics: {'d1': 0.9719573259353638, 'd2': 0.9969310164451599, 'd3': 0.9993809461593628, 'abs_rel': 0.06099411100149155, 'sq_rel': 0.09817992895841599, 'rmse': 1.0149725675582886, 'rmse_log': 0.08138494193553925, 'log10': 0.026278657838702202, 'silog': 0.08133445680141449}
+[2026-10-31 22:57:30,672][    INFO] ===========> Epoch: 2/4, d1: 0.972, d2: 0.997, d3: 0.999
+[2026-10-31 22:57:30,672][    INFO] ===========> Epoch: 2/4, abs_rel: 0.061, sq_rel: 0.098, rmse: 1.015, rmse_log: 0.081, log10: 0.026, silog: 0.081
+
+[2026-10-31 22:57:30,973][    INFO] Iter: 0/23373, LR: 0.0000268, Loss: 0.001
+[2026-10-31 22:57:42,226][    INFO] Iter: 100/23373, LR: 0.0000267, Loss: 0.001
+[2026-10-31 22:57:53,018][    INFO] Iter: 200/23373, LR: 0.0000267, Loss: 0.001
+[2026-10-31 22:58:03,989][    INFO] Iter: 300/23373, LR: 0.0000266, Loss: 0.001
+[2026-10-31 22:58:13,429][    INFO] Iter: 400/23373, LR: 0.0000266, Loss: 0.001
+[2026-10-31 22:58:23,558][    INFO] Iter: 500/23373, LR: 0.0000265, Loss: 0.001
+[2026-10-31 22:58:31,886][    INFO] Iter: 600/23373, LR: 0.0000265, Loss: 0.001
+[2026-10-31 22:58:35,355][    INFO] Iter: 700/23373, LR: 0.0000264, Loss: 0.004
+[2026-10-31 22:58:38,832][    INFO] Iter: 800/23373, LR: 0.0000264, Loss: 0.001
+[2026-10-31 22:58:42,481][    INFO] Iter: 900/23373, LR: 0.0000263, Loss: 0.001
+[2026-10-31 22:58:46,111][    INFO] Iter: 1000/23373, LR: 0.0000263, Loss: 0.002
+[2026-10-31 22:58:49,623][    INFO] Iter: 1100/23373, LR: 0.0000262, Loss: 0.002
+[2026-10-31 22:58:53,413][    INFO] Iter: 1200/23373, LR: 0.0000262, Loss: 0.000
+[2026-10-31 22:58:57,143][    INFO] Iter: 1300/23373, LR: 0.0000261, Loss: 0.001
+[2026-10-31 22:59:00,696][    INFO] Iter: 1400/23373, LR: 0.0000261, Loss: 0.001
+[2026-10-31 22:59:04,032][    INFO] Iter: 1500/23373, LR: 0.0000260, Loss: 0.002
+[2026-10-31 22:59:07,363][    INFO] Iter: 1600/23373, LR: 0.0000260, Loss: 0.001
+[2026-10-31 22:59:10,564][    INFO] Iter: 1700/23373, LR: 0.0000259, Loss: 0.002
+[2026-10-31 22:59:13,553][    INFO] Iter: 1800/23373, LR: 0.0000259, Loss: 0.001
+[2026-10-31 22:59:16,533][    INFO] Iter: 1900/23373, LR: 0.0000258, Loss: 0.001
+[2026-10-31 22:59:19,392][    INFO] Iter: 2000/23373, LR: 0.0000258, Loss: 0.002
+[2026-10-31 22:59:22,373][    INFO] Iter: 2100/23373, LR: 0.0000257, Loss: 0.001
+[2026-10-31 22:59:25,382][    INFO] Iter: 2200/23373, LR: 0.0000257, Loss: 0.001
+[2026-10-31 22:59:28,310][    INFO] Iter: 2300/23373, LR: 0.0000256, Loss: 0.001
+[2026-10-31 22:59:31,612][    INFO] Iter: 2400/23373, LR: 0.0000256, Loss: 0.001
+[2026-10-31 22:59:34,635][    INFO] Iter: 2500/23373, LR: 0.0000255, Loss: 0.001
+[2026-10-31 22:59:38,170][    INFO] Iter: 2600/23373, LR: 0.0000254, Loss: 0.005
+[2026-10-31 22:59:41,960][    INFO] Iter: 2700/23373, LR: 0.0000254, Loss: 0.001
+[2026-10-31 22:59:46,684][    INFO] Iter: 2800/23373, LR: 0.0000253, Loss: 0.000
+[2026-10-31 22:59:50,256][    INFO] Iter: 2900/23373, LR: 0.0000253, Loss: 0.001
+[2026-10-31 22:59:53,948][    INFO] Iter: 3000/23373, LR: 0.0000252, Loss: 0.002
+[2026-10-31 22:59:58,466][    INFO] Iter: 3100/23373, LR: 0.0000252, Loss: 0.001
+[2026-10-31 23:00:02,839][    INFO] Iter: 3200/23373, LR: 0.0000251, Loss: 0.004
+[2026-10-31 23:00:07,574][    INFO] Iter: 3300/23373, LR: 0.0000251, Loss: 0.001
+[2026-10-31 23:00:12,201][    INFO] Iter: 3400/23373, LR: 0.0000250, Loss: 0.001
+[2026-10-31 23:00:16,759][    INFO] Iter: 3500/23373, LR: 0.0000250, Loss: 0.001
+[2026-10-31 23:00:21,331][    INFO] Iter: 3600/23373, LR: 0.0000249, Loss: 0.001
+[2026-10-31 23:00:25,785][    INFO] Iter: 3700/23373, LR: 0.0000249, Loss: 0.001
+[2026-10-31 23:00:30,615][    INFO] Iter: 3800/23373, LR: 0.0000248, Loss: 0.001
+[2026-10-31 23:00:35,185][    INFO] Iter: 3900/23373, LR: 0.0000248, Loss: 0.001
+[2026-10-31 23:00:39,596][    INFO] Iter: 4000/23373, LR: 0.0000247, Loss: 0.000
+[2026-10-31 23:00:44,136][    INFO] Iter: 4100/23373, LR: 0.0000247, Loss: 0.000
+[2026-10-31 23:00:48,500][    INFO] Iter: 4200/23373, LR: 0.0000246, Loss: 0.002
+[2026-10-31 23:00:52,185][    INFO] Iter: 4300/23373, LR: 0.0000246, Loss: 0.001
+[2026-10-31 23:00:56,203][    INFO] Iter: 4400/23373, LR: 0.0000245, Loss: 0.000
+[2026-10-31 23:00:59,828][    INFO] Iter: 4500/23373, LR: 0.0000245, Loss: 0.000
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42598: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000078_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 23:01:03,346][    INFO] Iter: 4600/23373, LR: 0.0000244, Loss: 0.001
+[2026-10-31 23:01:06,968][    INFO] Iter: 4700/23373, LR: 0.0000244, Loss: 0.001
+[2026-10-31 23:01:10,762][    INFO] Iter: 4800/23373, LR: 0.0000243, Loss: 0.001
+[2026-10-31 23:01:14,073][    INFO] Iter: 4900/23373, LR: 0.0000243, Loss: 0.000
+[2026-10-31 23:01:17,747][    INFO] Iter: 5000/23373, LR: 0.0000242, Loss: 0.001
+[2026-10-31 23:01:21,549][    INFO] Iter: 5100/23373, LR: 0.0000241, Loss: 0.007
+[2026-10-31 23:01:24,977][    INFO] Iter: 5200/23373, LR: 0.0000241, Loss: 0.001
+[2026-10-31 23:01:28,532][    INFO] Iter: 5300/23373, LR: 0.0000240, Loss: 0.001
+[2026-10-31 23:01:32,306][    INFO] Iter: 5400/23373, LR: 0.0000240, Loss: 0.001
+[2026-10-31 23:01:36,260][    INFO] Iter: 5500/23373, LR: 0.0000239, Loss: 0.002
+[2026-10-31 23:01:40,150][    INFO] Iter: 5600/23373, LR: 0.0000239, Loss: 0.001
+[2026-10-31 23:01:44,247][    INFO] Iter: 5700/23373, LR: 0.0000238, Loss: 0.001
+[2026-10-31 23:01:48,577][    INFO] Iter: 5800/23373, LR: 0.0000238, Loss: 0.001
+[2026-10-31 23:01:52,632][    INFO] Iter: 5900/23373, LR: 0.0000237, Loss: 0.001
+[2026-10-31 23:01:56,772][    INFO] Iter: 6000/23373, LR: 0.0000237, Loss: 0.001
+[2026-10-31 23:02:00,518][    INFO] Iter: 6100/23373, LR: 0.0000236, Loss: 0.002
+[2026-10-31 23:02:04,422][    INFO] Iter: 6200/23373, LR: 0.0000236, Loss: 0.001
+[2026-10-31 23:02:08,111][    INFO] Iter: 6300/23373, LR: 0.0000235, Loss: 0.002
+[2026-10-31 23:02:12,142][    INFO] Iter: 6400/23373, LR: 0.0000235, Loss: 0.001
+[2026-10-31 23:02:15,518][    INFO] Iter: 6500/23373, LR: 0.0000234, Loss: 0.002
+[2026-10-31 23:02:19,223][    INFO] Iter: 6600/23373, LR: 0.0000234, Loss: 0.006
+[2026-10-31 23:02:22,710][    INFO] Iter: 6700/23373, LR: 0.0000233, Loss: 0.001
+[2026-10-31 23:02:26,189][    INFO] Iter: 6800/23373, LR: 0.0000233, Loss: 0.002
+[2026-10-31 23:02:29,701][    INFO] Iter: 6900/23373, LR: 0.0000232, Loss: 0.001
+[2026-10-31 23:02:34,269][    INFO] Iter: 7000/23373, LR: 0.0000232, Loss: 0.005
+[2026-10-31 23:02:37,914][    INFO] Iter: 7100/23373, LR: 0.0000231, Loss: 0.003
+[2026-10-31 23:02:41,199][    INFO] Iter: 7200/23373, LR: 0.0000230, Loss: 0.001
+[2026-10-31 23:02:44,203][    INFO] Iter: 7300/23373, LR: 0.0000230, Loss: 0.005
+[2026-10-31 23:02:47,607][    INFO] Iter: 7400/23373, LR: 0.0000229, Loss: 0.001
+[2026-10-31 23:02:51,262][    INFO] Iter: 7500/23373, LR: 0.0000229, Loss: 0.001
+[2026-10-31 23:02:54,381][    INFO] Iter: 7600/23373, LR: 0.0000228, Loss: 0.001
+[2026-10-31 23:02:57,327][    INFO] Iter: 7700/23373, LR: 0.0000228, Loss: 0.004
+[2026-10-31 23:03:00,678][    INFO] Iter: 7800/23373, LR: 0.0000227, Loss: 0.000
+[2026-10-31 23:03:04,032][    INFO] Iter: 7900/23373, LR: 0.0000227, Loss: 0.001
+[2026-10-31 23:03:07,237][    INFO] Iter: 8000/23373, LR: 0.0000226, Loss: 0.001
+[2026-10-31 23:03:11,197][    INFO] Iter: 8100/23373, LR: 0.0000226, Loss: 0.001
+[2026-10-31 23:03:15,170][    INFO] Iter: 8200/23373, LR: 0.0000225, Loss: 0.000
+[2026-10-31 23:03:18,537][    INFO] Iter: 8300/23373, LR: 0.0000225, Loss: 0.000
+[2026-10-31 23:03:21,835][    INFO] Iter: 8400/23373, LR: 0.0000224, Loss: 0.005
+[2026-10-31 23:03:25,324][    INFO] Iter: 8500/23373, LR: 0.0000224, Loss: 0.001
+[2026-10-31 23:03:28,861][    INFO] Iter: 8600/23373, LR: 0.0000223, Loss: 0.001
+[2026-10-31 23:03:32,305][    INFO] Iter: 8700/23373, LR: 0.0000223, Loss: 0.001
+[2026-10-31 23:03:35,983][    INFO] Iter: 8800/23373, LR: 0.0000222, Loss: 0.003
+[2026-10-31 23:03:39,843][    INFO] Iter: 8900/23373, LR: 0.0000222, Loss: 0.001
+[2026-10-31 23:03:43,075][    INFO] Iter: 9000/23373, LR: 0.0000221, Loss: 0.001
+[2026-10-31 23:03:47,228][    INFO] Iter: 9100/23373, LR: 0.0000221, Loss: 0.001
+[2026-10-31 23:03:51,082][    INFO] Iter: 9200/23373, LR: 0.0000220, Loss: 0.001
+[2026-10-31 23:03:55,388][    INFO] Iter: 9300/23373, LR: 0.0000219, Loss: 0.001
+[2026-10-31 23:03:58,893][    INFO] Iter: 9400/23373, LR: 0.0000219, Loss: 0.001
+[2026-10-31 23:04:02,255][    INFO] Iter: 9500/23373, LR: 0.0000218, Loss: 0.001
+[2026-10-31 23:04:05,654][    INFO] Iter: 9600/23373, LR: 0.0000218, Loss: 0.012
+[2026-10-31 23:04:09,524][    INFO] Iter: 9700/23373, LR: 0.0000217, Loss: 0.001
+[2026-10-31 23:04:12,936][    INFO] Iter: 9800/23373, LR: 0.0000217, Loss: 0.001
+[2026-10-31 23:04:16,369][    INFO] Iter: 9900/23373, LR: 0.0000216, Loss: 0.003
+[2026-10-31 23:04:19,632][    INFO] Iter: 10000/23373, LR: 0.0000216, Loss: 0.001
+[2026-10-31 23:04:23,083][    INFO] Iter: 10100/23373, LR: 0.0000215, Loss: 0.001
+[2026-10-31 23:04:26,376][    INFO] Iter: 10200/23373, LR: 0.0000215, Loss: 0.002
+[2026-10-31 23:04:29,818][    INFO] Iter: 10300/23373, LR: 0.0000214, Loss: 0.001
+[2026-10-31 23:04:32,906][    INFO] Iter: 10400/23373, LR: 0.0000214, Loss: 0.001
+[2026-10-31 23:04:36,567][    INFO] Iter: 10500/23373, LR: 0.0000213, Loss: 0.000
+[2026-10-31 23:04:39,684][    INFO] Iter: 10600/23373, LR: 0.0000213, Loss: 0.001
+[2026-10-31 23:04:43,006][    INFO] Iter: 10700/23373, LR: 0.0000212, Loss: 0.001
+[2026-10-31 23:04:47,245][    INFO] Iter: 10800/23373, LR: 0.0000212, Loss: 0.000
+[2026-10-31 23:04:51,031][    INFO] Iter: 10900/23373, LR: 0.0000211, Loss: 0.002
+[2026-10-31 23:04:55,254][    INFO] Iter: 11000/23373, LR: 0.0000210, Loss: 0.000
+[2026-10-31 23:04:58,691][    INFO] Iter: 11100/23373, LR: 0.0000210, Loss: 0.000
+[2026-10-31 23:05:02,242][    INFO] Iter: 11200/23373, LR: 0.0000209, Loss: 0.001
+[2026-10-31 23:05:05,785][    INFO] Iter: 11300/23373, LR: 0.0000209, Loss: 0.003
+[2026-10-31 23:05:08,918][    INFO] Iter: 11400/23373, LR: 0.0000208, Loss: 0.001
+[2026-10-31 23:05:12,103][    INFO] Iter: 11500/23373, LR: 0.0000208, Loss: 0.000
+[2026-10-31 23:05:15,225][    INFO] Iter: 11600/23373, LR: 0.0000207, Loss: 0.000
+[2026-10-31 23:05:18,543][    INFO] Iter: 11700/23373, LR: 0.0000207, Loss: 0.001
+[2026-10-31 23:05:22,056][    INFO] Iter: 11800/23373, LR: 0.0000206, Loss: 0.001
+[2026-10-31 23:05:25,567][    INFO] Iter: 11900/23373, LR: 0.0000206, Loss: 0.001
+[2026-10-31 23:05:29,039][    INFO] Iter: 12000/23373, LR: 0.0000205, Loss: 0.001
+[2026-10-31 23:05:32,433][    INFO] Iter: 12100/23373, LR: 0.0000205, Loss: 0.001
+[2026-10-31 23:05:35,641][    INFO] Iter: 12200/23373, LR: 0.0000204, Loss: 0.001
+libpng error: IDAT: CRC error
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42540: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000020_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 23:05:38,713][    INFO] Iter: 12300/23373, LR: 0.0000204, Loss: 0.002
+[2026-10-31 23:05:42,447][    INFO] Iter: 12400/23373, LR: 0.0000203, Loss: 0.000
+[2026-10-31 23:05:45,497][    INFO] Iter: 12500/23373, LR: 0.0000202, Loss: 0.003
+[2026-10-31 23:05:50,238][    INFO] Iter: 12600/23373, LR: 0.0000202, Loss: 0.001
+[2026-10-31 23:05:53,796][    INFO] Iter: 12700/23373, LR: 0.0000201, Loss: 0.001
+[2026-10-31 23:05:57,650][    INFO] Iter: 12800/23373, LR: 0.0000201, Loss: 0.000
+[2026-10-31 23:06:01,107][    INFO] Iter: 12900/23373, LR: 0.0000200, Loss: 0.000
+[2026-10-31 23:06:04,314][    INFO] Iter: 13000/23373, LR: 0.0000200, Loss: 0.001
+[2026-10-31 23:06:07,687][    INFO] Iter: 13100/23373, LR: 0.0000199, Loss: 0.001
+[2026-10-31 23:06:11,089][    INFO] Iter: 13200/23373, LR: 0.0000199, Loss: 0.000
+[2026-10-31 23:06:14,519][    INFO] Iter: 13300/23373, LR: 0.0000198, Loss: 0.001
+[2026-10-31 23:06:18,203][    INFO] Iter: 13400/23373, LR: 0.0000198, Loss: 0.001
+[2026-10-31 23:06:21,663][    INFO] Iter: 13500/23373, LR: 0.0000197, Loss: 0.001
+[2026-10-31 23:06:29,426][    INFO] Iter: 13600/23373, LR: 0.0000197, Loss: 0.001
+[2026-10-31 23:06:42,628][    INFO] Iter: 13700/23373, LR: 0.0000196, Loss: 0.000
+[2026-10-31 23:06:46,439][    INFO] Iter: 13800/23373, LR: 0.0000196, Loss: 0.001
+[2026-10-31 23:06:50,771][    INFO] Iter: 13900/23373, LR: 0.0000195, Loss: 0.003
+[2026-10-31 23:06:54,580][    INFO] Iter: 14000/23373, LR: 0.0000194, Loss: 0.001
+[2026-10-31 23:06:58,891][    INFO] Iter: 14100/23373, LR: 0.0000194, Loss: 0.001
+[2026-10-31 23:07:04,750][    INFO] Iter: 14200/23373, LR: 0.0000193, Loss: 0.001
+[2026-10-31 23:07:09,846][    INFO] Iter: 14300/23373, LR: 0.0000193, Loss: 0.000
+[2026-10-31 23:07:14,649][    INFO] Iter: 14400/23373, LR: 0.0000192, Loss: 0.001
+[2026-10-31 23:07:20,136][    INFO] Iter: 14500/23373, LR: 0.0000192, Loss: 0.001
+[2026-10-31 23:07:25,175][    INFO] Iter: 14600/23373, LR: 0.0000191, Loss: 0.001
+[2026-10-31 23:07:30,725][    INFO] Iter: 14700/23373, LR: 0.0000191, Loss: 0.001
+[2026-10-31 23:07:36,045][    INFO] Iter: 14800/23373, LR: 0.0000190, Loss: 0.004
+[2026-10-31 23:07:41,806][    INFO] Iter: 14900/23373, LR: 0.0000190, Loss: 0.001
+[2026-10-31 23:07:48,473][    INFO] Iter: 15000/23373, LR: 0.0000189, Loss: 0.000
+[2026-10-31 23:07:54,388][    INFO] Iter: 15100/23373, LR: 0.0000189, Loss: 0.001
+[2026-10-31 23:08:00,130][    INFO] Iter: 15200/23373, LR: 0.0000188, Loss: 0.001
+[2026-10-31 23:08:05,679][    INFO] Iter: 15300/23373, LR: 0.0000188, Loss: 0.000
+[2026-10-31 23:08:11,315][    INFO] Iter: 15400/23373, LR: 0.0000187, Loss: 0.001
+[2026-10-31 23:08:16,788][    INFO] Iter: 15500/23373, LR: 0.0000186, Loss: 0.001
+[2026-10-31 23:08:22,476][    INFO] Iter: 15600/23373, LR: 0.0000186, Loss: 0.007
+[2026-10-31 23:08:28,027][    INFO] Iter: 15700/23373, LR: 0.0000185, Loss: 0.000
+[2026-10-31 23:08:33,988][    INFO] Iter: 15800/23373, LR: 0.0000185, Loss: 0.001
+[2026-10-31 23:08:39,622][    INFO] Iter: 15900/23373, LR: 0.0000184, Loss: 0.001
+[2026-10-31 23:08:44,936][    INFO] Iter: 16000/23373, LR: 0.0000184, Loss: 0.001
+[2026-10-31 23:08:51,021][    INFO] Iter: 16100/23373, LR: 0.0000183, Loss: 0.001
+[2026-10-31 23:08:56,969][    INFO] Iter: 16200/23373, LR: 0.0000183, Loss: 0.013
+[2026-10-31 23:09:02,566][    INFO] Iter: 16300/23373, LR: 0.0000182, Loss: 0.000
+[2026-10-31 23:09:08,243][    INFO] Iter: 16400/23373, LR: 0.0000182, Loss: 0.001
+[2026-10-31 23:09:13,348][    INFO] Iter: 16500/23373, LR: 0.0000181, Loss: 0.001
+[2026-10-31 23:09:18,688][    INFO] Iter: 16600/23373, LR: 0.0000181, Loss: 0.001
+[2026-10-31 23:09:25,606][    INFO] Iter: 16700/23373, LR: 0.0000180, Loss: 0.001
+[2026-10-31 23:09:31,107][    INFO] Iter: 16800/23373, LR: 0.0000179, Loss: 0.001
+[2026-10-31 23:09:37,392][    INFO] Iter: 16900/23373, LR: 0.0000179, Loss: 0.003
+[2026-10-31 23:09:43,648][    INFO] Iter: 17000/23373, LR: 0.0000178, Loss: 0.005
+[2026-10-31 23:09:49,658][    INFO] Iter: 17100/23373, LR: 0.0000178, Loss: 0.001
+[2026-10-31 23:09:55,581][    INFO] Iter: 17200/23373, LR: 0.0000177, Loss: 0.004
+[2026-10-31 23:10:01,012][    INFO] Iter: 17300/23373, LR: 0.0000177, Loss: 0.004
+[2026-10-31 23:10:07,378][    INFO] Iter: 17400/23373, LR: 0.0000176, Loss: 0.000
+[2026-10-31 23:10:13,360][    INFO] Iter: 17500/23373, LR: 0.0000176, Loss: 0.001
+[2026-10-31 23:10:19,074][    INFO] Iter: 17600/23373, LR: 0.0000175, Loss: 0.001
+[2026-10-31 23:10:25,014][    INFO] Iter: 17700/23373, LR: 0.0000175, Loss: 0.003
+[2026-10-31 23:10:30,883][    INFO] Iter: 17800/23373, LR: 0.0000174, Loss: 0.001
+[2026-10-31 23:10:36,377][    INFO] Iter: 17900/23373, LR: 0.0000174, Loss: 0.001
+[2026-10-31 23:10:41,984][    INFO] Iter: 18000/23373, LR: 0.0000173, Loss: 0.003
+[2026-10-31 23:10:48,310][    INFO] Iter: 18100/23373, LR: 0.0000172, Loss: 0.000
+[2026-10-31 23:10:54,076][    INFO] Iter: 18200/23373, LR: 0.0000172, Loss: 0.023
+[2026-10-31 23:10:59,512][    INFO] Iter: 18300/23373, LR: 0.0000171, Loss: 0.001
+[2026-10-31 23:11:05,779][    INFO] Iter: 18400/23373, LR: 0.0000171, Loss: 0.001
+[2026-10-31 23:11:11,194][    INFO] Iter: 18500/23373, LR: 0.0000170, Loss: 0.002
+[2026-10-31 23:11:16,628][    INFO] Iter: 18600/23373, LR: 0.0000170, Loss: 0.002
+[2026-10-31 23:11:21,931][    INFO] Iter: 18700/23373, LR: 0.0000169, Loss: 0.001
+[2026-10-31 23:11:27,471][    INFO] Iter: 18800/23373, LR: 0.0000169, Loss: 0.001
+[2026-10-31 23:11:33,035][    INFO] Iter: 18900/23373, LR: 0.0000168, Loss: 0.002
+[2026-10-31 23:11:38,696][    INFO] Iter: 19000/23373, LR: 0.0000168, Loss: 0.000
+[2026-10-31 23:11:44,315][    INFO] Iter: 19100/23373, LR: 0.0000167, Loss: 0.001
+[2026-10-31 23:11:50,999][    INFO] Iter: 19200/23373, LR: 0.0000166, Loss: 0.000
+[2026-10-31 23:11:56,682][    INFO] Iter: 19300/23373, LR: 0.0000166, Loss: 0.003
+[2026-10-31 23:12:02,473][    INFO] Iter: 19400/23373, LR: 0.0000165, Loss: 0.001
+[2026-10-31 23:12:08,652][    INFO] Iter: 19500/23373, LR: 0.0000165, Loss: 0.002
+[2026-10-31 23:12:14,117][    INFO] Iter: 19600/23373, LR: 0.0000164, Loss: 0.002
+[2026-10-31 23:12:19,482][    INFO] Iter: 19700/23373, LR: 0.0000164, Loss: 0.002
+[2026-10-31 23:12:24,939][    INFO] Iter: 19800/23373, LR: 0.0000163, Loss: 0.001
+[2026-10-31 23:12:30,401][    INFO] Iter: 19900/23373, LR: 0.0000163, Loss: 0.019
+[2026-10-31 23:12:35,857][    INFO] Iter: 20000/23373, LR: 0.0000162, Loss: 0.001
+[2026-10-31 23:12:41,538][    INFO] Iter: 20100/23373, LR: 0.0000162, Loss: 0.010
+[2026-10-31 23:12:47,416][    INFO] Iter: 20200/23373, LR: 0.0000161, Loss: 0.000
+[2026-10-31 23:12:52,850][    INFO] Iter: 20300/23373, LR: 0.0000160, Loss: 0.002
+[2026-10-31 23:12:58,350][    INFO] Iter: 20400/23373, LR: 0.0000160, Loss: 0.002
+[2026-10-31 23:13:03,569][    INFO] Iter: 20500/23373, LR: 0.0000159, Loss: 0.000
+[2026-10-31 23:13:08,897][    INFO] Iter: 20600/23373, LR: 0.0000159, Loss: 0.000
+[2026-10-31 23:13:14,155][    INFO] Iter: 20700/23373, LR: 0.0000158, Loss: 0.001
+[2026-10-31 23:13:20,201][    INFO] Iter: 20800/23373, LR: 0.0000158, Loss: 0.001
+[2026-10-31 23:13:37,016][    INFO] Iter: 20900/23373, LR: 0.0000157, Loss: 0.001
+[2026-10-31 23:15:17,274][    INFO] Iter: 21000/23373, LR: 0.0000157, Loss: 0.001
+[2026-10-31 23:16:36,422][    INFO] Iter: 21100/23373, LR: 0.0000156, Loss: 0.001
+[2026-10-31 23:16:43,987][    INFO] Iter: 21200/23373, LR: 0.0000156, Loss: 0.002
+[2026-10-31 23:16:51,596][    INFO] Iter: 21300/23373, LR: 0.0000155, Loss: 0.002
+[2026-10-31 23:16:58,912][    INFO] Iter: 21400/23373, LR: 0.0000154, Loss: 0.001
+[2026-10-31 23:17:05,899][    INFO] Iter: 21500/23373, LR: 0.0000154, Loss: 0.002
+[2026-10-31 23:17:13,192][    INFO] Iter: 21600/23373, LR: 0.0000153, Loss: 0.001
+[2026-10-31 23:17:19,787][    INFO] Iter: 21700/23373, LR: 0.0000153, Loss: 0.001
+[2026-10-31 23:17:25,603][    INFO] Iter: 21800/23373, LR: 0.0000152, Loss: 0.000
+[2026-10-31 23:17:31,676][    INFO] Iter: 21900/23373, LR: 0.0000152, Loss: 0.001
+[2026-10-31 23:17:38,217][    INFO] Iter: 22000/23373, LR: 0.0000151, Loss: 0.000
+[2026-10-31 23:17:46,640][    INFO] Iter: 22100/23373, LR: 0.0000151, Loss: 0.001
+[2026-10-31 23:17:53,842][    INFO] Iter: 22200/23373, LR: 0.0000150, Loss: 0.001
+[2026-10-31 23:18:03,814][    INFO] Iter: 22300/23373, LR: 0.0000150, Loss: 0.001
+[2026-10-31 23:18:14,340][    INFO] Iter: 22400/23373, LR: 0.0000149, Loss: 0.001
+[2026-10-31 23:18:24,721][    INFO] Iter: 22500/23373, LR: 0.0000148, Loss: 0.000
+[2026-10-31 23:18:32,914][    INFO] Iter: 22600/23373, LR: 0.0000148, Loss: 0.004
+[2026-10-31 23:18:39,187][    INFO] Iter: 22700/23373, LR: 0.0000147, Loss: 0.001
+[2026-10-31 23:18:47,673][    INFO] Iter: 22800/23373, LR: 0.0000147, Loss: 0.002
+[2026-10-31 23:18:53,690][    INFO] Iter: 22900/23373, LR: 0.0000146, Loss: 0.005
+[2026-10-31 23:18:59,258][    INFO] Iter: 23000/23373, LR: 0.0000146, Loss: 0.004
+[2026-10-31 23:19:04,709][    INFO] Iter: 23100/23373, LR: 0.0000145, Loss: 0.000
+[2026-10-31 23:19:17,197][    INFO] Iter: 23200/23373, LR: 0.0000145, Loss: 0.001
+[2026-10-31 23:19:28,725][    INFO] Iter: 23300/23373, LR: 0.0000144, Loss: 0.001
+[2026-10-31 23:40:42,280][    INFO] ==========================================================================================
+[2026-10-31 23:40:42,280][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2026-10-31 23:40:42,281][    INFO]    0.973,    0.997,    0.999,    0.060,    0.094,    1.000,    0.080,    0.026,    0.080
+[2026-10-31 23:40:42,281][    INFO] ==========================================================================================
+[2026-10-31 23:40:43,961][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/latest.pth
+[2026-10-31 23:40:46,353][    INFO] Best checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/best.pth
+[2026-10-31 23:40:46,353][    INFO] New best checkpoint saved! Metrics: {'d1': 0.9730332493782043, 'd2': 0.9971192479133606, 'd3': 0.9994104504585266, 'abs_rel': 0.060052819550037384, 'sq_rel': 0.09440155327320099, 'rmse': 1.000353217124939, 'rmse_log': 0.08045350015163422, 'log10': 0.02594304084777832, 'silog': 0.08040489256381989}
+[2026-10-31 23:40:46,353][    INFO] ===========> Epoch: 3/4, d1: 0.973, d2: 0.997, d3: 0.999
+[2026-10-31 23:40:46,353][    INFO] ===========> Epoch: 3/4, abs_rel: 0.060, sq_rel: 0.094, rmse: 1.000, rmse_log: 0.080, log10: 0.026, silog: 0.080
+
+[2026-10-31 23:40:46,599][    INFO] Iter: 0/23373, LR: 0.0000144, Loss: 0.006
+[2026-10-31 23:40:50,730][    INFO] Iter: 100/23373, LR: 0.0000143, Loss: 0.002
+[2026-10-31 23:40:55,642][    INFO] Iter: 200/23373, LR: 0.0000142, Loss: 0.002
+[2026-10-31 23:41:00,475][    INFO] Iter: 300/23373, LR: 0.0000142, Loss: 0.002
+[2026-10-31 23:41:04,862][    INFO] Iter: 400/23373, LR: 0.0000141, Loss: 0.001
+[2026-10-31 23:41:09,974][    INFO] Iter: 500/23373, LR: 0.0000141, Loss: 0.000
+[2026-10-31 23:41:15,055][    INFO] Iter: 600/23373, LR: 0.0000140, Loss: 0.001
+[2026-10-31 23:41:19,641][    INFO] Iter: 700/23373, LR: 0.0000140, Loss: 0.001
+[2026-10-31 23:41:24,443][    INFO] Iter: 800/23373, LR: 0.0000139, Loss: 0.001
+[2026-10-31 23:41:29,183][    INFO] Iter: 900/23373, LR: 0.0000139, Loss: 0.001
+[2026-10-31 23:41:34,167][    INFO] Iter: 1000/23373, LR: 0.0000138, Loss: 0.002
+[2026-10-31 23:41:38,765][    INFO] Iter: 1100/23373, LR: 0.0000137, Loss: 0.001
+[2026-10-31 23:41:43,296][    INFO] Iter: 1200/23373, LR: 0.0000137, Loss: 0.001
+[2026-10-31 23:41:48,429][    INFO] Iter: 1300/23373, LR: 0.0000136, Loss: 0.000
+[2026-10-31 23:41:52,939][    INFO] Iter: 1400/23373, LR: 0.0000136, Loss: 0.001
+[2026-10-31 23:41:57,730][    INFO] Iter: 1500/23373, LR: 0.0000135, Loss: 0.001
+[2026-10-31 23:42:02,271][    INFO] Iter: 1600/23373, LR: 0.0000135, Loss: 0.001
+[2026-10-31 23:42:07,029][    INFO] Iter: 1700/23373, LR: 0.0000134, Loss: 0.001
+[2026-10-31 23:42:11,819][    INFO] Iter: 1800/23373, LR: 0.0000134, Loss: 0.001
+[2026-10-31 23:42:16,374][    INFO] Iter: 1900/23373, LR: 0.0000133, Loss: 0.000
+[2026-10-31 23:42:21,500][    INFO] Iter: 2000/23373, LR: 0.0000132, Loss: 0.001
+[2026-10-31 23:42:26,307][    INFO] Iter: 2100/23373, LR: 0.0000132, Loss: 0.001
+[2026-10-31 23:42:30,917][    INFO] Iter: 2200/23373, LR: 0.0000131, Loss: 0.001
+[2026-10-31 23:42:35,624][    INFO] Iter: 2300/23373, LR: 0.0000131, Loss: 0.001
+[2026-10-31 23:42:39,759][    INFO] Iter: 2400/23373, LR: 0.0000130, Loss: 0.001
+[2026-10-31 23:42:44,759][    INFO] Iter: 2500/23373, LR: 0.0000130, Loss: 0.015
+[2026-10-31 23:42:49,344][    INFO] Iter: 2600/23373, LR: 0.0000129, Loss: 0.000
+[2026-10-31 23:42:53,819][    INFO] Iter: 2700/23373, LR: 0.0000129, Loss: 0.001
+[2026-10-31 23:42:58,342][    INFO] Iter: 2800/23373, LR: 0.0000128, Loss: 0.000
+[2026-10-31 23:43:03,066][    INFO] Iter: 2900/23373, LR: 0.0000127, Loss: 0.001
+[2026-10-31 23:43:06,926][    INFO] Iter: 3000/23373, LR: 0.0000127, Loss: 0.006
+[2026-10-31 23:43:12,219][    INFO] Iter: 3100/23373, LR: 0.0000126, Loss: 0.002
+[2026-10-31 23:43:17,230][    INFO] Iter: 3200/23373, LR: 0.0000126, Loss: 0.000
+[2026-10-31 23:43:21,828][    INFO] Iter: 3300/23373, LR: 0.0000125, Loss: 0.001
+[2026-10-31 23:43:26,453][    INFO] Iter: 3400/23373, LR: 0.0000125, Loss: 0.000
+[2026-10-31 23:43:31,537][    INFO] Iter: 3500/23373, LR: 0.0000124, Loss: 0.001
+[2026-10-31 23:43:35,355][    INFO] Iter: 3600/23373, LR: 0.0000124, Loss: 0.000
+[2026-10-31 23:43:39,673][    INFO] Iter: 3700/23373, LR: 0.0000123, Loss: 0.001
+[2026-10-31 23:43:44,568][    INFO] Iter: 3800/23373, LR: 0.0000122, Loss: 0.001
+[2026-10-31 23:43:49,115][    INFO] Iter: 3900/23373, LR: 0.0000122, Loss: 0.000
+[2026-10-31 23:43:54,093][    INFO] Iter: 4000/23373, LR: 0.0000121, Loss: 0.003
+[2026-10-31 23:43:58,585][    INFO] Iter: 4100/23373, LR: 0.0000121, Loss: 0.000
+[2026-10-31 23:44:04,103][    INFO] Iter: 4200/23373, LR: 0.0000120, Loss: 0.002
+[2026-10-31 23:44:09,061][    INFO] Iter: 4300/23373, LR: 0.0000120, Loss: 0.000
+[2026-10-31 23:44:14,228][    INFO] Iter: 4400/23373, LR: 0.0000119, Loss: 0.001
+[2026-10-31 23:44:19,515][    INFO] Iter: 4500/23373, LR: 0.0000118, Loss: 0.001
+[2026-10-31 23:44:23,880][    INFO] Iter: 4600/23373, LR: 0.0000118, Loss: 0.000
+[2026-10-31 23:44:28,773][    INFO] Iter: 4700/23373, LR: 0.0000117, Loss: 0.011
+[2026-10-31 23:44:33,193][    INFO] Iter: 4800/23373, LR: 0.0000117, Loss: 0.003
+[2026-10-31 23:44:38,393][    INFO] Iter: 4900/23373, LR: 0.0000116, Loss: 0.002
+[2026-10-31 23:44:43,419][    INFO] Iter: 5000/23373, LR: 0.0000116, Loss: 0.001
+[2026-10-31 23:44:48,204][    INFO] Iter: 5100/23373, LR: 0.0000115, Loss: 0.001
+[2026-10-31 23:44:52,890][    INFO] Iter: 5200/23373, LR: 0.0000114, Loss: 0.001
+[2026-10-31 23:44:58,492][    INFO] Iter: 5300/23373, LR: 0.0000114, Loss: 0.002
+[2026-10-31 23:45:03,524][    INFO] Iter: 5400/23373, LR: 0.0000113, Loss: 0.001
+[2026-10-31 23:45:08,359][    INFO] Iter: 5500/23373, LR: 0.0000113, Loss: 0.002
+[2026-10-31 23:45:13,406][    INFO] Iter: 5600/23373, LR: 0.0000112, Loss: 0.003
+[2026-10-31 23:45:18,221][    INFO] Iter: 5700/23373, LR: 0.0000112, Loss: 0.001
+[2026-10-31 23:45:22,661][    INFO] Iter: 5800/23373, LR: 0.0000111, Loss: 0.001
+[2026-10-31 23:45:27,474][    INFO] Iter: 5900/23373, LR: 0.0000111, Loss: 0.000
+[2026-10-31 23:45:32,918][    INFO] Iter: 6000/23373, LR: 0.0000110, Loss: 0.002
+[2026-10-31 23:45:37,746][    INFO] Iter: 6100/23373, LR: 0.0000109, Loss: 0.001
+[2026-10-31 23:45:42,364][    INFO] Iter: 6200/23373, LR: 0.0000109, Loss: 0.001
+[2026-10-31 23:45:47,098][    INFO] Iter: 6300/23373, LR: 0.0000108, Loss: 0.003
+[2026-10-31 23:45:52,211][    INFO] Iter: 6400/23373, LR: 0.0000108, Loss: 0.000
+[2026-10-31 23:45:56,957][    INFO] Iter: 6500/23373, LR: 0.0000107, Loss: 0.001
+[2026-10-31 23:46:01,452][    INFO] Iter: 6600/23373, LR: 0.0000107, Loss: 0.001
+[2026-10-31 23:46:06,053][    INFO] Iter: 6700/23373, LR: 0.0000106, Loss: 0.000
+[2026-10-31 23:46:10,546][    INFO] Iter: 6800/23373, LR: 0.0000105, Loss: 0.002
+[2026-10-31 23:46:15,644][    INFO] Iter: 6900/23373, LR: 0.0000105, Loss: 0.001
+[2026-10-31 23:46:20,353][    INFO] Iter: 7000/23373, LR: 0.0000104, Loss: 0.011
+[2026-10-31 23:46:25,736][    INFO] Iter: 7100/23373, LR: 0.0000104, Loss: 0.000
+[2026-10-31 23:46:30,662][    INFO] Iter: 7200/23373, LR: 0.0000103, Loss: 0.001
+[2026-10-31 23:46:35,529][    INFO] Iter: 7300/23373, LR: 0.0000103, Loss: 0.001
+[2026-10-31 23:46:39,932][    INFO] Iter: 7400/23373, LR: 0.0000102, Loss: 0.001
+[2026-10-31 23:46:44,849][    INFO] Iter: 7500/23373, LR: 0.0000101, Loss: 0.001
+[2026-10-31 23:46:50,177][    INFO] Iter: 7600/23373, LR: 0.0000101, Loss: 0.002
+[2026-10-31 23:46:54,794][    INFO] Iter: 7700/23373, LR: 0.0000100, Loss: 0.002
+[2026-10-31 23:46:59,827][    INFO] Iter: 7800/23373, LR: 0.0000100, Loss: 0.002
+libpng error: IDAT: CRC error
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42540: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000020_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-10-31 23:47:04,043][    INFO] Iter: 7900/23373, LR: 0.0000099, Loss: 0.000
+[2026-10-31 23:47:08,371][    INFO] Iter: 8000/23373, LR: 0.0000098, Loss: 0.001
+[2026-10-31 23:47:13,051][    INFO] Iter: 8100/23373, LR: 0.0000098, Loss: 0.006
+[2026-10-31 23:47:17,742][    INFO] Iter: 8200/23373, LR: 0.0000097, Loss: 0.001
+[2026-10-31 23:47:22,044][    INFO] Iter: 8300/23373, LR: 0.0000097, Loss: 0.001
+[2026-10-31 23:47:26,543][    INFO] Iter: 8400/23373, LR: 0.0000096, Loss: 0.001
+[2026-10-31 23:47:31,293][    INFO] Iter: 8500/23373, LR: 0.0000096, Loss: 0.001
+[2026-10-31 23:47:36,021][    INFO] Iter: 8600/23373, LR: 0.0000095, Loss: 0.001
+[2026-10-31 23:47:40,413][    INFO] Iter: 8700/23373, LR: 0.0000094, Loss: 0.001
+[2026-10-31 23:47:45,248][    INFO] Iter: 8800/23373, LR: 0.0000094, Loss: 0.001
+[2026-10-31 23:47:49,963][    INFO] Iter: 8900/23373, LR: 0.0000093, Loss: 0.000
+[2026-10-31 23:47:54,997][    INFO] Iter: 9000/23373, LR: 0.0000093, Loss: 0.001
+[2026-10-31 23:47:59,327][    INFO] Iter: 9100/23373, LR: 0.0000092, Loss: 0.001
+[2026-10-31 23:48:03,911][    INFO] Iter: 9200/23373, LR: 0.0000092, Loss: 0.000
+[2026-10-31 23:48:08,620][    INFO] Iter: 9300/23373, LR: 0.0000091, Loss: 0.001
+[2026-10-31 23:48:12,946][    INFO] Iter: 9400/23373, LR: 0.0000090, Loss: 0.001
+[2026-10-31 23:48:17,638][    INFO] Iter: 9500/23373, LR: 0.0000090, Loss: 0.002
+[2026-10-31 23:48:22,772][    INFO] Iter: 9600/23373, LR: 0.0000089, Loss: 0.001
+[2026-10-31 23:48:27,220][    INFO] Iter: 9700/23373, LR: 0.0000089, Loss: 0.029
+[2026-10-31 23:48:32,228][    INFO] Iter: 9800/23373, LR: 0.0000088, Loss: 0.000
+[2026-10-31 23:48:36,812][    INFO] Iter: 9900/23373, LR: 0.0000087, Loss: 0.001
+[2026-10-31 23:48:41,791][    INFO] Iter: 10000/23373, LR: 0.0000087, Loss: 0.002
+[2026-10-31 23:48:46,842][    INFO] Iter: 10100/23373, LR: 0.0000086, Loss: 0.002
+[2026-10-31 23:48:51,817][    INFO] Iter: 10200/23373, LR: 0.0000086, Loss: 0.001
+[2026-10-31 23:48:56,756][    INFO] Iter: 10300/23373, LR: 0.0000085, Loss: 0.001
+[2026-10-31 23:49:01,581][    INFO] Iter: 10400/23373, LR: 0.0000085, Loss: 0.001
+[2026-10-31 23:49:05,859][    INFO] Iter: 10500/23373, LR: 0.0000084, Loss: 0.001
+[2026-10-31 23:49:11,005][    INFO] Iter: 10600/23373, LR: 0.0000083, Loss: 0.001
+[2026-10-31 23:49:15,843][    INFO] Iter: 10700/23373, LR: 0.0000083, Loss: 0.001
+[2026-10-31 23:49:20,924][    INFO] Iter: 10800/23373, LR: 0.0000082, Loss: 0.001
+[2026-10-31 23:49:25,912][    INFO] Iter: 10900/23373, LR: 0.0000082, Loss: 0.001
+[2026-10-31 23:49:30,561][    INFO] Iter: 11000/23373, LR: 0.0000081, Loss: 0.001
+[2026-10-31 23:49:35,557][    INFO] Iter: 11100/23373, LR: 0.0000080, Loss: 0.001
+[2026-10-31 23:49:40,200][    INFO] Iter: 11200/23373, LR: 0.0000080, Loss: 0.001
+[2026-10-31 23:49:45,226][    INFO] Iter: 11300/23373, LR: 0.0000079, Loss: 0.001
+[2026-10-31 23:49:50,773][    INFO] Iter: 11400/23373, LR: 0.0000079, Loss: 0.001
+[2026-10-31 23:49:56,006][    INFO] Iter: 11500/23373, LR: 0.0000078, Loss: 0.001
+[2026-10-31 23:50:00,698][    INFO] Iter: 11600/23373, LR: 0.0000077, Loss: 0.007
+[2026-10-31 23:50:06,176][    INFO] Iter: 11700/23373, LR: 0.0000077, Loss: 0.001
+[2026-10-31 23:50:11,772][    INFO] Iter: 11800/23373, LR: 0.0000076, Loss: 0.002
+[2026-10-31 23:50:16,741][    INFO] Iter: 11900/23373, LR: 0.0000076, Loss: 0.000
+[2026-10-31 23:50:22,232][    INFO] Iter: 12000/23373, LR: 0.0000075, Loss: 0.001
+[2026-10-31 23:50:27,151][    INFO] Iter: 12100/23373, LR: 0.0000074, Loss: 0.000
+[2026-10-31 23:50:32,939][    INFO] Iter: 12200/23373, LR: 0.0000074, Loss: 0.001
+[2026-10-31 23:50:37,339][    INFO] Iter: 12300/23373, LR: 0.0000073, Loss: 0.001
+[2026-10-31 23:50:42,245][    INFO] Iter: 12400/23373, LR: 0.0000073, Loss: 0.000
+[2026-10-31 23:50:47,422][    INFO] Iter: 12500/23373, LR: 0.0000072, Loss: 0.001
+[2026-10-31 23:50:51,905][    INFO] Iter: 12600/23373, LR: 0.0000072, Loss: 0.001
+[2026-10-31 23:50:57,078][    INFO] Iter: 12700/23373, LR: 0.0000071, Loss: 0.002
+[2026-10-31 23:51:01,780][    INFO] Iter: 12800/23373, LR: 0.0000070, Loss: 0.002
+[2026-10-31 23:51:06,555][    INFO] Iter: 12900/23373, LR: 0.0000070, Loss: 0.002
+[2026-10-31 23:51:11,050][    INFO] Iter: 13000/23373, LR: 0.0000069, Loss: 0.002
+[2026-10-31 23:51:16,241][    INFO] Iter: 13100/23373, LR: 0.0000069, Loss: 0.001
+[2026-10-31 23:51:21,154][    INFO] Iter: 13200/23373, LR: 0.0000068, Loss: 0.001
+[2026-10-31 23:51:25,728][    INFO] Iter: 13300/23373, LR: 0.0000067, Loss: 0.001
+[2026-10-31 23:51:30,623][    INFO] Iter: 13400/23373, LR: 0.0000067, Loss: 0.001
+[2026-10-31 23:51:35,767][    INFO] Iter: 13500/23373, LR: 0.0000066, Loss: 0.001
+[2026-10-31 23:51:40,780][    INFO] Iter: 13600/23373, LR: 0.0000066, Loss: 0.002
+[2026-10-31 23:51:45,505][    INFO] Iter: 13700/23373, LR: 0.0000065, Loss: 0.002
+[2026-10-31 23:51:50,788][    INFO] Iter: 13800/23373, LR: 0.0000064, Loss: 0.001
+[2026-10-31 23:51:55,446][    INFO] Iter: 13900/23373, LR: 0.0000064, Loss: 0.001
+[2026-10-31 23:52:00,833][    INFO] Iter: 14000/23373, LR: 0.0000063, Loss: 0.002
+[2026-10-31 23:52:05,136][    INFO] Iter: 14100/23373, LR: 0.0000062, Loss: 0.001
+[2026-10-31 23:52:09,931][    INFO] Iter: 14200/23373, LR: 0.0000062, Loss: 0.001
+[2026-10-31 23:52:15,337][    INFO] Iter: 14300/23373, LR: 0.0000061, Loss: 0.001
+[2026-10-31 23:52:20,191][    INFO] Iter: 14400/23373, LR: 0.0000061, Loss: 0.003
+[2026-10-31 23:52:25,203][    INFO] Iter: 14500/23373, LR: 0.0000060, Loss: 0.001
+[2026-10-31 23:52:30,108][    INFO] Iter: 14600/23373, LR: 0.0000059, Loss: 0.000
+[2026-10-31 23:52:36,077][    INFO] Iter: 14700/23373, LR: 0.0000059, Loss: 0.001
+[2026-10-31 23:52:41,562][    INFO] Iter: 14800/23373, LR: 0.0000058, Loss: 0.001
+[2026-10-31 23:52:46,600][    INFO] Iter: 14900/23373, LR: 0.0000058, Loss: 0.001
+[2026-10-31 23:52:51,777][    INFO] Iter: 15000/23373, LR: 0.0000057, Loss: 0.000
+[2026-10-31 23:52:56,275][    INFO] Iter: 15100/23373, LR: 0.0000056, Loss: 0.001
+[2026-10-31 23:53:01,182][    INFO] Iter: 15200/23373, LR: 0.0000056, Loss: 0.001
+[2026-10-31 23:53:06,633][    INFO] Iter: 15300/23373, LR: 0.0000055, Loss: 0.001
+[2026-10-31 23:53:11,823][    INFO] Iter: 15400/23373, LR: 0.0000055, Loss: 0.005
+[2026-10-31 23:53:16,926][    INFO] Iter: 15500/23373, LR: 0.0000054, Loss: 0.018
+[2026-10-31 23:53:22,256][    INFO] Iter: 15600/23373, LR: 0.0000053, Loss: 0.003
+[2026-10-31 23:53:27,410][    INFO] Iter: 15700/23373, LR: 0.0000053, Loss: 0.002
+[2026-10-31 23:53:32,348][    INFO] Iter: 15800/23373, LR: 0.0000052, Loss: 0.001
+[2026-10-31 23:53:38,406][    INFO] Iter: 15900/23373, LR: 0.0000051, Loss: 0.001
+[2026-10-31 23:53:43,672][    INFO] Iter: 16000/23373, LR: 0.0000051, Loss: 0.001
+[2026-10-31 23:53:49,191][    INFO] Iter: 16100/23373, LR: 0.0000050, Loss: 0.001
+[2026-10-31 23:53:54,972][    INFO] Iter: 16200/23373, LR: 0.0000050, Loss: 0.000
+[2026-10-31 23:54:00,235][    INFO] Iter: 16300/23373, LR: 0.0000049, Loss: 0.004
+[2026-10-31 23:54:05,433][    INFO] Iter: 16400/23373, LR: 0.0000048, Loss: 0.001
+[2026-10-31 23:54:10,764][    INFO] Iter: 16500/23373, LR: 0.0000048, Loss: 0.000
+[2026-10-31 23:54:16,412][    INFO] Iter: 16600/23373, LR: 0.0000047, Loss: 0.001
+[2026-10-31 23:54:21,307][    INFO] Iter: 16700/23373, LR: 0.0000046, Loss: 0.000
+[2026-10-31 23:54:26,315][    INFO] Iter: 16800/23373, LR: 0.0000046, Loss: 0.002
+[2026-10-31 23:54:31,203][    INFO] Iter: 16900/23373, LR: 0.0000045, Loss: 0.001
+[2026-10-31 23:54:36,386][    INFO] Iter: 17000/23373, LR: 0.0000045, Loss: 0.001
+[2026-10-31 23:54:41,457][    INFO] Iter: 17100/23373, LR: 0.0000044, Loss: 0.000
+[2026-10-31 23:54:46,599][    INFO] Iter: 17200/23373, LR: 0.0000043, Loss: 0.001
+[2026-10-31 23:54:52,124][    INFO] Iter: 17300/23373, LR: 0.0000043, Loss: 0.035
+[2026-10-31 23:54:56,683][    INFO] Iter: 17400/23373, LR: 0.0000042, Loss: 0.001
+[2026-10-31 23:55:02,216][    INFO] Iter: 17500/23373, LR: 0.0000041, Loss: 0.000
+[2026-10-31 23:55:08,617][    INFO] Iter: 17600/23373, LR: 0.0000041, Loss: 0.001
+[2026-10-31 23:55:13,973][    INFO] Iter: 17700/23373, LR: 0.0000040, Loss: 0.001
+[2026-10-31 23:55:18,740][    INFO] Iter: 17800/23373, LR: 0.0000040, Loss: 0.001
+[2026-10-31 23:55:24,278][    INFO] Iter: 17900/23373, LR: 0.0000039, Loss: 0.000
+[2026-10-31 23:55:29,872][    INFO] Iter: 18000/23373, LR: 0.0000038, Loss: 0.001
+[2026-10-31 23:55:35,067][    INFO] Iter: 18100/23373, LR: 0.0000038, Loss: 0.001
+[2026-10-31 23:55:40,850][    INFO] Iter: 18200/23373, LR: 0.0000037, Loss: 0.001
+[2026-10-31 23:55:46,908][    INFO] Iter: 18300/23373, LR: 0.0000036, Loss: 0.000
+[2026-10-31 23:55:52,471][    INFO] Iter: 18400/23373, LR: 0.0000036, Loss: 0.000
+[2026-10-31 23:55:57,976][    INFO] Iter: 18500/23373, LR: 0.0000035, Loss: 0.002
+[2026-10-31 23:56:03,111][    INFO] Iter: 18600/23373, LR: 0.0000034, Loss: 0.003
+[2026-10-31 23:56:08,616][    INFO] Iter: 18700/23373, LR: 0.0000034, Loss: 0.001
+[2026-10-31 23:56:13,747][    INFO] Iter: 18800/23373, LR: 0.0000033, Loss: 0.012
+[2026-10-31 23:56:19,012][    INFO] Iter: 18900/23373, LR: 0.0000032, Loss: 0.006
+[2026-10-31 23:56:24,500][    INFO] Iter: 19000/23373, LR: 0.0000032, Loss: 0.001
+[2026-10-31 23:56:30,148][    INFO] Iter: 19100/23373, LR: 0.0000031, Loss: 0.001
+[2026-10-31 23:56:35,728][    INFO] Iter: 19200/23373, LR: 0.0000030, Loss: 0.003
+[2026-10-31 23:56:41,902][    INFO] Iter: 19300/23373, LR: 0.0000030, Loss: 0.001
+[2026-10-31 23:56:47,075][    INFO] Iter: 19400/23373, LR: 0.0000029, Loss: 0.009
+[2026-10-31 23:56:52,764][    INFO] Iter: 19500/23373, LR: 0.0000028, Loss: 0.000
+[2026-10-31 23:56:58,263][    INFO] Iter: 19600/23373, LR: 0.0000028, Loss: 0.001
+[2026-10-31 23:57:03,875][    INFO] Iter: 19700/23373, LR: 0.0000027, Loss: 0.000
+[2026-10-31 23:57:09,839][    INFO] Iter: 19800/23373, LR: 0.0000026, Loss: 0.001
+[2026-10-31 23:57:15,877][    INFO] Iter: 19900/23373, LR: 0.0000026, Loss: 0.008
+[2026-10-31 23:57:21,655][    INFO] Iter: 20000/23373, LR: 0.0000025, Loss: 0.001
+[2026-10-31 23:57:27,755][    INFO] Iter: 20100/23373, LR: 0.0000024, Loss: 0.001
+[2026-10-31 23:57:33,339][    INFO] Iter: 20200/23373, LR: 0.0000024, Loss: 0.002
+[2026-10-31 23:57:39,541][    INFO] Iter: 20300/23373, LR: 0.0000023, Loss: 0.003
+[2026-10-31 23:57:45,416][    INFO] Iter: 20400/23373, LR: 0.0000022, Loss: 0.001
+[2026-10-31 23:57:51,432][    INFO] Iter: 20500/23373, LR: 0.0000022, Loss: 0.001
+[2026-10-31 23:57:57,282][    INFO] Iter: 20600/23373, LR: 0.0000021, Loss: 0.001
+[2026-10-31 23:58:03,519][    INFO] Iter: 20700/23373, LR: 0.0000020, Loss: 0.000
+[2026-10-31 23:58:09,296][    INFO] Iter: 20800/23373, LR: 0.0000020, Loss: 0.001
+[2026-10-31 23:58:15,150][    INFO] Iter: 20900/23373, LR: 0.0000019, Loss: 0.000
+[2026-10-31 23:58:21,092][    INFO] Iter: 21000/23373, LR: 0.0000018, Loss: 0.001
+[2026-10-31 23:58:27,139][    INFO] Iter: 21100/23373, LR: 0.0000018, Loss: 0.010
+[2026-10-31 23:58:33,087][    INFO] Iter: 21200/23373, LR: 0.0000017, Loss: 0.001
+[2026-10-31 23:58:39,125][    INFO] Iter: 21300/23373, LR: 0.0000016, Loss: 0.000
+[2026-10-31 23:58:46,332][    INFO] Iter: 21400/23373, LR: 0.0000016, Loss: 0.002
+[2026-10-31 23:59:03,644][    INFO] Iter: 21500/23373, LR: 0.0000015, Loss: 0.001
+[2026-10-31 23:59:09,519][    INFO] Iter: 21600/23373, LR: 0.0000014, Loss: 0.001
+[2026-10-31 23:59:16,110][    INFO] Iter: 21700/23373, LR: 0.0000013, Loss: 0.001
+[2026-10-31 23:59:23,027][    INFO] Iter: 21800/23373, LR: 0.0000013, Loss: 0.001
+[2026-10-31 23:59:29,354][    INFO] Iter: 21900/23373, LR: 0.0000012, Loss: 0.003
+[2026-10-31 23:59:35,914][    INFO] Iter: 22000/23373, LR: 0.0000011, Loss: 0.002
+[2026-10-31 23:59:42,532][    INFO] Iter: 22100/23373, LR: 0.0000010, Loss: 0.001
+[2026-10-31 23:59:48,959][    INFO] Iter: 22200/23373, LR: 0.0000010, Loss: 0.001
+[2026-10-31 23:59:56,365][    INFO] Iter: 22300/23373, LR: 0.0000009, Loss: 0.001
+[2026-11-01 00:00:03,760][    INFO] Iter: 22400/23373, LR: 0.0000008, Loss: 0.006
+[2026-11-01 00:00:18,505][    INFO] Iter: 22500/23373, LR: 0.0000007, Loss: 0.001
+[2026-11-01 00:00:27,767][    INFO] Iter: 22600/23373, LR: 0.0000007, Loss: 0.001
+[2026-11-01 00:00:36,223][    INFO] Iter: 22700/23373, LR: 0.0000006, Loss: 0.001
+[2026-11-01 00:00:46,276][    INFO] Iter: 22800/23373, LR: 0.0000005, Loss: 0.000
+[2026-11-01 00:00:54,905][    INFO] Iter: 22900/23373, LR: 0.0000004, Loss: 0.001
+[2026-11-01 00:01:04,001][    INFO] Iter: 23000/23373, LR: 0.0000003, Loss: 0.001
+/home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/training_datasets.py:128: UserWarning: Skipping corrupted sample at index 42598: Could not load image: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/datasets/raw_data/CityScapes/leftImg8bit/train/aachen/aachen_000078_000019_leftImg8bit.png
+  warnings.warn(f"Skipping corrupted sample at index {index}: {e}", UserWarning)
+[2026-11-01 00:01:12,865][    INFO] Iter: 23100/23373, LR: 0.0000003, Loss: 0.001
+[2026-11-01 00:01:22,079][    INFO] Iter: 23200/23373, LR: 0.0000002, Loss: 0.001
+[2026-11-01 00:01:32,155][    INFO] Iter: 23300/23373, LR: 0.0000001, Loss: 0.001
+[2026-11-01 00:17:35,131][    INFO] ==========================================================================================
+[2026-11-01 00:17:35,131][    INFO]       d1,       d2,       d3,  abs_rel,   sq_rel,     rmse, rmse_log,    log10,    silog
+[2026-11-01 00:17:35,133][    INFO]    0.972,    0.997,    0.999,    0.061,    0.097,    1.010,    0.081,    0.026,    0.081
+[2026-11-01 00:17:35,133][    INFO] ==========================================================================================
+[2026-11-01 00:17:37,296][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/zeroshot_rerun/revised_basic_vits_vcdn/revised_basic_vits_vkitti+cityscapes+diode+nyu_intrinsics_lr5e-6_bs2_20261031_205808/latest.pth
+[2026-11-01 00:17:37,381][    INFO] TensorBoard writer closed. Training completed.
+
+EXIT_CODE=0

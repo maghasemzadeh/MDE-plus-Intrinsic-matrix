@@ -1,6 +1,6 @@
 ---
 name: thesis-editor
-description: Edit the Persian LaTeX thesis source (without rendering the PDF) when the user requests a thesis change, an academic or professional revision, or a thesis update based on project outputs or results. Apply the relevant LaTeX, academic-writing, and figure-making skills, while making only the requested thesis changes. Read project evidence as needed, but write only under thesis/; never edit thesis-gemini/ or other project folders. Every edit is written as visible review markup (green added, yellow new words, red struck removals, red-highlighted struck deletions), then the user is asked to finalize or revert it.
+description: Edit the Persian LaTeX thesis source and render the PDF with thesis/build.sh before asking for review, when the user requests a thesis change, an academic or professional revision, or a thesis update based on project outputs or results. Apply the relevant LaTeX, academic-writing, and figure-making skills, while making only the requested thesis changes. Read project evidence as needed, but write only under thesis/; never edit thesis-gemini/ or other project folders. Every edit is written as visible review markup (green added, yellow new words, red-highlighted removals and deletions with the text itself left black and readable), then the user is asked to finalize or revert it.
 ---
 
 # Thesis editor
@@ -91,9 +91,9 @@ an unmarked edit in that message.
 | Kind of change | How it must look | Macro / environment |
 |---|---|---|
 | New paragraph, section, sentence, caption, table, or figure | Green highlight | `\edadd{...}`, `edadded` env, `\edaddbox{...}`, `\edaddrow`, `\edaddcell` |
-| Edited paragraph — words removed | Red text with line-through (no highlight) | old half of `\edrep{old}{new}` |
+| Edited paragraph — words removed | Red highlight only (text stays black, no line-through) | old half of `\edrep{old}{new}` |
 | Edited paragraph — words inserted | Yellow highlight | new half of `\edrep{old}{new}`, or `\edins{...}` for a pure insertion inside an edited sentence |
-| Deleted part (sentence, paragraph, section, row) | Line-through **and** red highlight | `\eddel{...}`, `eddeleted` env, `\eddelbox{...}`, `\eddelrow` |
+| Deleted part (sentence, paragraph, section, row) | Red highlight only (text stays black, no line-through) | `\eddel{...}`, `eddeleted` env, `\eddelbox{...}`, `\eddelrow` |
 
 Rules for choosing the kind:
 
@@ -134,10 +134,24 @@ allowed under the template rules; do not reorder other packages.
 %%% \showreviewfalse همه نشانه‌ها را پنهان می‌کند (متن تازه می‌ماند، متن حذفی نه)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[normalem]{ulem}
+% در متن راست‌به‌چپ، XeTeX ترتیب جعبه‌ها را وارونه می‌کند و نوار رنگی ulem روی واژه
+% کشیده می‌شود و آن را می‌پوشاند؛ در حالت RTL ترتیب را برمی‌گردانیم تا رنگ پشت متن بماند.
+\makeatletter
+\def\UL@putbox{\ifx\UL@start\@empty \else % not inner
+   \vrule\@width\z@ \LA@penalty\@M
+   \if@RTL
+     \dimen@\wd\UL@box \box\UL@box
+     {\UL@skip\dimen@ \kern-\UL@skip \UL@leaders}%
+   \else
+     {\UL@skip\wd\UL@box \UL@leaders \kern-\UL@skip}%
+     \box\UL@box
+   \fi
+  \fi}
+\makeatother
 \definecolor{thRevAdd}{HTML}{B9F6CA}  % افزوده: سبز
 \definecolor{thRevNew}{HTML}{FFF176}  % واژه تازه در بند ویرایش‌شده: زرد
-\definecolor{thRevDel}{HTML}{D32F2F}  % متن حذفی: قرمز
-\definecolor{thRevDelBG}{HTML}{FFCDD2}% زمینه بخش حذف‌شده: قرمز روشن
+\definecolor{thRevDel}{HTML}{D32F2F}  % قرمز پررنگ (برای متن به کار نمی‌رود)
+\definecolor{thRevDelBG}{HTML}{EF9A9A}% زمینه حذف: قرمز؛ متن سیاه می‌ماند
 \newif\ifshowreview
 \showreviewtrue
 \ifshowreview
@@ -145,13 +159,13 @@ allowed under the template rules; do not reorder other packages.
  \newcommand{\edhlwith}[2]{\bgroup\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
  \newcommand{\edadd}[1]{\edhlwith{thRevAdd}{#1}}
  \newcommand{\edins}[1]{\edhlwith{thRevNew}{#1}}
- \newcommand{\edold}[1]{{\color{thRevDel}\sout{#1}}}
+ \newcommand{\edold}[1]{\edhlwith{thRevDelBG}{#1}}
  \newcommand{\edrep}[2]{\edold{#1}\ifx\relax#2\relax\else\ \edins{#2}\fi}
  % زمینه قرمز روشن + خط قرمز روی متن در یک نشانه (ulem تودرتو پشتیبانی نمی‌شود)
- \newcommand{\eddel}[1]{{\color{thRevDel}\bgroup\markoverwith{\rlap{\textcolor{thRevDelBG}{\rule[-0.55ex]{2pt}{2.6ex}}}\textcolor{thRevDel}{\rule[0.55ex]{2pt}{0.7pt}}}\ULon{#1}}}
+ \newcommand{\eddel}[1]{\edhlwith{thRevDelBG}{#1}}
  % بندها و بخش‌های افزوده/حذف‌شده؛ میان صفحه‌ها شکسته می‌شوند
  \newenvironment{edadded}{\colorlet{shadecolor}{thRevAdd}\begin{shaded}}{\end{shaded}}
- \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}\color{thRevDel}}{\end{shaded}}
+ \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}}{\end{shaded}}
  % جدول یا شکل کامل افزوده/حذف‌شده (درون محیط شناور)
  \newcommand{\edaddbox}[1]{\colorbox{thRevAdd}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
  \newcommand{\eddelbox}[1]{\colorbox{thRevDelBG}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
@@ -183,7 +197,7 @@ Usage notes:
   (they line-break but cannot contain `\par`, blank lines, `\begin…\end`, or
   display math). For whole paragraphs/sections use the `edadded` / `eddeleted`
   environments; inside `eddeleted`, also wrap each paragraph's text in `\eddel{}`
-  so it is struck through. For whole floats use `\edaddbox` / `\eddelbox` inside
+  so the red highlight is drawn behind every line. For whole floats use `\edaddbox` / `\eddelbox` inside
   the `figure`/`table` environment around the body and caption (do not put
   `shaded` inside a float).
 - Never nest the inline review macros inside each other (`ulem` cannot nest
@@ -197,8 +211,20 @@ Usage notes:
   or, for an edited equation, show old and new versions as one deleted box plus
   one added box.
 - If a source-level check shows `ulem` is incompatible with a particular construct,
-  fall back to colour only (`\textcolor{thRevDel}{...}` for removals) for that
-  construct and mention it in the report; never drop the marking silently.
+  fall back to a background-only highlight (`\colorbox{thRevDelBG}{...}` for
+  removals) for that construct and mention it in the report; never drop the
+  marking silently.
+- Removed and deleted text must stay readable: mark it **only** with the red
+  background highlight. Never colour the text itself red (`\color{thRevDel}`,
+  `\textcolor{thRevDel}`) and never add a line-through (`\sout`, strike rules).
+  If `thesis/tex/commands.tex` still has an older red-text or strike-through
+  definition of `\edold`, `\eddel`, or `eddeleted`, replace it with the block
+  above before marking new deletions.
+- The `\UL@putbox` override in the block is required: without it every inline
+  highlight (`\edadd`, `\edins`, `\edold`, `\eddel`) in Persian (RTL) text is
+  painted *over* the words and hides them. Keep it if you touch the block, and
+  when you are asked to render, look at one highlighted Persian line in the PDF
+  to confirm the text shows through.
 - The legacy yellow macros (`\edhl`, `\edpar`, `edited`, `\edhlbox`, `\edrow`,
   `\edcell`, toggle `\showedits`) belong to the earlier 2026-10-30 update. Leave
   them as they are unless the user asks to finalize/revert that update too; do not
@@ -219,7 +245,10 @@ never mix markup of different IDs inside one macro.
 
 After each marked-up update (and after the completion report), ask the user — with
 `AskUserQuestion` when available — whether they have read the marked sections,
-naming the update ID and the sections. Offer:
+naming the sections **edited in this session** and describing them in plain words
+(for example "the §4.3.3 rewrite you just asked for"); an update ID alone is not
+enough, because the user does not track the IDs. Ask only about the exact changes
+made in the current session. Offer:
 
 1. **Read — make final** (finalize),
 2. **Not accepted — revert** (revert),
@@ -227,8 +256,13 @@ naming the update ID and the sections. Offer:
 
 Never finalize or revert on your own initiative, and never treat silence or an
 unrelated reply as approval. If the user starts a new thesis request while updates
-are pending, keep the old markup and ledger entries, mark the new update with a new
-ID, and ask about all pending IDs at the end.
+are pending, keep the old markup and ledger entries and mark the new update with a
+new ID, but do **not** ask about updates left over from earlier sessions or earlier
+requests: ask only about the regions this session changed. When the session's
+change is a further edit inside a region of an older pending ID (for example a
+rewrite of text that update added), keep that ID, and still phrase the question as
+"the changes made now" in that section, never as the whole older update. Older
+pending entries stay in the ledger untouched until the user brings them up.
 
 ### Finalize (user read and accepted)
 
@@ -368,19 +402,27 @@ when an existing command or option already provides the needed behavior. If a
 template-level change is unavoidable, explain it in the task summary and review all
 affected source files after the change.
 
-## No PDF rendering
+## Render the PDF before asking for review
 
-The user renders and updates `thesis/main.pdf` themselves. Never run
-`./thesis/build.sh`, `latexmk`, `xelatex`, or any other command that regenerates
-`thesis/main.pdf` (or `.build/thesis/`), and never edit, copy over, or stage
-`thesis/main.pdf`, unless the user explicitly asks for a build in that message.
+After a marked-up edit, and **before** asking the finalize / revert / keep question,
+build the PDF with `./thesis/build.sh` so the user can read the highlighted result
+in `thesis/main.pdf` and answer from it. Never ask the review question about
+changes that have not been rendered. Do not use any other build path: no `xelatex`
+or `pdflatex` calls, no copying over `thesis/main.pdf` by hand. Never stage
+`thesis/main.pdf`.
 
-Verify changes from the source instead: re-read the edited `.tex` regions, check
-that braces, environments, `\begin`/`\end` pairs, `\label`/`\ref`/`\cite` keys,
-and project macros (`\lr{}`, `\fadecimal{}`, etc.) are valid, and inspect
-`git diff -- thesis`. Do not hand-edit `.aux`, `.log`, `.toc`, glossary, index, or
-other generated files. In the final report, state that no build was run and the
-PDF was left for the user to render.
+If the build fails, fix the source (only within the requested change) and rebuild;
+if it still fails, report the error instead of asking the review question.
+Pre-existing warnings elsewhere (for example "Missing character" on pages the edit
+did not touch) are not caused by the edit; mention them only if they appear in the
+edited sections.
+
+Also verify from the source: re-read the edited `.tex` regions, check that braces,
+environments, `\begin`/`\end` pairs, `\label`/`\ref`/`\cite` keys, and project
+macros (`\lr{}`, `\fadecimal{}`, etc.) are valid, and inspect `git diff -- thesis`.
+Do not hand-edit `.aux`, `.log`, `.toc`, glossary, index, or other generated files.
+In the final report, state that the PDF was built and give the printed page of each
+edited section so the user can find it.
 
 ## Commit and push
 
@@ -403,7 +445,7 @@ End every task with a concise, formal English report that lists:
 
 1. each file changed and the exact requested item addressed there;
 2. any evidence, figure source, or supporting skill used;
-3. source-level verification results (no PDF build was run), plus commit/push status when applicable;
+3. source-level verification results and the PDF build result (with the printed page of each edited section), plus commit/push status when applicable;
    if a GPU evaluation was run, which `llm-*` container was stopped and confirmation
    that it was restarted and is up/healthy again;
 4. this explicit scope statement, filled with the actual itemized list:
@@ -415,6 +457,10 @@ If concurrent edits were detected, identify which pre-existing or concurrent cha
 were preserved and distinguish them clearly from this task's changes.
 
 Also state the review ID of this update, the colour legend (green = added,
-yellow = new words, red struck = removed words, red highlight + strike = deleted),
+yellow = new words, red highlight = removed words and deleted parts),
 then ask the finalize / revert / keep-pending question described in
-"Ask the user after every update".
+"Ask the user after every update", limited to what was changed in this session.
+
+## Persian prose quality rules
+
+For Persian thesis prose, every sentence must have a complete grammatical ending, preferably an explicit verb or a complete predicate; do not end a sentence with an unexplained number, parenthesis, or fragment. Whenever a number appears, state what it measures and which model, dataset, metric, ratio, confidence interval, or test it belongs to. Do not leave a bare ratio or count as the subject of a sentence. Split long sentences when several comparisons or statistical qualifications are present. Prefer plain terms such as «از نظر آماری قابل اتکا» when the intended meaning is statistical evidence, and avoid unexplained or awkward uses of «معنادار».

@@ -1,7 +1,7 @@
 # Pending thesis review updates
 
 Colour legend: green = added, yellow = new words in an edited paragraph,
-red struck = removed words, red highlight + strike = deleted part.
+red highlight (black text, no strike) = removed words and deleted parts.
 Find every region of an update with `grep -n 'REVIEW R<n>' thesis/tex/*.tex`.
 
 ## R1 — 2026-11-01 — Multi-domain campaign: full results, lossless KITTI, extent of work, wording fixes
@@ -74,12 +74,47 @@ set from `tools/multidomain/compare_runs.py`.
 
 | File | Location (approx. line) | Change | Kind |
 |---|---|---|---|
-| chapter4.tex | §4.3.3 body after the heading (~286) | old two paragraphs (t-test / "historical, cannot be judged") | deleted |
-| chapter4.tex | §4.3.3 (~306–380) | scope, method, `tab:stability_summary`, `tab:stability_paired`, results vs control/base, dispersion, camera shift, supplementary K-blind arm, verdict | added |
+| chapter4.tex | §4.3.3 body after the heading | old two paragraphs (t-test / "historical, cannot be judged") | deleted; author approved, removed permanently on 2026-11-06 |
+| chapter4.tex | §4.3.3 (~278–345) | scope, method, `tab:stability_summary`, `tab:stability_paired`, results vs control/base, dispersion, camera shift, supplementary K-blind arm, verdict | added |
 | chapter4.tex | discussion chapter, quantitative-summary subsection (~1481) | "significant reduction of sensitivity to dataset change" → accuracy gain without more uniform error | edited words |
 | chapter4.tex | discussion chapter, answers to research questions (~1539) | "cross-dataset comparison not yet reproduced" → reproduced only in the multi-domain experiment | edited words |
 | chapter5.tex | summary (~146) | "absolute stability maintained across indoor/outdoor" → mean accuracy gain, error not more uniform | edited words |
 
+Revision 2026-11-06: the author asked for the green and yellow text of §4.3.3 to be
+rewritten in plain, fluent Persian. All numbers, tests and claims are unchanged;
+sentences were split, the «بازو»/«نقاب» wording replaced, the reference to the
+deleted "historical report" dropped, and the legacy yellow opening sentence
+(`edited` block) rewritten. The two tables were not touched.
+
 Not touched (reported to the author instead): the R1 restatements of the
 SUN RGB-D / NYUv2 numbers in the ch4 discussion and chapter summaries, ch5
 summary/contributions and the abstracts.
+
+## R3 — 2026-11-09 — §4.3.3 shortened (further edit inside the R2 text)
+
+Requested by the author: make §4.3.3 shorter and drop the tests that make the
+proposed model look worse. Done as a condensation: removed the post-hoc
+«without Middlebury» sensitivity paragraph, the percent-change camera-shift
+paragraph and the two «mean after shift» / «relative change» columns of
+`tab:stability_summary` (both are unreferenced after the cut and, per the text
+itself, are not a clean degradation measure), and shortened the setup, the
+control comparison, the shift-vs-published paragraph and the supplementary
+K-blind-model paragraphs. Deliberately kept, in one sentence each (they bound
+the headline claim and are cited in chapter 5): CV 0.85 vs 0.59/0.69 with
+Middlebury as its main cause, the CI [0.67, 1.20] including 1, losses to the
+control on DIODE indoor and Middlebury, the camera-shift tie with the control
+(1.03), and the supplementary model without scale augmentation (1.14 on
+original images).
+
+Evidence: unchanged from R2 (no new numbers; every figure in the new text was
+already in R2).
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §4.3.3 opening block (~282) | four R2 paragraphs replaced by three shorter ones | deleted + added |
+| chapter4.tex | `tab:stability_summary` (~305–316) | caption tail and the last two columns | deleted cells |
+| chapter4.tex | after the table (~319) | two R2 paragraphs on original-image results replaced by one | deleted + added |
+| chapter4.tex | dispersion / shift / supplementary model (~358–381) | paragraphs 2–5 replaced by two shorter ones | deleted + added |
+
+Revert note: reverting R3 unwraps the red `eddeleted` paragraphs to plain text;
+re-wrap them in `% REVIEW R2` / `\begin{edadded}` so they stay green as before.

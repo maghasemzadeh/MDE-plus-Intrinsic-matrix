@@ -178,14 +178,28 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \fi
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%% نشانه‌گذاری بازبینی: سبز = افزوده، زرد = واژه تازه، قرمز خط‌خورده = حذف
+%%% نشانه‌گذاری بازبینی: سبز = افزوده، زرد = واژه تازه، زمینه قرمز = حذف (متن سیاه و خوانا)
 %%% \showreviewfalse همه نشانه‌ها را پنهان می‌کند (متن تازه می‌ماند، متن حذفی نه)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[normalem]{ulem}
+% در متن راست‌به‌چپ، XeTeX ترتیب جعبه‌ها را وارونه می‌کند و نوار رنگی ulem روی واژه
+% کشیده می‌شود و آن را می‌پوشاند؛ در حالت RTL ترتیب را برمی‌گردانیم تا رنگ پشت متن بماند.
+\makeatletter
+\def\UL@putbox{\ifx\UL@start\@empty \else % not inner
+   \vrule\@width\z@ \LA@penalty\@M
+   \if@RTL
+     \dimen@\wd\UL@box \box\UL@box
+     {\UL@skip\dimen@ \kern-\UL@skip \UL@leaders}%
+   \else
+     {\UL@skip\wd\UL@box \UL@leaders \kern-\UL@skip}%
+     \box\UL@box
+   \fi
+  \fi}
+\makeatother
 \definecolor{thRevAdd}{HTML}{B9F6CA}  % افزوده: سبز
 \definecolor{thRevNew}{HTML}{FFF176}  % واژه تازه در بند ویرایش‌شده: زرد
-\definecolor{thRevDel}{HTML}{D32F2F}  % متن حذفی: قرمز
-\definecolor{thRevDelBG}{HTML}{FFCDD2}% زمینه بخش حذف‌شده: قرمز روشن
+\definecolor{thRevDel}{HTML}{D32F2F}  % قرمز پررنگ (برای متن به کار نمی‌رود)
+\definecolor{thRevDelBG}{HTML}{EF9A9A}% زمینه حذف: قرمز؛ متن سیاه می‌ماند
 \newif\ifshowreview
 \showreviewtrue
 \ifshowreview
@@ -193,13 +207,13 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  \newcommand{\edhlwith}[2]{\bgroup\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
  \newcommand{\edadd}[1]{\edhlwith{thRevAdd}{#1}}
  \newcommand{\edins}[1]{\edhlwith{thRevNew}{#1}}
- \newcommand{\edold}[1]{{\color{thRevDel}\sout{#1}}}
+ \newcommand{\edold}[1]{\edhlwith{thRevDelBG}{#1}}
  \newcommand{\edrep}[2]{\edold{#1}\ifx\relax#2\relax\else\ \edins{#2}\fi}
- % زمینه قرمز روشن + خط قرمز روی متن در یک نشانه (ulem تودرتو پشتیبانی نمی‌شود)
- \newcommand{\eddel}[1]{{\color{thRevDel}\bgroup\markoverwith{\rlap{\textcolor{thRevDelBG}{\rule[-0.55ex]{2pt}{2.6ex}}}\textcolor{thRevDel}{\rule[0.55ex]{2pt}{0.7pt}}}\ULon{#1}}}
+ % حذف: فقط زمینه قرمز، بدون رنگ‌کردن متن و بدون خط روی آن تا خوانا بماند
+ \newcommand{\eddel}[1]{\edhlwith{thRevDelBG}{#1}}
  % بندها و بخش‌های افزوده/حذف‌شده؛ میان صفحه‌ها شکسته می‌شوند
  \newenvironment{edadded}{\colorlet{shadecolor}{thRevAdd}\begin{shaded}}{\end{shaded}}
- \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}\color{thRevDel}}{\end{shaded}}
+ \newenvironment{eddeleted}{\colorlet{shadecolor}{thRevDelBG}\begin{shaded}}{\end{shaded}}
  % جدول یا شکل کامل افزوده/حذف‌شده (درون محیط شناور)
  \newcommand{\edaddbox}[1]{\colorbox{thRevAdd}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
  \newcommand{\eddelbox}[1]{\colorbox{thRevDelBG}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}

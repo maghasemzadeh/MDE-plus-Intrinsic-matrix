@@ -1366,6 +1366,26 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ \\ \hline
 
 \input{./figures/pending/qualitative_figures}
 
+% REVIEW R3
+\subsection[مقایسه کیفی در آزمایش چندمجموعه‌ای]{\edadd{مقایسه کیفی در آزمایش چندمجموعه‌ای}}
+\label{subsec:qualitative_multidomain}
+
+% REVIEW R3
+\begin{edadded}
+برای نمایش بصری نتایج جدول~\ref{tab:multidomain_main}، همان پروتکل نمونه قفل‌شده بر چهار مجموعه آزمون این جدول اجرا شد. از هر مجموعه شش تصویر تنها از روی بذر تصادفی \fadecimal{۲۰۲۶۱۱۰۶} انتخاب شد و چکیده \lr{SHA-256} فهرست شناسه‌ها (\lr{4c11bcdc9b21}) پیش از بارگذاری هر مدل ثبت شد. سپس \proposedmodel{}، \controlmodel{} و \publishedbasemodel{} بر همین ۲۴ تصویر اجرا شدند؛ نسخه منتشرشده، مانند جدول~\ref{tab:multidomain_main}، برای صحنه‌های داخلی نقطه وارسی \lr{Hypersim} و برای \lr{Cityscapes} نقطه وارسی \lr{Virtual KITTI 2} است. مقدار \lr{AbsRel} هر ۱۴۴ پیش‌بینی ذخیره‌شده (سه مدل، تصاویر اصلی و برش مرکزی) با مقدار همان تصویر در ارزیابی کامل، با اختلاف کمتر از \fadecimal{۰٫۰۰۰۰۱}، یکسان است؛ بنابراین این شکل‌ها از همان خروجی‌هایی رسم شده‌اند که جدول‌ها از آن‌ها به دست آمده‌اند.
+
+شکل‌های~\ref{fig:qual_md_nyu} تا \ref{fig:qual_md_cityscapes} هر ۲۴ تصویر را بدون حذف نشان می‌دهند. در هر ردیف، بازه رنگ تنها از عمق مرجع همان ردیف محاسبه شده و برای مرجع و هر سه مدل یکسان است، پس اختلاف مقیاس مطلق به‌صورت اختلاف رنگ دیده می‌شود. رنگ نسبت به عکس عمق خطی است: قرمز نزدیک و آبی دور را نشان می‌دهد و خاکستری پیکسل بدون عمق مرجع معتبر است.
+
+\proposedmodel{} بر ۲۰ تصویر از ۲۴ تصویر کمترین \lr{AbsRel} را دارد، \publishedbasemodel{} بر سه تصویر و \controlmodel{} بر یک تصویر. این شمارش بر نمونه‌ای کوچک انجام شده و جای مقایسه کمّی جدول~\ref{tab:multidomain_main} را نمی‌گیرد. تفاوت مدل‌ها بیش از همه در مقیاس است. میانه نسبت مقیاس شش تصویر هر مجموعه برای \proposedmodel{} بین \fadecimal{۰٫۹۶۵} و \fadecimal{۱٫۰۹۰} است، برای \controlmodel{} بین \fadecimal{۱٫۰۷۵} و \fadecimal{۱٫۲۴۸} و برای \publishedbasemodel{} بین \fadecimal{۱٫۱۴۰} و \fadecimal{۱٫۲۸۷}. شکل~\ref{fig:qual_md_error} همین اریبی را نشان می‌دهد: در بیشتر ردیف‌ها، ستون‌های \publishedbasemodel{} و \controlmodel{} قرمزتر از ستون \proposedmodel{} هستند، یعنی صحنه را دورتر از مقدار واقعی برآورد می‌کنند.
+
+برتری در مقیاس به معنای برتری در جزییات نیست. در این تصاویر، \publishedbasemodel{} مرز اجسام و ساختارهای ریز را تیزتر بازسازی می‌کند؛ خروجی \proposedmodel{} و \controlmodel{} هموارتر است و در برخی تصاویر الگوی شبکه‌ای ضعیفی دارد. این ویژگی در هر دو مدل آموزش‌دیده دیده می‌شود، پس نمی‌توان آن را به ورودی ماتریس کالیبراسیون نسبت داد؛ سازوکار آن در این پژوهش بررسی نشد. افزون بر این، در سه تصویری که \publishedbasemodel{} کمترین خطا را دارد، اختلاف آن با \proposedmodel{} می‌تواند بزرگ باشد (برای نمونه \fadecimal{۰٫۰۳۵} در برابر \fadecimal{۰٫۱۹۷} بر یکی از تصاویر \lr{Kinect v1}).
+
+شکل~\ref{fig:qual_md_shift} همان سه مدل را در آزمون جابه‌جایی دوربین نشان می‌دهد. در این آزمون، بر هر ۲۴ تصویر قفل‌شده، \proposedmodel{} بر ۱۰ تصویر، \publishedbasemodel{} بر هشت تصویر و \controlmodel{} بر شش تصویر کمترین \lr{AbsRel} را دارد؛ بنابراین این نمونه برتری روشنی برای هیچ مدلی نشان نمی‌دهد. میانگین بر کل مجموعه‌ها در جدول~\ref{tab:multidomain_all} آمده است: \proposedmodel{} بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2} دقیق‌ترین مدل است و بر \lr{Kinect v1} از \publishedbasemodel{} ضعیف‌تر.
+\end{edadded}
+
+% REVIEW R3
+\input{./figures/pending/qualitative_md_figures}
+
 
 \section{تحلیل موردی دیتاست \lr{CityScapes}}
 \label{sec:cityscapes_analysis}

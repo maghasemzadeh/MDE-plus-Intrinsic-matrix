@@ -139,3 +139,27 @@ in `logs/qual-dump.log` on lingotube. All 144 dumped AbsRel values match
 | chapter4.tex | §sec:qualitative_results, new subsection subsec:qualitative_multidomain (1340) | protocol, reading guide, results, detail caveat, camera-shift result | added |
 | figures/pending/qualitative_md_figures.tex | new file, `\input` from the subsection | fig:qual_md_nyu, _kv1, _kv2, _cityscapes, _error, _shift | added |
 | figures/qualitative_md/ | new directory | six figure PDFs, manifest.json, geometry.json | added (compile dependency) |
+
+## R5 — 2026-11-13 — Paragraph-level Persian editing from §4.4.7 onward
+
+Requested by the author: start at §۴.۴.۷ «پیکربندی لرزش کانونی: جهش سهم پارامترهای دوربین» and check every subsequent thesis paragraph one by one with the paragraph-editor workflow, changing only text that needs clearer or more fluent Persian.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §۴.۴.۷ and integrated configuration summary through §۴.۴.۹ | agreement, statistical plurality, fluency, repeated wording, and spelling corrections | edited |
+| chapter4.tex | camera-sensitivity section through the multi-domain section | spelling, punctuation, grammatical agreement, and one malformed clause repaired | edited |
+| chapter4.tex | multi-domain results through chapter conclusion | agreement, spelling, terminology, and CityScapes limitation wording clarified | edited |
+
+All scientific claims, numbers, metrics, tests, citations, equations, labels, and section structure were preserved. Review markers are tagged `% REVIEW R5` in `thesis/tex/chapter4.tex`. The mandated `./thesis/build.sh` validation was attempted after editing but could not run because `latexmk` is unavailable in the environment (`command not found`).
+
+## R6 — 2026-11-13 — Paragraph-level Persian editing through the end of the thesis
+
+Requested by the author: continue the paragraph-editor review after Chapter 4 through the end of the included thesis source. The review covered all of `thesis/tex/chapter5.tex`, from the introduction through the final summary, checking each paragraph in sequence with its section context.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter5.tex | Introduction, main findings, and final research-question answers | spelling, agreement, punctuation, and wording corrections | edited |
+| chapter5.tex | Final interpretation, innovations, and limitations | spelling, agreement, and fluency corrections | edited |
+| chapter5.tex | Future work and final chapter summary | spelling, agreement, and fluency corrections | edited |
+
+All scientific claims, numbers, metrics, citations, equations, labels, and existing review markup were preserved. New review markers are tagged `% REVIEW R6` in `thesis/tex/chapter5.tex`. The appendices remain excluded because `main.tex` comments out their include lines. The mandated `./thesis/build.sh` validation remains unavailable because `latexmk` is not installed in the environment.

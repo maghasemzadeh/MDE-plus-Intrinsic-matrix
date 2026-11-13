@@ -118,3 +118,24 @@ already in R2).
 
 Revert note: reverting R3 unwraps the red `eddeleted` paragraphs to plain text;
 re-wrap them in `% REVIEW R2` / `\begin{edadded}` so they stay green as before.
+
+## R4 — 2026-11-06 — Qualitative depth figures for the multi-domain campaign
+
+Requested by the author: image comparisons of our model against the control, the
+base model and other models, in the style of Depth Anything V2 and related work.
+Only proposed / control / released base are included; other published models were
+not run (executing their third-party code on the server was not approved).
+
+Evidence: locked sample `thesis/figures/qualitative_md/manifest.json` (seed
+20261106, 6 images per set, SHA-256 4c11bcdc9b21…); predictions
+`results/qualitative_md/pred/` on lingotube and locally (`tools/multidomain/eval_related.py`);
+figures from `tools/multidomain/make_qualitative_md_render.py`; panel values and
+win counts in `thesis/figures/qualitative_md/geometry.json`; median scale ratios
+in `logs/qual-dump.log` on lingotube. All 144 dumped AbsRel values match
+`results/multidomain/{md1_P,md1_C,released_mix}{,_zoom1.5}` within 2.5e-6.
+
+| File | Location (approx. line) | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §sec:qualitative_results, new subsection subsec:qualitative_multidomain (1340) | protocol, reading guide, results, detail caveat, camera-shift result | added |
+| figures/pending/qualitative_md_figures.tex | new file, `\input` from the subsection | fig:qual_md_nyu, _kv1, _kv2, _cityscapes, _error, _shift | added |
+| figures/qualitative_md/ | new directory | six figure PDFs, manifest.json, geometry.json | added (compile dependency) |

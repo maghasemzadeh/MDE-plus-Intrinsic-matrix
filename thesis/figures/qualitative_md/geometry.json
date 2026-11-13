@@ -1,0 +1,553 @@
+{
+ "seed": 20261106,
+ "sha256": "4c11bcdc9b213a8727531509ea7a85925ca4803dbe325f7b53751fab80e27ce8",
+ "all_locked": {
+  "standard": {
+   "lowest_absrel_per_set": {
+    "nyu": {
+     "base": 0,
+     "control": 1,
+     "proposed": 5
+    },
+    "sunrgbd_kv1": {
+     "base": 2,
+     "control": 0,
+     "proposed": 4
+    },
+    "sunrgbd_kv2": {
+     "base": 1,
+     "control": 0,
+     "proposed": 5
+    },
+    "cityscapes": {
+     "base": 0,
+     "control": 0,
+     "proposed": 6
+    }
+   },
+   "lowest_absrel_total": {
+    "base": 3,
+    "control": 1,
+    "proposed": 20
+   }
+  },
+  "shift": {
+   "lowest_absrel_per_set": {
+    "nyu": {
+     "base": 1,
+     "control": 2,
+     "proposed": 3
+    },
+    "sunrgbd_kv1": {
+     "base": 3,
+     "control": 1,
+     "proposed": 2
+    },
+    "sunrgbd_kv2": {
+     "base": 2,
+     "control": 2,
+     "proposed": 2
+    },
+    "cityscapes": {
+     "base": 2,
+     "control": 1,
+     "proposed": 3
+    }
+   },
+   "lowest_absrel_total": {
+    "base": 8,
+    "control": 6,
+    "proposed": 10
+   }
+  }
+ },
+ "figures": {
+  "qual_md_nyu": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.8228,
+   "rows": [
+    {
+     "set": "nyu",
+     "index": 55,
+     "id": "nyu_0131",
+     "base": 0.3347,
+     "control": 0.1563,
+     "proposed": 0.1413
+    },
+    {
+     "set": "nyu",
+     "index": 148,
+     "id": "nyu_0361",
+     "base": 0.2069,
+     "control": 0.0856,
+     "proposed": 0.0635
+    },
+    {
+     "set": "nyu",
+     "index": 231,
+     "id": "nyu_0565",
+     "base": 0.1907,
+     "control": 0.107,
+     "proposed": 0.0472
+    },
+    {
+     "set": "nyu",
+     "index": 260,
+     "id": "nyu_0634",
+     "base": 0.238,
+     "control": 0.06,
+     "proposed": 0.0676
+    },
+    {
+     "set": "nyu",
+     "index": 405,
+     "id": "nyu_0965",
+     "base": 0.1719,
+     "control": 0.1563,
+     "proposed": 0.0571
+    },
+    {
+     "set": "nyu",
+     "index": 161,
+     "id": "nyu_0410",
+     "base": 0.2907,
+     "control": 0.1287,
+     "proposed": 0.0814
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 0,
+    "control": 1,
+    "proposed": 5
+   },
+   "rule": [
+    [
+     "nyu",
+     6
+    ]
+   ],
+   "view": "standard"
+  },
+  "qual_md_kv1": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.8347,
+   "rows": [
+    {
+     "set": "sunrgbd_kv1",
+     "index": 106,
+     "id": "img_0445",
+     "base": 0.2192,
+     "control": 0.4355,
+     "proposed": 0.2122
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 141,
+     "id": "img_0655",
+     "base": 0.0567,
+     "control": 0.1198,
+     "proposed": 0.0805
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 1,
+     "id": "img_0068",
+     "base": 0.1983,
+     "control": 0.209,
+     "proposed": 0.1056
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 18,
+     "id": "img_0115",
+     "base": 0.1372,
+     "control": 0.2754,
+     "proposed": 0.0751
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 148,
+     "id": "img_0683",
+     "base": 0.2546,
+     "control": 0.3261,
+     "proposed": 0.0771
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 75,
+     "id": "img_0286",
+     "base": 0.0347,
+     "control": 0.1661,
+     "proposed": 0.1975
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 2,
+    "control": 0,
+    "proposed": 4
+   },
+   "rule": [
+    [
+     "sunrgbd_kv1",
+     6
+    ]
+   ],
+   "view": "standard"
+  },
+  "qual_md_kv2": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.7971,
+   "rows": [
+    {
+     "set": "sunrgbd_kv2",
+     "index": 75,
+     "id": "001408_2014-06-19_16-16-19_260595134347_rgbf000084-resize",
+     "base": 0.2152,
+     "control": 0.1533,
+     "proposed": 0.109
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 125,
+     "id": "002440_2014-06-28_20-31-12_260595134347_rgbf000113-resize",
+     "base": 0.3103,
+     "control": 0.3225,
+     "proposed": 0.0804
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 137,
+     "id": "002632_2014-06-24_14-48-29_094959634447_rgbf000063-resize",
+     "base": 0.3404,
+     "control": 0.3685,
+     "proposed": 0.1154
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 110,
+     "id": "002216_2014-06-28_18-38-31_260595134347_rgbf000035-resize",
+     "base": 0.0442,
+     "control": 0.1978,
+     "proposed": 0.0836
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 3,
+     "id": "000083_2014-05-14_21-39-38_260595134347_rgbf000151-resize",
+     "base": 0.4361,
+     "control": 0.2147,
+     "proposed": 0.065
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 121,
+     "id": "002410_2014-06-28_20-23-44_260595134347_rgbf000032-resize",
+     "base": 0.1529,
+     "control": 0.2423,
+     "proposed": 0.09
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 1,
+    "control": 0,
+    "proposed": 5
+   },
+   "rule": [
+    [
+     "sunrgbd_kv2",
+     6
+    ]
+   ],
+   "view": "standard"
+  },
+  "qual_md_cityscapes": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.5552,
+   "rows": [
+    {
+     "set": "cityscapes",
+     "index": 158,
+     "id": "frankfurt_000001_044413",
+     "base": 0.3653,
+     "control": 0.2772,
+     "proposed": 0.235
+    },
+    {
+     "set": "cityscapes",
+     "index": 237,
+     "id": "frankfurt_000001_068063",
+     "base": 0.1934,
+     "control": 0.1034,
+     "proposed": 0.0783
+    },
+    {
+     "set": "cityscapes",
+     "index": 288,
+     "id": "lindau_000021_000019",
+     "base": 0.3141,
+     "control": 0.1956,
+     "proposed": 0.1708
+    },
+    {
+     "set": "cityscapes",
+     "index": 140,
+     "id": "frankfurt_000001_037705",
+     "base": 0.3939,
+     "control": 0.217,
+     "proposed": 0.1811
+    },
+    {
+     "set": "cityscapes",
+     "index": 467,
+     "id": "munster_000141_000019",
+     "base": 0.226,
+     "control": 0.187,
+     "proposed": 0.1508
+    },
+    {
+     "set": "cityscapes",
+     "index": 23,
+     "id": "frankfurt_000000_011007",
+     "base": 0.2376,
+     "control": 0.1188,
+     "proposed": 0.0997
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 0,
+    "control": 0,
+    "proposed": 6
+   },
+   "rule": [
+    [
+     "cityscapes",
+     6
+    ]
+   ],
+   "view": "standard"
+  },
+  "qual_md_error": {
+   "centres": [
+    0.142,
+    0.37,
+    0.598,
+    0.826
+   ],
+   "height_over_width": 1.2543,
+   "rows": [
+    {
+     "set": "nyu",
+     "index": 55,
+     "id": "nyu_0131",
+     "base": 0.3347,
+     "control": 0.1563,
+     "proposed": 0.1413
+    },
+    {
+     "set": "nyu",
+     "index": 148,
+     "id": "nyu_0361",
+     "base": 0.2069,
+     "control": 0.0856,
+     "proposed": 0.0635
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 106,
+     "id": "img_0445",
+     "base": 0.2192,
+     "control": 0.4355,
+     "proposed": 0.2122
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 141,
+     "id": "img_0655",
+     "base": 0.0567,
+     "control": 0.1198,
+     "proposed": 0.0805
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 75,
+     "id": "001408_2014-06-19_16-16-19_260595134347_rgbf000084-resize",
+     "base": 0.2152,
+     "control": 0.1533,
+     "proposed": 0.109
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 125,
+     "id": "002440_2014-06-28_20-31-12_260595134347_rgbf000113-resize",
+     "base": 0.3103,
+     "control": 0.3225,
+     "proposed": 0.0804
+    },
+    {
+     "set": "cityscapes",
+     "index": 158,
+     "id": "frankfurt_000001_044413",
+     "base": 0.3653,
+     "control": 0.2772,
+     "proposed": 0.235
+    },
+    {
+     "set": "cityscapes",
+     "index": 237,
+     "id": "frankfurt_000001_068063",
+     "base": 0.1934,
+     "control": 0.1034,
+     "proposed": 0.0783
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 1,
+    "control": 0,
+    "proposed": 7
+   },
+   "rule": [
+    [
+     "nyu",
+     2
+    ],
+    [
+     "sunrgbd_kv1",
+     2
+    ],
+    [
+     "sunrgbd_kv2",
+     2
+    ],
+    [
+     "cityscapes",
+     2
+    ]
+   ],
+   "view": "standard"
+  },
+  "qual_md_shift": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 1.0044,
+   "rows": [
+    {
+     "set": "nyu",
+     "index": 55,
+     "id": "nyu_0131",
+     "base": 0.0624,
+     "control": 0.1718,
+     "proposed": 0.1627
+    },
+    {
+     "set": "nyu",
+     "index": 148,
+     "id": "nyu_0361",
+     "base": 0.1219,
+     "control": 0.081,
+     "proposed": 0.0476
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 106,
+     "id": "img_0445",
+     "base": 0.0822,
+     "control": 0.4908,
+     "proposed": 0.3356
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 141,
+     "id": "img_0655",
+     "base": 0.2453,
+     "control": 0.0666,
+     "proposed": 0.0842
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 75,
+     "id": "001408_2014-06-19_16-16-19_260595134347_rgbf000084-resize",
+     "base": 0.1257,
+     "control": 0.1081,
+     "proposed": 0.082
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 125,
+     "id": "002440_2014-06-28_20-31-12_260595134347_rgbf000113-resize",
+     "base": 0.1631,
+     "control": 0.1724,
+     "proposed": 0.147
+    },
+    {
+     "set": "cityscapes",
+     "index": 158,
+     "id": "frankfurt_000001_044413",
+     "base": 0.0994,
+     "control": 0.1221,
+     "proposed": 0.1656
+    },
+    {
+     "set": "cityscapes",
+     "index": 237,
+     "id": "frankfurt_000001_068063",
+     "base": 0.1841,
+     "control": 0.0772,
+     "proposed": 0.0833
+    }
+   ],
+   "lowest_absrel_rows": {
+    "base": 3,
+    "control": 2,
+    "proposed": 3
+   },
+   "rule": [
+    [
+     "nyu",
+     2
+    ],
+    [
+     "sunrgbd_kv1",
+     2
+    ],
+    [
+     "sunrgbd_kv2",
+     2
+    ],
+    [
+     "cityscapes",
+     2
+    ]
+   ],
+   "view": "_zoom1.5"
+  }
+ }
+}

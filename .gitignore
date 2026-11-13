@@ -12,6 +12,7 @@ correctness_check/**
 /.build/
 /thesis/main-past.pdf
 /thesis/build/
+/thesis/.build/
 
 # Also ignore LaTeX by-products if a TeX editor bypasses latexmkrc.
 /thesis/**/*.acn

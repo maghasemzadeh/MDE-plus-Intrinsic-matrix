@@ -118,7 +118,11 @@ Rules for choosing the kind:
   deleted block that is still referenced elsewhere — move the `\label` or mark the
   referencing text too.
 
-### Markup macros
+### Word-level colour discipline
+
+For an edited paragraph, sentence, caption, table cell, or heading, apply colour only to the exact changed words or phrases. Keep unchanged text outside review macros. Use `\edrep{old}{new}` when replacing wording, `\edins{...}` for inserted words, and `\edrep{old}{}` for removed words. Do not wrap an entire existing paragraph in a yellow, green, or red environment merely because one sentence changed. A whole paragraph may be green only when the paragraph is entirely new; a whole deleted unit may be red only when the unit itself is removed. The same word-level rule applies consistently to yellow insertions, red deletions, and any green additions inside existing prose.
+
+## Markup macros
 
 The macros live in `thesis/tex/commands.tex`. Before the first marked-up edit,
 check whether `\edadd` is already defined there; if it is not, insert the block

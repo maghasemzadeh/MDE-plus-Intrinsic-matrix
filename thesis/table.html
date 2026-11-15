@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>فهرست تفصیلی پایان‌نامه</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root { --bg:#fafaf7; --fg:#1d1d1b; --muted:#6b6b66; --accent:#1f4e79; --line:#d4d4cb; --hover:#eef2f6; }
+@media (prefers-color-scheme: dark) {
+  :root { --bg:#16181c; --fg:#ececec; --muted:#9aa0a6; --accent:#7fb2e5; --line:#363a41; --hover:#20242a; }
+}
+* { box-sizing:border-box; }
+body { background:var(--bg); color:var(--fg); font-family:"Vazirmatn","Vazir",Tahoma,sans-serif;
+       line-height:1.8; margin:0; padding:2rem 16px 4rem; }
+main { max-width:56rem; margin:0 auto; }
+h1 { font-size:1.5rem; margin:0 0 .4rem; }
+.hint { color:var(--muted); font-size:.85rem; margin:0 0 1rem; }
+.bar { display:flex; gap:.5rem; margin-bottom:1.5rem; }
+button { font:inherit; font-size:.85rem; padding:.25rem .9rem; border:1px solid var(--line);
+         background:transparent; color:var(--fg); border-radius:6px; cursor:pointer; }
+button:hover { background:var(--hover); }
+
+details > summary { list-style:none; cursor:pointer; position:relative; padding:.45rem 2rem .45rem .5rem; border-radius:6px; }
+details > summary::-webkit-details-marker { display:none; }
+details > summary:hover { background:var(--hover); }
+details > summary::before { content:"+"; position:absolute; right:.35rem; top:.45rem; width:1.2rem; height:1.2rem;
+  line-height:1.1rem; text-align:center; border:1px solid var(--accent); color:var(--accent);
+  border-radius:4px; font-size:.95rem; font-family:monospace; }
+details[open] > summary::before { content:"\2212"; }
+
+.leaf { padding:.4rem 2rem .4rem .5rem; position:relative; }
+.leaf::before { content:""; position:absolute; right:.8rem; top:1.1rem; width:.4rem; height:.4rem;
+  border-radius:50%; background:var(--line); }
+
+.n { color:var(--accent); margin-left:.5rem; font-variant-numeric:tabular-nums; }
+.t { }
+.d { display:block; color:var(--muted); font-weight:400; font-size:.82rem; line-height:1.7; margin-top:.1rem; }
+
+/* chapters */
+.lv1 { border-top:2px solid var(--line); margin-top:.6rem; padding-top:.4rem; }
+.lv1 > summary .n, .lv1 > summary .t { font-size:1.2rem; font-weight:700; }
+.lv1 > summary .n { color:var(--accent); }
+/* sections */
+.lv2 > summary .t, .lv2.leaf .t { font-size:1.02rem; font-weight:600; }
+.lv2 > summary .n, .lv2.leaf .n { font-weight:600; }
+/* subsections */
+.lv3 > summary .t, .lv3.leaf .t { font-size:.95rem; font-weight:400; }
+.lv3 > summary .n, .lv3.leaf .n { font-weight:400; }
+
+/* indentation: each nested level steps further in, with a guide line */
+.kids { margin-right:1.4rem; padding-right:1rem; border-right:2px solid var(--line); }
+.lv1 > .kids { margin-top:.2rem; }
+</style>
+</head>
+<body>
+<main>
+<h1>فهرست تفصیلی پایان‌نامه</h1>
+<p class="hint">برای باز و بسته کردن هر فصل یا بخش روی عنوان آن (علامت +) کلیک کنید.</p>
+<div class="bar"><button id="open">باز کردن همه</button><button id="close">بستن همه</button></div>
+<details class="lv1"><summary><span class="n" dir="ltr">1</span><span class="t">مقدمه</span><span class="d">معرفی مساله، انگیزه، سوالات و نقشه راه پایان‌نامه.</span></summary>
+<div class="kids">
+<div class="lv2 leaf"><span class="n" dir="ltr">1.1</span><span class="t">مقدمه</span><span class="d">تخمین عمق تک‌دوربینه ذاتا مبهم است، چون یک تصویر فقط پرتو هر پیکسل را معین می‌کند و نه فاصله آن را.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.2</span><span class="t">ضرورت انجام تحقیق</span><span class="d">تخمین عمق مطلق پایدار و قابل تعمیم هنوز مساله‌ای باز است و سامانه‌های واقعی به آن نیاز دارند.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.3</span><span class="t">تعریف موضوع تحقیق</span><span class="d">مساله اصلی، ابهام مقیاس در نبود اطلاعات هندسی صریح دوربین است.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.4</span><span class="t">سوالات تحقیق</span><span class="d">سه سوال درباره حساسیت مدل پایه به دیتاست، آنچه ارزیابی نسبی پنهان می‌کند، و سودمندی ورودی صریح ماتریس کالیبراسیون.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.5</span><span class="t">اهداف آرمانی تحقیق</span><span class="d">سنجش وابستگی به دوربین و دیتاست، مقایسه معیارهای نسبی و مطلق، و آزمودن هندسه صریح به‌عنوان راه‌حل.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.6</span><span class="t">فرضیات پژوهش</span><span class="d">فرضیه‌های آزمون‌پذیر متناظر با سوالات، همراه با معیار آماری هر یک.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.7</span><span class="t">روش انجام تحقیق</span><span class="d">(در متن فعلی خالی است؛ فقط عنوان دارد.)</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.8</span><span class="t">کاربرد تحقیق</span><span class="d">رباتیک و سامانه‌های مشابه به فاصله در واحد فیزیکی نیاز دارند، نه فقط ترتیب دور و نزدیک.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">1.9</span><span class="t">ساختار پایان‌نامه</span><span class="d">نقشه راه پنج فصل.</span></div>
+</div></details>
+<details class="lv1"><summary><span class="n" dir="ltr">2</span><span class="t">مبانی نظری، مرور ادبیات، شکاف و نوآوری تحقیق</span><span class="d">مبانی، کارهای پیشین، شکاف موجود و نوآوری‌ها.</span></summary>
+<div class="kids">
+<details class="lv2"><summary><span class="n" dir="ltr">2.1</span><span class="t">مبانی نظری</span><span class="d">مفاهیم پایه لازم برای ادامه پایان‌نامه.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">2.1.1</span><span class="t">مساله MDE</span><span class="d">تعریف صوری مساله و دلیل یکتا نبودن نگاشت تصویر به عمق.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.1.2</span><span class="t">مدل سوراخ‌سوزنی و ماتریس کالیبراسیون دوربین</span><span class="d">رابطه تصویربرداری سوراخ‌سوزنی و معنای اجزای ماتریس کالیبراسیون (فاصله کانونی و نقطه اصلی).</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.1.3</span><span class="t">پارادایم‌های نظارتی و تابع‌های هزینه</span><span class="d">آموزش نظارت‌شده، خودنظارتی استریو و ویدیویی، و نیمه‌نظارتی، با تابع‌های هزینه هر یک.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">2.2</span><span class="t">مرور ادبیات گذشته</span><span class="d">مرور تاریخی روش‌های تخمین عمق.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.1</span><span class="t">دسته‌بندی کلی بر اساس حسگر و نوع نما</span><span class="d">دسته‌بندی کارها بر اساس منبع هندسه (چندنما، لایدار، تک‌تصویری و ...).</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.2</span><span class="t">روش‌های کلاسیک و نظارت‌شده اولیه</span><span class="d">از نشانه‌های دستی (Hoiem و Make3D) تا نخستین شبکه‌های عمیق نظارت‌شده (Eigen).</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.3</span><span class="t">سیر خودنظارتی: از استریو تا ویدیو</span><span class="d">خودنظارتی با بازسازی استریو و سپس ویدیو، که مقیاس آن به چیدمان تصویربرداری وابسته می‌ماند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.4</span><span class="t">مدل‌های نسبی، معماری‌های ترنسفورمری و مدل‌های سبک</span><span class="d">مدل‌های نسبی خانواده MiDaS و DPT که خوب تعمیم می‌یابند اما مقیاس فیزیکی نمی‌دهند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.5</span><span class="t">مدل‌های بنیادین و تقطیر در مقیاس بزرگ</span><span class="d">مدل‌های بنیادین مانند Depth Anything که با تقطیر معلم‌ـ‌دانش‌آموز در مقیاس بزرگ ساخته شده‌اند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.6</span><span class="t">مدل‌های مطلق و شرطی‌سازی دوربین</span><span class="d">روش‌های عمق مطلق که دوربین را به‌کار می‌برند یا حدس می‌زنند (CAM-Convs، ZoeDepth، Metric3D، UniDepth).</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">2.2.7</span><span class="t">مقاله‌ پایه برای مدل پیشنهادی</span><span class="d">معرفی Depth Anything V2، مدل پایه‌ای که مدل پیشنهادی بر آن ساخته می‌شود.</span></div>
+</div></details>
+<div class="lv2 leaf"><span class="n" dir="ltr">2.3</span><span class="t">شکاف تحقیقاتی</span><span class="d">مدل‌های بنیادین نسبی اتصال صریحی به هندسه دوربین ندارند و سهم علی ماتریس کالیبراسیون اثبات نشده است.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">2.4</span><span class="t">نوآوری‌های تحقیق</span><span class="d">نوآوری‌ها متناظر با شکاف‌ها؛ مهم‌ترین آن‌ها تزریق ماتریس کالیبراسیون به‌صورت توکن در انکودر.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">2.5</span><span class="t">جمع‌بندی فصل</span><span class="d">آگاهی از دوربین ایده‌ای تثبیت‌شده است، اما هنوز به مدل‌های بنیادین منتقل نشده است.</span></div>
+</div></details>
+<details class="lv1"><summary><span class="n" dir="ltr">3</span><span class="t">روش تحقیق</span><span class="d">روش پیشنهادی، شیوه آموزش، معیارها و تابع‌های هزینه.</span></summary>
+<div class="kids">
+<div class="lv2 leaf"><span class="n" dir="ltr">3.1</span><span class="t">مقدمه</span><span class="d">نمای کلی شرطی‌سازی مدل بنیادین با پارامترهای درونی دوربین.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">3.2</span><span class="t">تحلیل مدل پایه</span><span class="d">مدل پایه معماری encoder-decoder مبتنی بر ViT دارد و دوربین را نمی‌بیند؛ همین مقیاس آن را ناپایدار می‌کند.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">3.3</span><span class="t">صورت‌بندی مساله MDE</span><span class="d">بیان صوری مساله و دلیل بدوضعیت بودن آن.</span></div>
+<details class="lv2"><summary><span class="n" dir="ltr">3.4</span><span class="t">هندسه دوربین و نقش پارامترهای درونی</span><span class="d">تخمین عمق ریشه در هندسه تصویربرداری دارد.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.4.1</span><span class="t">مدل دوربین سوراخ‌سوزنی</span><span class="d">مدل سوراخ‌سوزنی به‌عنوان تقریب هندسی استاندارد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.4.2</span><span class="t">ماتریس کالیبراسیون دوربین</span><span class="d">تعریف ماتریس کالیبراسیون و نگاشت نقطه سه‌بعدی به پیکسل.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.4.3</span><span class="t">نقش پارامترهای درونی در تخمین عمق</span><span class="d">بدون ماتریس کالیبراسیون فقط عمق نسبی قابل بازیابی است، نه مقیاس مطلق.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">3.5</span><span class="t">طراحی روش پیشنهادی: ادغام صریح ماتریس کالیبراسیون دوربین</span><span class="d">طراحی‌ای که ماتریس کالیبراسیون را مستقیم در اختیار مدل می‌گذارد.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.5.1</span><span class="t">اصل طراحی: تفکیک اطلاعات تصویری و هندسی</span><span class="d">محتوای تصویر و هندسه دوربین دو ورودی جدا می‌مانند، به‌جای آنکه هندسه در وزن‌ها جذب شود.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.5.2</span><span class="t">نمایش و پیش‌پردازش ماتریس کالیبراسیون دوربین</span><span class="d">تبدیل ماتریس کالیبراسیون به توصیف‌گری نرمال‌شده و مستقل از تفکیک‌پذیری.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.5.3</span><span class="t">راهبرد ادغام اطلاعات دوربین با معماری Depth Anything V2</span><span class="d">انکودر دوربین (MLP و چند بلوک ترنسفورمر) یک توکن دوربین می‌سازد که به توکن‌های ViT افزوده می‌شود.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.5.4</span><span class="t">مزایای مورد انتظار از ادغام صریح پارامترهای درونی</span><span class="d">انتظار می‌رود دقت عمق مطلق بیشتر و وابستگی به دوربین‌های آموزشی کمتر شود.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">3.6</span><span class="t">داده‌ها، پیش‌پردازش و نرمال‌سازی ورودی</span><span class="d">داده‌ها و زنجیره آماده‌سازی ورودی.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.6.1</span><span class="t">مجموعه‌داده‌های مورد استفاده</span><span class="d">چند مجموعه‌داده آزموده شد، اما مطالعه علی نهایی به NYUv2 محدود شد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.6.2</span><span class="t">پیکربندی محل تزریق توکن دوربین</span><span class="d">لایه‌ای از انکودر که توکن دوربین در آن وارد می‌شود و گزینه کنترل آن.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.6.3</span><span class="t">پیش‌پردازش داده‌ها</span><span class="d">تغییر اندازه به 518 و برش تصادفی 518 در 518، مطابق تنظیمات مدل پایه.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.6.4</span><span class="t">مدیریت و نرمال‌سازی پارامترهای درونی دوربین</span><span class="d">فاصله‌های کانونی و نقطه اصلی پیش از ورود به شبکه با عرض و ارتفاع تصویر نرمال می‌شوند.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">3.7</span><span class="t">راهبرد آموزش مدل پیشنهادی</span><span class="d">تنظیم دقیق نسخه نسبی و ازپیش‌آموزش‌دیده Large برای رسیدن به مدل مطلق آگاه از دوربین.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.1</span><span class="t">پروتکل تقسیم مجموعه‌های آموزش و آزمون در NYUv2</span><span class="d">مجموعه آزمون استاندارد 654 تصویری؛ 795 تصویر باقی‌مانده با نسبت 80/20 به آموزش و اعتبارسنجی تقسیم می‌شوند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.2</span><span class="t">مدل پایه Depth Anything V2 و راهبرد تنظیم دقیق‌پارامترها</span><span class="d">شروع از وزن‌های نسخه نسبی مدل پایه با انکودر DINOv2 فریزشده.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.3</span><span class="t">فعال‌سازی پشتیبانی از پارامترهای دوربین</span><span class="d">گزینه‌های اسکریپت آموزش که مسیر پارامترهای دوربین را فعال می‌کنند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.4</span><span class="t">تنظیمات آموزش و بهینه‌سازی</span><span class="d">دو حالت آموزش نسبی و مطلق با بهینه‌ساز AdamW.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.5</span><span class="t">فضای هدف آموزش برای مدل‌های نسبی: عمق معکوس</span><span class="d">مدل‌های نسبی، مانند MiDaS و مدل پایه، در فضای عمق معکوس آموزش می‌بینند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.6</span><span class="t">افزونه‌سازی زوم‌ـ‌برش آگاه از پارامترهای دوربین</span><span class="d">زوم‌ـ‌برش با به‌روزرسانی درست ماتریس کالیبراسیون، از داده تک‌دوربینه میدان دیدهای متنوع می‌سازد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.7</span><span class="t">افزونه‌سازی لرزش کانونی: غیرقابل‌حل‌کردن مقیاس بدون ماتریس کالیبراسیون دوربین</span><span class="d">لرزش کانونی عمق و ماتریس کالیبراسیون را با هم تغییر می‌دهد تا مقیاس بدون خواندن ماتریس قابل حل نباشد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.7.8</span><span class="t">جمع‌بندی فرآیند آموزش</span><span class="d">کل روند آموزش در قالب یک الگوریتم.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">3.8</span><span class="t">معیارهای ارزیابی عملکرد</span><span class="d">معیارهای استاندارد ارزیابی در پروتکل Eigen.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.8.1</span><span class="t">خطای نسبی مطلق</span><span class="d">معیار AbsRel، خطای نرمال‌شده نسبت به عمق مرجع.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.8.2</span><span class="t">ریشه میانگین مربعات خطا و حساسیت آن به پارامترهای دوربین</span><span class="d">معیار RMSE نرمال نمی‌شود، پس خطای مقیاس فیزیکی و دورافت‌ها را مستقیم نشان می‌دهد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.8.3</span><span class="t">معیارهای دقت آستانه‌ای</span><span class="d">معیارهای دلتا، یعنی سهم پیکسل‌هایی که نسبت پیش‌بینی به مرجع زیر یک آستانه است.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.8.4</span><span class="t">کاربرد معیارها برای مدل‌های مطلق و نسبی</span><span class="d">مدل‌های مطلق بدون تراز و مدل‌های نسبی پس از تراز مقیاس و جابجایی هر تصویر سنجیده می‌شوند.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">3.9</span><span class="t">توابع هزینه و معیارهای بهینه‌سازی</span><span class="d">تابع هزینه به نوع مدل بستگی دارد.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.1</span><span class="t">هزینه SiLog برای مدل‌های مطلق</span><span class="d">تابع هزینه لگاریتمی SiLog برای آموزش عمق مطلق.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.2</span><span class="t">هزینه تغییرناپذیر نسبت به مقیاس و جابجایی برای مدل‌های نسبی</span><span class="d">تابع هزینه خانواده MiDaS برای آموزش عمق نسبی.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.3</span><span class="t">تمایز میان توابع هزینه آموزش و معیارهای ارزیابی</span><span class="d">تابع‌های هزینه آموزش و معیارهای ارزیابی آگاهانه از هم جدا نگه داشته می‌شوند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.4</span><span class="t">پروتکل ارزیابی و سناریوهای مقایسه</span><span class="d">معیارها و نوع تراز در هر سناریوی مقایسه.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.5</span><span class="t">آزمون‌های آماری و برآورد عدم‌قطعیت</span><span class="d">آزمون t دو نمونه‌ای میان دیتاست‌ها و آزمون‌های زوجی تصویر به تصویر در مطالعه کنترل‌شده.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">3.9.6</span><span class="t">نقش پارامترهای درونی دوربین در آموزش</span><span class="d">ماتریس کالیبراسیون از راه معماری (توکن دوربین) اثر می‌گذارد، نه با افزودن جمله‌ای به تابع هزینه.</span></div>
+</div></details>
+<div class="lv2 leaf"><span class="n" dir="ltr">3.10</span><span class="t">جمع‌بندی فصل</span><span class="d">مرور هندسه، طراحی تزریق توکن و تنظیمات آموزش و ارزیابی.</span></div>
+</div></details>
+<details class="lv1"><summary><span class="n" dir="ltr">4</span><span class="t">نتایج</span><span class="d">ارزیابی تجربی مدل پیشنهادی در برابر مدل پایه.</span></summary>
+<div class="kids">
+<div class="lv2 leaf"><span class="n" dir="ltr">4.1</span><span class="t">مقدمه</span><span class="d">بررسی اینکه تزریق هندسه دوربین ناپایداری مقیاس و وابستگی به دوربین را کم می‌کند یا نه.</span></div>
+<details class="lv2"><summary><span class="n" dir="ltr">4.2</span><span class="t">جزئیات پیاده‌سازی</span><span class="d">جزئیات اجرایی لازم برای بازتولید نتایج.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.2.1</span><span class="t">چارچوب نرم‌افزاری و زیرساخت محاسباتی</span><span class="d">پیاده‌سازی با PyTorch بر پایه مخزن رسمی مدل پایه، و سخت‌افزار به‌کاررفته.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.2.2</span><span class="t">تنظیمات آموزش و راهبرد بهینه‌سازی</span><span class="d">بهینه‌ساز AdamW با نرخ پایه 5e-6، ده برابر برای دیکودر و لایه‌های جدید، و انکودر فریزشده.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.2.3</span><span class="t">ساختار کد و اسکریپت‌های اصلی</span><span class="d">اسکریپت train.py و دیگر اسکریپت‌های اصلی با آرگومان‌هایشان.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.2.4</span><span class="t">اشکال‌زدایی و درس‌های پیاده‌سازی</span><span class="d">اشکالی خاموش که در آن برش تصادفی نقطه اصلی را جابه‌جا می‌کرد ولی ماتریس کالیبراسیون به‌روز نمی‌شد، و رفع آن.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">4.3</span><span class="t">نتایج کمی: مقایسه عددی مدل‌ها</span><span class="d">مقایسه عددی مدل‌ها با یک پروتکل ارزیابی یکسان.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.3.1</span><span class="t">عملکرد مدل پایه Depth Anything V2 در دیتاست‌های مختلف</span><span class="d">خطای SiLog مدل پایه میان دیتاست‌ها تفاوت معنادار دارد، یعنی مقیاس آن ناپایدار است.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.3.2</span><span class="t">مقایسه مدل پایه Depth Anything V2 و مدل پیشنهادی</span><span class="d">مقایسه‌ای تاریخی و اکتشافی که اعداد مدل پیشنهادی آن بازتولید نشد و مبنای ادعای اصلی نیست.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.3.3</span><span class="t">تحلیل پایداری بین‌دیتاستی مدل پیشنهادی</span><span class="d">مقایسه مدل پیشنهادی، مدل کنترل و نسخه منتشرشده روی تصاویر یکسان با آزمون‌های زوجی.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">4.4</span><span class="t">مطالعه کنترل‌شده بر روی پروتکل استاندارد NYUv2</span><span class="d">آزمایش‌های منصفانه مدل پیشنهادی در برابر مدل کنترل روی پروتکل استاندارد.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.1</span><span class="t">ممیزی نقاط وارسی و مسیر رسیدن به آزمایش نهایی</span><span class="d">هفت گام مشاهده، تشخیص و اقدام که به پروتکل نهایی انجامید.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.2</span><span class="t">راستی‌آزمایی زنجیره ارزیابی: بازتولید نتایج مدل پایه Depth Anything V2</span><span class="d">زنجیره ارزیابی اعداد مقاله مرجع را با اختلاف AbsRel حداکثر 0.005 بازتولید می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.3</span><span class="t">ناکارآمدی تنظیم دقیق‌پارامترها برای ارزیابی برون‌دامنه‌ای</span><span class="d">تنظیم دقیق روی چند مجموعه‌داده محدود، تعمیم صفرنمونه مدل بنیادین را به‌شدت تخریب می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.4</span><span class="t">نتایج پروتکل نسبی: مقایسه چهارگانه</span><span class="d">مقایسه چهار مدل در ارزیابی نسبی برای دو اندازه انکودر.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.5</span><span class="t">افزونه‌سازی زوم‌ـ‌برش و نبود برتری مدل پیشنهادی در پروتکل نسبی</span><span class="d">زوم‌ـ‌برش به هر دو مدل کمک می‌کند، اما مدل پیشنهادی برتری ندارد، چون تراز هر تصویر مقیاس را حذف می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.6</span><span class="t">ارزیابی مطلق: آشکارشدن سهم پارامترهای درونی دوربین</span><span class="d">بدون تراز مقیاس، مدل پیشنهادی کمی از مدل کنترل بهتر می‌شود.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.7</span><span class="t">پیکربندی لرزش کانونی: جهش سهم پارامترهای دوربین</span><span class="d">لرزش کانونی بهبود AbsRel نسبت به مدل کنترل را از 0.0009 به 0.0231 می‌رساند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.8</span><span class="t">نمای یکپارچه پیکربندی‌های آموزشی و رابطه سهم پارامترهای دوربین با شدت ابهام مقیاس</span><span class="d">هرچه ابهام مقیاس در آموزش شدیدتر باشد، سود ماتریس کالیبراسیون بیشتر است.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.9</span><span class="t">جمع‌بندی مطالعه کنترل‌شده و گزارش کوشش‌های تجربی</span><span class="d">خلاصه بیش از بیست اجرای آموزش و چگونگی تثبیت پروتکل نهایی.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.4.10</span><span class="t">نمای اندازه اثر: مقایسه همه معیارها در یک نگاه</span><span class="d">نمودار اندازه اثر با تفاضل زوجی و بازه اطمینان همه معیارها.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">4.5</span><span class="t">تحلیل حساسیت نسبت به پارامترهای دوربین</span><span class="d">رفتار مدل‌ها هنگام تغییر پارامترهای دوربین.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.5.1</span><span class="t">آزمون پیمایش فاصله کانونی: آیا مدل واقعا فاصله کانونی را می‌خواند؟</span><span class="d">با تغییر فاصله کانونی روی تصویر ثابت، شیب لگاریتمی در لرزش کانونی 0.97 و در زوم‌ـ‌برش 0.06 است.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.5.2</span><span class="t">آزمون حذف و تحریف ماتریس کالیبراسیون: اثبات اتکای علی</span><span class="d">حذف ماتریس کالیبراسیون خطای AbsRel را 111 درصد بالا می‌برد و فاصله کانونی غلط همان خطایی را می‌سازد که هندسه پیش‌بینی می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.5.3</span><span class="t">رفتار متفاوت معیارهای AbsRel و RMSE</span><span class="d">معیار AbsRel می‌تواند تغییر مقیاسی را پنهان کند که RMSE آشکار می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.5.4</span><span class="t">ارتباط با تحلیل هندسی فصل سوم</span><span class="d">نتایج تجربی با تحلیل هندسی فصل سوم هم‌راستا است.</span></div>
+</div></details>
+<div class="lv2 leaf"><span class="n" dir="ltr">4.6</span><span class="t">ملاحظات کیفی و حدود شواهد بصری</span><span class="d">نقشه‌های عمق فقط برای اشکال‌زدایی به‌کار رفتند و ادعای برتری بصری مطرح نمی‌شود.</span></div>
+<details class="lv2"><summary><span class="n" dir="ltr">4.7</span><span class="t">تحلیل موردی دیتاست CityScapes</span><span class="d">دلیل نیاز این دیتاست به تحلیل جداگانه.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.7.1</span><span class="t">ماهیت و ویژگی‌های خاص دیتاست CityScapes</span><span class="d">صحنه‌های شهری واقعی که عمق مرجع آن‌ها از تطبیق استریو می‌آید، نه از حسگر عمق.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.7.2</span><span class="t">تحلیل کیفیت عمق مرجع</span><span class="d">عمق مرجع آن نویزی و ناهمگن است، به‌ویژه در نواحی دور و لبه‌ها.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.7.3</span><span class="t">دلیل رفتار متفاوت خطاها</span><span class="d">دامنه بسیار وسیع عمق، خطای نسبی کوچک را به خطای مطلق بزرگ تبدیل می‌کند.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.7.4</span><span class="t">محدودیت همسان‌سازی نتایج با سایر دیتاست‌ها</span><span class="d">اعداد این دیتاست را نباید مستقیم با دیتاست‌های دیگر مقایسه کرد.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">4.8</span><span class="t">بحث و تفسیر نتایج</span><span class="d">تفسیر نتایج فراتر از گزارش اعداد.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">4.8.1</span><span class="t">جمع‌بندی تحلیلی نتایج کمی و کیفی</span><span class="d">مدل پایه در معیارهای مطلق ناپایدار است و ماتریس کالیبراسیون صریح آن‌ها را بهبود می‌دهد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.8.2</span><span class="t">پاسخ به سوالات تحقیق</span><span class="d">پاسخ هر سه سوال تحقیق بر پایه شواهد فصل.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.8.3</span><span class="t">وابستگی سهم پارامترهای دوربین به پروتکل ارزیابی و ظرفیت مدل</span><span class="d">سود ماتریس کالیبراسیون به پروتکل ارزیابی و ظرفیت مدل بستگی دارد.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.8.4</span><span class="t">مقایسه غیرمستقیم با ادبیات موضوع</span><span class="d">مقایسه جهت یافته‌ها با کارهای پیشین، نه مقایسه عددی.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">4.8.5</span><span class="t">تفسیر نتایج در چارچوب هندسه تصویربرداری</span><span class="d">دادن ماتریس کالیبراسیون، قیدهای فیزیکی دوربین را به یادگیری تحمیل می‌کند.</span></div>
+</div></details>
+<div class="lv2 leaf"><span class="n" dir="ltr">4.9</span><span class="t">جمع‌بندی فصل نتایج</span><span class="d">مرور شواهد فصل در برابر اهداف پژوهش.</span></div>
+</div></details>
+<details class="lv1"><summary><span class="n" dir="ltr">5</span><span class="t">بحث و نتیجه‌گیری</span><span class="d">نتیجه‌گیری، نوآوری‌ها، محدودیت‌ها و کارهای آینده.</span></summary>
+<div class="kids">
+<div class="lv2 leaf"><span class="n" dir="ltr">5.1</span><span class="t">مقدمه</span><span class="d">معنای یافته‌ها و ارزش علمی و عملی آن‌ها.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">5.2</span><span class="t">جمع‌بندی یافته‌های اصلی پژوهش</span><span class="d">ابهام مقیاس محدودیتی هندسی در مدل‌های صرفا تصویری است، نه ضعف پیاده‌سازی.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">5.3</span><span class="t">پاسخ نهایی به سوالات تحقیق</span><span class="d">داوری نهایی هر فرضیه در کنار شاهد اصلی آن.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">5.4</span><span class="t">تفسیر نهایی نتایج در چارچوب هندسه تصویربرداری</span><span class="d">عمق مطلق کمیتی هندسی است و بدون پارامترهای دوربین به‌صورت یکتا بازیابی نمی‌شود.</span></div>
+<details class="lv2"><summary><span class="n" dir="ltr">5.5</span><span class="t">نوآوری‌های تحقیق</span><span class="d">نوآوری‌ها در دو سطح تئوریک و عملی.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">5.5.1</span><span class="t">نوآوری تئوریک</span><span class="d">بازتعریف مساله در چارچوب هندسه تصویربرداری، به‌جای نگاه صرفا داده‌محور.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">5.5.2</span><span class="t">نوآوری عملی</span><span class="d">تزریق ساده توکن ماتریس کالیبراسیون که با معماری‌های موجود سازگار است، برخلاف روش‌های کانولوشنی یا حدس‌زننده دوربین.</span></div>
+<div class="lv3 leaf"><span class="n" dir="ltr">5.5.3</span><span class="t">دستاوردهای روش‌شناختی و تشخیصی</span><span class="d">ابزارهای قابل استفاده مجدد: افزونه‌سازی زوم‌ـ‌برش و لرزش کانونی، و آزمون‌های پیمایش کانونی و حذف ماتریس.</span></div>
+</div></details>
+<details class="lv2"><summary><span class="n" dir="ltr">5.6</span><span class="t">محدودیت‌ها و چالش‌های پژوهش</span><span class="d">محدودیت‌های اصلی، به‌ویژه وابستگی به صحت ماتریس کالیبراسیون.</span></summary>
+<div class="kids">
+<div class="lv3 leaf"><span class="n" dir="ltr">5.6.1</span><span class="t">ملاحظات عملی و محدودیت‌های پیاده‌سازی</span><span class="d">محدودیت‌های عملی مانند حافظه 24 گیگابایتی کارت گرافیک که با تجمع گرادیان مدیریت شد.</span></div>
+</div></details>
+<div class="lv2 leaf"><span class="n" dir="ltr">5.7</span><span class="t">پیشنهادهایی برای تحقیقات آینده</span><span class="d">گام‌های بعدی، مانند کار با ماتریس کالیبراسیون نادقیق یا ناموجود.</span></div>
+<div class="lv2 leaf"><span class="n" dir="ltr">5.8</span><span class="t">جمع‌بندی نهایی فصل</span><span class="d">تخمین عمق مطلق پایدار تک‌دوربینه به هندسه صریح دوربین نیاز دارد.</span></div>
+</div></details>
+</main>
+<script>
+document.getElementById("open").onclick  = () => document.querySelectorAll("details").forEach(d => d.open = true);
+document.getElementById("close").onclick = () => document.querySelectorAll("details").forEach(d => d.open = false);
+</script>
+</body>
+</html>

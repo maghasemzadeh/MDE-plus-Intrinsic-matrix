@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Evaluate one metric-depth model on several held-out test sets.
+"""Evaluate one depth model on several held-out test sets.
 
 Absolute metric depth, no per-image scale or shift alignment, prediction at
 the DA2 inference resolution (lower-bound 518, multiple of 14) interpolated
@@ -17,11 +17,23 @@ Test sets (datasets/multidomain.py EVAL_READERS):
   sunrgbd_*      SUN RGB-D subset, 200 frames per sensor (kv1 B3DO, kv2,
                  realsense, xtion; NYU frames excluded), raw depth, ..10 m
 
+Relative (basic) models, i.e. a train.py checkpoint with model_type 'basic'
+or --released basic, output inverse depth. They are evaluated with the DA2
+paper protocol instead: per-image least-squares scale and shift in
+inverse-depth space on the valid pixels, inversion, clipping to the eval
+range, then the same metrics. Same images and masks as the metric mode.
+
+--relative-protocol evaluates a METRIC model under that same relative protocol:
+its depth output is floored at --pred-floor metres, inverted, and then aligned
+exactly like a relative model. The unaligned and the median-scaled AbsRel of the
+same predictions are stored per image as abs_rel_metric / abs_rel_median.
+
 Models:
   --checkpoint X       a train.py checkpoint (ReLU-head class; intrinsics use
                        read from its config)
   --released NAME      released DA2 metric vitl: hypersim (max 20 m) or
-                       vkitti (max 80 m), original sigmoid*max_depth head
+                       vkitti (max 80 m), original sigmoid*max_depth head;
+                       or basic: the released relative DA2 checkpoint
 Diagnostics (camera-aware models only):
   --k-scale s          feed K with fx, fy multiplied by s (wrong focal)
   --withhold-k         run the camera-aware model without K
@@ -89,7 +101,26 @@ class _Items(Dataset):
                 'K': K.astype(np.float32), 'id': self.reader.item_id(i)}
 
 
+def align_inverse_depth(pred, gt, lo, hi):
+    """Least-squares scale and shift of a disparity prediction to 1/gt, then
+    depth clipped to the eval range (evaluate_paper.py basic protocol)."""
+    p, t = pred.astype(np.float64), 1.0 / gt.astype(np.float64)
+    A = np.stack([p, np.ones_like(p)], axis=1)
+    (s, b), *_ = np.linalg.lstsq(A, t, rcond=None)
+    return np.clip(1.0 / np.maximum(s * p + b, 1e-6), lo, hi)
+
+
 def load_model(args, device):
+    if args.released == 'basic':
+        sys.path.insert(0, os.path.join(ROOT, 'models', 'raw_models', 'DepthAnythingV2-revised'))
+        from depth_anything_v2.dpt import DepthAnythingV2
+        ckpt = os.path.join(ROOT, 'models', 'raw_models', 'DepthAnythingV2-revised', 'checkpoints',
+                            f'depth_anything_v2_{args.encoder}.pth')
+        model = DepthAnythingV2(**MODEL_CONFIGS[args.encoder], use_camera_intrinsics=False)
+        model.load_state_dict(torch.load(ckpt, map_location='cpu'), strict=True)
+        meta = {'checkpoint': ckpt, 'released': 'basic', 'uses_intrinsics': False,
+                'encoder': args.encoder, 'relative': True}
+        return model.to(device).eval(), False, meta
     if args.released:
         # The released metric package dir has no __init__.py, so a plain
         # `import depth_anything_v2` resolves to the revised (ReLU-head)
@@ -132,14 +163,17 @@ def load_model(args, device):
     assert os.sep.join(['DepthAnythingV2-revised', 'depth_anything_v2', 'dpt.py']) in src, src
     ckpt = torch.load(args.checkpoint, map_location='cpu', weights_only=False)
     cfg = ckpt['config']
-    assert cfg['model_type'] == 'metric', cfg
+    assert cfg['model_type'] in ('metric', 'basic'), cfg
+    if cfg['model_type'] == 'basic':
+        assert cfg.get('basic_target_space') == 'disparity', cfg
     uses_k = bool(cfg.get('use_camera_intrinsics'))
     model = DepthAnythingV2(**MODEL_CONFIGS[cfg['encoder']], use_camera_intrinsics=uses_k,
                             cam_token_inject_layer=cfg.get('cam_token_inject_layer'))
     model.load_state_dict(ckpt['model'], strict=True)
     meta = {'checkpoint': os.path.abspath(args.checkpoint), 'epoch': ckpt.get('epoch'),
             'uses_intrinsics': uses_k, 'train_config': cfg, 'encoder': cfg['encoder'],
-            'canonical_focal': float(cfg.get('canonical_focal') or 0.0)}
+            'canonical_focal': float(cfg.get('canonical_focal') or 0.0),
+            'relative': cfg['model_type'] == 'basic'}
     if uses_k:
         meta['cam_gate'] = float(model.cam_encoder.output_gate.item())
     return model.to(device).eval(), uses_k, meta
@@ -149,7 +183,7 @@ def main():
     p = argparse.ArgumentParser()
     g = p.add_mutually_exclusive_group(required=True)
     g.add_argument('--checkpoint')
-    g.add_argument('--released', choices=['hypersim', 'vkitti'])
+    g.add_argument('--released', choices=['hypersim', 'vkitti', 'basic'])
     p.add_argument('--encoder', default='vitl')
     p.add_argument('--datasets', default='nyu,kitti,cityscapes,diode_indoor,diode_outdoor,middlebury')
     p.add_argument('--out-dir', required=True)
@@ -161,10 +195,17 @@ def main():
     p.add_argument('--jpeg-quality', type=int, default=0,
                    help='re-encode every test image as JPEG at this quality first (0 = off)')
     p.add_argument('--workers', type=int, default=6)
+    p.add_argument('--relative-protocol', action='store_true',
+                   help='metric model: align 1/prediction to 1/GT per image (scale+shift) before the metrics')
+    p.add_argument('--pred-floor', type=float, default=0.1,
+                   help='with --relative-protocol: floor (m) applied to the metric prediction before inversion')
+    p.add_argument('--device', default=None)
     args = p.parse_args()
 
-    device = 'cuda' if torch.cuda.is_available() else 'cpu'
+    device = args.device or ('cuda' if torch.cuda.is_available() else 'cpu')
     model, uses_k, meta = load_model(args, device)
+    if args.relative_protocol:
+        assert not meta.get('relative'), '--relative-protocol is for metric models; basic ones are always aligned'
     feed_k = uses_k and not args.withhold_k
     os.makedirs(args.out_dir, exist_ok=True)
     print(f"model: {meta['checkpoint']} | intrinsics: {uses_k} | feed K: {feed_k} "
@@ -212,7 +253,17 @@ def main():
             valid = np.isfinite(gt) & (gt > lo) & (gt < hi) & region
             if valid.sum() < 10:
                 continue
-            m = depth_metrics(pred[valid], gt[valid])
+            if meta.get('relative'):
+                m = depth_metrics(align_inverse_depth(pred[valid], gt[valid], lo, hi), gt[valid])
+            elif args.relative_protocol:
+                pv, gv = pred[valid], gt[valid]
+                m = depth_metrics(align_inverse_depth(1.0 / np.maximum(pv, args.pred_floor), gv, lo, hi), gv)
+                m['abs_rel_metric'] = depth_metrics(pv, gv)['abs_rel']
+                scaled = np.clip(pv * (np.median(gv) / max(float(np.median(pv)), 1e-6)), lo, hi)
+                m['abs_rel_median'] = depth_metrics(scaled, gv)['abs_rel']
+                m['frac_floored'] = float((pv < args.pred_floor).mean())
+            else:
+                m = depth_metrics(pred[valid], gt[valid])
             m['id'] = s['id']
             m['pred_median'] = float(np.median(pred[valid]))
             m['gt_median'] = float(np.median(gt[valid]))
@@ -222,10 +273,16 @@ def main():
         summary['n_images'] = len(per_image)
         summary['median_scale_ratio'] = float(np.median(
             [m['pred_median'] / m['gt_median'] for m in per_image]))
+        if args.relative_protocol:
+            for k in ('abs_rel_metric', 'abs_rel_median', 'frac_floored'):
+                summary[k] = float(np.mean([m[k] for m in per_image]))
         overview[name] = summary
         out = {'dataset': name, 'eval_range': [lo, hi], 'summary': summary,
                'model': meta, 'k_scale': args.k_scale, 'withhold_k': args.withhold_k,
                'center_zoom': args.center_zoom, 'input_size': args.input_size,
+               'protocol': 'relative_inverse_depth_aligned' if meta.get('relative') else
+               'metric_model_inverse_depth_aligned' if args.relative_protocol else 'metric',
+               'pred_floor': args.pred_floor if args.relative_protocol else None,
                'per_image': per_image}
         with open(os.path.join(args.out_dir, f'{name}.json'), 'w') as f:
             json.dump(out, f, indent=1)

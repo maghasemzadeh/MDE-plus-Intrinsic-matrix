@@ -1,0 +1,180 @@
+mdrels  Sun Nov 15 02:57:26 PM +0330 2026
+-rw-rw-r-- 1 ubuntu ubuntu 99221808 Nov 15 14:57 models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_metric_vkitti_vits.pth
+llm-qwen
+=== TRAIN_START PR 11-15 14:57
+=== TRAIN_START CR 11-15 14:57
+=== STEP released-basic-zoom1.0: 11-15 14:57
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/depth_anything_v2_vits.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0509 rmse=0.241 d1=0.9732 scale=0.740 (21s)
+kitti          n= 652 abs_rel=0.0832 rmse=3.649 d1=0.9340 scale=0.303 (44s)
+cityscapes     n= 500 abs_rel=0.1194 rmse=7.259 d1=0.8615 scale=0.115 (91s)
+diode_indoor   n= 325 abs_rel=0.0733 rmse=0.399 d1=0.9351 scale=1.025 (22s)
+diode_outdoor  n= 446 abs_rel=0.3318 rmse=7.435 d1=0.6031 scale=0.206 (29s)
+middlebury     n=  23 abs_rel=0.0359 rmse=0.149 d1=0.9934 scale=0.676 (4s)
+sunrgbd_kv1    n= 200 abs_rel=0.0579 rmse=0.230 d1=0.9628 scale=1.661 (8s)
+sunrgbd_kv2    n= 200 abs_rel=0.0471 rmse=0.209 d1=0.9789 scale=1.513 (9s)
+sunrgbd_realsense n= 200 abs_rel=0.0466 rmse=0.183 d1=0.9755 scale=1.731 (8s)
+sunrgbd_xtion  n= 200 abs_rel=0.0666 rmse=0.263 d1=0.9566 scale=1.157 (8s)
+EVAL_DONE
+=== STEP_DONE released-basic-zoom1.0 rc=0
+=== STEP released-basic-zoom1.5: 11-15 15:02
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2-revised/checkpoints/depth_anything_v2_vits.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0515 rmse=0.257 d1=0.9724 scale=0.837 (22s)
+kitti          n= 652 abs_rel=0.0899 rmse=4.119 d1=0.9264 scale=0.262 (60s)
+cityscapes     n= 500 abs_rel=0.0902 rmse=6.096 d1=0.9053 scale=0.209 (51s)
+diode_indoor   n= 325 abs_rel=0.0778 rmse=0.409 d1=0.9260 scale=0.948 (15s)
+diode_outdoor  n= 446 abs_rel=0.3016 rmse=6.845 d1=0.6347 scale=0.190 (20s)
+middlebury     n=  23 abs_rel=0.0372 rmse=0.153 d1=0.9902 scale=0.925 (2s)
+sunrgbd_kv1    n= 200 abs_rel=0.0525 rmse=0.171 d1=0.9681 scale=1.648 (6s)
+sunrgbd_kv2    n= 200 abs_rel=0.0470 rmse=0.208 d1=0.9800 scale=1.438 (7s)
+sunrgbd_realsense n= 200 abs_rel=0.0532 rmse=0.185 d1=0.9681 scale=1.650 (7s)
+sunrgbd_xtion  n= 200 abs_rel=0.0618 rmse=0.255 d1=0.9588 scale=1.155 (6s)
+EVAL_DONE
+=== STEP_DONE released-basic-zoom1.5 rc=0
+=== STEP released-hypersim: 11-15 15:06
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_metric_hypersim_vits.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.2143 rmse=0.618 d1=0.6739 scale=1.161 (26s)
+kitti          n= 652 abs_rel=0.5443 rmse=12.517 d1=0.0066 scale=0.469 (61s)
+cityscapes     n= 500 abs_rel=0.5742 rmse=21.699 d1=0.0052 scale=0.454 (58s)
+diode_indoor   n= 325 abs_rel=0.2818 rmse=1.236 d1=0.4517 scale=0.895 (22s)
+diode_outdoor  n= 446 abs_rel=0.5708 rmse=11.216 d1=0.0663 scale=0.527 (29s)
+middlebury     n=  23 abs_rel=0.3581 rmse=1.145 d1=0.2185 scale=0.655 (3s)
+sunrgbd_kv1    n= 200 abs_rel=0.2642 rmse=0.501 d1=0.5632 scale=1.173 (7s)
+sunrgbd_kv2    n= 200 abs_rel=0.2512 rmse=0.647 d1=0.5477 scale=1.226 (8s)
+sunrgbd_realsense n= 200 abs_rel=0.1390 rmse=0.358 d1=0.8184 scale=0.940 (7s)
+sunrgbd_xtion  n= 200 abs_rel=0.2287 rmse=0.568 d1=0.6819 scale=1.123 (7s)
+EVAL_DONE
+=== STEP_DONE released-hypersim rc=0
+=== STEP released-vkitti: 11-15 15:11
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_metric_vkitti_vits.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=2.5663 rmse=7.295 d1=0.0017 scale=3.310 (27s)
+kitti          n= 652 abs_rel=0.1374 rmse=4.674 d1=0.8093 scale=1.035 (61s)
+cityscapes     n= 500 abs_rel=0.2334 rmse=8.677 d1=0.6112 scale=1.174 (58s)
+diode_indoor   n= 325 abs_rel=1.8438 rmse=4.258 d1=0.1037 scale=2.579 (22s)
+diode_outdoor  n= 446 abs_rel=0.6813 rmse=7.727 d1=0.3267 scale=1.200 (29s)
+middlebury     n=  23 abs_rel=2.5390 rmse=7.097 d1=0.0286 scale=3.360 (3s)
+sunrgbd_kv1    n= 200 abs_rel=3.2564 rmse=5.457 d1=0.0060 scale=3.687 (7s)
+sunrgbd_kv2    n= 200 abs_rel=3.2662 rmse=8.461 d1=0.0001 scale=3.992 (8s)
+sunrgbd_realsense n= 200 abs_rel=2.5313 rmse=5.454 d1=0.0059 scale=3.376 (7s)
+sunrgbd_xtion  n= 200 abs_rel=2.5208 rmse=6.010 d1=0.0087 scale=3.255 (7s)
+EVAL_DONE
+=== STEP_DONE released-vkitti rc=0
+=== TRAIN_DONE 11-15 15:21
+[2026-11-15 15:21:33,967][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/PR/revised_basic_vits_nyu+kitti+vkitti+cityscapes_intrinsics_lr5e-6_bs4_20261115_145906/latest.pth
+[2026-11-15 15:21:33,967][    INFO] TensorBoard writer closed. Training completed.
+
+=== STEP PR-zoom1.0: 11-15 15:21
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/PR/revised_basic_vits_nyu+kitti+vkitti+cityscapes_intrinsics_lr5e-6_bs4_20261115_145906/best.pth | intrinsics: True | feed K: True | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0460 rmse=0.221 d1=0.9795 scale=5.157 (20s)
+kitti          n= 652 abs_rel=0.0752 rmse=3.436 d1=0.9392 scale=2.042 (39s)
+cityscapes     n= 500 abs_rel=0.0983 rmse=6.293 d1=0.8866 scale=0.729 (69s)
+diode_indoor   n= 325 abs_rel=0.0763 rmse=0.418 d1=0.9329 scale=7.209 (16s)
+diode_outdoor  n= 446 abs_rel=0.3022 rmse=6.757 d1=0.6254 scale=1.302 (21s)
+middlebury     n=  23 abs_rel=0.0382 rmse=0.171 d1=0.9887 scale=5.074 (3s)
+sunrgbd_kv1    n= 200 abs_rel=0.0574 rmse=0.240 d1=0.9648 scale=11.976 (5s)
+sunrgbd_kv2    n= 200 abs_rel=0.0484 rmse=0.204 d1=0.9790 scale=10.574 (6s)
+sunrgbd_realsense n= 200 abs_rel=0.0456 rmse=0.168 d1=0.9782 scale=12.557 (6s)
+sunrgbd_xtion  n= 200 abs_rel=0.0649 rmse=0.252 d1=0.9583 scale=8.185 (6s)
+EVAL_DONE
+=== STEP_DONE PR-zoom1.0 rc=0
+=== STEP PR-zoom1.5: 11-15 15:25
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/PR/revised_basic_vits_nyu+kitti+vkitti+cityscapes_intrinsics_lr5e-6_bs4_20261115_145906/best.pth | intrinsics: True | feed K: True | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0468 rmse=0.233 d1=0.9774 scale=5.866 (17s)
+kitti          n= 652 abs_rel=0.0799 rmse=3.751 d1=0.9349 scale=1.797 (37s)
+cityscapes     n= 500 abs_rel=0.0737 rmse=5.298 d1=0.9283 scale=1.421 (38s)
+diode_indoor   n= 325 abs_rel=0.0800 rmse=0.422 d1=0.9232 scale=6.524 (10s)
+diode_outdoor  n= 446 abs_rel=0.2822 rmse=6.342 d1=0.6532 scale=1.244 (14s)
+middlebury     n=  23 abs_rel=0.0402 rmse=0.176 d1=0.9873 scale=6.410 (2s)
+sunrgbd_kv1    n= 200 abs_rel=0.0508 rmse=0.162 d1=0.9708 scale=12.319 (4s)
+sunrgbd_kv2    n= 200 abs_rel=0.0482 rmse=0.206 d1=0.9796 scale=10.201 (5s)
+sunrgbd_realsense n= 200 abs_rel=0.0496 rmse=0.169 d1=0.9727 scale=12.046 (5s)
+sunrgbd_xtion  n= 200 abs_rel=0.0590 rmse=0.242 d1=0.9624 scale=8.307 (4s)
+EVAL_DONE
+=== STEP_DONE PR-zoom1.5 rc=0
+=== STEP PR-noK: 11-15 15:28
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/PR/revised_basic_vits_nyu+kitti+vkitti+cityscapes_intrinsics_lr5e-6_bs4_20261115_145906/best.pth | intrinsics: True | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0460 rmse=0.221 d1=0.9795 scale=5.190 (20s)
+kitti          n= 652 abs_rel=0.0753 rmse=3.433 d1=0.9394 scale=2.040 (38s)
+cityscapes     n= 500 abs_rel=0.0980 rmse=6.277 d1=0.8873 scale=0.730 (68s)
+diode_indoor   n= 325 abs_rel=0.0758 rmse=0.415 d1=0.9331 scale=7.284 (16s)
+diode_outdoor  n= 446 abs_rel=0.3023 rmse=6.765 d1=0.6251 scale=1.309 (21s)
+middlebury     n=  23 abs_rel=0.0379 rmse=0.169 d1=0.9899 scale=4.957 (3s)
+sunrgbd_kv1    n= 200 abs_rel=0.0573 rmse=0.240 d1=0.9650 scale=11.959 (5s)
+sunrgbd_kv2    n= 200 abs_rel=0.0483 rmse=0.204 d1=0.9790 scale=10.514 (6s)
+sunrgbd_realsense n= 200 abs_rel=0.0456 rmse=0.168 d1=0.9782 scale=12.538 (6s)
+sunrgbd_xtion  n= 200 abs_rel=0.0647 rmse=0.252 d1=0.9586 scale=8.157 (5s)
+EVAL_DONE
+=== STEP_DONE PR-noK rc=0
+[2026-11-15 15:21:03,139][    INFO] Checkpoint saved: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/CR/base_basic_vits_nyu+kitti+vkitti+cityscapes_lr5e-6_bs4_20261115_145906/latest.pth
+[2026-11-15 15:21:03,140][    INFO] TensorBoard writer closed. Training completed.
+
+=== STEP CR-zoom1.0: 11-15 15:31
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/CR/base_basic_vits_nyu+kitti+vkitti+cityscapes_lr5e-6_bs4_20261115_145906/best.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0470 rmse=0.227 d1=0.9784 scale=4.500 (20s)
+kitti          n= 652 abs_rel=0.0777 rmse=3.464 d1=0.9374 scale=1.914 (38s)
+cityscapes     n= 500 abs_rel=0.0987 rmse=6.312 d1=0.8858 scale=0.686 (68s)
+diode_indoor   n= 325 abs_rel=0.0748 rmse=0.415 d1=0.9353 scale=6.340 (16s)
+diode_outdoor  n= 446 abs_rel=0.3038 rmse=6.792 d1=0.6226 scale=1.223 (21s)
+middlebury     n=  23 abs_rel=0.0384 rmse=0.171 d1=0.9892 scale=4.325 (3s)
+sunrgbd_kv1    n= 200 abs_rel=0.0577 rmse=0.247 d1=0.9646 scale=10.684 (5s)
+sunrgbd_kv2    n= 200 abs_rel=0.0473 rmse=0.205 d1=0.9784 scale=9.480 (6s)
+sunrgbd_realsense n= 200 abs_rel=0.0444 rmse=0.167 d1=0.9788 scale=11.468 (6s)
+sunrgbd_xtion  n= 200 abs_rel=0.0649 rmse=0.256 d1=0.9587 scale=7.198 (5s)
+EVAL_DONE
+=== STEP_DONE CR-zoom1.0 rc=0
+=== STEP CR-zoom1.5: 11-15 15:35
+xFormers not available
+xFormers not available
+xFormers not available
+xFormers not available
+model: /home/ubuntu/projects/MDE-plus-Intrinsic-matrix/experiments/md_rel_s/CR/base_basic_vits_nyu+kitti+vkitti+cityscapes_lr5e-6_bs4_20261115_145906/best.pth | intrinsics: False | feed K: False | k_scale: 1.0
+nyu            n= 654 abs_rel=0.0470 rmse=0.236 d1=0.9769 scale=5.201 (16s)
+kitti          n= 652 abs_rel=0.0821 rmse=3.774 d1=0.9341 scale=1.674 (36s)
+cityscapes     n= 500 abs_rel=0.0747 rmse=5.364 d1=0.9264 scale=1.335 (38s)
+diode_indoor   n= 325 abs_rel=0.0787 rmse=0.419 d1=0.9257 scale=5.862 (10s)
+diode_outdoor  n= 446 abs_rel=0.2840 rmse=6.387 d1=0.6511 scale=1.156 (13s)
+middlebury     n=  23 abs_rel=0.0394 rmse=0.174 d1=0.9873 scale=5.832 (2s)
+sunrgbd_kv1    n= 200 abs_rel=0.0510 rmse=0.162 d1=0.9704 scale=10.768 (4s)
+sunrgbd_kv2    n= 200 abs_rel=0.0471 rmse=0.206 d1=0.9806 scale=9.316 (5s)
+sunrgbd_realsense n= 200 abs_rel=0.0496 rmse=0.170 d1=0.9727 scale=10.828 (5s)
+sunrgbd_xtion  n= 200 abs_rel=0.0594 rmse=0.246 d1=0.9614 scale=7.235 (4s)
+EVAL_DONE
+=== STEP_DONE CR-zoom1.5 rc=0
+EXIT_CODE=0
+llm-qwen

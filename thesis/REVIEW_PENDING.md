@@ -444,3 +444,25 @@ The old chart `fig:cross_dataset_silog` (red, deleted in R7) is not restored: it
 
 - Finalize R15: drop `edadded`, `\edadd` and `\edaddbox` wrappers and the `% REVIEW R15` comments.
 - Revert R15: delete the `edadded` block and the whole `figure` (both tagged `% REVIEW R15`).
+
+## R18 — 2026-11-17 — Evaluation metrics made consistent: AbsRel (+ δ1) is the main metric
+
+Requested by the author: remove the contradictions about AbsRel / RMSE / SiLog and use AbsRel as the main metric for absolute models.
+Evidence: `src/metrics.py` (AbsRel, SqRel, RMSE, log10, δ, SiLog with λ=0.5), `train.py:104` (SiLog λ=0.5). Codex pass ran. Tag R16 is already used (unlogged), R17 was finalized and removed.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter2.tex | 2.1.1 (`sec:eval_metrics`), AbsRel sentence (~91) | «به مقیاس مطلق صحنه حساسیت کمتری» → unitless / independent of depth range; new sentences: AbsRel = \|s−1\| for a global scale error, main metric, asymmetric, so δ1 is reported with it | edited |
+| chapter2.tex | 2.1.1, RMSE paragraph (~95) | «حساس به پارامترهای درونی دوربین / فاصله کانونی» → in metres, grows with depth range, compared only within one dataset; focal-length scale error shows in both metrics | edited |
+| chapter2.tex | 2.1.1, after δ definition (~101) | only δ1 is reported (as in DA2) | edited |
+| chapter2.tex | 2.1.1, after δ definition | new paragraph + equation defining SqRel and log10 (used only in some chapter 4 tables) | added |
+| chapter3.tex | 3.2.4 (~249) | sentence pointing to «نتایج تجربی ... تحلیل RMSE» in 2.1.1 (which has no results) | deleted |
+| chapter3.tex | 3.5.2 `subsec:evaluation_protocol` (~610) | «همراه با δ1» + reason AbsRel is the main metric | edited |
+| chapter3.tex | 3.5.2, SiLog paragraph (~614) | «تغییرناپذیری ذاتی نسبت به مقیاس» → with λ=0.5 only partly scale-invariant (full only with λ=1); «برای این دسته از مدل‌ها» removed | edited |
+| chapter3.tex | 3.5.2, `subsec:rmse_sensitivity` paragraph (~618) | old «RMSE as stability measure» paragraph (red) replaced by new paragraph: RMSE in metres, within-dataset only; cross-dataset and camera-stability claims rest on AbsRel/δ1 and the K-sweep/knockout tests | deleted + added |
+| chapter3.tex | 3.6 summary (~640) | «RMSE برای سنجش حساسیت به مقیاس … AbsRel برای مقایسه نرمال‌شده» → AbsRel + δ1 main, RMSE within-dataset complement | edited |
+| chapter4.tex | 4.3.3 `sec:quantitative_results` (~388) | SiLog «به‌عنوان معیار مطلق اصلی» → «در این مقایسه»; added: AbsRel + δ1 main in the rest of the chapter | edited |
+| chapter4.tex | 4.3.3 (~412) | «خروجی عمق … و در نتیجه به پارامترهای دوربین» → «خطای … به نوع دیتاست»; added caveat that datasets differ in more than the camera, camera role tested directly in `sec:camera_sensitivity` | edited |
+
+- Finalize R18: `\edrep{old}{new}` → new, `\edins{X}` → X, drop `edadded` wrapper, delete `\eddel{}` sentence and the `eddeleted` paragraph, remove `% REVIEW R18` lines.
+- Revert R18: `\edrep{old}{new}` → old, delete `\edins{}` and the `edadded` blocks, unwrap `\eddel{}` / `eddeleted`, remove `% REVIEW R18` lines.

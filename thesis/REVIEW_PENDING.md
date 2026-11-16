@@ -163,3 +163,101 @@ Requested by the author: continue the paragraph-editor review after Chapter 4 th
 | chapter5.tex | Future work and final chapter summary | spelling, agreement, and fluency corrections | edited |
 
 All scientific claims, numbers, metrics, citations, equations, labels, and existing review markup were preserved. New review markers are tagged `% REVIEW R6` in `thesis/tex/chapter5.tex`. The appendices remain excluded because `main.tex` comments out their include lines. The mandated `./thesis/build.sh` validation remains unavailable because `latexmk` is not installed in the environment.
+
+## R7 — 2026-11-15 — Restructuring of chapters 2–5 per `thesis/table-edit.md`
+
+Requested by the author: apply the target structure and per-section instructions of
+`thesis/table-edit.md` (compared against `thesis/table.md`), add the ViT-S / ViT-L,
+absolute / relative multi-domain results, and mark everything with the colour rule.
+
+Author decisions taken on 2026-11-15 (asked before editing):
+- Older marks (R1–R6, legacy yellow) stay where the text is untouched; inside blocks
+  that R7 moves or deletes they were flattened to their accepted form.
+- **Gray** (`\edmove`, `edmoved`, `\edmovebox`, `\edmoverow`; new macros in
+  `commands.tex`) = text moved without word changes, shown only at its new place.
+  Green / yellow / red keep their meaning. Deleted headings are starred
+  (`\section*{\eddel{…}}`) so the PDF shows the target numbering.
+- KITTI: the best KITTI results are shown everywhere. For the ViT-L absolute pair the
+  KITTI values come from the pair retrained with lossless KITTI images
+  (`md7_P7` / `md7_C7`, seed 42) in `tab:multidomain_all` (original images and camera
+  shift) and in the new `tab:md_encoder_protocol`, each with a one-sentence note.
+- All new or reworded Persian (and the English abstract sentence) was written by Codex.
+
+Evidence: `results/multidomain/VITS_VS_VITL_MULTIDOMAIN.md` and
+`vits_vs_vitl_multidomain.csv`; per-image files `results/multidomain/<run>/<set>.json`
+(`md1_P/C`, `md2s_P1/C`, `md7_P7/C7` and `_zoom1.5`, `mdrel_PR/CR`, `mdrels_PR/CR`,
+`*_noK`); paired Wilcoxon p-values recomputed and equal to the CSV; per-set threshold
+0.01, uncorrected. Training settings in `tab:experiment_settings` come from the logged
+argument dictionaries and checkpoint configs on lingotube (`logs/train-nyu-pair.log`,
+`train-vitl-disp.log`, `train-vitl-aug.log`, `metric-pair2.log`,
+`train-focal-ablation-pair.log`, `md1-*.log`, `md2s-*.log`, `md7-*.log`, `mdrel.log`,
+`mdrels-train-*.log`).
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| commands.tex | review-macro block | gray moved-text macros | added (compile dependency) |
+| chapter2.tex | 2.1.1 | `fig:scale_ambiguity`, metric definitions from old 3.8 (`sec:eval_metrics`) | moved |
+| chapter2.tex | 2.1.2 | `fig:pinhole_model`, lens-distortion and homogeneous-component sentences | moved |
+| chapter2.tex | 2.1.3 | old 3.9.1 / 3.9.2 merged; SiLog form without the radical removed | moved + deleted |
+| chapter2.tex | new section 2.3 (`sec:ch2_base_model`), 2.3.1–2.3.8 | old 2.2.7 split under eight new headings, with sentences from old 3.2, 3.7.2, 3.7.5; new label `subsec:ch2_base_output` | added headings + moved |
+| chapter3.tex | intro, summary | roadmap and summary agree with the new layout | edited |
+| chapter3.tex | old 3.2, 3.3, 3.4, 3.6.2, 3.7.3, 3.8, 3.9.1, 3.9.2, 3.9.6 | removed sections (content moved as the plan says) | deleted |
+| chapter3.tex | design section start; 3.2.3; 3.2.4 | f(I,K)→D definition; fixed-injection and future-work sentences; RMSE reference | moved + added + edited |
+| chapter3.tex | 3.3.1, datasets table, R1 paragraph | wording per plan; Cityscapes case-study phrase and KITTI JPEG-95 sentence | edited + deleted |
+| chapter3.tex | 3.4 opening, 3.4.1–3.4.4 | controlled-study wording, retitle, script/option names removed | edited |
+| chapter3.tex | 3.5 heading and opening, 3.5.1, 3.5.2 | retitle, sentence from old 3.9.6, reference updates, SiLog and RMSE-stability sentences (`subsec:rmse_sensitivity`) | edited + moved |
+| chapter4.tex | 4.1 | roadmap paragraph naming the two stages | added |
+| chapter4.tex | 4.2 opening, 4.2.1 seed sentence | wording; seed fixed only in the focal-jitter configuration and multi-domain training | edited |
+| chapter4.tex | 4.2.2 | retitled; schedule paragraph (no warmup) and table intro rewritten; `tab:training_hyperparams` limited to shared values; new `tab:experiment_settings` | edited + deleted + added |
+| chapter4.tex | old 4.2.3, 4.2.4 | code structure and debugging subsections | deleted |
+| chapter4.tex | new 4.3 (`sec:experiment_path`), 4.3.1, 4.3.2 | new heading; old 4.4.1 (journey table row 2 removed, seven → six steps, figure updated) and old 4.4.2 | added + moved + edited + deleted |
+| chapter4.tex | 4.4 | retitled, subsection heading dissolved, old 4.3.2 with its table and figure | edited + deleted |
+| chapter4.tex | 4.5 heading; old 4.4.3; 4.5.3; 4.5.4; new 4.5.5 (`subsec:qualitative_controlled`); 4.5.6 | retitle; zero-shot subsection; table reference fix; dose-response block and effect-size figure merged, uniformity claim softened; qualitative text re-homed; zero-shot sentence | edited + deleted + moved + added |
+| chapter4.tex | 4.6 | «فصل سوم» → «فصل دوم»; two last subsections | edited + deleted |
+| chapter4.tex | 4.7 heading and intro | «گام پایانی:»; `tab:multidomain_main` and its paragraph; two CityScapes sentences | edited + moved |
+| chapter4.tex | 4.7.1 `tab:multidomain_all` and text | KITTI rows from the lossless pair, bold, note; KITTI sentences | edited + added |
+| chapter4.tex | old 4.6.2 lossless subsection, `tab:md_lossless_kitti` | whole subsection | deleted |
+| chapter4.tex | 4.7.2 `subsec:revised_cross_dataset` | retitled; new text and `tab:md_encoder_protocol`; old text and `tab:stability_summary`, `tab:stability_paired` | added + deleted |
+| chapter4.tex | 4.7.3 `tab:md_runs` and text | rows 11–12 (relative pairs), 13 → 17 models | edited + added |
+| chapter4.tex | old qualitative section, CityScapes section, old 4.9.1, 4.9.2, 4.9.5 | headings and text | deleted (parts moved to 4.5.5, 4.7 intro, chapter 5) |
+| chapter4.tex | 4.8 opening, 4.8.1; 4.9 | wording, multi-domain sentences; summary reduced to one paragraph | edited + added + deleted |
+| chapter5.tex | 5.1 | shortened; structure sentence | deleted + added + edited |
+| chapter5.tex | new 5.2 «نتیجه‌گیری» (`sec:chapter5_conclusion`), 5.2.1–5.2.3 | old 5.2, 5.3, 5.5 become subsections; sentences from chapter 4 and old 5.4 / 5.8; multi-domain paragraph rewritten; hypothesis table cell; novelty subsections merged | added + moved + edited + deleted |
+| chapter5.tex | old 5.4, 5.6.1, 5.8 | headings and remaining text | deleted |
+| chapter5.tex | 5.3, `tab:limitations_future`; 5.4 | retitles; merged limitation paragraphs; table row; multi-camera paragraph rewritten; list items | edited + deleted + added |
+| faTitle.tex, enTitle.tex | multi-domain sentence of the abstract | second-pair sentence → KITTI from the lossless-retrained pair | edited |
+
+Labels added: `sec:experiment_path`, `subsec:qualitative_controlled`,
+`tab:experiment_settings`, `tab:md_encoder_protocol`, `sec:chapter5_conclusion`,
+`subsec:ch2_base_output`. Labels kept only on red blocks (they disappear on finalize,
+and the red chapter-3 JPEG sentence still points at the first): `subsec:md_lossless_kitti`,
+`tab:md_lossless_kitti`, `tab:stability_summary`, `tab:stability_paired`,
+`tab:da2_revised_comparison`, `fig:cross_dataset_silog`, `tab:zeroshot_failure`.
+
+Not built: there is no TeX on the editing machine; source-level checks only (brace
+and environment balance, no nested review macros, no undefined or duplicate labels,
+all cited keys present).
+
+Revert of R7: nothing was committed, so
+`git checkout edd45b2 -- thesis/tex/chapter2.tex thesis/tex/chapter3.tex thesis/tex/chapter4.tex thesis/tex/chapter5.tex thesis/tex/faTitle.tex thesis/tex/enTitle.tex thesis/tex/commands.tex`
+restores the pre-update text exactly (the R7 moves leave no trace at the old places,
+so a region-by-region revert is not possible). Finalize: as for other IDs, plus
+`\edmove{X}` → X, `edmoved` → body, `\edmovebox{X}` → X, drop `\edmoverow` /
+`\edmovecell`, and turn nothing back for starred red headings (they are removed).
+
+R7 additions after the author's answers (2026-11-15, same ID):
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.4.3, last sentence | «گرم‌سازی خطی» → no warmup (every run logged `warmup_epochs: 0`) | edited |
+| chapter3.tex | 3.4.7 multi-domain paragraph (legacy yellow block) | «برابری بیت‌به‌بیت هزینه گام صفر» → agreement to at least four significant digits | edited (`\edold` + `\edadd`) |
+| chapter4.tex | 4.5.1 opening | ViT-L pair trained with the inverse-depth target, ViT-S pair with the direct depth target | edited |
+| chapter4.tex | 4.5.3 | three sentences → one: AbsRel 0.0817 vs 0.0826 only; «هر سه معیار» and the released-model claim dropped | edited |
+| faTitle.tex, enTitle.tex | abstract | KITTI figures and the retraining remark removed; one sentence on the encoder-size / model-type comparison | deleted + added |
+
+Open points reported to the author, not changed: wording of `tab:datasets_overview`
+cells («نهایی», «مرحله اکتشافی», «ارزیابی صفرنمونه»); the chapter-1 roadmap figure
+node for chapter 3; mixed depth notation in 2.1.1; the 4.5 intro «در مرحله دوم»;
+caption «زوج اصلی» of `tab:multidomain_all`; row 2 text of `tab:md_runs`; the
+`tab:limitations_future` cell on repeating the controlled study on KITTI; position of
+the closing sentence of 5.2.

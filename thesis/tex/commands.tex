@@ -200,6 +200,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \definecolor{thRevNew}{HTML}{FFF176}  % واژه تازه در بند ویرایش‌شده: زرد
 \definecolor{thRevDel}{HTML}{D32F2F}  % قرمز پررنگ (برای متن به کار نمی‌رود)
 \definecolor{thRevDelBG}{HTML}{EF9A9A}% زمینه حذف: قرمز؛ متن سیاه می‌ماند
+\definecolor{thRevMove}{HTML}{D9D9D9} % جابه‌جاشده بدون تغییر واژه: خاکستری
 \newif\ifshowreview
 \showreviewtrue
 \ifshowreview
@@ -222,6 +223,12 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  \newcommand{\edaddcell}{\cellcolor{thRevAdd}}
  \newcommand{\ednewcell}{\cellcolor{thRevNew}}
  \newcommand{\eddelrow}{\rowcolor{thRevDelBG}}
+ % متن جابه‌جاشده بدون تغییر واژه (خاکستری)
+ \newcommand{\edmove}[1]{\edhlwith{thRevMove}{#1}}
+ \newenvironment{edmoved}{\colorlet{shadecolor}{thRevMove}\begin{shaded}}{\end{shaded}}
+ \newcommand{\edmovebox}[1]{\colorbox{thRevMove}{\begin{minipage}{\dimexpr\linewidth-2\fboxsep\relax}\centering #1\end{minipage}}}
+ \newcommand{\edmoverow}{\rowcolor{thRevMove}}
+ \newcommand{\edmovecell}{\cellcolor{thRevMove}}
 \else
  \newcommand{\edadd}[1]{#1}
  \newcommand{\edins}[1]{#1}
@@ -236,6 +243,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  \newcommand{\edaddcell}{}
  \newcommand{\ednewcell}{}
  \newcommand{\eddelrow}{}
+ \newcommand{\edmove}[1]{#1}
+ \newenvironment{edmoved}{}{}
+ \newcommand{\edmovebox}[1]{#1}
+ \newcommand{\edmoverow}{}
+ \newcommand{\edmovecell}{}
 \fi
 
 \pgfplotsset{

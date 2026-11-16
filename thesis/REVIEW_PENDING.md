@@ -466,3 +466,42 @@ Evidence: `src/metrics.py` (AbsRel, SqRel, RMSE, log10, δ, SiLog with λ=0.5), 
 
 - Finalize R18: `\edrep{old}{new}` → new, `\edins{X}` → X, drop `edadded` wrapper, delete `\eddel{}` sentence and the `eddeleted` paragraph, remove `% REVIEW R18` lines.
 - Revert R18: `\edrep{old}{new}` → old, delete `\edins{}` and the `edadded` blocks, unwrap `\eddel{}` / `eddeleted`, remove `% REVIEW R18` lines.
+
+## R20 — 2026-11-17 — Section 4.6 «گام پایانی: تعمیم بین‌دامنه‌ای با آموزش چندمجموعه‌ای» shortened
+
+Requested by the author (two messages): the final multi-domain section is too long; shorten it.
+Rules given: no explanation of DIODE / Middlebury (left to the future-work section of chapter 5,
+which already has that item); the trial runs get one paragraph of overall history with no details;
+keep the emphasis on the results and the zero-shot behaviour; existing highlights stay as they
+are; new text is written by Codex.
+
+New text (items 3, 6, 7, 10) was written by Codex (`codex exec` through `codex_prose.sh`, read-only)
+from fact lists taken from the old paragraphs; every number in it was checked against the old text. Two terms in the Codex output were corrected by hand to the thesis vocabulary: «مقیاس کلی» → «مقیاس سراسری» (item 3) and «نسبت مقیاس قاب» → «نسبت ابعاد قاب» (item 10; the old text says aspect ratio).
+All other items are marked deletions. No table value changed. Not built: no TeX on this machine.
+(This update was first tagged R19 locally; renumbered R20 because the author's commit b1281ad uses R19.)
+Older marks (R1, R3, R7, R15) were not finalized or reverted; where an R1/R7 green block had to be
+split around a deleted paragraph, the block was closed and reopened with its original tag.
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter4.tex | `sec:multidomain_results`, first paragraph | sentence on mixed precision, batch size 4 and three hours per arm | deleted sentence |
+| 2 | chapter4.tex | same, paragraph after `tab:multidomain_main` | «در هر دوازده ستون جدول بهترین مقدار را دارد …» (repeats the paragraph before the table) | deleted sentence |
+| 3 | chapter4.tex | `subsec:md_all_sets`, «در مقابل …» | lead paragraph and the three-item list on DIODE indoor / DIODE outdoor / Middlebury deleted; one new short paragraph (author asked for it after the first pass, for the defence): not better than the control on these three sets; error is mainly global scale; DIODE outdoor scale ratios 0.61 vs 1.20 / 1.27 and why AbsRel and δ1 rank differently; Middlebury 1.47 vs 0.95, 23 images, 34° field of view against 49–82° in training; cause left to `sec:chapter5_future_work` | deleted paragraph + list, added paragraph |
+| 4 | chapter4.tex | `subsec:md_all_sets`, last paragraph | first sentence (RealSense / Xtion), already stated above | deleted sentence |
+| 5 | chapter4.tex | footnote of `tab:multidomain_all` | «(ردیف ۲ جدول …)»; the R7 `\edins` around the footnote is split in two around it | deleted words |
+| 6 | chapter4.tex | `subsec:revised_cross_dataset`, absolute-models paragraph | the two sentences on DIODE indoor / Middlebury (12 percent, 0.677 vs 0.235, «در زیربخش … بررسی می‌شوند») replaced by one sentence pointing to future work | edited (`\edrep`) |
+| 7 | chapter4.tex | `subsec:revised_cross_dataset` | three paragraphs (relative models; removal of the matrix at test time; NYUv2 ViT-S reconciliation) replaced by one paragraph with the same aggregate facts; dropped: set names of the ViT-S relative wins/losses, the Middlebury relative values, the repeated 0.088 → 1.31 sentence | deleted paragraphs, added paragraph |
+| 8 | chapter4.tex | `subsec:revised_cross_dataset`: set-up paragraph, last paragraph, footnote of `tab:md_encoder_protocol` | the three references to rows of `tab:md_runs` | deleted words |
+| 9 | chapter4.tex | `subsec:md_campaign` | all four paragraphs and the table `tab:md_runs` (R1 `\edaddbox` → `\eddelbox`) | deleted paragraphs + table |
+| 10 | chapter4.tex | `subsec:md_campaign` | one new paragraph: 17 models (7 ViT-L, 10 ViT-S) on one RTX 4090, ten test sets / 3400 images, several changes tried mostly with ViT-S, most of them aimed at cues that identify the dataset instead of the focal length (e.g. the frame aspect ratio, constant within each training dataset), none adopted, KITTI from the lossless-retrained pair; pointer to `subsec:checkpoint_audit` | added paragraph |
+| 11 | chapter4.tex | `subsec:qualitative_multidomain`, first paragraph | clause repeating which released checkpoint is used | deleted words |
+| 12 | chapter4.tex | `subsec:qualitative_multidomain`, last paragraph | paragraph on the camera-shift figure | deleted paragraph |
+| 13 | figures/pending/qualitative_md_figures.tex | figure `fig:qual_md_shift` | whole figure: R3 `\edaddbox` → `\eddelbox` | deleted figure |
+| 14 | chapter5.tex | `sec:chapter5_future_work`, multi-domain paragraph (~614) | pointer «(زیربخش …)» to `subsec:md_campaign` after the Hypersim ViT-S trial sentence: that subsection no longer gives the per-set outcome; the sentence itself stays | deleted words |
+| 15 | chapter5.tex | `sec:chapter5_future_work`, compute-limits sentence (~622) | pointer «زیربخش `subsec:md_campaign`» → «زیربخش‌های `subsec:multidomain_training` و `subsec:md_campaign`» (the frozen-encoder / 12-epoch settings are in chapter 3; the single RTX 4090 is in the campaign paragraph). Reference wording only, not sent to Codex | edited (`\edrep`) |
+
+Checked and left unchanged: chapter 5 limitations (~483) still points to `subsec:md_all_sets` (the ten-set table is there) and keeps the DIODE outdoor / Middlebury scale ratios; chapter 3 `tab:datasets_overview` keeps Middlebury's 23 images and 34-degree field of view and the Hypersim row; no other file refers to `tab:md_runs`, `subsec:md_campaign` or `fig:qual_md_shift`.
+
+
+- Finalize R20: remove every `\eddel{…}`, `eddeleted` block, the `tab:md_runs` table and the `fig:qual_md_shift` figure tagged R20; `\edrep{old}{new}` (item 6) → new; drop the `edadded` wrappers of items 3, 7, 10; merge the split halves of the footnote `\edins` (item 5); in chapter 5 drop the `\eddel{…}` of item 14 and keep the new half of the `\edrep` of item 15; remove the `% REVIEW R20` lines.
+- Revert R20: in chapter 5 unwrap the `\eddel{…}` of item 14 and keep the old half of the `\edrep` of item 15; restore the regions from commit 16ae4c3 (`git show 16ae4c3:thesis/tex/chapter4.tex`, lines of `sec:multidomain_results` … before `\section{بحث و تفسیر نتایج}`; and `git checkout 16ae4c3 -- thesis/figures/pending/qualitative_md_figures.tex`) — no other update has touched this section since that commit.

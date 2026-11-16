@@ -205,7 +205,15 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \showreviewtrue
 \ifshowreview
  % برجسته‌سازی شکست‌پذیر میان سطرها (ulem رنگ را پشت متن می‌کشد)
- \newcommand{\edhlwith}[2]{\bgroup\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
+ % \cite با فهرست چندکلیدی (a,b) درون آرگومان ulem خطای «Undefined control sequence» می‌دهد؛
+ % درون برجسته‌سازی، \cite را در یک جعبه می‌گذاریم تا ulem آن را تکه‌تکه نکند.
+ \makeatletter
+ \let\ed@origcite\cite
+ \newcommand{\ed@safecite}{\@ifnextchar[\ed@safecite@opt\ed@safecite@}
+ \def\ed@safecite@opt[#1]#2{\mbox{\ed@origcite[#1]{#2}}}
+ \def\ed@safecite@#1{\mbox{\ed@origcite{#1}}}
+ \newcommand{\edhlwith}[2]{\bgroup\let\cite\ed@safecite\markoverwith{\textcolor{#1}{\rule[-0.55ex]{2pt}{2.6ex}}}\ULon{#2}}
+ \makeatother
  \newcommand{\edadd}[1]{\edhlwith{thRevAdd}{#1}}
  \newcommand{\edins}[1]{\edhlwith{thRevNew}{#1}}
  \newcommand{\edold}[1]{\edhlwith{thRevDelBG}{#1}}

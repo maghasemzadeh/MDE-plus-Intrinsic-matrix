@@ -280,3 +280,167 @@ Also in the working tree, no review ID (build fix, no visible change): `chapter4
 
 - Finalize R8: drop the `edmoved` wrapper and the `% REVIEW R8` line; `\edrep{old}{new}` → new.
 - Revert R8: move the paragraph back to the end of 1.3 with its old opening.
+
+## R9 — 2026-11-16 — Section 4.4 merged into 4.3 as subsection 4.3.3
+
+Requested by the author: the baseline-behaviour section «نقطه شروع…» was a separate
+top-level section right after the experiment-path section 4.3; it is now its third
+subsection.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | old 4.4 → 4.3.3 | `\section` → `\subsection`; title unchanged (still marked `\edrep`); body untouched | structure |
+| chapter4.tex | 4.3.3 opening | «در این بخش» / «در این بخش» → «زیربخش» (two places, `\edrep`) | edited |
+| chapter4.tex | 4.3 intro | new closing sentence (`\edadd`): the baseline behaviour is reported at the end of 4.3 as a starting point, not a final ranking | added |
+| chapter4.tex | 4.1 roadmap | the sentence listing the order of sections no longer treats the baseline as its own section (inside the existing `edadded`) | edited |
+
+Side effect: all later chapter 4 sections shift down by one (old 4.5→4.4 … old 4.9→4.8).
+All cross-references use `\ref`, so they follow automatically; no text hard-codes these numbers.
+
+- Finalize R9: drop the `% REVIEW R9` lines and the two `\edrep{بخش}{زیربخش}` wrappers (keep «زیربخش»).
+- Revert R9: change `\subsection` back to `\section` at `sec:quantitative_results`, remove the added 4.3 sentence, restore «بخش» and the 4.1 roadmap wording.
+
+## R10 — 2026-11-16 — Chapter 3 intro: two «فصل دوم آمده است» sentences merged
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.1, «در ادامه این فصل…» paragraph | «فرمول‌بندی دقیق مساله و مدل هندسی دوربین در فصل دوم آمده است. جزییات عمومی مدل پایه نیز در فصل دوم آمده است؛» → «فرمول‌بندی دقیق مساله، مدل هندسی دوربین و جزییات عمومی مدل پایه در فصل دوم آمده است؛» (new words `\edins`) | edited |
+
+- Finalize R10: drop the `\edins{…}` wrapper. Revert R10: restore the two sentences with the earlier `\edins{…}` pieces.
+
+## Finalized — 2026-11-16 — everything up to the end of subsection 2.3.6
+
+Requested by the author («تا انتهای صفحه ۴۳ پی‌دی‌اف»: page 43 of `last-highlight.pdf`, which ends inside 2.3.6).
+All review markup was resolved in: the Persian and English abstracts (`faTitle.tex`, `enTitle.tex`),
+chapter 1 (including R8) and chapter 2 up to the end of 2.3.6 (new text kept, deleted text and
+red-background blocks dropped, `% REVIEW` comment lines removed). Entries R1, R7 and R8 above are
+therefore settled for that range; their rows for chapter 2 sections from 2.3.7 on, and for chapters
+3–5, are still pending. R9 and R10 are untouched.
+
+## R11 — 2026-11-16 — Section 3.3.1: the two dataset tables merged into one
+
+Requested by the author: the dataset overview table (old 3.2) and the multi-domain
+dataset table (old 3.3) described the same datasets, so they were merged.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.3.1 | new merged table `tab:datasets_overview` («مجموعه‌داده‌های پژوهش: مشخصات دوربین، اندازه بخش‌ها و نقش هر یک»): environment + depth source, `f_y/H`, horizontal FoV, train/val/test sizes, role; 14 rows (all datasets of both tables, DIODE and SUN RGB-D split per sensor/scene, Hypersim as checkpoint row) (green `\edaddbox`) | added |
+| chapter3.tex | 3.3.1 | old tables kept in place as red `\eddelbox` blocks (no labels, no footnote); they vanish in the final build | deleted |
+| chapter3.tex | table intro | words «اندازه بخش‌های آموزش، اعتبارسنجی و آزمون،» and a sentence that all datasets provide the camera matrix (`\edadd`) | added |
+
+Dropped as unimportant: the «دسترسی به ماتریس کالیبراسیون دوربین» column (every row was «دارد»; the per-row notes «ثابت برای کل مجموعه», «از فایل کالیبراسیون», «دو نمای کالیبره‌شده», «برای هر تصویر»), and the separate «نوع محیط» column (merged into «محیط و منبع عمق مرجع»). Role texts were shortened.
+Cross-references: `\ref{tab:multidomain_datasets}` (3 places: chapter3 ×2, chapter4 ×1) now point to `tab:datasets_overview`; chapter4.tex changed only in that label.
+
+- Finalize R11: drop `\edaddbox` wrapper and the two `\eddelbox` tables.
+- Revert R11: remove the new table, unwrap the two old tables (restore their labels, the `\footnotemark` and `\LTRfootnotetext`), restore `tab:multidomain_datasets` refs.
+
+## R12 — 2026-11-16 — Section 3.3.1: the five reasons for the dataset combination summarized
+
+Requested by the author: summarize the five reasons («این ترکیب به پنج دلیل انتخاب شد»), keeping all five, and drop unimportant detail
+and anything the dataset overview table already shows. The Persian wording was written with codex.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.3.1, list after «این ترکیب به پنج دلیل انتخاب شد:» | the original five-item list kept as a red `eddeleted` block (the R1 markup inside item 5 was flattened to its proposed text because `ulem` cannot nest; original below) | deleted |
+| chapter3.tex | same place | shorter five-item list (green `edadded`): `f_y/H` and field-of-view ranges, image counts (۳۷۸۶۰, ۶۵۴), per-source listing of depth sensors, B3DO/exclusion details and the Kinect v2 field-of-view comparison removed because the table shows them | added |
+| chapter3.tex | same place | `\end{edited}` moved from after the list to right after «این ترکیب به پنج دلیل انتخاب شد:» (a shaded box cannot be nested inside the legacy yellow `edited` box) | structure |
+
+- Finalize R12: delete the `eddeleted` block, drop the `edadded` wrapper, remove `% REVIEW R12`.
+- Revert R12: delete the `edadded` block, remove the `\end{edited}` that follows the intro line, and put the original lines below back (the last `\end{edited}` returns after `\end{itemize}`). Full original source (with the R1 markup in item 5) is saved in the session backup and reproduced here:
+
+```latex
+\begin{itemize}
+ \item تنوع واقعی دوربین: نسبت $f_y/H$ در چهار دوربین آموزشی از \fadecimal{۱٫۰۸} تا \fadecimal{۲٫۲۱} و میدان دید افقی آن‌ها از حدود ۴۹ تا ۸۲ درجه تغییر می‌کند. بنابراین بردار توصیف‌گر دوربین، برخلاف آموزش تک‌دوربینه \lr{NYUv2}، مقادیر واقعا متفاوتی می‌گیرد و تنوع هندسی فقط از راه افزونه‌سازی شبیه‌سازی نمی‌شود.
+ \item پوشش هم‌زمان صحنه‌های داخلی و بیرونی: \lr{NYUv2} صحنه‌های داخلی را با عمق تا حدود ۱۰ متر و سه مجموعه دیگر صحنه‌های جاده‌ای و شهری را با عمق تا ۸۰ متر پوشش می‌دهند.
+ \item مکمل‌بودن منابع عمق مرجع: حسگر \lr{Kinect} در \lr{NYUv2}، لایدار در \lr{KITTI}، تطبیق استریو در \lr{Cityscapes} و عمق رندرشده دقیق و چگال در \lr{Virtual KITTI 2}؛ حجم بالای داده مصنوعی (۳۷۸۶۰ تصویر) کم‌بودن برچسب چگال در داده‌های واقعی بیرونی را جبران می‌کند.
+ \item امکان مقایسه با ادبیات: بخش آزمون ۶۵۴ تصویری \lr{NYUv2} همان پروتکل استاندارد مقاله مرجع است~\cite{Eigen2014Depth,DepthAnythingV2}.
+% REVIEW R1
+ \item آزمون صفرنمونه بر \edold{حسگرهای تازه}\ \edadd{داده‌ها و حسگرهای تازه}: تصاویر \lr{Kinect v1} از بخش \lr{B3DO} مجموعه‌داده \lr{SUN RGB-D} برداشته شدند و تصاویری که این مجموعه از \lr{NYUv2} وام گرفته است کنار گذاشته شدند تا هیچ هم‌پوشانی با داده آموزش پیش نیاید. \edadd{حسگر {\lr{Kinect v1}} همان مدل حسگری است که {\lr{NYUv2}} با آن ثبت شده است؛ بنابراین در این مجموعه، صحنه‌ها و کالیبراسیون دوربین تازه‌اند ({$f_y/H$} برابر {\fadecimal{۱٫۲۲}} در برابر {\fadecimal{۱٫۰۸}})، نه خود حسگر. سه حسگر {\lr{Kinect v2}}، {\lr{RealSense}} و {\lr{Xtion}} در هیچ‌یک از مجموعه‌داده‌های آموزشی وجود ندارند.} حسگر \lr{Kinect v2} با $f_y/H\approx1.00$ میدان دید عمودی حدود ۵۳ درجه دارد که از همه دوربین‌های آموزشی (حداکثر حدود ۵۰ درجه در \lr{NYUv2}) بازتر است.
+\end{itemize}
+\end{edited}
+```
+
+R12, second part — the dense paragraph after the dataset table («در جدول ۳.۲، تصاویر آموزشی NYUv2…»), also in 3.3.1:
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.3.1, paragraph after the tables | original paragraph kept as a red `eddeleted` block (its R1/R7 markup flattened; the already-deleted KITTI JPEG sentence is included in it) | deleted |
+| chapter3.tex | same place | shorter paragraph (green `edadded`): NYUv2 80/20 split, held-out validation parts, test sets and protocols (raw depth + crop, KITTI list from the reference code, Middlebury ×2 downscaling), Cityscapes disparity depth and hood exclusion, depth ranges; removed: counts shown in the table, scene/drive/city names, the list of later-added test sets | added |
+| chapter3.tex | same place | `\begin{edited}`…`\end{edited}` around the old paragraph replaced by the two blocks | structure |
+
+- Finalize: delete the `eddeleted` block, drop the `edadded` wrapper, remove `% REVIEW R12/R1/R7` lines there.
+- Revert: delete both new blocks and put back this original (with its R1/R7 markup):
+
+```latex
+\begin{edited}
+% REVIEW R1
+% REVIEW R7
+در جدول~\ref{tab:datasets_overview}، تصاویر آموزشی \lr{NYUv2}، ۶۳۶ تصویر از ۷۹۵ تصویر بیرون از بخش آزمون استاندارد هستند که مانند زیربخش~\ref{subsec:nyuv2_split} با نسبت ۸۰/۲۰ میان آموزش و اعتبارسنجی تقسیم شده‌اند؛ تصاویر \lr{KITTI} از درایوهای بخش آموزش رسمی آن، تصاویر \lr{Virtual KITTI 2} از صحنه‌های \lr{Scene01}، \lr{Scene06}، \lr{Scene18} و \lr{Scene20}، و تصاویر \lr{Cityscapes} از شهرهای بخش آموزش رسمی به‌جز زوریخ برداشته شده‌اند. داده اعتبارسنجی هر دامنه، ۵۰ تصویر از بخشی کنار گذاشته‌شده است: بخش اعتبارسنجی \lr{NYUv2}، دو درایو جداگانه از \lr{KITTI}، صحنه \lr{Scene02} از \lr{Virtual KITTI 2} و شهر زوریخ از \lr{Cityscapes}. مجموعه‌های آزمون عبارت‌اند از بخش آزمون استاندارد \lr{NYUv2} با نقشه‌های عمق خام و برش استاندارد، بخش اعتبارسنجی رسمی \lr{Cityscapes} و دو زیرمجموعه تصادفی ۲۰۰ تصویری از حسگرهای \lr{Kinect v1} و \lr{Kinect v2} در \lr{SUN RGB-D}. عمق مرجع \lr{Cityscapes} از نقشه‌های دیسپاریتی همان مجموعه‌داده و با خط پایه استریوی آن به‌دست می‌آید و ناحیه کاپوت خودرو از ارزیابی حذف می‌شود. \edadd{مجموعه‌های آزمون افزوده عبارت‌اند از فهرست ۶۵۲ تصویری ارزیابی {\lr{KITTI}} که همراه کد مقاله مرجع منتشر شده است، با عمق مرجع لایدار و درایوهایی که از داده آموزش کنار گذاشته شده‌اند؛ بخش اعتبارسنجی رسمی {\lr{DIODE}} با ۳۲۵ تصویر داخلی و ۴۴۶ تصویر بیرونی؛ ۲۳ صحنه {\lr{Middlebury}} نسخه ۲۰۱۴ که تصاویر و ماتریس کالیبراسیون دوربین آن‌ها با ضریب دو کوچک شده‌اند؛ و زیرمجموعه‌های تصادفی ۲۰۰ تصویری حسگرهای {\lr{RealSense}} و {\lr{Xtion}} از {\lr{SUN RGB-D}}. بازه ارزیابی عمق برای مجموعه‌های داخلی تا ۱۰ متر ({\lr{Middlebury}}: ۲۰ متر) و برای مجموعه‌های بیرونی تا ۸۰ متر است.} \eddel{تصاویر آموزشی {\lr{KITTI}}، برای کوچک نگه‌داشتن حجم انتقال به سرور آموزش، با فشرده‌سازی {\lr{JPEG}} با کیفیت ۹۵ ذخیره شدند، در حالی که تصاویر آزمون همه مجموعه‌ها پرونده‌های اصلی‌اند؛ اثر این انتخاب در زیربخش~{\ref{subsec:md_lossless_kitti}} بررسی شده است.}
+\end{edited}
+```
+
+## R12 — 2026-11-16 — Section 3.6 «جمع‌بندی فصل»: second paragraph merged into the first
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.6 | the separate paragraph «در گام پایانی، همین چارچوب به آموزش چندمجموعه‌ای…» (was after the sentence announcing chapter 4) moved into the first paragraph, just before «فصل چهارم بر پایهٔ این چارچوب…»; its last verb «ممکن می‌کنند» → «ممکن کردند» to match the past tense of the paragraph (`\edins`) | edited |
+
+- Finalize R12: drop the `\edins` wrapper. Revert R12: move the sentence back to its own yellow paragraph after the chapter-4 sentence, with «ممکن می‌کنند».
+
+## Finalized — 2026-11-16 — chapters 1–3 (front matter, chapter 1, chapter 2, chapter 3)
+
+Requested by the author after their review («همه موارد کاملا درست بود»). All review markup in the abstracts,
+chapter 1, chapter 2 and chapter 3 is resolved (new text kept; deleted text, red blocks and the two old dataset
+tables of R11 dropped; `% REVIEW` lines removed). This settles R1, R7 and R8 and also R10, R11 and R12 for those
+chapters. **Still pending:** everything in chapter 4 (including R9) and chapter 5, plus the markup macros in
+`tex/commands.tex` (kept for those chapters).
+
+## R13 — 2026-11-16 — «دوربین‌های واقعی» → «دوربین‌های متفاوت» for the multi-domain training
+
+Reason (author): the multi-domain training still applies the simulated camera augmentations and
+Virtual KITTI 2 is rendered, so «واقعی» overstated it.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter3.tex | 3.3.1, 3.4.7 title and opening, 3.6 | «دوربین‌های واقعی (متفاوت)» → «دوربین‌های متفاوت»; «ماتریس کالیبراسیون دوربین واقعی خود» → «…دوربین خود»; 3.4.7 opening now says the real calibration differences are added on top of the same augmentations | plain edits (chapter already finalized) |
+| chapter4.tex | 4.1 roadmap (inside existing green block) | «با دوربین‌های واقعی» → «با دوربین‌های متفاوت» | edited |
+| chapter4.tex | 4.6 intro | «چند دوربین واقعی» → «چند دوربین متفاوت» (`\edrep`) | edited |
+| chapter5.tex | contributions table, methodological row | «با دوربین‌های واقعی» → «با دوربین‌های متفاوت» (`\edrep`) | edited |
+
+Left unchanged on purpose: «چهار دوربین واقعی و مصنوعی» / «دوربین‌های واقعی و مصنوعی متفاوت» (already accurate),
+«اثرات ثانویه دوربین‌های واقعی» (lens effects), «نه از دوربین‌های واقعی متفاوت» in the limitations, «به دوربین واقعی بازگردانده می‌شود»
+(canonical-focal), and text inside deleted blocks.
+
+## R14 — 2026-11-16 — Subsection 4.3.1 (experiment path) rewritten to match the current chapter
+
+Requested by the author: the path table no longer matched the thesis.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | 4.3.1 title | back to «…مسیر رسیدن به آزمایش نهایی» (the path now ends at the multi-domain step) | edited |
+| chapter4.tex | 4.3.1 intro | rewritten: eight steps, in the order of the chapter's sections (green block) | rewritten |
+| chapter4.tex | `tab:experiment_journey` | all rows rewritten (green rows), each pointing to the section that reports it: 1 audit + paper reproduction; 2 baseline instability (new); 3 relative four-way comparison (ViT-S small gain, ViT-L none); 4 zoom-crop in the relative protocol; 5 absolute evaluation (0.0817 vs 0.0826); 6 focal jitter (gain 0.0009→0.0231, sweep slope 0.06→0.97); 7 matrix removal (+111%); 8 multi-domain training (new) | rewritten |
+| chapter4.tex | phase summary + `fig:experiment_phases` | three phases → four (added «تعمیم», row 8); caption rewritten (green) | rewritten |
+
+Conflicts removed: the old zoom-crop row described a crop/matrix mismatch bug (the chapter introduces zoom-crop to give
+the constant camera descriptor some variety); the old absolute-evaluation row claimed a trend over «تنوع میدان دید» (the
+chapter reports one small gain); the baseline step and the final multi-domain step were missing.
+**Not shown in the PDF:** the previous rows, intro and phase paragraph were replaced outright, not kept as red text
+(they are in git at `c60d338` and in the pre-R7 history). The closing «چهار شرط» paragraph is unchanged.
+
+- Finalize R14: drop `\edaddrow`, the `edadded` wrappers, `\edaddbox` and `\edmove` on the title.
+- Revert R14: restore the subsection from `git show c60d338:thesis/tex/chapter4.tex` (lines of `subsec:checkpoint_audit`).
+
+## R15 — 2026-11-16 — Bar chart of the final multi-domain result (AbsRel)
+
+Requested by the author: add a bar chart like the old cross-dataset one, in the right section, for the final result.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §sec:multidomain_results, after the paragraph that introduces `tab:multidomain_main` (~1196) | one-sentence pointer to the chart | added (green block) |
+| chapter4.tex | same place | `fig:multidomain_absrel`: grouped bars, AbsRel of the published base, control and proposed models (ViT-L, absolute, no alignment) on NYUv2, Cityscapes, SUN RGB-D Kinect v1 and Kinect v2; values copied from `tab:multidomain_main` | added (green box) |
+
+The old chart `fig:cross_dataset_silog` (red, deleted in R7) is not restored: its proposed-model numbers did not reproduce.
+
+- Finalize R15: drop `edadded`, `\edadd` and `\edaddbox` wrappers and the `% REVIEW R15` comments.
+- Revert R15: delete the `edadded` block and the whole `figure` (both tagged `% REVIEW R15`).

@@ -137,7 +137,11 @@ do not invent new direction-handling macros or packages.**
 4. For every inline decimal number, use `\fadecimal{}`.
 5. Run the native-AI-tell check (banned phrase list above) before calling the
    text done.
-6. If this touches `thesis/`, build via `thesis/build.sh` and visually inspect
+6. If this touches Persian prose in `thesis/` (rewriting, summarizing, merging or
+   splitting paragraphs), run the mandatory Codex pass described in
+   `.claude/skills/thesis-editor/SKILL.md` ("Codex pass for Persian prose edits")
+   and apply the accepted findings before building.
+7. If this touches `thesis/`, build via `thesis/build.sh` and visually inspect
    the rendered page for direction issues — a missing `\lr{}` often doesn't
    error, it just renders wrong, so grep alone won't catch it.
 

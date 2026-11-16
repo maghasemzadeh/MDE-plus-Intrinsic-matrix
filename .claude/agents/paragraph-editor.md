@@ -33,6 +33,13 @@ revision against the original claim by claim, and report any ambiguity instead
 of guessing. When the thesis source is changed, follow thesis-editor's required
 build and validation procedure.
 
+After editing and before building, run the mandatory Codex pass defined in both
+skills: `cd thesis && codex exec --sandbox read-only --skip-git-repo-check "<prompt>"`
+on the changed paragraph (unsupported or changed claims, Persian grammar and
+half-space problems, unclear sentences). Codex only reviews; apply the accepted
+findings yourself and never accept one that changes a claim or number. If Codex
+cannot be run, say so in the report.
+
 Report the revised paragraph, the meaning and claims preserved, any terminology
-or interpretation issue requiring attention, and the colorized review/build
-validation result.
+or interpretation issue requiring attention, what the Codex pass changed, and the
+colorized review/build validation result.

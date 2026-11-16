@@ -445,6 +445,14 @@ The old chart `fig:cross_dataset_silog` (red, deleted in R7) is not restored: it
 - Finalize R15: drop `edadded`, `\edadd` and `\edaddbox` wrappers and the `% REVIEW R15` comments.
 - Revert R15: delete the `edadded` block and the whole `figure` (both tagged `% REVIEW R15`).
 
+## R15 — 2026-11-16 — Section 4.4.1: closing paragraph for the four-way comparison tables
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | 4.4.1, after `tab:nyu_basic_vitl` | new paragraph (green block), without numbers: proposed beats the published model in both sizes; after fine-tuning, proposed and control perform almost the same (ViT-S slightly better, ViT-L tied); likely reason is the constant camera matrix on single-camera NYUv2, so zoom-crop augmentation was added next (4.4.2) | added |
+
+- Finalize R15: drop the `edadded` wrapper. Revert R15: delete the paragraph.
+
 ## R18 — 2026-11-17 — Evaluation metrics made consistent: AbsRel (+ δ1) is the main metric
 
 Requested by the author: remove the contradictions about AbsRel / RMSE / SiLog and use AbsRel as the main metric for absolute models.
@@ -466,3 +474,21 @@ Evidence: `src/metrics.py` (AbsRel, SqRel, RMSE, log10, δ, SiLog with λ=0.5), 
 
 - Finalize R18: `\edrep{old}{new}` → new, `\edins{X}` → X, drop `edadded` wrapper, delete `\eddel{}` sentence and the `eddeleted` paragraph, remove `% REVIEW R18` lines.
 - Revert R18: `\edrep{old}{new}` → old, delete `\edins{}` and the `edadded` blocks, unwrap `\eddel{}` / `eddeleted`, remove `% REVIEW R18` lines.
+
+## R19 — 2026-11-17 — §4.5: knockout test extended to the zoom-crop model; control line removed from the sweep chart
+
+Evidence: new run `results/lambda05_focal/k_knockout_zoomcrop.json` on lingotube (tools/k_knockout.py, NYUv2 eigen-654, rawDepths, 0.001–10 m; checkpoint `metric_finetuning_aug2/revised_metric_vitl_nyu_intrinsics_lr5e-6_bs2_20260706_224730/best.pth`, sweep slope 0.06). Zoom-crop AbsRel: correct 0.0819, removed 0.1007, f×0.7 0.0807, f×1.4 0.0916. Focal-jitter numbers unchanged (`k_knockout_lam05.json`). Persian drafted and reviewed with Codex.
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter4.tex | §4.5.1 after `tab:k_sweep_slopes` note | paragraph: control slope is zero by construction, not drawn; informative contrast is the two proposed configs | added |
+| chapter4.tex | `fig:intrinsics_sensitivity` | control `\addplot` + legend commented out; figure framed in yellow | edited |
+| chapter4.tex | §4.5.2 method paragraph | sentence: same test run on zoom-crop model | edited (yellow) |
+| chapter4.tex | `tab:k_knockout` | config header row + three zoom-crop columns; wrapped in adjustbox | added cells |
+| chapter4.tex | §4.5.2 results paragraph (R5) | «برای پیکربندی لرزش کانونی» inserted | edited (yellow) |
+| chapter4.tex | after R5 paragraph | new paragraph interpreting zoom-crop results and the out-of-distribution effect of removal | added |
+| chapter4.tex | sentence before `fig:k_knockout`, its caption | two short insertions | edited (yellow) |
+| chapter4.tex | `fig:k_knockout` | paired bars (zoom-crop added), stars shifted to focal bars; yellow frame | edited |
+
+- Finalize R19: drop `edadded`/`\edadd`/`\edins` wrappers, `\edaddrow`/`\edaddcell` tokens, the two `\colorbox{thRevNew}{%` … `}` frames, the commented control plot lines, and the `% REVIEW R19` comments.
+- Revert R19: delete the added paragraphs/insertions, restore `tab:k_knockout` to 4 columns without adjustbox, restore single-series bars at x=1..4 (bar width 20pt) with stars at x=3,4 and legend «خطای مشاهده‌شده», uncomment the control plot, remove the frames.

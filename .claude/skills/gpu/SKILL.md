@@ -57,6 +57,24 @@ Decision guide (RTX 4090 = 24 576 MiB total):
   job by polling, then launch) or ask which job has priority.
 - Also check RAM: if available RAM < ~8 GB, don't add another dataloader-heavy job.
 
+### The `llm-qwen` container (pre-authorized: stop it, then bring it back)
+
+A docker container `llm-qwen` (`/app/llama-server`, Qwen 27B GGUF, restart policy
+`unless-stopped`) often holds ~23.6 GB VRAM, leaving no room for project jobs. The user has
+standing permission: **if it is active and the job needs the GPU, stop it without asking, and
+always restart it when the job ends** (success or failure).
+
+- Identify it: `nvidia-smi --query-compute-apps` shows `/app/llama-server`;
+  `docker ps` shows `llm-qwen`. Only this container is pre-authorized — any other process
+  holding the GPU still needs the user's go-ahead.
+- Stop: `ssh lingotube 'docker stop llm-qwen && nvidia-smi --query-gpu=memory.used --format=csv,noheader'`
+  (no sudo needed; confirm VRAM dropped).
+- Restart must not depend on this session surviving: chain it after the job in the same tmux
+  command, e.g. `{ <CMD>; echo EXIT_CODE=$?; } 2>&1 | tee $LOG; docker start llm-qwen`.
+- After the job, verify it's back: `docker ps --filter name=llm-qwen --format '{{.Status}}'`.
+  If several jobs run back-to-back, restart only after the last one.
+- Tell the user in the report that qwen was stopped and restarted.
+
 **Known issue**: if `nvidia-smi` reports "couldn't communicate with the NVIDIA driver", the
 kernel module isn't loaded (this happens after server kernel updates — the DKMS module for
 the new kernel is missing). GPU work is impossible until fixed. Tell the user to run

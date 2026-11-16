@@ -261,3 +261,22 @@ node for chapter 3; mixed depth notation in 2.1.1; the 4.5 intro «در مرحل
 caption «زوج اصلی» of `tab:multidomain_all`; row 2 text of `tab:md_runs`; the
 `tab:limitations_future` cell on repeating the controlled study on KITTI; position of
 the closing sentence of 5.2.
+
+## R8 — 2026-11-16 — Section 1.7 «روش انجام تحقیق» restored
+
+Requested by the author: the section had been a bare heading since commit `076d15d`
+(2026-10-25), which moved its only paragraph into 1.3 «تعریف موضوع تحقیق».
+
+| File | Location | Change | Kind |
+|---|---|---|---|
+| chapter1.tex | 1.3 → 1.7 | paragraph «…خلا مورد هدف این پژوهش…» moved back under «روش انجام تحقیق» (gray, `edmoved`); nothing left at 1.3 | moved |
+| chapter1.tex | 1.7, opening | «با توجه به این مساله و فقدان تفکیک سهم علی ماتریس کالیبراسیون دوربین در پژوهش‌های پیشین،» → «بر این اساس،» (the pre-`076d15d` opening) | edited (`\edrep`) |
+
+The rest of the paragraph keeps its current wording («مطلق», «انکودر \lr{DINOv2}»),
+not the October wording («متریک», «هسته یک مدل بنیادین»). Not built.
+
+Also in the working tree, no review ID (build fix, no visible change): `chapter4.tex`
+`tab:training_hyperparams` caption given a plain short form for the list of tables.
+
+- Finalize R8: drop the `edmoved` wrapper and the `% REVIEW R8` line; `\edrep{old}{new}` → new.
+- Revert R8: move the paragraph back to the end of 1.3 with its old opening.

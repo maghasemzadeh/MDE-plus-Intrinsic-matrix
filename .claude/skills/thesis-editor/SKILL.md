@@ -303,6 +303,43 @@ so that only that ID's regions changed. A revert must leave the affected regions
 byte-identical to their state before the update (compare with
 `git show <commit-before-update>:<file>` when the update was committed).
 
+## Codex pass for Persian prose edits (mandatory)
+
+Every edit that changes Persian prose in the thesis goes through the Codex CLI
+(`codex`, on PATH) before it is rendered and reported. This covers rewriting or
+smoothing a paragraph, writing a new paragraph or summary, merging or splitting
+paragraphs, shortening text, and rewriting table cells or captions. It does not
+cover pure LaTeX/structure changes with no wording change (moving a block, changing
+a `\section` level, fixing a label or reference, removing review markup).
+
+1. Make the edit in the source first, with the review markup this skill requires.
+2. Run Codex read-only from `thesis/` and tell it exactly where the edit is and what
+   to compare it with (the original wording, the tables or figures it describes, and
+   the neighbouring paragraphs or the section it leads into):
+
+   ```bash
+   cd thesis && codex exec --sandbox read-only --skip-git-repo-check "<prompt>"
+   ```
+
+   The prompt must name the file and a searchable anchor (label or opening words) and
+   ask Codex to report, briefly and in English: (a) claims not supported by the
+   cited tables/text or contradicting nearby sections, and any changed meaning,
+   number, caveat or citation compared with the original; (b) Persian grammar,
+   spelling and half-space (ZWNJ) problems; (c) awkward or unclear sentences with a
+   suggested Persian rewrite. State any constraint the user gave (for example "no
+   numbers in this paragraph") and end with "Do not modify any file."
+3. Apply the findings you agree with by editing the source yourself. Codex never
+   writes thesis files. Keep this project's terminology and macros (`\proposedmodel{}`,
+   `\controlmodel{}`, `\lr{}`, `\fadecimal{}`, انکودر) even when Codex's rewrite
+   uses plain words, and do not adopt a suggestion that changes a claim or number.
+4. Then build with `thesis/build.sh` as usual.
+5. In the completion report, say that the Codex pass ran, list what it changed, and
+   mention any suggestion you rejected and why. If `codex` is unavailable or fails,
+   say so explicitly instead of skipping the step silently.
+
+Running Codex sends the quoted thesis text to an external service; the author has
+asked for this for thesis prose edits.
+
 ## Academic and professional editing
 
 1. Locate the authoritative evidence before changing a claim. For numerical results,

@@ -682,3 +682,120 @@ its text; `fig:qual_md_shift` (already deleted by R20/R21).
   «R24 (new images)», turn the five R24 `\eddelbox` back into `\edaddbox` and rename the labels
   back (drop `_old`); delete `thesis/figures/qualitative_md_v2/`; remove the `% REVIEW R24` lines
   and the R24 comment in the file header.
+
+## R26 — 2026-11-17 — §5.2.2 «پاسخ نهایی به سوالات تحقیق»: questions restated, answers rewritten, Table 5.1 shortened
+
+Author requests (three, same session): (1) before each answer, write the complete research
+question again on its own line; (2) check the answers against the whole thesis so that they match,
+shorten the table `tab:hypothesis_verdicts`, show every hypothesis as accepted and do not use
+«مشروط» in the table; (3) rewrite the answers so that they are fluent and easy to understand.
+
+What was wrong in the old text (checked against chapter 1 and the current chapter 4): answer 1 gave
+no evidence and answered only the first half of question 1; answer 2 used only the NYUv2 ViT-L pair
+and ignored the multi-domain repetition; answer 3 said «مثبت اما مشروط», listed the relative-protocol
+result as a condition although question 3 is about absolute evaluation, cited
+`subsec:revised_cross_dataset` for a comparison that subsection no longer contains, and did not
+mention the sensitivity tests. The content of each new answer and table cell was fixed first; Codex
+(read-only) wrote the Persian wording and proofread the result.
+
+Wording notes: the hypothesis-3 cell is about the ViT-L multi-domain relative pair (lower AbsRel
+than the control on all eight sets, `tab:md_encoder_protocol`), because chapter 4 also reports two
+small reliable deficits elsewhere (`tab:nyu_basic_aug`; two sets of the ViT-S relative pair).
+
+All text regions are inside the gray R7 `edmoved` block of this subsection; the tables are outside it.
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter5.tex | `sec:chapter5_research_questions_answers`, intro sentence | «بر اساس شواهد گزارش‌شده در فصل چهارم» → «بر پایه شواهد فصل چهارم»; «… را در کنار … قرار می‌دهد» → «…، شاهد اصلی و داوری نهایی هر فرضیه را نشان می‌دهد» | edited |
+| 2 | chapter5.tex | old table, label renamed `tab:hypothesis_verdicts_old` | whole float wrapped in `\eddelbox` (its R1/R6 markup inside is untouched) | deleted table |
+| 3 | chapter5.tex | `tab:hypothesis_verdicts` (new float after the old one) | short three-row table, every verdict «تأیید می‌شود» | added table |
+| 4 | chapter5.tex | before each answer | three lines «سوال اول: …», «سوال دوم: …», «سوال سوم: …» (word for word from `sec:research_questions_ch1`) | added |
+| 5 | chapter5.tex | after each question line | three new answer paragraphs | added |
+| 6 | chapter5.tex | the three old answer paragraphs | each wrapped whole in `\eddel{}` | deleted |
+| 7 | chapter5.tex | paragraph «بخشی از قید دوم …» | deleted (content is in the new answer 3); it is three adjacent `\eddel{}`: the first and third are R26, the middle one («و در آزمون جابه‌جایی دوربین …») is R21's and was not changed | deleted |
+
+- Finalize R26: `\edrep{old}{new}` → new; delete the old table float (from the comment «REVIEW R26:
+  old table deleted» to its `\end{table}`); `\edaddbox{X}` → X for the new table; `\edadd{X}` → X
+  (un-brace `{\lr{…}}`, `{\ref{…}}`, `{\fadecimal{…}}`, `{\proposedmodel{}}` etc.); remove the four
+  `\eddel{…}` paragraphs (for item 7 also the middle R21 `\eddel`, and R21's comment line above it);
+  remove the `% REVIEW R26` lines.
+- Revert R26: `\edrep{old}{new}` → old; remove `\eddelbox{%` and its closing `}% REVIEW R26: end of
+  \eddelbox`, rename the label back to `tab:hypothesis_verdicts`; delete the new table float; delete
+  the six `\edadd{…}` paragraphs (three questions, three answers); `\eddel{X}` → X for the three old
+  answers and for the first and third piece of item 7 (un-brace the fragile units; the middle piece
+  stays as R21 markup); remove the `% REVIEW R26` lines. Check against
+  `git show 1f2833a:thesis/tex/chapter5.tex`.
+
+## R27 — 2026-11-17 — §5.3 «محدودیت‌های تحقیق»: three paragraphs summarized into two, data/time limitation added, table shortened
+
+Author request: review the section again, reword what is unclear, summarize the paragraph
+«در پیکربندی زوم‌ـ‌برش … / مطالعه کنترل‌شده دو محدودیت داشت …» and the paragraph after it, say that
+training data and training time were limited (so the final model can still improve, most visibly at
+object boundaries, where the released base model is sharper), and make `tab:limitations_future`
+very short and data-rich. All Persian text was written by Codex (read-only) from a fact list and
+checked by a second Codex pass.
+
+Evidence: `tab:k_knockout` (0.0836 → 0.1764 = +111 %, f×0.7 0.2898, f×1.4 0.4332);
+`tab:dose_response_summary` (zoom-crop AbsRel −0.0009, p = 0.040); `tab:multidomain_all`
+(KITTI 0.156 vs released 0.146; RealSense 0.093 vs 0.092; Xtion 0.176 vs 0.178; DIODE outdoor scale
+ratio 0.61); `subsec:multidomain_training` (4 datasets, 12 epochs × 6000 = 72000 samples, frozen
+DINOv2); `subsec:md_campaign` (8 test sets, 3052 images, one RTX 4090); `sec:ch2_base_model`
+(595 K synthetic + 62 M real images). Object boundaries: visual reading of the qualitative figures
+under `thesis/figures/qualitative_md_v2/` (released base sharper than both the proposed and the
+control model); no boundary metric was computed, so the cause is stated only as probable.
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter5.tex | `sec:chapter5_limitations`, 1st limitation (calibration) | knockout sentence made precise: focal-jitter configuration, AbsRel, f×0.7 / f×1.4 | edited |
+| 2 | chapter5.tex | same, 2nd limitation (reference depth) | «بر مقادیر مطلق خطاهای مطلق اثرگذار باشد» → clearer clause | edited |
+| 3 | chapter5.tex | same, architecture paragraph (three places) | "one specific model" → DA2 with ViT-S and ViT-L; "different encoders" → encoders outside this family; "the architecture used" → this family | edited |
+| 4 | chapter5.tex | same, the two R7 paragraphs and the R1/R21 paragraph | kept as a red `eddeleted` block (R1/R7/R21 markup flattened to its current new wording) | deleted |
+| 5 | chapter5.tex | same place | two short paragraphs (green `edadded`): controlled-study limits and their partial resolution; data/time limitation, sets where the model is not the best, object boundaries | added |
+| 6 | chapter5.tex | `tab:limitations_future` | five rows → red deleted rows (legacy `\edcell` dropped inside them) | deleted rows |
+| 7 | chapter5.tex | same table | six short rows with numbers | added rows |
+
+- Finalize R27: `\edrep{old}{new}` → new, `\edins{X}` → X (un-brace `{\lr{…}}`, `{\fadecimal{…}}`,
+  `{\focaljitterconfig{}}`); delete the `eddeleted` block and the five `\eddelrow` rows; drop the
+  `edadded` environment lines and the six `\edaddrow` tokens; remove the `% REVIEW R27` lines. This
+  also ends the R7 / R1 / R21 marks that were on the three replaced paragraphs.
+- Revert R27: items 1–3 `\edrep{old}{new}` → old, remove the `\edins{…}`; delete the green block and
+  the six `\edaddrow` rows; replace the red paragraph block and the red rows by the original text
+  below (it carries the earlier R7 / R1 / R21 marks and the legacy `\edcell` cells); remove the
+  `% REVIEW R27` lines. There is no commit to restore from: R26 was uncommitted in the same file.
+
+Original paragraphs (before R27):
+
+```latex
+% REVIEW R7
+\begin{edadded}
+در \zoomcropconfig{}، برتری \proposedmodel{} در \lr{RMSE} از نظر آماری قابل اتکا بود، اما \lr{AbsRel} تنها در مرز اتکاپذیری آماری بود. این محدودیت مربوط به \zoomcropconfig{} است؛ در \focaljitterconfig{} تمام معیارها به‌طور قابل اتکا بهبود یافتند. بنابراین قدرت شواهد به میزان ابهام هندسی ایجادشده در داده وابسته است.
+
+مطالعه کنترل‌شده دو محدودیت داشت: تنوع دوربین فقط با افزونه‌سازی زوم‌ـ‌برش شبیه‌سازی شده بود و اثرات ثانویه دوربین‌های واقعی را پوشش نمی‌داد؛ همچنین مقایسه‌ها به یک مجموعه‌داده درون‌دامنه‌ای، یعنی \lr{NYUv2}، محدود بود. آزمایش چندمجموعه‌ای این دو محدودیت را تا حدی برطرف کرد (بخش~\ref{sec:multidomain_results}): یک مدل واحد بر چهار مجموعه‌داده با دوربین‌های واقعی و مصنوعی متفاوت آموزش دید و برتری آن در صحنه‌های داخلی \lr{NYUv2}، صحنه‌های شهری \lr{Cityscapes} و داده‌های دیده‌نشده دو حسگر \lr{Kinect} از \lr{SUN RGB-D} نشان داده شد. در این آموزش \lr{NYUv2} تنها منبع صحنه‌های داخلی بود؛ گسترش آن در بخش~\ref{sec:chapter5_future_work} پیشنهاد شده است.
+\end{edadded}
+
+% REVIEW R1
+\begin{edadded}
+% REVIEW R21 (محدودیت‌ها: فقط DIODE بیرونی)
+در آزمایش چندمجموعه‌ای نیز محدودیت‌هایی باقی ماند (زیربخش~\ref{subsec:md_all_sets}). \edrep{بر {\lr{DIODE}} و {\lr{Middlebury}}، {\proposedmodel{}} با تصاویر اصلی از {\controlmodel{}} دقیق‌تر نبود و بر {\lr{RealSense}} و {\lr{Xtion}} در {\lr{AbsRel}} و {$\delta_1$} تنها هم‌تراز {\publishedbasemodel{}} بود.}{در {\lr{DIODE}} بیرونی، {\proposedmodel{}} کمترین {\lr{AbsRel}} را داشت، اما در {$\delta_1$} و {\lr{RMSE}} از {\controlmodel{}} ضعیف‌تر بود؛ در {\lr{RealSense}} و {\lr{Xtion}} نیز در {\lr{AbsRel}} و {$\delta_1$} تنها با {\publishedbasemodel{}} هم‌تراز بود.} خطای آن \edrep{بر {\lr{DIODE}} و {\lr{Middlebury}}}{در {\lr{DIODE}} بیرونی} عمدتا خطای مقیاس سراسری است، نه خطای شکل: نسبت مقیاس آن \edrep{بر {\lr{DIODE}} بیرونی {\fadecimal{۰٫۶۱}} و بر {\lr{Middlebury}} {\fadecimal{۱٫۴۷}}}{{\fadecimal{۰٫۶۱}}} است، در حالی که خطای شکل آن به دو مدل دیگر نزدیک است. علت این \edrep{خطاهای}{خطای} مقیاس در این پژوهش تعیین نشد.
+\end{edadded}
+```
+
+Original table rows (before R27):
+
+```latex
+وابستگی به صحت ماتریس کالیبراسیون دوربین &
+همان اتکای علی که مزیت مدل است، آن را به خطای کالیبراسیون حساس می‌کند &
+مطالعه رفتار مدل تحت عدم قطعیت‌های واقع‌گرایانه کالیبراسیون؛ طراحی سازوکار مقاوم به نویز ماتریس کالیبراسیون دوربین \\
+شبیه‌سازی تنوع دوربین با افزونه‌سازی &
+اثرات ثانویه دوربین‌های واقعی مانند اعوجاج لنز، عمق میدان و نویز حسگر پوشش داده نشده است &
+\edcell آموزش بر داده‌های واقعا چنددوربینه؛ با توجه به رشد سهم پارامترهای دوربین با شدت ابهام مقیاس، انتظار می‌رود سهم ماتریس کالیبراسیون دوربین در این حالت بزرگ‌تر شود؛ گام نخست این مسیر با آموزش چندمجموعه‌ای بر چهار دوربین برداشته شد (بخش~\ref{sec:multidomain_results}) \\
+تمرکز بر یک مجموعه‌داده درون‌دامنه‌ای &
+\edcell تعمیم یافته‌ها به صحنه‌های بیرونی با دامنه عمق بزرگ در مطالعه کنترل‌شده \lr{NYUv2} آزموده نشده بود؛ آزمایش چندمجموعه‌ای این تعمیم را بر \lr{Cityscapes} نشان داد &
+\edcell تکرار مطالعه کنترل‌شده مطلق روی \lr{KITTI} یا مجموعه‌داده‌های بیرونی مشابه؛ افزودن مجموعه‌داده‌های داخلی بیشتر با دوربین‌های متنوع به ترکیب آموزشی \\
+تک‌اجرا بودن هر بازو &
+استنباط علی درون هر زوج قوی است، اما واریانس ناشی از تصادفی‌بودن کل فرآیند آموزش برآورد نشده است &
+تکرار هر زوج با چند بذر مستقل و گزارش میانگین و انحراف معیار میان اجراها \\
+تک‌معماری بودن ارزیابی &
+نتایج در چارچوب خانواده \lr{Depth Anything V2} تفسیرپذیرند &
+پیاده‌سازی همان چارچوب روی انکودرها و دیکودرهای متفاوت \\
+```

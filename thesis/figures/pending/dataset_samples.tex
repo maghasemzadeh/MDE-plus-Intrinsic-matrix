@@ -1,17 +1,15 @@
 % =============================================================================
 % نوار تصاویر نمونه مجموعه‌داده‌ها
 %
-% فایل‌های لازم (هر چهار تصویر از خود مجموعه‌داده‌ها استخراج شده‌اند؛
+% فایل‌های لازم (هر سه تصویر از خود مجموعه‌داده‌ها استخراج شده‌اند؛
 % مسیر دقیق و مجوز هرکدام در thesis/figures/samples/provenance.json ثبت است):
 % thesis/figures/samples/nyu.jpg 640x480
-% thesis/figures/samples/middlebury.jpg 900x607
 % thesis/figures/samples/cityscapes.jpg 900x450
 % thesis/figures/samples/kitti.jpg 900x261
 %
-% چیدمان دو در دو است و تصاویر با نسبت ابعاد اصلی خود درج می‌شوند: همین
-% تفاوت نسبت ابعاد و میدان دید، بخشی از پیام شکل است و نباید با برش یکسان‌سازی
-% شود. ردیف‌ها بر اساس نسبت ابعاد جفت شده‌اند تا ارتفاع دو تصویر هر ردیف
-% به هم نزدیک بماند.
+% تصویر NYUv2 در ردیف نخست وسط‌چین است و دو تصویر بیرونی در ردیف دوم می‌آیند.
+% تصاویر با نسبت ابعاد اصلی خود درج می‌شوند: همین تفاوت نسبت ابعاد و میدان دید،
+% بخشی از پیام شکل است و نباید با برش یکسان‌سازی شود.
 %
 % محل درج: انتهای زیربخش «مجموعه‌داده‌های مورد استفاده» در فصل سوم، با دستور:
 % \input{./figures/pending/dataset_samples}
@@ -20,11 +18,8 @@
 \begin{figure}[htbp]
   \centering
   \begin{tabular}{@{}c@{\hspace{0.02\textwidth}}c@{}}
-    \includegraphics[width=0.47\textwidth]{./figures/samples/nyu.jpg} &
-    \includegraphics[width=0.47\textwidth]{./figures/samples/middlebury.jpg} \\[1pt]
-    {\scriptsize \lr{NYUv2} داخلی، عمق از حسگر نوری، میدان دید $\approx 63^\circ$} &
-    % REVIEW R21 (قاب Middlebury حذف می‌شود؛ هنگام نهایی‌سازی تصویر middlebury.jpg و این زیرنویس برداشته و تصویر NYUv2 با \multicolumn{2}{c}{...} وسط‌چین شود)
-    {\scriptsize \eddel{{\lr{Middlebury}} داخلی، دو نمای کالیبره، وضوح بالا}} \\[7pt]
+    \multicolumn{2}{c}{\includegraphics[width=0.47\textwidth]{./figures/samples/nyu.jpg}} \\[1pt]
+    \multicolumn{2}{c}{\scriptsize \lr{NYUv2} داخلی، عمق از حسگر نوری، میدان دید $\approx 63^\circ$} \\[7pt]
     \includegraphics[width=0.47\textwidth]{./figures/samples/cityscapes.jpg} &
     \includegraphics[width=0.47\textwidth]{./figures/samples/kitti.jpg} \\[1pt]
     {\scriptsize \lr{Cityscapes} شهری، عمق از تطبیق استریو} &

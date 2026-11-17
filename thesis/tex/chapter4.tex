@@ -267,7 +267,8 @@ python train.py --encoder vitl --datasets nyu --model-type absolute \
 \edaddrow ۸. آموزش چندمجموعه‌ای (گام پایانی)
 & همه شواهد گام‌های پیشین از یک دوربین و تغییر شبیه‌سازی‌شده فاصله کانونی به‌دست آمده بود.
 & تعمیم به دوربین‌ها و دامنه‌های متفاوت هنوز آزموده نشده بود.
-& یک مدل واحد بر چهار مجموعه‌داده آموزش دید و بر ده مجموعه آزمون سنجیده شد (بخش~\ref{sec:multidomain_results}). \\
+% REVIEW R21
+& یک مدل واحد بر چهار مجموعه‌داده آموزش دید و بر \edrep{ده}{هشت} مجموعه آزمون سنجیده شد (بخش~\ref{sec:multidomain_results}). \\
 \end{longtable}
 \endgroup
 
@@ -308,7 +309,8 @@ python train.py --encoder vitl --datasets nyu --model-type absolute \
     \node[outc, fill=white] (o3) at (3.8,-1.0)
     {\rl{خروجی: شاهد علی مصرف ماتریس کالیبراسیون دوربین، نه صرفا هم‌بستگی}};
     \node[outc, fill=white] (o4) at (0.0,-1.0)
-    {\rl{خروجی: سنجش برتری بر چند دوربین و ده مجموعه آزمون}};
+    % REVIEW R21 (ده -> هشت؛ بدون نشانه درون‌خطی، چون درون گره TikZ است)
+    {\rl{خروجی: سنجش برتری بر چند دوربین و هشت مجموعه آزمون}};
     \draw[tharrow] (p1) -- (p2);
     \draw[tharrow] (p2) -- (p3);
     \draw[tharrow] (p3) -- (p4);
@@ -1282,17 +1284,21 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 % REVIEW R7
 \leavevmode\edins{در {\lr{Cityscapes}}،} \edmove{در نواحی نزدیک به دوربین و بر روی اجسام برجسته، عمق مرجع از کیفیت نسبتا بالایی برخوردار است، اما در نواحی دوردست، لبه‌ها و سطوح با بافت ضعیف، خطاها و ناپیوستگی‌های قابل توجهی مشاهده می‌شود.} \edins{به‌دلیل} \edmove{تفاوت در نحوه تولید عمق مرجع، دامنه عمق صحنه، و کیفیت داده‌ها، مقایسه عددی ساده} \edins{بین مقادیر خطای {\lr{Cityscapes}} و سایر دیتاست‌ها} \edmove{بدون در نظر گرفتن این عوامل ممکن است به برداشت نادرست منجر شود.}
 
+% REVIEW R21 (بند آزمون جابه‌جایی دوربین حذف شد؛ نشانه‌های R1/R7 درون آن تخت شدند)
+\begin{eddeleted}
+\eddel{بر {\lr{NYUv2}}، {\lr{Cityscapes}} و {\lr{Kinect v2}}، برتری {\proposedmodel{}} با تغییر دوربین نیز حفظ می‌شود. در آزمون جابه‌جایی دوربین، از مرکز هر تصویر آزمون پنجره‌ای با اندازهٔ دوسومِ تصویر برداشته و ماتریس کالیبراسیون دوربین متناظر با آن به‌روز شد؛ این کار همان صحنه‌ها را از نگاه دوربینی با فاصله کانونی {\fadecimal{۱٫۵}} برابر نشان می‌دهد. نتایج این آزمون در جدول~{\ref{tab:multidomain_camera_shift}} آمده است: {\proposedmodel{}} بر هر سه مجموعه آزمون کمترین {\lr{AbsRel}} را دارد و بر {\lr{NYUv2}} و {\lr{Cityscapes}}، برتری آن بر هر دو مدل مرجع معنادار است. این آزمون برای همه مجموعه‌های آزمون در زیربخش~{\ref{subsec:md_all_sets}} نیز گزارش شده است.}
+\end{eddeleted}
+
 \begin{edited}
 % REVIEW R1
 % REVIEW R7
-بر \lr{NYUv2}، \lr{Cityscapes} و \lr{Kinect v2}، برتری \proposedmodel{} با تغییر دوربین نیز حفظ می‌شود. در آزمون جابه‌جایی دوربین، از مرکز هر تصویر آزمون پنجره‌ای با اندازهٔ دوسومِ تصویر برداشته و ماتریس کالیبراسیون دوربین متناظر با آن به‌روز شد؛ این کار همان صحنه‌ها را از نگاه دوربینی با فاصله کانونی \fadecimal{۱٫۵} برابر نشان می‌دهد. نتایج این آزمون در جدول~\ref{tab:multidomain_camera_shift} آمده است: \proposedmodel{} بر هر سه مجموعه آزمون کمترین \lr{AbsRel} را دارد و بر \lr{NYUv2} و \lr{Cityscapes}، برتری آن بر هر دو مدل مرجع معنادار است. \edadd{این آزمون برای همه مجموعه‌های آزمون در زیربخش~{\ref{subsec:md_all_sets}}}\edrep{ و برای زوج دوم در زیربخش~{\ref{subsec:md_lossless_kitti}}}{}\edadd{ نیز گزارش شده است.}
-
 سرانجام، آزمون‌های سازوکاری بخش~\ref{sec:camera_sensitivity} نشان می‌دهند که این مدل نیز واقعا از ماتریس کالیبراسیون دوربین استفاده می‌کند. در آزمون پیمایش فاصله کانونی بر \lr{NYUv2}، عمق پیش‌بینی‌شده تقریبا به همان نسبتی مقیاس می‌شود که فاصله کانونی تحریف شده است؛ یعنی شیب پیمایش \fadecimal{۰٫۹۹} است که به مقدار ایده‌آل ۱ بسیار نزدیک است. حذف ماتریس کالیبراسیون دوربین نیز \lr{AbsRel} را از \fadecimal{۰٫۰۸۸} به \fadecimal{۱٫۳۱} می‌رساند. بنابراین دقت گزارش‌شده در جدول~\ref{tab:multidomain_main} از مسیر ورودی دوربین به‌دست می‌آید.
 \end{edited}
 
+% REVIEW R21 (جدول آزمون جابه‌جایی دوربین حذف شد: \edhlbox -> \eddelbox)
 \begin{table}[htbp]
 \centering
-\edhlbox{%
+\eddelbox{%
 \caption{\lr{AbsRel} مدل‌های آموزش چندمجموعه‌ای در آزمون جابه‌جایی دوربین (فاصله کانونی \fadecimal{۱٫۵} برابر)}
 \label{tab:multidomain_camera_shift}
 \begin{tabular}{rccc}
@@ -1309,16 +1315,18 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \label{subsec:md_all_sets}
 
 % REVIEW R1
+% REVIEW R21
 \begin{edadded}
-جدول~\ref{tab:multidomain_main} چهار مجموعه آزمونی را نشان می‌دهد که \proposedmodel{} در آن‌ها در هر سه معیار از هر دو مدل مرجع دقیق‌تر است. برای تصویری کامل، همین سه مدل بر شش مجموعه آزمون دیگر نیز ارزیابی شدند: بخش ارزیابی \lr{KITTI}، بخش‌های داخلی و بیرونی \lr{DIODE}، مجموعه \lr{Middlebury} و دو حسگر \lr{Intel RealSense} و \lr{Asus Xtion} از \lr{SUN RGB-D} (جدول~\ref{tab:datasets_overview}). جدول~\ref{tab:multidomain_all} نتایج هر ده مجموعه را با تصاویر اصلی و در آزمون جابه‌جایی دوربین نشان می‌دهد. سه مجموعه نخست این جدول، بخش آزمون نگه‌داشته‌شده مجموعه‌داده‌های آموزشی‌اند و هیچ تصویری از هفت مجموعه دیگر در آموزش به‌کار نرفته است. در این جدول، مقدار پررنگ بهترین مقدار هر مجموعه آزمون را نشان می‌دهد.
+جدول~\ref{tab:multidomain_main} چهار مجموعه آزمونی را نشان می‌دهد که \proposedmodel{} در آن‌ها در هر سه معیار از هر دو مدل مرجع دقیق‌تر است. \edrep{برای تصویری کامل، همین}{همین} سه مدل بر \edrep{شش}{چهار} مجموعه آزمون دیگر نیز ارزیابی شدند: بخش ارزیابی \lr{KITTI}، \edrep{بخش‌های داخلی و بیرونی {\lr{DIODE}}، مجموعه {\lr{Middlebury}}}{بخش بیرونی {\lr{DIODE}}} و دو حسگر \lr{Intel RealSense} و \lr{Asus Xtion} از \lr{SUN RGB-D} (جدول~\ref{tab:datasets_overview}). جدول~\ref{tab:multidomain_all} نتایج هر \edrep{ده مجموعه را با تصاویر اصلی و در آزمون جابه‌جایی دوربین}{هشت مجموعه را} نشان می‌دهد. سه مجموعه نخست این جدول، بخش آزمون نگه‌داشته‌شده مجموعه‌داده‌های آموزشی‌اند و هیچ تصویری از \edrep{هفت}{پنج} مجموعه دیگر در آموزش به‌کار نرفته است. در این جدول، مقدار پررنگ بهترین مقدار هر مجموعه آزمون را نشان می‌دهد.
 
 برای تفکیک نوع خطا، دو سنجه کمکی نیز گزارش می‌شود. برای «نسبت مقیاس»، نسبت میانه عمق پیش‌بینی‌شده به میانه عمق مرجع در هر تصویر محاسبه و میانه این نسبت در میان تصاویر گزارش می‌شود. مقدار ایده‌آل آن ۱ است؛ مقدار کمتر از ۱ یعنی مدل صحنه را نزدیک‌تر از واقع و مقدار بیشتر از ۱ یعنی دورتر از واقع برآورد می‌کند. «خطای شکل» انحراف معیار خطای لگاریتمی عمق درون هر تصویر است که بر تصاویر میانگین گرفته می‌شود. این سنجه به خطای مقیاس سراسری حساس نیست و تنها خطای ساختار نسبی صحنه را می‌سنجد.
 \end{edadded}
 % REVIEW R1
+% REVIEW R21 (ستون‌های «جابه‌جایی دوربین»، سرستون «تصاویر اصلی» و ردیف‌های DIODE داخلی و Middlebury حذف شدند؛ نشانه‌های R7 در خانه‌های حذف‌شده KITTI تخت شدند)
 \begin{table}[htbp]
 \centering
 \edaddbox{%
-\caption[نتایج ارزیابی مطلق زوج اصلی ViT-L و نسخه منتشرشده بر ده مجموعه آزمون]{نتایج ارزیابی مطلق زوج اصلی \lr{ViT-L} و \publishedbasemodel{} بر ده مجموعه آزمون}
+\caption[نتایج ارزیابی مطلق زوج اصلی ViT-L و نسخه منتشرشده بر هشت مجموعه آزمون]{نتایج ارزیابی مطلق زوج اصلی \lr{ViT-L} و \publishedbasemodel{} بر \edrep{ده}{هشت} مجموعه آزمون}
 \label{tab:multidomain_all}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -1327,64 +1335,64 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \begin{tabular}{rrcccccc}
 \hline
 \multirow{2}{*}{مجموعه آزمون} & \multirow{2}{*}{مدل}
-& \multicolumn{3}{c}{تصاویر اصلی}
-& \multicolumn{3}{c}{جابه‌جایی دوربین} \\ \cline{3-8}
+& \multicolumn{3}{c}{\eddel{تصاویر اصلی}}
+& \multicolumn{3}{c}{\eddel{جابه‌جایی دوربین}} \\ \cline{3-8}
 & & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$
-& \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ \\ \hline
+& \eddel{{\lr{AbsRel}$\downarrow$}} & \eddel{{$\delta_1\uparrow$}} & \eddel{{\lr{RMSE}$\downarrow$}} \\ \hline
 \multicolumn{8}{c}{بخش آزمون مجموعه‌داده‌های آموزشی} \\ \hline
 \multirow{3}{*}{\lr{NYUv2}}
-& \tableproposedmodel{} & $\mathbf{0.088}$ & $\mathbf{0.945}$ & $\mathbf{0.309}$ & $\mathbf{0.097}$ & $\mathbf{0.927}$ & $\mathbf{0.346}$ \\
-& \tablecontrolmodel{} & $0.133$ & $0.856$ & $0.395$ & $0.118$ & $0.877$ & $0.393$ \\
-& \tablepublishedmodel{} & $0.207$ & $0.692$ & $0.600$ & $0.164$ & $0.673$ & $0.547$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.088}$ & $\mathbf{0.945}$ & $\mathbf{0.309}$ & \eddel{{$\mathbf{0.097}$}} & \eddel{{$\mathbf{0.927}$}} & \eddel{{$\mathbf{0.346}$}} \\
+& \tablecontrolmodel{} & $0.133$ & $0.856$ & $0.395$ & \eddel{{$0.118$}} & \eddel{{$0.877$}} & \eddel{{$0.393$}} \\
+& \tablepublishedmodel{} & $0.207$ & $0.692$ & $0.600$ & \eddel{{$0.164$}} & \eddel{{$0.673$}} & \eddel{{$0.547$}} \\ \hline
 \multirow{3}{*}{\lr{Cityscapes}}
-& \tableproposedmodel{} & $\mathbf{0.109}$ & $\mathbf{0.894}$ & $\mathbf{5.417}$ & $\mathbf{0.087}$ & $\mathbf{0.935}$ & $\mathbf{4.763}$ \\
-& \tablecontrolmodel{} & $0.136$ & $0.851$ & $5.938$ & $0.108$ & $0.894$ & $5.128$ \\
-& \tablepublishedmodel{} & $0.243$ & $0.577$ & $7.569$ & $0.178$ & $0.675$ & $9.083$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.109}$ & $\mathbf{0.894}$ & $\mathbf{5.417}$ & \eddel{{$\mathbf{0.087}$}} & \eddel{{$\mathbf{0.935}$}} & \eddel{{$\mathbf{4.763}$}} \\
+& \tablecontrolmodel{} & $0.136$ & $0.851$ & $5.938$ & \eddel{{$0.108$}} & \eddel{{$0.894$}} & \eddel{{$5.128$}} \\
+& \tablepublishedmodel{} & $0.243$ & $0.577$ & $7.569$ & \eddel{{$0.178$}} & \eddel{{$0.675$}} & \eddel{{$9.083$}} \\ \hline
 \multirow{3}{*}{\lr{KITTI}}
 % REVIEW R7
-& \tableproposedmodel{} & \edrep{{$0.156$}}{{$\mathbf{0.099}$}} & \edrep{{$0.811$}}{{$\mathbf{0.917}$}} & \edrep{{$4.063$}}{{$\mathbf{2.963}$}} & \edrep{{$\mathbf{0.123}$}}{{$\mathbf{0.096}$}} & \edrep{{$0.874$}}{{$\mathbf{0.923}$}} & \edrep{{$4.055$}}{{$\mathbf{3.281}$}} \\
-& \tablecontrolmodel{} & \edrep{{$0.175$}}{{$0.113$}} & \edrep{{$0.787$}}{{$0.891$}} & \edrep{{$4.403$}}{{$3.270$}} & \edrep{{$0.124$}}{{$0.108$}} & \edrep{{$\mathbf{0.875}$}}{{$0.903$}} & \edrep{{$\mathbf{3.841}$}}{{$3.489$}} \\
-& \tablepublishedmodel{} & \edrep{{$\mathbf{0.146}$}}{{$0.146$}} & \edrep{{$\mathbf{0.820}$}}{{$0.820$}} & \edrep{{$\mathbf{3.893}$}}{{$3.893$}} & $0.249$ & $0.286$ & $6.489$ \\ \hline
+& \tableproposedmodel{} & $0.156$ & $0.811$ & $4.063$ & $\mathbf{0.123}$ & $0.874$ & $4.055$ \\
+& \tablecontrolmodel{} & $0.175$ & $0.787$ & $4.403$ & $0.124$ & $\mathbf{0.875}$ & $\mathbf{3.841}$ \\
+& \tablepublishedmodel{} & $\mathbf{0.146}$ & $\mathbf{0.820}$ & $\mathbf{3.893}$ & $0.249$ & $0.286$ & $6.489$ \\
 \multicolumn{8}{c}{داده‌های دیده‌نشده در آموزش} \\ \hline
 \multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v1}}}
-& \tableproposedmodel{} & $\mathbf{0.169}$ & $\mathbf{0.766}$ & $\mathbf{0.369}$ & $0.238$ & $0.630$ & $0.397$ \\
-& \tablecontrolmodel{} & $0.314$ & $0.478$ & $0.532$ & $0.295$ & $0.534$ & $0.460$ \\
-& \tablepublishedmodel{} & $0.196$ & $0.749$ & $0.396$ & $\mathbf{0.185}$ & $\mathbf{0.635}$ & $\mathbf{0.394}$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.169}$ & $\mathbf{0.766}$ & $\mathbf{0.369}$ & \eddel{{$0.238$}} & \eddel{{$0.630$}} & \eddel{{$0.397$}} \\
+& \tablecontrolmodel{} & $0.314$ & $0.478$ & $0.532$ & \eddel{{$0.295$}} & \eddel{{$0.534$}} & \eddel{{$0.460$}} \\
+& \tablepublishedmodel{} & $0.196$ & $0.749$ & $0.396$ & \eddel{{$\mathbf{0.185}$}} & \eddel{{$\mathbf{0.635}$}} & \eddel{{$\mathbf{0.394}$}} \\ \hline
 \multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v2}}}
-& \tableproposedmodel{} & $\mathbf{0.104}$ & $\mathbf{0.906}$ & $\mathbf{0.351}$ & $\mathbf{0.106}$ & $\mathbf{0.915}$ & $\mathbf{0.314}$ \\
-& \tablecontrolmodel{} & $0.209$ & $0.677$ & $0.470$ & $0.113$ & $0.890$ & $0.335$ \\
-& \tablepublishedmodel{} & $0.246$ & $0.524$ & $0.616$ & $0.142$ & $0.773$ & $0.399$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.104}$ & $\mathbf{0.906}$ & $\mathbf{0.351}$ & \eddel{{$\mathbf{0.106}$}} & \eddel{{$\mathbf{0.915}$}} & \eddel{{$\mathbf{0.314}$}} \\
+& \tablecontrolmodel{} & $0.209$ & $0.677$ & $0.470$ & \eddel{{$0.113$}} & \eddel{{$0.890$}} & \eddel{{$0.335$}} \\
+& \tablepublishedmodel{} & $0.246$ & $0.524$ & $0.616$ & \eddel{{$0.142$}} & \eddel{{$0.773$}} & \eddel{{$0.399$}} \\ \hline
 \multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{RealSense}}}
-& \tableproposedmodel{} & $0.093$ & $0.935$ & $\mathbf{0.234}$ & $0.138$ & $\mathbf{0.846}$ & $0.312$ \\
-& \tablecontrolmodel{} & $0.125$ & $0.862$ & $0.290$ & $\mathbf{0.130}$ & $0.842$ & $\mathbf{0.307}$ \\
-& \tablepublishedmodel{} & $\mathbf{0.092}$ & $\mathbf{0.941}$ & $0.265$ & $0.267$ & $0.251$ & $0.558$ \\ \hline
+& \tableproposedmodel{} & $0.093$ & $0.935$ & $\mathbf{0.234}$ & \eddel{{$0.138$}} & \eddel{{$\mathbf{0.846}$}} & \eddel{{$0.312$}} \\
+& \tablecontrolmodel{} & $0.125$ & $0.862$ & $0.290$ & \eddel{{$\mathbf{0.130}$}} & \eddel{{$0.842$}} & \eddel{{$\mathbf{0.307}$}} \\
+& \tablepublishedmodel{} & $\mathbf{0.092}$ & $\mathbf{0.941}$ & $0.265$ & \eddel{{$0.267$}} & \eddel{{$0.251$}} & \eddel{{$0.558$}} \\ \hline
 \multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Xtion}}}
-& \tableproposedmodel{} & $\mathbf{0.176}$ & $0.770$ & $\mathbf{0.430}$ & $0.221$ & $0.659$ & $0.547$ \\
-& \tablecontrolmodel{} & $0.216$ & $0.697$ & $0.493$ & $\mathbf{0.190}$ & $\mathbf{0.736}$ & $\mathbf{0.485}$ \\
-& \tablepublishedmodel{} & $0.178$ & $\mathbf{0.784}$ & $0.472$ & $0.206$ & $0.523$ & $0.608$ \\ \hline
-\multirow{3}{*}{\makecell{\lr{DIODE}\\داخلی}}
-& \tableproposedmodel{} & $0.268$ & $0.431$ & $1.233$ & $\mathbf{0.256}$ & $\mathbf{0.571}$ & $\mathbf{1.080}$ \\
-& \tablecontrolmodel{} & $0.240$ & $\mathbf{0.509}$ & $\mathbf{0.982}$ & $0.298$ & $0.338$ & $1.200$ \\
-& \tablepublishedmodel{} & $\mathbf{0.235}$ & $0.507$ & $1.029$ & $0.381$ & $0.187$ & $1.547$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.176}$ & $0.770$ & $\mathbf{0.430}$ & \eddel{{$0.221$}} & \eddel{{$0.659$}} & \eddel{{$0.547$}} \\
+& \tablecontrolmodel{} & $0.216$ & $0.697$ & $0.493$ & \eddel{{$\mathbf{0.190}$}} & \eddel{{$\mathbf{0.736}$}} & \eddel{{$\mathbf{0.485}$}} \\
+& \tablepublishedmodel{} & $0.178$ & $\mathbf{0.784}$ & $0.472$ & \eddel{{$0.206$}} & \eddel{{$0.523$}} & \eddel{{$0.608$}} \\ \hline
+\multirow{3}{*}{\makecell{\eddel{{\lr{DIODE}}}\\\eddel{داخلی}}}
+& \eddel{{\tableproposedmodel{}}} & \eddel{{$0.268$}} & \eddel{{$0.431$}} & \eddel{{$1.233$}} & \eddel{{$\mathbf{0.256}$}} & \eddel{{$\mathbf{0.571}$}} & \eddel{{$\mathbf{1.080}$}} \\
+& \eddel{{\tablecontrolmodel{}}} & \eddel{{$0.240$}} & \eddel{{$\mathbf{0.509}$}} & \eddel{{$\mathbf{0.982}$}} & \eddel{{$0.298$}} & \eddel{{$0.338$}} & \eddel{{$1.200$}} \\
+& \eddel{{\tablepublishedmodel{}}} & \eddel{{$\mathbf{0.235}$}} & \eddel{{$0.507$}} & \eddel{{$1.029$}} & \eddel{{$0.381$}} & \eddel{{$0.187$}} & \eddel{{$1.547$}} \\ \hline
 \multirow{3}{*}{\makecell{\lr{DIODE}\\بیرونی}}
-& \tableproposedmodel{} & $\mathbf{0.517}$ & $0.118$ & $8.322$ & $\mathbf{0.521}$ & $0.128$ & $9.068$ \\
-& \tablecontrolmodel{} & $0.606$ & $\mathbf{0.529}$ & $\mathbf{6.810}$ & $0.551$ & $\mathbf{0.513}$ & $\mathbf{6.533}$ \\
-& \tablepublishedmodel{} & $0.740$ & $0.339$ & $7.474$ & $0.627$ & $0.317$ & $8.164$ \\ \hline
-\multirow{3}{*}{\lr{Middlebury}}
-& \tableproposedmodel{} & $0.677$ & $0.270$ & $1.816$ & $0.813$ & $0.172$ & $2.110$ \\
-& \tablecontrolmodel{} & $\mathbf{0.235}$ & $\mathbf{0.527}$ & $\mathbf{0.834}$ & $\mathbf{0.293}$ & $\mathbf{0.394}$ & $\mathbf{0.994}$ \\
-& \tablepublishedmodel{} & $0.384$ & $0.142$ & $1.190$ & $0.515$ & $0.056$ & $1.542$ \\ \hline
+& \tableproposedmodel{} & $\mathbf{0.517}$ & $0.118$ & $8.322$ & \eddel{{$\mathbf{0.521}$}} & \eddel{{$0.128$}} & \eddel{{$9.068$}} \\
+& \tablecontrolmodel{} & $0.606$ & $\mathbf{0.529}$ & $\mathbf{6.810}$ & \eddel{{$0.551$}} & \eddel{{$\mathbf{0.513}$}} & \eddel{{$\mathbf{6.533}$}} \\
+& \tablepublishedmodel{} & $0.740$ & $0.339$ & $7.474$ & \eddel{{$0.627$}} & \eddel{{$0.317$}} & \eddel{{$8.164$}} \\ \hline
+\multirow{3}{*}{\eddel{{\lr{Middlebury}}}}
+& \eddel{{\tableproposedmodel{}}} & \eddel{{$0.677$}} & \eddel{{$0.270$}} & \eddel{{$1.816$}} & \eddel{{$0.813$}} & \eddel{{$0.172$}} & \eddel{{$2.110$}} \\
+& \eddel{{\tablecontrolmodel{}}} & \eddel{{$\mathbf{0.235}$}} & \eddel{{$\mathbf{0.527}$}} & \eddel{{$\mathbf{0.834}$}} & \eddel{{$\mathbf{0.293}$}} & \eddel{{$\mathbf{0.394}$}} & \eddel{{$\mathbf{0.994}$}} \\
+& \eddel{{\tablepublishedmodel{}}} & \eddel{{$0.384$}} & \eddel{{$0.142$}} & \eddel{{$1.190$}} & \eddel{{$0.515$}} & \eddel{{$0.056$}} & \eddel{{$1.542$}} \\ \hline
 \end{tabular}
 \end{adjustbox}
 \par\smallskip
 % REVIEW R7
 % REVIEW R20
-{\footnotesize \edins{نتایج {\lr{KITTI}} از زوجی است که با تصاویر آموزشی {\lr{KITTI}} بدون اتلاف بازآموزی شد}\eddel{ (ردیف ۲ جدول~{\ref{tab:md_runs}})}\edins{.}}}
 \end{table}
 
 % REVIEW R1
+% REVIEW R21 («تصاویر اصلی»)
 \begin{edadded}
-رفتار صفرنمونه \proposedmodel{} بیش از همه در \lr{SUN RGB-D} دیده می‌شود. بر چهار حسگر این مجموعه، با ۸۰۰ تصویری که هیچ‌یک در آموزش به‌کار نرفته‌اند، \proposedmodel{} در هر دوازده ستون تصاویر اصلی از \controlmodel{} دقیق‌تر است و همه این تفاوت‌ها در آزمون زوجی ویلکاکسون معنادارند. کاهش \lr{AbsRel} نسبت به \controlmodel{} بر \lr{Kinect v1}، \lr{Kinect v2}، \lr{RealSense} و \lr{Xtion} به‌ترتیب ۴۶، ۵۰، ۲۶ و ۱۹ درصد است. دو مقدار نخست، بزرگ‌ترین کاهش‌ها در کل جدول~\ref{tab:multidomain_all} هستند؛ کاهش متناظر بر بخش آزمون خود مجموعه‌داده‌های آموزشی \lr{NYUv2} و \lr{Cityscapes} ۳۴ و ۲۰ درصد است. \proposedmodel{} بر هیچ‌یک از این چهار حسگر در هیچ معیاری به‌طور معنادار از \publishedbasemodel{} ضعیف‌تر نیست و \lr{RMSE} آن بر هر چهار حسگر به‌طور معنادار کمتر است.
+رفتار صفرنمونه \proposedmodel{} بیش از همه در \lr{SUN RGB-D} دیده می‌شود. بر چهار حسگر این مجموعه، با ۸۰۰ تصویری که هیچ‌یک در آموزش به‌کار نرفته‌اند، \proposedmodel{} در هر دوازده ستون \eddel{تصاویر اصلی} از \controlmodel{} دقیق‌تر است و همه این تفاوت‌ها در آزمون زوجی ویلکاکسون معنادارند. کاهش \lr{AbsRel} نسبت به \controlmodel{} بر \lr{Kinect v1}، \lr{Kinect v2}، \lr{RealSense} و \lr{Xtion} به‌ترتیب ۴۶، ۵۰، ۲۶ و ۱۹ درصد است. دو مقدار نخست، بزرگ‌ترین کاهش‌ها در کل جدول~\ref{tab:multidomain_all} هستند؛ کاهش متناظر بر بخش آزمون خود مجموعه‌داده‌های آموزشی \lr{NYUv2} و \lr{Cityscapes} ۳۴ و ۲۰ درصد است. \proposedmodel{} بر هیچ‌یک از این چهار حسگر در هیچ معیاری به‌طور معنادار از \publishedbasemodel{} ضعیف‌تر نیست و \lr{RMSE} آن بر هر چهار حسگر به‌طور معنادار کمتر است.
 
 مقایسه \controlmodel{} با \publishedbasemodel{} نکته مهم دیگری را نشان می‌دهد. \controlmodel{} همان داده، افزونه‌سازی و برنامه آموزشی \proposedmodel{} را دریافت کرد و تنها ماتریس کالیبراسیون دوربین را نمی‌دید؛ با این حال، بر سه حسگر از چهار حسگر \lr{SUN RGB-D} از \publishedbasemodel{} ضعیف‌تر است. \lr{AbsRel} آن بر \lr{Kinect v1}، \lr{RealSense} و \lr{Xtion} به‌ترتیب ۶۱، ۳۷ و ۲۲ درصد بیشتر از \publishedbasemodel{} است و $\delta_1$ آن نیز در هر سه حسگر به‌طور معنادار کمتر است. در همین سه حسگر، \proposedmodel{} بر \lr{Kinect v1} در \lr{AbsRel} و \lr{RMSE} به‌طور معنادار از \publishedbasemodel{} دقیق‌تر و بر \lr{RealSense} و \lr{Xtion} در \lr{AbsRel} و $\delta_1$ هم‌تراز آن است. بنابراین آموزش چندمجموعه‌ای با افزونه‌سازی دوربین، اگر ماتریس کالیبراسیون دوربین در دسترس مدل نباشد، می‌تواند تعمیم صفرنمونه مدل پایه را کاهش دهد؛ همان آموزش با ماتریس کالیبراسیون دوربین این افت را ندارد. این الگو با طراحی آزمایش سازگار است: افزونه‌سازی دوربین هندسه تصویر را بدون تغییر عمق صحنه تغییر می‌دهد و این تغییر تنها در ماتریس کالیبراسیون دوربین به‌روزشده ثبت می‌شود (زیربخش~\ref{subsec:focal_jitter_results})؛ مدلی که این ماتریس را نمی‌بیند، نمی‌تواند تغییر هندسه ناشی از دوربین را از تغییر واقعی عمق تشخیص دهد. خطای اضافه \controlmodel{} نیز عمدتا از جنس مقیاس است: نسبت مقیاس آن بر \lr{Kinect v1} \fadecimal{۱٫۲۵} است، در برابر \fadecimal{۱٫۰۸} برای \proposedmodel{}، در حالی که خطای شکل دو مدل تقریبا برابر است (\fadecimal{۰٫۱۲۲} و \fadecimal{۰٫۱۱۹}).
 \end{edadded}
@@ -1399,53 +1407,20 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \end{itemize}
 \end{eddeleted}
 % REVIEW R20
+% REVIEW R21 (بند R20 درباره سه مجموعه حذف شد؛ بند تازه فقط درباره DIODE بیرونی)
+\begin{eddeleted}
+\eddel{در مقابل، با تصاویر اصلی، {\proposedmodel{}} در سه مجموعه آزمونِ دیده‌نشده {\lr{DIODE}} داخلی، {\lr{DIODE}} بیرونی و {\lr{Middlebury}} از {\controlmodel{}} دقیق‌تر نیست (جدول~{\ref{tab:multidomain_all}}). در هر سه مجموعه، خطای {\proposedmodel{}} عمدتاً ناشی از مقیاس سراسری است و خطای شکل آن به خطای شکل دو مدل دیگر نزدیک است. در {\lr{DIODE}} بیرونی، {\proposedmodel{}} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس {\fadecimal{۰٫۶۱}})، در حالی که {\controlmodel{}} و {\publishedbasemodel{}} آن را دورتر از واقعیت برآورد می‌کنند ({\fadecimal{۱٫۲۰}} و {\fadecimal{۱٫۲۷}})؛ چون {\lr{AbsRel}} برآورد نزدیک‌تر را حداکثر به‌اندازهٔ ۱ جریمه می‌کند اما برای برآورد دورتر کرانی ندارد، در حالی که {$\delta_1$} هر دو جهت را به یک اندازه می‌سنجد، رتبه‌بندی مدل‌ها به معیار بستگی دارد. در {\lr{Middlebury}}، نسبت مقیاس {\proposedmodel{}} برابر {\fadecimal{۱٫۴۷}} و برای {\controlmodel{}} برابر {\fadecimal{۰٫۹۵}} است؛ این مجموعه فقط ۲۳ تصویر دارد و دوربین آن با میدان دید افقی حدود ۳۴ درجه، از هر چهار دوربین واقعی آموزش با میدان دید ۴۹ تا ۸۲ درجه باریک‌تر است. علت این خطاهای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در بخش~{\ref{sec:chapter5_future_work}} واگذار شد.}
+\end{eddeleted}
+% REVIEW R21
 \begin{edadded}
-در مقابل، با تصاویر اصلی، \proposedmodel{} در سه مجموعه آزمونِ دیده‌نشده \lr{DIODE} داخلی، \lr{DIODE} بیرونی و \lr{Middlebury} از \controlmodel{} دقیق‌تر نیست (جدول~\ref{tab:multidomain_all}). در هر سه مجموعه، خطای \proposedmodel{} عمدتاً ناشی از مقیاس سراسری است و خطای شکل آن به خطای شکل دو مدل دیگر نزدیک است. در \lr{DIODE} بیرونی، \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷})؛ چون \lr{AbsRel} برآورد نزدیک‌تر را حداکثر به‌اندازهٔ ۱ جریمه می‌کند اما برای برآورد دورتر کرانی ندارد، در حالی که $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد، رتبه‌بندی مدل‌ها به معیار بستگی دارد. در \lr{Middlebury}، نسبت مقیاس \proposedmodel{} برابر \fadecimal{۱٫۴۷} و برای \controlmodel{} برابر \fadecimal{۰٫۹۵} است؛ این مجموعه فقط ۲۳ تصویر دارد و دوربین آن با میدان دید افقی حدود ۳۴ درجه، از هر چهار دوربین واقعی آموزش با میدان دید ۴۹ تا ۸۲ درجه باریک‌تر است. علت این خطاهای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در بخش~\ref{sec:chapter5_future_work} واگذار شد.
+در \lr{DIODE} بیرونی، رتبه‌بندی سه مدل بر اساس معیار ارزیابی متفاوت است (جدول~\ref{tab:multidomain_all}): \proposedmodel{} کمترین \lr{AbsRel} را دارد، اما $\delta_1$ آن کمتر و \lr{RMSE} آن بیشتر از دو مدل دیگر است. دلیل این تفاوت، جهت خطای مقیاس است؛ \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷}). \lr{AbsRel} برآورد بیش‌ازحد نزدیک را حداکثر به‌اندازهٔ ۱ جریمه می‌کند، اما برای برآورد بیش‌ازحد دور کران بالایی ندارد؛ در مقابل، $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد. خطای \proposedmodel{} در این مجموعه عمدتاً خطای مقیاس سراسری است و خطای شکل آن به خطای دو مدل دیگر نزدیک است. علت این خطای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در بخش~\ref{sec:chapter5_future_work} واگذار می‌شود.
 \end{edadded}
 % REVIEW R1
-\begin{edadded}
+% REVIEW R21 (جمله باقی‌مانده درباره آزمون جابه‌جایی دوربین حذف شد؛ کل بند اکنون حذفی است و نشانه‌های R7 درون آن تخت شدند)
+\begin{eddeleted}
 % REVIEW R7
 % REVIEW R20
-\eddel{بر {\lr{RealSense}} و {\lr{Xtion}}، {\proposedmodel{}} در هر سه معیار از {\controlmodel{}} دقیق‌تر است، اما در {\lr{AbsRel}} و {$\delta_1$} تنها هم‌تراز {\publishedbasemodel{}} است.}\edrep{ خطای {\lr{KITTI}} در زوج اصلی علت مشخصی داشت که در زیربخش~{\ref{subsec:md_lossless_kitti}} بررسی و برطرف شده است.}{} در آزمون جابه‌جایی دوربین، \proposedmodel{} بر \lr{NYUv2}، \lr{Cityscapes}، \edins{{\lr{KITTI}}،} \lr{Kinect v2} و \lr{DIODE} داخلی در هر سه معیار دقیق‌ترین مدل است؛ بر \lr{Xtion} و \lr{Middlebury} \controlmodel{} و بر \lr{Kinect v1} \publishedbasemodel{} دقیق‌ترند و بر \edrep{سه}{دو} مجموعه دیگر، برتری میان معیارها تقسیم شده است.
-\end{edadded}
-
-% REVIEW R7
-\subsection*{\eddel{اثر ذخیره‌سازی بدون اتلاف تصاویر آموزشی {\lr{KITTI}}}}
-\label{subsec:md_lossless_kitti}
-
-% REVIEW R7
-\begin{eddeleted}
-\eddel{در زوج اصلی، {\lr{KITTI}} تنها مجموعه‌داده آموزشی‌ای بود که {\proposedmodel{}} بر بخش آزمون آن از {\publishedbasemodel{}} عقب ماند ({\lr{AbsRel}} برابر {\fadecimal{۰٫۱۵۶}} در برابر {\fadecimal{۰٫۱۴۶}}) و صحنه را حدود ۱۳ درصد دورتر از واقع برآورد کرد (نسبت مقیاس {\fadecimal{۱٫۱۳}}). بررسی زنجیره داده نشان داد که تصاویر آموزشی {\lr{KITTI}}، برای کوچک نگه‌داشتن حجم انتقال به سرور آموزش، با فشرده‌سازی {\lr{JPEG}} با کیفیت ۹۵ ذخیره شده بودند، در حالی که تصاویر آزمون آن پرونده‌های اصلی بدون اتلاف بودند؛ در میان چهار مجموعه‌داده آموزشی، تنها در {\lr{KITTI}} قالب ذخیره تصاویر آموزش و آزمون متفاوت بود. دو آزمون نقش این تفاوت را نشان دادند. نخست، هنگامی که همان ۶۵۲ تصویر آزمون، بدون هیچ تغییر دیگری، با همان فشرده‌سازی دوباره ذخیره شدند، {\lr{AbsRel}} {\proposedmodel{}} از {\fadecimal{۰٫۱۵۶}} به {\fadecimal{۰٫۰۹۱}} و نسبت مقیاس آن از {\fadecimal{۱٫۱۳}} به {\fadecimal{۱٫۰۳}} رسید (جدول~{\ref{tab:md_lossless_kitti}}). دوم، شیب پیمایش فاصله کانونی (زیربخش~{\ref{subsec:intrinsics_variation}}) بر {\lr{KITTI}} {\fadecimal{۰٫۷۳}} بود، در برابر {\fadecimal{۰٫۹۹}} بر {\lr{NYUv2}}. بنابراین مدل، مقیاس {\lr{KITTI}} را تا حدی به ظاهر فشرده تصاویر آموزشی آن گره زده بود و بر این دامنه کمتر از ماتریس کالیبراسیون دوربین استفاده می‌کرد.}
-
-\eddel{برای سنجش مستقیم این اثر، زوج دومی از {\proposedmodel{}} و {\controlmodel{}} با انکودر {\lr{ViT-L}} آموزش داده شد که تنها تفاوت آن با زوج اصلی، ذخیره تصاویر آموزشی {\lr{KITTI}} به‌صورت پرونده‌های اصلی بدون اتلاف بود؛ داده، ترتیب نمونه‌ها، افزونه‌سازی، ابرپارامترها و بذر تصادفی تغییری نکردند. این تغییر خطای {\lr{KITTI}} را در هر دو بازو کاهش داد: {\lr{AbsRel}} {\proposedmodel{}} ۳۷ درصد (از {\fadecimal{۰٫۱۵۶}} به {\fadecimal{۰٫۰۹۹}}) و {\lr{AbsRel}} {\controlmodel{}} ۳۵ درصد (از {\fadecimal{۰٫۱۷۵}} به {\fadecimal{۰٫۱۱۳}}) کم شد و {\lr{RMSE}} دو بازو نیز به‌ترتیب ۲۷ و ۲۶ درصد کاهش یافت. همین تغییر در نسخه {\lr{ViT-S}} {\proposedmodel{}}، خطای {\lr{KITTI}} را اندکی کاهش داد ({\lr{AbsRel}} از {\fadecimal{۰٫۱۱۷}} به {\fadecimal{۰٫۱۱۶}}) و نسبت مقیاس آن را از {\fadecimal{۰٫۹۳}} به {\fadecimal{۱٫۰۰}} رساند؛ بنابراین در هر سه مدلی که با تصاویر بدون اتلاف آموزش دیدند، خطای {\lr{KITTI}} کم شد. پس از این اصلاح نیز {\proposedmodel{}} از {\controlmodel{}} دقیق‌تر ماند: {\lr{AbsRel}} آن ۱۳ درصد و {\lr{RMSE}} آن ۹ درصد کمتر و {$\delta_1$} آن {\fadecimal{۰٫۹۱۷}} در برابر {\fadecimal{۰٫۸۹۱}} است و هر سه تفاوت معنادارند. هر دو مدل اکنون بر {\lr{KITTI}} از {\publishedbasemodel{}} دقیق‌ترند و {\lr{AbsRel}} {\proposedmodel{}} ۳۲ درصد کمتر از آن است. شیب پیمایش فاصله کانونی بر {\lr{KITTI}} نیز از {\fadecimal{۰٫۷۳}} به {\fadecimal{۱٫۰۱}} رسید و با شیب {\lr{NYUv2}} ({\fadecimal{۱٫۰۰}}) برابر شد؛ یعنی پس از حذف این نشانه ظاهری، مدل مقیاس {\lr{KITTI}} را نیز از ماتریس کالیبراسیون دوربین می‌خواند.}
-\end{eddeleted}
-
-% REVIEW R7
-\begin{table}[htbp]
-\centering
-\eddelbox{%
-\caption{نتایج \lr{ViT-L} بر بخش ارزیابی \lr{KITTI} (۶۵۲ تصویر) با تصاویر آموزشی فشرده و بدون اتلاف (پررنگ: بهترین مقدار با تصاویر آزمون اصلی)}
-\label{tab:md_lossless_kitti}
-\setlength{\tabcolsep}{5pt}
-\begin{adjustbox}{max width=\linewidth}
-\begin{tabular}{rrrcccc}
-\hline
-مدل & تصاویر آموزشی \lr{KITTI} & تصاویر آزمون & \lr{AbsRel}$\downarrow$ & $\delta_1\uparrow$ & \lr{RMSE}$\downarrow$ & نسبت مقیاس \\ \hline
-\tablepublishedmodel{} & & اصلی & $0.146$ & $0.820$ & $3.893$ & $1.10$ \\
-\tableproposedmodel{}، زوج اصلی & \lr{JPEG}، کیفیت ۹۵ & اصلی & $0.156$ & $0.811$ & $4.063$ & $1.13$ \\
-\tablecontrolmodel{}، زوج اصلی & \lr{JPEG}، کیفیت ۹۵ & اصلی & $0.175$ & $0.787$ & $4.403$ & $1.14$ \\
-\tableproposedmodel{}، زوج اصلی & \lr{JPEG}، کیفیت ۹۵ & فشرده با \lr{JPEG}، کیفیت ۹۵ & $0.091$ & $0.931$ & $2.833$ & $1.03$ \\ \hline
-\tableproposedmodel{}، زوج دوم & بدون اتلاف & اصلی & $\mathbf{0.099}$ & $\mathbf{0.917}$ & $\mathbf{2.963}$ & $\mathbf{1.05}$ \\
-\tablecontrolmodel{}، زوج دوم & بدون اتلاف & اصلی & $0.113$ & $0.891$ & $3.270$ & $1.06$ \\ \hline
-\end{tabular}
-\end{adjustbox}}
-\end{table}
-
-% REVIEW R7
-\begin{eddeleted}
-\eddel{زوج دوم، مقایسه اصلی جدول~{\ref{tab:multidomain_main}} را نیز تکرار کرد. در این زوج هم {\proposedmodel{}} بر {\lr{NYUv2}}، {\lr{Cityscapes}}، {\lr{Kinect v1}} و {\lr{Kinect v2}} در هر دوازده ستون از {\controlmodel{}} دقیق‌تر است و همه این تفاوت‌ها معنادارند؛ کاهش {\lr{AbsRel}} نسبت به {\controlmodel{}} در این چهار مجموعه به‌ترتیب ۲۷، ۷، ۳۹ و ۳۸ درصد است. برتری بر {\publishedbasemodel{}} نیز در نه ستون از این دوازده ستون معنادار است و در سه ستون {\lr{Kinect v1}} تفاوت معناداری دیده نمی‌شود. بنابراین برتری {\proposedmodel{}} بر {\controlmodel{}} به یک اجرای آموزشی منفرد محدود نیست و در دو اجرای جداگانه دیده شد.}
-
-\eddel{بااین‌حال، زوج دوم در همه جنبه‌ها بر زوج اصلی برتری ندارد. {\proposedmodel{}} این زوج، برخلاف {\controlmodel{}} آن، بر حسگرهای {\lr{SUN RGB-D}} صحنه را دورتر از {\proposedmodel{}} زوج اصلی برآورد می‌کند. با تصاویر اصلی، {\lr{AbsRel}} آن بر {\lr{RealSense}}، {\lr{Xtion}} و {\lr{Kinect v1}} به‌ترتیب {\fadecimal{۰٫۱۱۹}}، {\fadecimal{۰٫۲۱۹}} و {\fadecimal{۰٫۱۸۳}} است، در برابر {\fadecimal{۰٫۰۹۳}}، {\fadecimal{۰٫۱۷۶}} و {\fadecimal{۰٫۱۶۹}} در زوج اصلی. در آزمون جابه‌جایی دوربین، برتری آن بر {\controlmodel{}} در {\lr{NYUv2}} و {\lr{Cityscapes}} تکرار می‌شود، اما در {\lr{Kinect v2}} تکرار نمی‌شود: {\lr{AbsRel}} آن {\fadecimal{۰٫۱۸۸}} در برابر {\fadecimal{۰٫۱۰۹}} برای {\controlmodel{}} است و نسبت مقیاس آن به {\fadecimal{۱٫۱۵}} می‌رسد. این جابه‌جایی مقیاس در دو نقطهٔ وارسی پایانی همان اجرا یکسان بود و در نسخه {\lr{ViT-S}} نیز در آزمون جابه‌جایی دوربین با همان جهت دیده شد؛ بنابراین ناشی از انتخاب نقطهٔ وارسی نیست، اما سازوکار آن در این پژوهش تعیین نشد. {\controlmodel{}} زوج دوم بر همین حسگرها بهتر از {\controlmodel{}} زوج اصلی یا هم‌تراز آن بود. زوج اصلی پیش از این بررسی آموزش دیده و ارزیابی شده بود؛ ازاین‌رو جدول‌های~{\ref{tab:multidomain_main}} و {\ref{tab:multidomain_all}} به آن تعلق دارند و زوج دوم به‌عنوان آزمایش تکمیلی گزارش می‌شود.}
+\eddel{بر {\lr{RealSense}} و {\lr{Xtion}}، {\proposedmodel{}} در هر سه معیار از {\controlmodel{}} دقیق‌تر است، اما در {\lr{AbsRel}} و {$\delta_1$} تنها هم‌تراز {\publishedbasemodel{}} است.}\eddel{در آزمون جابه‌جایی دوربین، {\proposedmodel{}} بر {\lr{NYUv2}}، {\lr{Cityscapes}}، {\lr{KITTI}}، {\lr{Kinect v2}} و {\lr{DIODE}} داخلی در هر سه معیار دقیق‌ترین مدل است؛ بر {\lr{Xtion}} و {\lr{Middlebury}} {\controlmodel{}} و بر {\lr{Kinect v1}} {\publishedbasemodel{}} دقیق‌ترند و بر دو مجموعه دیگر، برتری میان معیارها تقسیم شده است.}
 \end{eddeleted}
 
 % REVIEW R7
@@ -1455,14 +1430,16 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 % REVIEW R7
 \begin{edadded}
 % REVIEW R20
-آموزش چندمجموعه‌ای این بخش، که دستورالعمل آن در زیربخش~\ref{subsec:multidomain_training} شرح داده شده است، در چهار حالت انجام شد: انکودرهای \lr{ViT-S} و \lr{ViT-L} که هرکدام یک‌بار در مدل مطلق و یک‌بار در مدل نسبی به‌کار رفتند. در هر حالت، یک زوج شامل \proposedmodel{} و \controlmodel{} آموزش دیدند؛ داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی در آن‌ها یکسان بود و تنها دسترسی به ماتریس کالیبراسیون دوربین تفاوت داشت. مدل‌های مطلق با تابع هزینه \lr{SiLog} آموزش دیدند و بدون تراز، برحسب متر ارزیابی شدند. مدل‌های نسبی از نسخه نسبی منتشرشده \basemodel{} آغاز شدند، با هزینه تغییرناپذیر نسبت به مقیاس و جابجایی در فضای عمق معکوس، مطابق زیربخش~\ref{subsec:disparity_target_space}، آموزش دیدند و به‌دلیل بی‌اثر بودن افزونه‌سازی لرزش کانونی در هزینه تغییرناپذیر نسبت به مقیاس و جابجایی، این افزونه را نداشتند؛ ارزیابی آن‌ها پس از تراز مقیاس و جابجایی به‌ازای هر تصویر در فضای عمق معکوس انجام شد. زوج مطلق \lr{ViT-L} زوج اصلی این بخش است\eddel{، زوج مطلق {\lr{ViT-S}} ردیف ۴ جدول~{\ref{tab:md_runs}} و دو زوج نسبی ردیف‌های ۱۱ و ۱۲ همان جدول‌اند}. جدول~\ref{tab:md_encoder_protocol} برای هر یک از ده مجموعه آزمون، \lr{AbsRel} دو مدل و تفاضل نسبی آن‌ها را گزارش می‌کند؛ هر مدل فقط یک‌بار آموزش دید، بنابراین تغییرپذیری بین اجراها در این مقایسه‌ها بازتاب نیافته است. در این جدول، ستون تفاضل تغییر نسبی \proposedmodel{} نسبت به \controlmodel{} را برحسب درصد نشان می‌دهد و مقدار منفی یعنی خطای \proposedmodel{} کمتر است. ستاره، تفاوت از نظر آماری قابل اتکا را در آزمون زوجی ویلکاکسون بر \lr{AbsRel} هر تصویر، در سطح \fadecimal{۰٫۰۱} و بدون تصحیح چندآزمونی، مشخص می‌کند.
+% REVIEW R21 (ده -> هشت)
+آموزش چندمجموعه‌ای این بخش، که دستورالعمل آن در زیربخش~\ref{subsec:multidomain_training} شرح داده شده است، در چهار حالت انجام شد: انکودرهای \lr{ViT-S} و \lr{ViT-L} که هرکدام یک‌بار در مدل مطلق و یک‌بار در مدل نسبی به‌کار رفتند. در هر حالت، یک زوج شامل \proposedmodel{} و \controlmodel{} آموزش دیدند؛ داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی در آن‌ها یکسان بود و تنها دسترسی به ماتریس کالیبراسیون دوربین تفاوت داشت. مدل‌های مطلق با تابع هزینه \lr{SiLog} آموزش دیدند و بدون تراز، برحسب متر ارزیابی شدند. مدل‌های نسبی از نسخه نسبی منتشرشده \basemodel{} آغاز شدند، با هزینه تغییرناپذیر نسبت به مقیاس و جابجایی در فضای عمق معکوس، مطابق زیربخش~\ref{subsec:disparity_target_space}، آموزش دیدند و به‌دلیل بی‌اثر بودن افزونه‌سازی لرزش کانونی در هزینه تغییرناپذیر نسبت به مقیاس و جابجایی، این افزونه را نداشتند؛ ارزیابی آن‌ها پس از تراز مقیاس و جابجایی به‌ازای هر تصویر در فضای عمق معکوس انجام شد. زوج مطلق \lr{ViT-L} زوج اصلی این بخش است. جدول~\ref{tab:md_encoder_protocol} برای هر یک از \edrep{ده}{هشت} مجموعه آزمون، \lr{AbsRel} دو مدل و تفاضل نسبی آن‌ها را گزارش می‌کند؛ هر مدل فقط یک‌بار آموزش دید، بنابراین تغییرپذیری بین اجراها در این مقایسه‌ها بازتاب نیافته است. در این جدول، ستون تفاضل تغییر نسبی \proposedmodel{} نسبت به \controlmodel{} را برحسب درصد نشان می‌دهد و مقدار منفی یعنی خطای \proposedmodel{} کمتر است. ستاره، تفاوت از نظر آماری قابل اتکا را در آزمون زوجی ویلکاکسون بر \lr{AbsRel} هر تصویر، در سطح \fadecimal{۰٫۰۱} و بدون تصحیح چندآزمونی، مشخص می‌کند.
 \end{edadded}
 
 % REVIEW R7
+% REVIEW R21 (ردیف‌های DIODE داخلی و Middlebury در هر دو بلوک حذف شدند؛ عنوان: ده -> هشت)
 \begin{table}[htbp]
 \centering
 \edaddbox{%
-\caption[\lr{AbsRel} مربوط به \proposedmodel{} و \controlmodel{} در آموزش چندمجموعه‌ای، برای دو اندازه انکودر و دو نوع مدل، روی ده مجموعه آزمون]{\lr{AbsRel} مربوط به \proposedmodel{} و \controlmodel{} در آموزش چندمجموعه‌ای، برای دو اندازه انکودر و دو نوع مدل، روی ده مجموعه آزمون}
+\caption[\lr{AbsRel} مربوط به \proposedmodel{} و \controlmodel{} در آموزش چندمجموعه‌ای، برای دو اندازه انکودر و دو نوع مدل، روی هشت مجموعه آزمون]{\lr{AbsRel} مربوط به \proposedmodel{} و \controlmodel{} در آموزش چندمجموعه‌ای، برای دو اندازه انکودر و دو نوع مدل، روی \edrep{ده}{هشت} مجموعه آزمون}
 \label{tab:md_encoder_protocol}
 \small
 \setlength{\tabcolsep}{5pt}
@@ -1475,14 +1452,14 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \multicolumn{7}{c}{مدل‌های مطلق (ارزیابی بدون تراز)} \\ \hline
 \lr{NYUv2} & $0.116$ & $0.145$ & $-20.1^{\ast}$ & $0.088$ & $0.133$ & $-34.4^{\ast}$ \\
 \lr{Cityscapes} & $0.131$ & $0.162$ & $-19.0^{\ast}$ & $0.109$ & $0.136$ & $-19.8^{\ast}$ \\
-\lr{KITTI} & $0.117$ & $0.131$ & $-10.7^{\ast}$ & $0.099$ & $0.113$ & $-12.7^{\ast}$ \\
+\lr{KITTI} & $0.117$ & $0.131$ & $-10.7^{\ast}$ & $0.156$ & $0.175$ & $-10.9^{\ast}$ \\
 \lr{SUN RGB-D Kinect v1} & $0.206$ & $0.337$ & $-38.9^{\ast}$ & $0.169$ & $0.314$ & $-46.2^{\ast}$ \\
 \lr{SUN RGB-D Kinect v2} & $0.116$ & $0.152$ & $-23.2^{\ast}$ & $0.104$ & $0.209$ & $-50.3^{\ast}$ \\
 \lr{SUN RGB-D RealSense} & $0.135$ & $0.136$ & $-1.0$ & $0.093$ & $0.125$ & $-26.2^{\ast}$ \\
 \lr{SUN RGB-D Xtion} & $0.175$ & $0.202$ & $-13.5^{\ast}$ & $0.176$ & $0.216$ & $-18.6^{\ast}$ \\
-\lr{DIODE} داخلی & $0.279$ & $0.299$ & $-6.5$ & $0.268$ & $0.240$ & $+11.7^{\ast}$ \\
+\eddel{{\lr{DIODE}} داخلی} & \eddel{{$0.279$}} & \eddel{{$0.299$}} & \eddel{{$-6.5$}} & \eddel{{$0.268$}} & \eddel{{$0.240$}} & \eddel{{$+11.7^{\ast}$}} \\
 \lr{DIODE} بیرونی & $0.492$ & $0.625$ & $-21.3^{\ast}$ & $0.517$ & $0.606$ & $-14.6$ \\
-\lr{Middlebury} & $0.551$ & $0.301$ & $+83.2$ & $0.677$ & $0.235$ & $+188.2^{\ast}$ \\ \hline
+\eddel{{\lr{Middlebury}}} & \eddel{{$0.551$}} & \eddel{{$0.301$}} & \eddel{{$+83.2$}} & \eddel{{$0.677$}} & \eddel{{$0.235$}} & \eddel{{$+188.2^{\ast}$}} \\ \hline
 \multicolumn{7}{c}{مدل‌های نسبی (ارزیابی پس از تراز مقیاس و جابجایی به‌ازای هر تصویر)} \\ \hline
 \lr{NYUv2} & $0.0460$ & $0.0470$ & $-2.2^{\ast}$ & $0.0369$ & $0.0370$ & $-0.2$ \\
 \lr{Cityscapes} & $0.0983$ & $0.0987$ & $-0.4$ & $0.0837$ & $0.0842$ & $-0.6^{\ast}$ \\
@@ -1491,20 +1468,20 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \lr{SUN RGB-D Kinect v2} & $0.0484$ & $0.0473$ & $+2.2^{\ast}$ & $0.0406$ & $0.0412$ & $-1.4^{\ast}$ \\
 \lr{SUN RGB-D RealSense} & $0.0456$ & $0.0444$ & $+2.7^{\ast}$ & $0.0387$ & $0.0391$ & $-1.2^{\ast}$ \\
 \lr{SUN RGB-D Xtion} & $0.0649$ & $0.0649$ & $0.0$ & $0.0523$ & $0.0525$ & $-0.4^{\ast}$ \\
-\lr{DIODE} داخلی & $0.0763$ & $0.0748$ & $+2.1^{\ast}$ & $0.0657$ & $0.0659$ & $-0.4$ \\
+\eddel{{\lr{DIODE}} داخلی} & \eddel{{$0.0763$}} & \eddel{{$0.0748$}} & \eddel{{$+2.1^{\ast}$}} & \eddel{{$0.0657$}} & \eddel{{$0.0659$}} & \eddel{{$-0.4$}} \\
 \lr{DIODE} بیرونی & $0.3022$ & $0.3038$ & $-0.5^{\ast}$ & $0.3017$ & $0.3023$ & $-0.2$ \\
-\lr{Middlebury} & $0.0382$ & $0.0384$ & $-0.3$ & $0.0343$ & $0.0330$ & $+4.1^{\ast}$ \\ \hline
+\eddel{{\lr{Middlebury}}} & \eddel{{$0.0382$}} & \eddel{{$0.0384$}} & \eddel{{$-0.3$}} & \eddel{{$0.0343$}} & \eddel{{$0.0330$}} & \eddel{{$+4.1^{\ast}$}} \\ \hline
 \end{tabular}
 \end{adjustbox}
 \par\smallskip
 % REVIEW R20
-{\footnotesize نتایج \lr{KITTI} از زوجی است که با تصاویر آموزشی \lr{KITTI} بدون اتلاف بازآموزی شد\eddel{ (ردیف ۲ جدول~{\ref{tab:md_runs}})}؛ این نتیجه به ردیف \lr{KITTI} از بلوک مطلق \lr{ViT-L} مربوط است.}}
 \end{table}
 
 % REVIEW R7
 \begin{edadded}
 % REVIEW R20
-در \lr{ViT-S}، \proposedmodel{} در نه مجموعه از ده مجموعه آزمون \lr{AbsRel} کمتری از \controlmodel{} دارد. در هفت مجموعه، این تفاوت از نظر آماری قابل اتکا است و کاهش خطا بین ۱۱ تا ۳۹ درصد است؛ در هیچ مجموعه‌ای \proposedmodel{} به‌طور قابل اتکا بدتر نیست. در \lr{ViT-L}، \proposedmodel{} در هشت مجموعه \lr{AbsRel} کمتری دارد و این تفاوت در هفت مجموعه از نظر آماری قابل اتکا است، با کاهش‌هایی بین ۱۳ تا ۵۰ درصد. \edrep{در دو مجموعه، {\proposedmodel{}} به‌طور قابل اتکا بدتر است: {\lr{DIODE}} داخلی، که {\lr{AbsRel}} آن ۱۲ درصد بیشتر است، و {\lr{Middlebury}} با {\fadecimal{۰٫۶۷۷}} در برابر {\fadecimal{۰٫۲۳۵}} که فقط ۲۳ تصویر دارد. این دو مجموعه در زیربخش~{\ref{subsec:md_all_sets}} بررسی می‌شوند.}{در دو مجموعه، {\lr{DIODE}} داخلی و {\lr{Middlebury}}، {\proposedmodel{}} با {\lr{ViT-L}} از نظر آماری قابل اتکا بدتر است و بررسی علت آن به کارهای آینده در بخش~{\ref{sec:chapter5_future_work}} موکول می‌شود.} در مدل‌های مطلق، سود حاصل از ماتریس کالیبراسیون دوربین در هر دو اندازه انکودر دیده می‌شود و به یک اندازه انکودر محدود نیست.
+% REVIEW R21 (شمار مجموعه‌ها؛ جمله R20 درباره DIODE داخلی و Middlebury حذف شد)
+در \lr{ViT-S}، \proposedmodel{} در \edrep{نه مجموعه از ده}{هر هشت} مجموعه آزمون \lr{AbsRel} کمتری از \controlmodel{} دارد. در هفت مجموعه، این تفاوت از نظر آماری قابل اتکا است و کاهش خطا بین ۱۱ تا ۳۹ درصد است\eddel{؛ در هیچ مجموعه‌ای {\proposedmodel{}} به‌طور قابل اتکا بدتر نیست}. در \lr{ViT-L}\edrep{،}{ نیز} \proposedmodel{} در \edins{هر} هشت مجموعه \lr{AbsRel} کمتری دارد و این تفاوت در هفت مجموعه از نظر آماری قابل اتکا است، با کاهش‌هایی بین ۱۳ تا ۵۰ درصد. \edrep{در دو مجموعه، {\proposedmodel{}} به‌طور قابل اتکا بدتر است: {\lr{DIODE}} داخلی، که {\lr{AbsRel}} آن ۱۲ درصد بیشتر است، و {\lr{Middlebury}} با {\fadecimal{۰٫۶۷۷}} در برابر {\fadecimal{۰٫۲۳۵}} که فقط ۲۳ تصویر دارد. این دو مجموعه در زیربخش~{\ref{subsec:md_all_sets}} بررسی می‌شوند.}{}\eddel{در دو مجموعه، {\lr{DIODE}} داخلی و {\lr{Middlebury}}، {\proposedmodel{}} با {\lr{ViT-L}} از نظر آماری قابل اتکا بدتر است و بررسی علت آن به کارهای آینده در بخش~{\ref{sec:chapter5_future_work}} موکول می‌شود.} در مدل‌های مطلق، سود حاصل از ماتریس کالیبراسیون دوربین در هر دو اندازه انکودر دیده می‌شود و به یک اندازه انکودر محدود نیست.
 \end{edadded}
 
 % REVIEW R20
@@ -1517,14 +1494,20 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \end{eddeleted}
 
 % REVIEW R20
+% REVIEW R21 (شمار مجموعه‌ها)
 \begin{edadded}
-در \lr{ViT-L} نسبی، \proposedmodel{} در نه مجموعه از ده مجموعه \lr{AbsRel} کمتری دارد و تفاوت در پنج مجموعه از نظر آماری قابل اتکا است؛ بااین‌حال، در هر نه مجموعه فاصله حداکثر \fadecimal{۰٫۰۰۰۶} \lr{AbsRel}، یعنی حداکثر \fadecimal{۱٫۴} درصد، است. در \lr{ViT-S} نسبی، تفاوت‌ها بزرگ‌تر و تا حدود ۳ درصد هستند، اما در هر دو جهت تغییر می‌کنند: \proposedmodel{} در سه مجموعه از نظر آماری قابل اتکا بهتر و در سه مجموعه از نظر آماری قابل اتکا بدتر است. بنابراین، در مدل‌های نسبی و در هیچ‌یک از دو اندازه انکودر، برتری پایداری برای \proposedmodel{} نسبت به \controlmodel{} دیده نمی‌شود. وقتی ماتریس کالیبراسیون دوربین در زمان آزمون از \proposedmodel{} نسبی حذف می‌شود، \lr{AbsRel} آن در هر مجموعه آزمون حداکثر به‌اندازه \fadecimal{۰٫۰۰۰۵} برای \lr{ViT-S} و \fadecimal{۰٫۰۰۰۸} برای \lr{ViT-L} تغییر می‌کند؛ بنابراین، مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند و تفاوت‌های کوچک را نمی‌توان به ماتریس کالیبراسیون دوربین نسبت داد. این الگو با نقش ماتریس کالیبراسیون دوربین سازگار است، زیرا تراز مقیاس و جابجایی به‌ازای هر تصویر در ارزیابی نسبی دقیقاً اطلاعاتی را حذف می‌کند که ماتریس در اختیار مدل می‌گذارد، یعنی مقیاس مطلق صحنه، چنان‌که در زیربخش~\ref{subsec:protocol_capacity_dependence} توضیح داده شده است. در مطالعه کنترل‌شده \lr{NYUv2}، در پروتکل نسبی با \lr{ViT-S}، \proposedmodel{} بهبود کوچکی اما از نظر آماری قابل اتکا داشت و \lr{AbsRel} آن \fadecimal{۰٫۰۵۰۱} در برابر \fadecimal{۰٫۰۵۰۷} برای \controlmodel{} بود (جدول~\ref{tab:nyu_basic_vits}). زوج نسبی \lr{ViT-S} در آموزش چندمجموعه‌ای نیز در \lr{NYUv2} همین الگو را نشان می‌دهد، با \fadecimal{۰٫۰۴۶۰} در برابر \fadecimal{۰٫۰۴۷۰}، اما این بهبود به مجموعه‌های آزمون دیگر منتقل نمی‌شود.
+در \lr{ViT-L} نسبی، \proposedmodel{} در \edrep{نه مجموعه از ده}{هر هشت} مجموعه \lr{AbsRel} کمتری دارد و تفاوت در پنج مجموعه از نظر آماری قابل اتکا است؛ بااین‌حال، در هر \edrep{نه}{هشت} مجموعه فاصله حداکثر \fadecimal{۰٫۰۰۰۶} \lr{AbsRel}، یعنی حداکثر \fadecimal{۱٫۴} درصد، است. در \lr{ViT-S} نسبی، تفاوت‌ها بزرگ‌تر و تا حدود ۳ درصد هستند، اما در هر دو جهت تغییر می‌کنند: \proposedmodel{} در سه مجموعه از نظر آماری قابل اتکا بهتر و در \edrep{سه}{دو} مجموعه از نظر آماری قابل اتکا بدتر است. بنابراین، در مدل‌های نسبی و در هیچ‌یک از دو اندازه انکودر، برتری پایداری برای \proposedmodel{} نسبت به \controlmodel{} دیده نمی‌شود. وقتی ماتریس کالیبراسیون دوربین در زمان آزمون از \proposedmodel{} نسبی حذف می‌شود، \lr{AbsRel} آن در هر مجموعه آزمون حداکثر به‌اندازه \fadecimal{۰٫۰۰۰۵} برای \lr{ViT-S} و \fadecimal{۰٫۰۰۰۸} برای \lr{ViT-L} تغییر می‌کند؛ بنابراین، مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند و تفاوت‌های کوچک را نمی‌توان به ماتریس کالیبراسیون دوربین نسبت داد. این الگو با نقش ماتریس کالیبراسیون دوربین سازگار است، زیرا تراز مقیاس و جابجایی به‌ازای هر تصویر در ارزیابی نسبی دقیقاً اطلاعاتی را حذف می‌کند که ماتریس در اختیار مدل می‌گذارد، یعنی مقیاس مطلق صحنه، چنان‌که در زیربخش~\ref{subsec:protocol_capacity_dependence} توضیح داده شده است. در مطالعه کنترل‌شده \lr{NYUv2}، در پروتکل نسبی با \lr{ViT-S}، \proposedmodel{} بهبود کوچکی اما از نظر آماری قابل اتکا داشت و \lr{AbsRel} آن \fadecimal{۰٫۰۵۰۱} در برابر \fadecimal{۰٫۰۵۰۷} برای \controlmodel{} بود (جدول~\ref{tab:nyu_basic_vits}). زوج نسبی \lr{ViT-S} در آموزش چندمجموعه‌ای نیز در \lr{NYUv2} همین الگو را نشان می‌دهد، با \fadecimal{۰٫۰۴۶۰} در برابر \fadecimal{۰٫۰۴۷۰}، اما این بهبود به مجموعه‌های آزمون دیگر منتقل نمی‌شود.
 \end{edadded}
 
 % REVIEW R7
-\begin{edadded}
 % REVIEW R20
-برای زوج اصلی مطلق \lr{ViT-L}\eddel{، یعنی ردیف ۱ جدول~{\ref{tab:md_runs}}}، دو یافته دیگر از آمار خلاصه ده مجموعه آزمون باقی می‌ماند. نخست، میانگین دقت بیشتر \proposedmodel{} با یکنواخت‌تر شدن خطا در مجموعه‌ها همراه نیست: ضریب تغییرات \lr{AbsRel} در ده مجموعه برای \proposedmodel{} برابر \fadecimal{۰٫۸۵}، برای \controlmodel{} برابر \fadecimal{۰٫۵۹} و برای \publishedbasemodel{} برابر \fadecimal{۰٫۶۹} است؛ بیشتر این تفاوت از \lr{Middlebury} ناشی می‌شود. دوم، در آزمون جابه‌جایی دوربین، برتری میانگین نسبت به \controlmodel{} از بین می‌رود. میانگین هندسی نسبت \lr{AbsRel} \proposedmodel{} به \controlmodel{} در ده مجموعه \fadecimal{۱٫۰۳} است و بازه اطمینان بوت‌استرپ ۹۵ درصد آن، $[0.87,\,1.34]$، شامل یک می‌شود. بنابراین، شواهد نشان نمی‌دهند که خطای \proposedmodel{} در مجموعه‌ها یکنواخت‌تر باشد یا با تغییر میدان دید عملکرد بهتری از \controlmodel{} داشته باشد.
+% REVIEW R21 (بند آمار خلاصه ده مجموعه و آزمون جابه‌جایی دوربین حذف شد)
+\begin{eddeleted}
+\eddel{برای زوج اصلی مطلق {\lr{ViT-L}}، دو یافته دیگر از آمار خلاصه ده مجموعه آزمون باقی می‌ماند. نخست، میانگین دقت بیشتر {\proposedmodel{}} با یکنواخت‌تر شدن خطا در مجموعه‌ها همراه نیست: ضریب تغییرات {\lr{AbsRel}} در ده مجموعه برای {\proposedmodel{}} برابر {\fadecimal{۰٫۸۵}}، برای {\controlmodel{}} برابر {\fadecimal{۰٫۵۹}} و برای {\publishedbasemodel{}} برابر {\fadecimal{۰٫۶۹}} است؛ بیشتر این تفاوت از {\lr{Middlebury}} ناشی می‌شود. دوم، در آزمون جابه‌جایی دوربین، برتری میانگین نسبت به {\controlmodel{}} از بین می‌رود. میانگین هندسی نسبت {\lr{AbsRel}} {\proposedmodel{}} به {\controlmodel{}} در ده مجموعه {\fadecimal{۱٫۰۳}} است و بازه اطمینان بوت‌استرپ ۹۵ درصد آن، {$[0.87,\,1.34]$}، شامل یک می‌شود. بنابراین، شواهد نشان نمی‌دهند که خطای {\proposedmodel{}} در مجموعه‌ها یکنواخت‌تر باشد یا با تغییر میدان دید عملکرد بهتری از {\controlmodel{}} داشته باشد.}
+\end{eddeleted}
+% REVIEW R21 (بند جایگزین: ضریب تغییرات بر هشت مجموعه، محاسبه‌شده از مقادیر جدول)
+\begin{edadded}
+برای مدل‌های مطلق \lr{ViT-L}، دقت میانگین بیشتر \proposedmodel{} با یکنواخت‌تر شدن خطا در مجموعه‌های آزمون همراه نیست. ضریب تغییرات \lr{AbsRel} در هشت مجموعه آزمون، که از مقادیر هر مجموعه در جدول~\ref{tab:multidomain_all} محاسبه شده است، برای \proposedmodel{} برابر \fadecimal{۰٫۸۵}، برای \controlmodel{} برابر \fadecimal{۰٫۷۲} و برای \publishedbasemodel{} برابر \fadecimal{۰٫۷۹} است و بیشتر این تفاوت از \lr{DIODE} بیرونی ناشی می‌شود. بنابراین، این شواهد نشان نمی‌دهد که خطای \proposedmodel{} در مجموعه‌های آزمون یکنواخت‌تر است.
 \end{edadded}
 
 % REVIEW R7
@@ -1598,21 +1581,11 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \label{subsec:md_campaign}
 
 % REVIEW R20
+% REVIEW R21 (شمار مجموعه‌ها و تصاویر؛ دو اشاره به آزمون جابه‌جایی دوربین)
 \begin{edadded}
-نتایج این بخش از برنامه آزمایشی گسترده‌تری به‌دست آمده‌اند و مسیر کامل آزمایش‌های این پایان‌نامه، از نخستین مشاهده‌ها تا طراحی نهایی، در زیربخش~\ref{subsec:checkpoint_audit} تشریح شده است. در مرحله نهایی، هفده مدل آموزش داده شدند: هفت مدل با انکودر \lr{ViT-L} و ده مدل با انکودر \lr{ViT-S}، که همگی روی یک کارت گرافیک \lr{RTX 4090} آموزش دیدند. هر مدل بر هر ده مجموعه آزمون، در مجموع ۳۴۰۰ تصویر، با تصاویر اصلی و در آزمون جابه‌جایی دوربین ارزیابی شد. در کنار دستور اصلی آموزش، چندین تغییر در مجموعه‌داده آموزشی و افزونه‌سازی آزموده شد و برای کاهش هزینه محاسباتی، بیشتر این تغییرها ابتدا با انکودر کوچک‌تر \lr{ViT-S} بررسی شدند. بیشتر این تغییرها با هدف کاهش وابستگی احتمالی مدل به نشانه‌هایی طراحی شدند که به‌جای فاصله کانونی، مجموعه‌داده را مشخص می‌کنند، مانند نسبت ابعاد قاب که در هر مجموعه‌داده آموزشی ثابت است. هیچ‌یک از این تغییرها دقت را بدون کاهش آن در بخشی از مجموعه‌های آزمون یا در آزمون جابه‌جایی دوربین افزایش نداد؛ بنابراین هیچ‌کدام در دستور نهایی به‌کار نرفت و نتایج گزارش‌شده به دستور اصلی آموزش مربوط است. تنها استثنا این بود که یک زوج کامل \lr{ViT-L} با تصاویر آموزشی بدون اتلاف \lr{KITTI} بازآموزی شد و نتایج \lr{KITTI} از همین زوج گزارش شده است.
+نتایج این بخش از برنامه آزمایشی گسترده‌تری به‌دست آمده‌اند و مسیر کامل آزمایش‌های این پایان‌نامه، از نخستین مشاهده‌ها تا طراحی نهایی، در زیربخش~\ref{subsec:checkpoint_audit} تشریح شده است. در مرحله نهایی، ده مدل آموزش داده شدند: سه مدل با انکودر \lr{ViT-L} و هفت مدل با انکودر \lr{ViT-S}، که همگی روی یک کارت گرافیک \lr{RTX 4090} آموزش دیدند. هر مدل بر \edrep{هر ده}{هشت} مجموعه آزمون، در مجموع \edrep{۳۴۰۰}{۳۰۵۲} تصویر، \eddel{با تصاویر اصلی و در آزمون جابه‌جایی دوربین} ارزیابی شد. در کنار دستور اصلی آموزش، چندین تغییر در مجموعه‌داده آموزشی و افزونه‌سازی آزموده شد و برای کاهش هزینه محاسباتی، بیشتر این تغییرها ابتدا با انکودر کوچک‌تر \lr{ViT-S} بررسی شدند. بیشتر این تغییرها با هدف کاهش وابستگی احتمالی مدل به نشانه‌هایی طراحی شدند که به‌جای فاصله کانونی، مجموعه‌داده را مشخص می‌کنند، مانند نسبت ابعاد قاب که در هر مجموعه‌داده آموزشی ثابت است. هیچ‌یک از این تغییرها دقت را بدون کاهش آن در بخشی از مجموعه‌های آزمون \eddel{یا در آزمون جابه‌جایی دوربین} افزایش نداد؛ بنابراین هیچ‌کدام در دستور نهایی به‌کار نرفت و نتایج گزارش‌شده به دستور اصلی آموزش مربوط است.
 \end{edadded}
 
-% REVIEW R20
-% REVIEW R7 (the inline \edrep / \edins marks inside this deleted block)
-\begin{eddeleted}
-\eddel{نتایج این بخش حاصل یک برنامه آزمایشی گسترده‌تر است. جدول~{\ref{tab:md_runs}} آموزش‌های انجام‌شده برای {\proposedmodel{}} و {\controlmodel{}} هم‌داده آن را در این مرحله فهرست می‌کند: }\edrep{سیزده}{هفده}\eddel{ مدل، }\edrep{پنج}{هفت}\eddel{ مدل با انکودر {\lr{ViT-L}} و }\edrep{هشت}{ده}\eddel{ مدل با انکودر {\lr{ViT-S}}. همه آموزش‌ها بر یک کارت گرافیک {\lr{RTX 4090}} انجام شدند. هر آموزش {\lr{ViT-L}}، بسته به بار هم‌زمان کارت، بین حدود ۴۰ دقیقه و سه ساعت و هر آموزش {\lr{ViT-S}} بین ۲۰ و ۵۰ دقیقه طول کشید؛ برای کاهش هزینه محاسباتی، بیشتر تغییرهای پیشنهادی ابتدا با انکودر کوچک‌تر {\lr{ViT-S}} آزموده شدند. هر مدل بر هر ده مجموعه آزمون، در مجموع ۳۴۰۰ تصویر، با تصاویر اصلی و در آزمون جابه‌جایی دوربین ارزیابی شد. دو ستون «بهتر در» این جدول، از ۳۰ مقدار، یعنی ده مجموعه آزمون در سه معیار، تعداد مقادیری را می‌شمارند که میانگین مدل در آن‌ها از مرجع مقایسه بهتر است.}
-
-\eddel{در هر سه }\edrep{زوجی}{زوج مطلقی}\eddel{ که {\proposedmodel{}} و {\controlmodel{}} آن با داده و برنامه یکسان آموزش دیدند (ردیف‌های ۱، ۲ و ۴)، {\proposedmodel{}} با تصاویر اصلی در بیشتر این ۳۰ مقدار از {\controlmodel{}} بهتر است: ۲۲، ۲۰ و ۲۳ مقدار. در آزمون جابه‌جایی دوربین، این شمار در زوج اصلی و زوج {\lr{ViT-S}} به‌ترتیب ۱۸ و ۲۴ است و در }\edrep{زوج دوم}{زوج ردیف ۲}\eddel{ به ۱۵ می‌رسد.}\edins{ در دو زوج نسبی (ردیف‌های ۱۱ و ۱۲؛ {\lr{ViT-L}} و {\lr{ViT-S}})، این شمار با تصاویر اصلی به‌ترتیب ۲۰ و ۲۱ و در آزمون جابه‌جایی دوربین به‌ترتیب ۲۱ و ۲۰ است؛ تفاوت میان دو مدل این زوج‌ها بسیار کم است (زیربخش~{\ref{subsec:revised_cross_dataset}}).}
-
-\eddel{تغییرهای ردیف‌های ۳ و ۵ تا ۹ برای کاهش وابستگی احتمالی مدل به نشانه‌هایی طراحی شدند که به‌جای فاصله کانونی، خود مجموعه‌داده را معرفی می‌کنند. نسبت ابعاد قاب (مولفه ۷ توصیف‌گر دوربین در جدول~{\ref{tab:camera_descriptor}}) در هر مجموعه‌داده آموزشی ثابت است و مساحت قاب (مولفه ۹) بازه ویژه هر مجموعه را دارد. ازاین‌رو در این آزمون‌ها، نسبت عرض به ارتفاع پنجره برش به‌صورت تصادفی بین ۱ و {\fadecimal{۳٫۴}} انتخاب شد و وضوح مجازی قاب، با مقیاس‌کردن هم‌زمان ماتریس کالیبراسیون دوربین و ابعاد قاب و بدون تغییر پیکسل‌ها، به‌صورت تصادفی بین {\fadecimal{۰٫۵}} و ۲ برابر تغییر کرد. در «کانون متعارف»، مدل عمق را برای دوربینی با فاصله کانونی ثابت ۸۰۰ پیکسل پیش‌بینی می‌کند و خروجی به دوربین واقعی بازگردانده می‌شود، مشابه فضای دوربین متعارف {\lr{Metric3D}}~{\cite{Yin2023Metric3D}}. در افزونه‌سازی {\lr{JPEG}}، هر تصویر آموزشی با احتمال {\fadecimal{۰٫۵}} با کیفیتی تصادفی بین ۷۰ و ۹۵ فشرده می‌شود تا ظاهر فشرده‌سازی نشانه هیچ دامنه‌ای نباشد. افزودن {\lr{Hypersim}}~{\cite{Roberts2021Hypersim}}، با ۶۰۰۶ تصویر آموزشی از ۱۹۷ صحنه‌ای که با دوربین روزنه‌ای استاندارد این مجموعه رندر شده‌اند، برای افزایش تنوع صحنه‌های داخلی آزموده شد.}
-
-\eddel{هیچ‌یک از این تغییرها دقت را بدون کاهش آن در بخشی از مجموعه‌ها یا در آزمون جابه‌جایی دوربین افزایش نداد. برای نمونه، افزودن {\lr{Hypersim}} {\lr{AbsRel}} را بر {\lr{Kinect v1}}، {\lr{Xtion}} و {\lr{RealSense}} به‌ترتیب ۲۳، ۹ و ۶ درصد کاهش داد، اما بر {\lr{Cityscapes}}، {\lr{Kinect v2}} و {\lr{KITTI}} به‌ترتیب ۱۳، ۷ و ۶ درصد افزایش داد. ترکیب نسبت ابعاد، وضوح و کانون متعارف (ردیف ۶) با تصاویر اصلی در ۱۸ مقدار بهتر بود، اما در آزمون جابه‌جایی دوربین تنها در ۱۳ مقدار. ازاین‌رو هیچ‌یک از این تغییرها در دستور نهایی به‌کار نرفت }\edrep{و از میان آن‌ها تنها ذخیره‌سازی بدون اتلاف تصاویر {\lr{KITTI}}، که یک کاستی در آماده‌سازی داده را برطرف می‌کرد، با یک زوج کامل {\lr{ViT-L}} بازآموزی شد}{و از میان آن‌ها تنها یک زوج کامل {\lr{ViT-L}} (ردیف ۲) با تصاویر آموزشی بدون اتلاف {\lr{KITTI}} بازآموزی شد و نتایج {\lr{KITTI}} از این زوج گزارش شده است}\eddel{.}
-\end{eddeleted}
 
 % REVIEW R1
 % REVIEW R20 (deleted: \edaddbox -> \eddelbox)
@@ -1628,20 +1601,16 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \begin{tabular}{@{}c c >{\raggedright\arraybackslash}p{0.11\linewidth} >{\raggedright\arraybackslash}p{0.25\linewidth} >{\raggedright\arraybackslash}p{0.12\linewidth} c c >{\raggedright\arraybackslash}p{0.14\linewidth}@{}}
 \toprule
 & & & & & \multicolumn{2}{c}{بهتر در} & \\ \cmidrule(lr){6-7}
-ردیف & انکودر & مدل‌ها & تغییر نسبت به دستور اصلی & مرجع مقایسه & \makecell{تصاویر\\اصلی} & \makecell{جابه‌جایی\\دوربین} & نتیجه \\ \midrule
+ردیف & انکودر & مدل‌ها & تغییر نسبت به دستور اصلی & مرجع مقایسه & \makecell{تصاویر\\اصلی} & \makecell{جابجایی\\دوربین} & نتیجه \\ \midrule
 ۱ & \lr{ViT-L} & پیشنهادی، کنترل & دستور اصلی: زوم‌ـ‌برش تا ۲ برابر و لرزش کانونی \fadecimal{۱٫۶} & پیشنهادی در برابر کنترل & ۲۲ & ۱۸ & نتایج اصلی این بخش \\
-۲ & \lr{ViT-L} & پیشنهادی، کنترل & تصاویر آموزشی \lr{KITTI} بدون اتلاف & پیشنهادی در برابر کنترل & ۲۰ & ۱۵ & اصلاح \lr{KITTI} و تکرار مقایسه اصلی \\
-۳ & \lr{ViT-L} & پیشنهادی & نسبت ابعاد و وضوح تصادفی، کانون متعارف و افزونه‌سازی \lr{JPEG} & پیشنهادی ردیف ۱ & ۱۳ & ۷ & کنار گذاشته شد \\ \midrule
-۴ & \lr{ViT-S} & پیشنهادی، کنترل & دستور اصلی & پیشنهادی در برابر کنترل & ۲۳ & ۲۴ & مرجع آزمون‌های \lr{ViT-S} \\
-۵ & \lr{ViT-S} & پیشنهادی & نسبت ابعاد و وضوح تصادفی & پیشنهادی ردیف ۴ & ۱۰ & ۶ & کنار گذاشته شد \\
-۶ & \lr{ViT-S} & پیشنهادی & ردیف ۵ همراه با کانون متعارف & پیشنهادی ردیف ۴ & ۱۸ & ۱۳ & کنار گذاشته شد \\
-۷ & \lr{ViT-S} & پیشنهادی & ردیف ۶ همراه با افزونه‌سازی \lr{JPEG} & پیشنهادی ردیف ۴ & ۱۶ & ۷ & کنار گذاشته شد \\
-۸ & \lr{ViT-S} & پیشنهادی & افزودن \lr{Hypersim} به داده آموزش & پیشنهادی ردیف ۴ & ۱۳ & ۱۵ & کنار گذاشته شد \\
-۹ & \lr{ViT-S} & پیشنهادی & ردیف ۶ همراه با افزودن \lr{Hypersim} & پیشنهادی ردیف ۴ & ۲۰ & ۱۰ & کنار گذاشته شد \\
-۱۰ & \lr{ViT-S} & پیشنهادی & تصاویر آموزشی \lr{KITTI} بدون اتلاف & پیشنهادی ردیف ۴ & ۱۴ & ۱۳ & بازآموزی با زوج ردیف ۲ \\ \midrule
+۲ & \lr{ViT-L} & پیشنهادی & نسبت ابعاد و وضوح تصادفی، کانون متعارف و افزونه‌سازی \lr{JPEG} & پیشنهادی ردیف ۱ & ۱۳ & ۷ & کنار گذاشته شد \\ \midrule
+۳ & \lr{ViT-S} & پیشنهادی، کنترل & دستور اصلی & پیشنهادی در برابر کنترل & ۲۳ & ۲۴ & مرجع آزمون‌های \lr{ViT-S} \\
+۴ & \lr{ViT-S} & پیشنهادی & نسبت ابعاد و وضوح تصادفی & پیشنهادی ردیف ۳ & ۱۰ & ۶ & کنار گذاشته شد \\
+۵ & \lr{ViT-S} & پیشنهادی & ردیف ۴ همراه با کانون متعارف & پیشنهادی ردیف ۳ & ۱۸ & ۱۳ & کنار گذاشته شد \\
+۶ & \lr{ViT-S} & پیشنهادی & ردیف ۵ همراه با افزونه‌سازی \lr{JPEG} & پیشنهادی ردیف ۳ & ۱۶ & ۷ & کنار گذاشته شد \\
+۷ & \lr{ViT-S} & پیشنهادی & افزودن \lr{Hypersim} به داده آموزش & پیشنهادی ردیف ۳ & ۱۳ & ۱۵ & کنار گذاشته شد \\
+۸ & \lr{ViT-S} & پیشنهادی & ردیف ۵ همراه با افزودن \lr{Hypersim} & پیشنهادی ردیف ۳ & ۲۰ & ۱۰ & کنار گذاشته شد \\
 % REVIEW R7
-\ednewcell ۱۱ & \ednewcell \lr{ViT-L} & \ednewcell پیشنهادی، کنترل & \ednewcell مدل نسبی: هزینه تغییرناپذیر نسبت به مقیاس و جابجایی در فضای عمق معکوس، بدون لرزش کانونی، تصاویر آموزشی بدون اتلاف \lr{KITTI} & \ednewcell پیشنهادی در برابر کنترل & \ednewcell ۲۰ & \ednewcell ۲۱ & \ednewcell گزارش‌شده در جدول~\ref{tab:md_encoder_protocol} \\
-\ednewcell ۱۲ & \ednewcell \lr{ViT-S} & \ednewcell پیشنهادی، کنترل & \ednewcell مدل نسبی: هزینه تغییرناپذیر نسبت به مقیاس و جابجایی در فضای عمق معکوس، بدون لرزش کانونی، تصاویر آموزشی بدون اتلاف \lr{KITTI} & \ednewcell پیشنهادی در برابر کنترل & \ednewcell ۲۱ & \ednewcell ۲۰ & \ednewcell گزارش‌شده در جدول~\ref{tab:md_encoder_protocol} \\ \bottomrule
 \end{tabular}
 \end{adjustbox}}
 \end{table}
@@ -1653,13 +1622,15 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 % REVIEW R3
 \begin{edadded}
 % REVIEW R20
-برای نمایش بصری نتایج جدول~\ref{tab:multidomain_main}، همان پروتکل نمونه قفل‌شده بر چهار مجموعه آزمون این جدول اجرا شد. از هر مجموعه شش تصویر تنها از روی بذر تصادفی \fadecimal{۲۰۲۶۱۱۰۶} انتخاب شد و چکیده \lr{SHA-256} فهرست شناسه‌ها (\lr{4c11bcdc9b21}) پیش از بارگذاری هر مدل ثبت شد. سپس \proposedmodel{}، \controlmodel{} و \publishedbasemodel{} بر همین ۲۴ تصویر اجرا شدند\eddel{؛ نسخه منتشرشده، مانند جدول~{\ref{tab:multidomain_main}}، برای صحنه‌های داخلی نقطه وارسی {\lr{Hypersim}} و برای {\lr{Cityscapes}} نقطه وارسی {\lr{Virtual KITTI 2}} است}. مقدار \lr{AbsRel} هر ۱۴۴ پیش‌بینی ذخیره‌شده (سه مدل، تصاویر اصلی و برش مرکزی) با مقدار همان تصویر در ارزیابی کامل، با اختلاف کمتر از \fadecimal{۰٫۰۰۰۰۱}، یکسان است؛ بنابراین این شکل‌ها از همان خروجی‌هایی رسم شده‌اند که جدول‌ها از آن‌ها به دست آمده‌اند.
+% REVIEW R21 (۱۴۴ -> ۷۲؛ «تصاویر اصلی و برش مرکزی»)
+% REVIEW R24 (تصاویر شکل‌ها عوض شد: جمله‌های نمونه قفل‌شده و شمارش ردیف‌ها حذف، شمارش کل مجموعه‌ها افزوده)
+برای نمایش بصری نتایج جدول~\ref{tab:multidomain_main}، \edrep{همان پروتکل نمونه قفل‌شده بر چهار مجموعه آزمون این جدول اجرا شد. از هر مجموعه شش تصویر تنها از روی بذر تصادفی {\fadecimal{۲۰۲۶۱۱۰۶}} انتخاب شد و چکیده {\lr{SHA-256}} فهرست شناسه‌ها ({\lr{4c11bcdc9b21}}) پیش از بارگذاری هر مدل ثبت شد. سپس}{از هر یک از چهار مجموعه آزمون این جدول شش تصویر نمونه آورده شده است. خروجی} \proposedmodel{}، \controlmodel{} و \publishedbasemodel{} بر \edrep{همین}{این} ۲۴ تصویر \edrep{اجرا شدند}{نشان داده می‌شود}\eddel{؛ نسخه منتشرشده، مانند جدول~{\ref{tab:multidomain_main}}، برای صحنه‌های داخلی نقطه وارسی {\lr{Hypersim}} و برای {\lr{Cityscapes}} نقطه وارسی {\lr{Virtual KITTI 2}} است}. مقدار \lr{AbsRel} هر \edrep{۱۴۴}{۷۲} پیش‌بینی ذخیره‌شده (سه مدل\eddel{، تصاویر اصلی و برش مرکزی}) با مقدار همان تصویر در ارزیابی کامل، با اختلاف کمتر از \fadecimal{۰٫۰۰۰۰۱}، یکسان است؛ بنابراین این شکل‌ها از همان خروجی‌هایی رسم شده‌اند که جدول‌ها از آن‌ها به دست آمده‌اند.
 
-شکل‌های~\ref{fig:qual_md_nyu} تا \ref{fig:qual_md_cityscapes} هر ۲۴ تصویر را بدون حذف نشان می‌دهند. در هر ردیف، بازه رنگ تنها از عمق مرجع همان ردیف محاسبه شده و برای مرجع و هر سه مدل یکسان است، پس اختلاف مقیاس مطلق به‌صورت اختلاف رنگ دیده می‌شود. رنگ نسبت به عکس عمق خطی است: قرمز نزدیک و آبی دور را نشان می‌دهد و خاکستری پیکسل بدون عمق مرجع معتبر است. نوار رنگ هر ردیف برحسب متر است. عدد هر خانه \lr{AbsRel} همان تصویر است و کمترین مقدار هر ردیف پررنگ شده است. عمق مرجع \lr{Cityscapes} از تناظر استریو به‌دست آمده و در بخش‌هایی از صحنه مقدار معتبر ندارد. شمار ردیف‌هایی که هر مدل در آن‌ها کمترین خطا را دارد چنین است: در \lr{NYUv2}، پنج ردیف برای \proposedmodel{} و یک ردیف برای \controlmodel{}؛ در \lr{Kinect v1}، چهار ردیف برای \proposedmodel{} و دو ردیف برای \publishedbasemodel{}؛ در \lr{Kinect v2}، پنج ردیف برای \proposedmodel{} و یک ردیف برای \publishedbasemodel{}؛ و در \lr{Cityscapes}، هر شش ردیف برای \proposedmodel{}.
+شکل‌های~\ref{fig:qual_md_nyu} تا \ref{fig:qual_md_cityscapes} \edrep{هر}{این} ۲۴ تصویر را \edrep{بدون حذف}{} نشان می‌دهند. در هر ردیف، بازه رنگ تنها از عمق مرجع همان ردیف محاسبه شده و برای مرجع و هر سه مدل یکسان است، پس اختلاف مقیاس مطلق به‌صورت اختلاف رنگ دیده می‌شود. رنگ نسبت به عکس عمق خطی است: قرمز نزدیک و آبی دور را نشان می‌دهد و خاکستری پیکسل بدون عمق مرجع معتبر است. نوار رنگ هر ردیف برحسب متر است. عدد هر خانه \lr{AbsRel} همان تصویر است و کمترین مقدار هر ردیف پررنگ شده است. عمق مرجع \lr{Cityscapes} از تناظر استریو به‌دست آمده و در بخش‌هایی از صحنه مقدار معتبر ندارد. \eddel{شمار ردیف‌هایی که هر مدل در آن‌ها کمترین خطا را دارد چنین است: در {\lr{NYUv2}}، پنج ردیف برای {\proposedmodel{}} و یک ردیف برای {\controlmodel{}}؛ در {\lr{Kinect v1}}، چهار ردیف برای {\proposedmodel{}} و دو ردیف برای {\publishedbasemodel{}}؛ در {\lr{Kinect v2}}، پنج ردیف برای {\proposedmodel{}} و یک ردیف برای {\publishedbasemodel{}}؛ و در {\lr{Cityscapes}}، هر شش ردیف برای {\proposedmodel{}}.}
 
-\proposedmodel{} بر ۲۰ تصویر از ۲۴ تصویر کمترین \lr{AbsRel} را دارد، \publishedbasemodel{} بر سه تصویر و \controlmodel{} بر یک تصویر. این شمارش بر نمونه‌ای کوچک انجام شده و جای مقایسه کمّی جدول~\ref{tab:multidomain_main} را نمی‌گیرد. تفاوت مدل‌ها بیش از همه در مقیاس است. میانه نسبت مقیاس شش تصویر هر مجموعه برای \proposedmodel{} بین \fadecimal{۰٫۹۶۵} و \fadecimal{۱٫۰۹۰} است، برای \controlmodel{} بین \fadecimal{۱٫۰۷۵} و \fadecimal{۱٫۲۴۸} و برای \publishedbasemodel{} بین \fadecimal{۱٫۱۴۰} و \fadecimal{۱٫۲۸۷}. شکل~\ref{fig:qual_md_error} همین اریبی را نشان می‌دهد: در بیشتر ردیف‌ها، ستون‌های \publishedbasemodel{} و \controlmodel{} قرمزتر از ستون \proposedmodel{} هستند، یعنی صحنه را دورتر از مقدار واقعی برآورد می‌کنند. این شکل نسبت عمق پیش‌بینی‌شده به عمق مرجع را در پیکسل‌های معتبر دو تصویر نخست هر مجموعه، به‌ترتیب قفل‌شده، نشان می‌دهد. در آن، قرمز یعنی پیش‌بینی دورتر از مرجع، آبی یعنی نزدیک‌تر و سفید یعنی انطباق؛ خاکستری پیکسل بدون عمق مرجع معتبر را نشان می‌دهد و نوار رنگ برای همه ردیف‌ها یکسان است. در این هشت ردیف، \proposedmodel{} در هفت ردیف و \publishedbasemodel{} در یک ردیف کمترین \lr{AbsRel} را دارد.
+\eddel{{\proposedmodel{}} بر ۲۰ تصویر از ۲۴ تصویر کمترین {\lr{AbsRel}} را دارد، {\publishedbasemodel{}} بر سه تصویر و {\controlmodel{}} بر یک تصویر. این شمارش بر نمونه‌ای کوچک انجام شده و جای مقایسه کمّی جدول~{\ref{tab:multidomain_main}} را نمی‌گیرد.} \edins{این تصاویر برای نشان دادن تفاوت مدل‌ها آورده شده‌اند و جای مقایسه کمّی جدول~{\ref{tab:multidomain_main}} را نمی‌گیرند. در میان همه ۱۵۵۴ تصویر این چهار مجموعه، {\proposedmodel{}} در ۱۲۰۵ تصویر کمترین {\lr{AbsRel}} را میان سه مدل دارد؛ این شمار برای {\controlmodel{}} برابر ۱۸۹ تصویر و برای {\publishedbasemodel{}} برابر ۱۶۰ تصویر است. شمار تصاویری که {\proposedmodel{}} در آن‌ها کمترین {\lr{AbsRel}} را دارد، در {\lr{NYUv2}} برابر ۵۰۱ تصویر از ۶۵۴ تصویر، در {\lr{Kinect v1}} برابر ۱۲۲ تصویر از ۲۰۰ تصویر، در {\lr{Kinect v2}} برابر ۱۴۵ تصویر از ۲۰۰ تصویر و در {\lr{Cityscapes}} برابر ۴۳۷ تصویر از ۵۰۰ تصویر است.} تفاوت مدل‌ها بیش از همه در مقیاس است. میانه نسبت مقیاس \edrep{شش تصویر}{همه تصاویر} هر مجموعه برای \proposedmodel{} بین \edrep{{\fadecimal{۰٫۹۶۵}}}{{\fadecimal{۰٫۹۳۵}}} و \edrep{{\fadecimal{۱٫۰۹۰}}}{{\fadecimal{۱٫۰۸۰}}} است، برای \controlmodel{} بین \edrep{{\fadecimal{۱٫۰۷۵}}}{{\fadecimal{۱٫۰۹۰}}} و \edrep{{\fadecimal{۱٫۲۴۸}}}{{\fadecimal{۱٫۲۵۰}}} و برای \publishedbasemodel{} بین \edrep{{\fadecimal{۱٫۱۴۰}}}{{\fadecimal{۱٫۱۴۶}}} و \edrep{{\fadecimal{۱٫۲۸۷}}}{{\fadecimal{۱٫۲۴۳}}}. شکل~\ref{fig:qual_md_error} همین اریبی را نشان می‌دهد: در بیشتر ردیف‌ها، ستون‌های \publishedbasemodel{} و \controlmodel{} قرمزتر از ستون \proposedmodel{} هستند، یعنی صحنه را دورتر از مقدار واقعی برآورد می‌کنند. این شکل نسبت عمق پیش‌بینی‌شده به عمق مرجع را در پیکسل‌های معتبر دو تصویر نخست هر مجموعه\edrep{، به‌ترتیب قفل‌شده،}{ در چهار شکل عمق پیشین} نشان می‌دهد. در آن، قرمز یعنی پیش‌بینی دورتر از مرجع، آبی یعنی نزدیک‌تر و سفید یعنی انطباق؛ خاکستری پیکسل بدون عمق مرجع معتبر را نشان می‌دهد و نوار رنگ برای همه ردیف‌ها یکسان است. \eddel{در این هشت ردیف، {\proposedmodel{}} در هفت ردیف و {\publishedbasemodel{}} در یک ردیف کمترین {\lr{AbsRel}} را دارد.}
 
-برتری در مقیاس به معنای برتری در جزییات نیست. در این تصاویر، \publishedbasemodel{} مرز اجسام و ساختارهای ریز را تیزتر بازسازی می‌کند؛ خروجی \proposedmodel{} و \controlmodel{} هموارتر است و در برخی تصاویر الگوی شبکه‌ای ضعیفی دارد. این ویژگی در هر دو مدل آموزش‌دیده دیده می‌شود، پس نمی‌توان آن را به ورودی ماتریس کالیبراسیون نسبت داد؛ سازوکار آن در این پژوهش بررسی نشد. افزون بر این، در سه تصویری که \publishedbasemodel{} کمترین خطا را دارد، اختلاف آن با \proposedmodel{} می‌تواند بزرگ باشد (برای نمونه \fadecimal{۰٫۰۳۵} در برابر \fadecimal{۰٫۱۹۷} بر یکی از تصاویر \lr{Kinect v1}).
+برتری در مقیاس به معنای برتری در جزییات نیست. در این تصاویر، \publishedbasemodel{} مرز اجسام و ساختارهای ریز را تیزتر بازسازی می‌کند؛ خروجی \proposedmodel{} و \controlmodel{} هموارتر است و در برخی تصاویر الگوی شبکه‌ای ضعیفی دارد. این ویژگی در هر دو مدل آموزش‌دیده دیده می‌شود، پس نمی‌توان آن را به ورودی ماتریس کالیبراسیون نسبت داد؛ سازوکار آن در این پژوهش بررسی نشد. \eddel{افزون بر این، در سه تصویری که {\publishedbasemodel{}} کمترین خطا را دارد، اختلاف آن با {\proposedmodel{}} می‌تواند بزرگ باشد (برای نمونه {\fadecimal{۰٫۰۳۵}} در برابر {\fadecimal{۰٫۱۹۷}} بر یکی از تصاویر {\lr{Kinect v1}}).}
 \end{edadded}
 
 % REVIEW R20
@@ -1805,7 +1776,8 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 \edrep{و پاسخ‌گویی صریح به سوالات تحقیق،
 تبیین رفتار مدل‌ها،
 و تفسیر یافته‌ها در چارچوب هندسه تصویربرداری
-و}{و بررسی وابستگی سهم پارامترهای دوربین به پروتکل ارزیابی و ظرفیت مدل و مقایسه غیرمستقیم با} ادبیات موجود در حوزه \lr{MDE} است.
+% REVIEW R25 («مقایسه غیرمستقیم با» از \edins پیشین R7 جدا شد)
+و}{و بررسی وابستگی سهم پارامترهای دوربین به پروتکل ارزیابی و ظرفیت مدل و} \edrep{مقایسه غیرمستقیم با ادبیات موجود در حوزه {\lr{MDE}}}{بیان یافته‌های اصلی و دامنه ادعای پژوهش} است.
 
 % REVIEW R7: این دو زیربخش از فصل چهارم برداشته شدند؛ جمله‌های غیرتکراری آن‌ها در فصل پنجم آمده است.
 % REVIEW R7
@@ -1893,7 +1865,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 (از {\fadecimal{−۰٫۰۲۳۲}} به {\fadecimal{−۰٫۰۱۱۳}})؛ بنابراین ادعای کوچک‌ترشدن
 اختلاف خطا میان دوربین‌ها از این شواهد نتیجه نمی‌شود.}
 
-\eddel{بخشی از قید دوم با آزمایش چندمجموعه‌ای بخش~{\ref{sec:multidomain_results}} برطرف شده است. {\proposedmodel{}} آموزش‌دیده بر چهار دوربین واقعی و مصنوعی، بر {\lr{NYUv2}}، {\lr{Cityscapes}} و داده‌های دیده‌نشده دو حسگر {\lr{Kinect}} از {\lr{SUN RGB-D}} در هر سه معیار {\lr{AbsRel}}، {$\delta_1$} و {\lr{RMSE}} از {\controlmodel{}} و {\publishedbasemodel{}} دقیق‌تر است (جدول~{\ref{tab:multidomain_main}}) و در آزمون جابه‌جایی دوربین نیز بر {\lr{NYUv2}}، {\lr{Cityscapes}} و {\lr{Kinect v2}} دقیق‌ترین مدل باقی می‌ماند؛ زوج دومی که جداگانه آموزش دید، برتری بر {\controlmodel{}} را در هر دوازده ستون جدول تکرار کرد، اما برتری در آزمون جابه‌جایی دوربین را تنها بر {\lr{NYUv2}} و {\lr{Cityscapes}} تکرار کرد (زیربخش~{\ref{subsec:md_lossless_kitti}}). بنابراین سودمندی ماتریس کالیبراسیون دوربین به تغییر مصنوعی فاصله کانونی در یک مجموعه‌داده محدود نیست و بر دوربین‌های واقعی متفاوت نیز دیده می‌شود.}
 
 \eddel{این داوری‌ها در جدول جمع‌بندی فصل پنجم (جدول~{\ref{tab:hypothesis_verdicts}})
 بر پایه شواهد فصل چهارم یک‌جا ارائه می‌شوند.}
@@ -1922,7 +1893,8 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 مهم‌تر آنکه \edrep{رشد یکنواخت}{افزایش} این برتری با افزایش شدت ابهام مقیاس
  نشان می‌دهد که این برتری، \edrep{پیوند علی با اطلاعات هندسی دارد}{با نقش ماتریس کالیبراسیون دوربین سازگار است}
 و \edrep{صرفا نوسان آماری نیست}{با توجه به مقایسه تنها دو پیکربندی آموزشی، این مقایسه به‌تنهایی نوسان تصادفی آموزش را رد نمی‌کند}.
-\edins{آزمایش چندمجموعه‌ای این وابستگی به پروتکل را در هر دو اندازه انکودر تکرار کرد (زیربخش~{\ref{subsec:revised_cross_dataset}}، جدول~{\ref{tab:md_encoder_protocol}}). در مدل‌های مطلق، در هر دو {\lr{ViT-S}} و {\lr{ViT-L}}، {\proposedmodel{}} در هفت مجموعه آزمون از ده مجموعه، با تفاوتی از نظر آماری قابل اتکا، دقیق‌تر از {\controlmodel{}} بود. در مدل‌های نسبی، تفاوت‌ها حداکثر حدود ۳ درصد بودند و جهت یکسانی نداشتند؛ همچنین حذف ماتریس کالیبراسیون دوربین در زمان آزمون، خطای مدل‌های نسبی را تقریباً بدون تغییر باقی گذاشت.}
+% REVIEW R21 (ده -> هشت؛ \edins پیشین دو نیم شد)
+\edins{آزمایش چندمجموعه‌ای این وابستگی به پروتکل را در هر دو اندازه انکودر تکرار کرد (زیربخش~{\ref{subsec:revised_cross_dataset}}، جدول~{\ref{tab:md_encoder_protocol}}). در مدل‌های مطلق، در هر دو {\lr{ViT-S}} و {\lr{ViT-L}}، {\proposedmodel{}} در هفت مجموعه آزمون از }\edrep{ده}{هشت}\edins{ مجموعه، با تفاوتی از نظر آماری قابل اتکا، دقیق‌تر از {\controlmodel{}} بود. در مدل‌های نسبی، تفاوت‌ها حداکثر حدود ۳ درصد بودند و جهت یکسانی نداشتند؛ همچنین حذف ماتریس کالیبراسیون دوربین در زمان آزمون، خطای مدل‌های نسبی را تقریباً بدون تغییر باقی گذاشت.}
 
 دوم، سهم پارامترهای دوربین به ظرفیت انکودر نیز وابسته است.
 در اندازه \lr{ViT-S}، حتی در پروتکل نسبی،
@@ -1934,11 +1906,11 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 را با دقتی استخراج می‌کند که برای بازسازی ساختار نسبی،
 اطلاعات مکمل چندانی از ماتریس کالیبراسیون دوربین باقی نمی‌ماند؛
 حال آنکه انکودر کوچک‌تر از هر سیگنال کمکی بهره می‌برد.
-این تبیین، فرضیه‌ای برخاسته از داده‌های همین پژوهش است و نه یافته‌ای
-نقل‌شده از ادبیات؛ کارهایی که ماتریس کالیبراسیون دوربین یا میدان دید را به مدل می‌دهند،
-اثر ظرفیت انکودر را به‌صورت جداگانه گزارش نکرده‌اند~\cite{Facil2019CAMConvs,Saxena2023FOV,Piccinelli2024UniDepth}.
+% REVIEW R25
+این تبیین، فرضیه‌ای برخاسته از داده‌های همین پژوهش \edrep{است و نه یافته‌ای نقل‌شده از ادبیات؛ کارهایی که ماتریس کالیبراسیون دوربین یا میدان دید را به مدل می‌دهند، اثر ظرفیت انکودر را به‌صورت جداگانه گزارش نکرده‌اند~{\cite{Facil2019CAMConvs,Saxena2023FOV,Piccinelli2024UniDepth}}.}{است.}
 % REVIEW R7
-\edins{آزمایش چندمجموعه‌ای این الگو را تأیید نکرد. در زوج نسبی {\lr{ViT-S}}، {\proposedmodel{}} در سه مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بهتر و در سه مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بدتر بود. در زوج نسبی {\lr{ViT-L}}، شکاف‌ها در همه مجموعه‌ها به‌جز {\lr{Middlebury}} حداکثر {\fadecimal{۰٫۰۰۰۶}} {\lr{AbsRel}} بودند (جدول~{\ref{tab:md_encoder_protocol}})؛ بنابراین وابستگی به ظرفیت انکودر در پروتکل نسبی فقط بر نتیجه تک‌دیتاست {\lr{NYUv2}} تکیه دارد و همچنان یک فرضیه است.}
+% REVIEW R21 (سه -> دو؛ «به‌جز Middlebury»؛ \edins پیشین چند تکه شد)
+\edins{آزمایش چندمجموعه‌ای این الگو را تأیید نکرد. در زوج نسبی {\lr{ViT-S}}، {\proposedmodel{}} در سه مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بهتر و در }\edrep{سه}{دو}\edins{ مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بدتر بود. در زوج نسبی {\lr{ViT-L}}، شکاف‌ها در همه مجموعه‌ها }\eddel{به‌جز {\lr{Middlebury}}}\edins{ حداکثر {\fadecimal{۰٫۰۰۰۶}} {\lr{AbsRel}} بودند (جدول~{\ref{tab:md_encoder_protocol}})؛ بنابراین وابستگی به ظرفیت انکودر در پروتکل نسبی فقط بر نتیجه تک‌دیتاست {\lr{NYUv2}} تکیه دارد و همچنان یک فرضیه است.}
 آزمون این فرضیه در چند اندازه انکودر، در بخش پیشنهادهای پژوهش آتی
 (بخش~\ref{sec:chapter5_future_work}) مطرح شده است.
 
@@ -1951,35 +1923,39 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 برای جلوگیری از بیش‌برآورد سهم هر مولفه ضروری است
 و اعتبار علمی ادعاهای پژوهش را تضمین می‌کند.
 
-\subsection{مقایسه غیرمستقیم با ادبیات موضوع}
+% REVIEW R25 (عنوان تازه؛ برچسب دست‌نخورده ماند)
+\subsection[یافته‌های اصلی و دامنه ادعای پژوهش]{\edrep{مقایسه غیرمستقیم با ادبیات موضوع}{یافته‌های اصلی و دامنه ادعای پژوهش}}
 \label{subsec:literature_comparison}
 
-مقایسه مستقیم اعداد این فصل با اعداد منتشرشده در ادبیات ممکن نیست، زیرا
+% REVIEW R25 (دو بند حذف‌شده؛ نشانه R5 «تایید -> تأیید» در بند دوم در همین حذف جذب شد)
+\begin{eddeleted}
+\eddel{مقایسه مستقیم اعداد این فصل با اعداد منتشرشده در ادبیات ممکن نیست، زیرا
 مدل‌های مرجع بر داده و برنامه آموزشی متفاوتی آموزش دیده‌اند. آنچه در ادامه
-می‌آید، مقایسه جهت‌گیری یافته‌ها است، نه مقایسه کمی.
+می‌آید، مقایسه جهت‌گیری یافته‌ها است، نه مقایسه کمی.}
 
-در جریان غالب مطالعات پیشین، تمرکز اصلی بر بهبود معیارهای نسبی یا استفاده
+\eddel{در جریان غالب مطالعات پیشین، تمرکز اصلی بر بهبود معیارهای نسبی یا استفاده
 از نرمال‌سازی‌های ضمنی برای کاهش اثر مقیاس بوده و اطلاعات دوربین یا نادیده گرفته
-شده یا به‌صورت ضمنی در داده‌ها نهفته فرض شده است~\cite{Eigen2014Depth,Godard2019Digging,Ranftl2019Robust,DepthAnythingV2}.
+شده یا به‌صورت ضمنی در داده‌ها نهفته فرض شده است~{\cite{Eigen2014Depth,Godard2019Digging,Ranftl2019Robust,DepthAnythingV2}}.
 یافته این فصل مبنی بر اینکه پروتکل نسبی دارای تراز مقیاس، نسبت به سهم اصلی
-% REVIEW R5
-ماتریس کالیبراسیون دوربین نابیناست، همین نکته را از منظر ارزیابی \edrep{تایید می‌کند}{تأیید می‌کند}.
+ماتریس کالیبراسیون دوربین نابیناست، همین نکته را از منظر ارزیابی تأیید می‌کند.}
+\end{eddeleted}
 
-در سوی دیگر، سه یافته اصلی این پژوهش با گزارش‌های موجود در خط پژوهشی
-شرطی‌سازی صریح بر هندسه دوربین هم‌جهت‌اند. نخست، افت عملکرد هنگام تغییر
-فاصله کانونی، همان پدیده‌ای است که \lr{CAM-Convs} به‌صورت تجربی نشان
-داد~\cite{Facil2019CAMConvs}. دوم، این تحلیل که ابهام مقیاس در آموزش
-چنددوربینه ریشه هندسی دارد و نه ریشه معماری، همان صورت‌بندی است که
-% REVIEW R5
-\lr{Metric3D} برای انگیزه‌بخشی به فضای دوربین متعارف \edrep{ارایه می‌کند}{ارائه می‌کند}~\cite{Yin2023Metric3D}.
-سوم، سودمندی شرطی‌سازی بر میدان دید در بازیابی مقیاس مطلق، پیش‌تر در چارچوب
-مدل‌های انتشاری~\cite{Saxena2023FOV} و در \lr{UniDepth} با یک شاخه دوربین
-درون‌مدلی~\cite{Piccinelli2024UniDepth} گزارش شده است.
+% REVIEW R25 (نشانه R5 «ارایه -> ارائه» در جمله دوم در همین حذف جذب شد)
+\eddel{در سوی دیگر،} سه یافته اصلی این پژوهش \edrep{با گزارش‌های موجود در خط پژوهشی}{به}
+شرطی‌سازی صریح بر هندسه دوربین \edrep{هم‌جهت‌اند}{مربوط می‌شوند}. نخست، \edrep{افت عملکرد هنگام تغییر
+فاصله کانونی، همان پدیده‌ای است که {\lr{CAM-Convs}} به‌صورت تجربی نشان
+داد~{\cite{Facil2019CAMConvs}}.}{با تغییر فاصله کانونی در داده آموزشی، خطای عمق مطلق {\controlmodel{}} افزایش می‌یابد (جدول~{\ref{tab:dose_response_summary}}).} دوم، \edrep{این تحلیل که}{بنا بر تحلیل این پژوهش،} ابهام مقیاس در آموزش
+چنددوربینه ریشه هندسی دارد و نه ریشه \edrep{معماری، همان صورت‌بندی است که
+{\lr{Metric3D}} برای انگیزه‌بخشی به فضای دوربین متعارف ارائه می‌کند~{\cite{Yin2023Metric3D}}.}{معماری.}
+سوم، \edrep{سودمندی شرطی‌سازی بر میدان دید در بازیابی مقیاس مطلق، پیش‌تر در چارچوب
+مدل‌های انتشاری~{\cite{Saxena2023FOV}} و در {\lr{UniDepth}} با یک شاخه دوربین
+درون‌مدلی~{\cite{Piccinelli2024UniDepth}} گزارش شده است.}{شرطی‌سازی بر ماتریس کالیبراسیون دوربین در بازیابی مقیاس مطلق سودمند است (جدول‌های~{\ref{tab:nyu_absolute_focal}} و~{\ref{tab:md_encoder_protocol}}).}
 
-در عین حال، باید توجه داشت که این هم‌جهتی، ادعای «لزوم» ماتریس کالیبراسیون دوربین را اثبات نمی‌کند.
-\lr{Depth Pro} نشان می‌دهد که با مقیاس داده و محاسبه به‌مراتب بزرگ‌تر، می‌توان
+% REVIEW R25
+در عین حال، باید توجه داشت که این \edrep{هم‌جهتی،}{یافته‌ها،} ادعای «لزوم» ماتریس کالیبراسیون دوربین را اثبات \edrep{نمی‌کند}{نمی‌کنند}.
+\eddel{{\lr{Depth Pro}} نشان می‌دهد که با مقیاس داده و محاسبه به‌مراتب بزرگ‌تر، می‌توان
 بدون دریافت فراداده‌های دوربین نیز به عمق مطلق صفرنمونه رسید و فاصله کانونی
-را از خود تصویر تخمین زد~\cite{Bochkovskii2025DepthPro}. بنابراین برداشت
+را از خود تصویر تخمین زد~{\cite{Bochkovskii2025DepthPro}}. بنابراین} برداشت
 قابل دفاع از نتایج این فصل چنین است: در رژیم داده محدود و ستون فقرات فریزشده، ورودی صریح ماتریس کالیبراسیون دوربین سیگنالی است که
 مدل در غیاب آن باید با هزینه داده و ظرفیت بسیار بیشتری بازسازی کند.
 % REVIEW R7: این زیربخش از فصل چهارم برداشته شد؛ جمله‌های غیرتکراری آن در فصل پنجم آمده است.
@@ -2021,9 +1997,14 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 
 \section{جمع‌بندی فصل نتایج}
 \label{sec:results_summary}
-% REVIEW R7
+% REVIEW R25 (بند پیشین R7/R21 با بند ساده زیر جایگزین شد؛ متن دقیق پیشین در REVIEW_PENDING.md)
+\begin{eddeleted}
+\eddel{خطای {\basemodel{}} منتشرشده در هر سه مقایسه بین‌دیتاستی تفاوتی از نظر آماری قابل اتکا داشت (جدول~{\ref{tab:basic_model_silog}})؛ بنابراین مقیاس مطلق آن بین دیتاست‌ها پایدار نیست. در مطالعه کنترل‌شده تک‌دوربینه روی {\lr{NYUv2}}، در پروتکل نسبی، سهم خالص ماتریس کالیبراسیون دوربین در برابر {\controlmodel{}} هم‌داده فقط برای انکودر کوچک از نظر آماری قابل اتکا بود (بخش~{\ref{sec:controlled_nyu_study}}). در ارزیابی مطلق بدون تراز، {\proposedmodel{}} در هر دو پیکربندی آموزشی از {\controlmodel{}} بهتر بود و شکاف {\lr{AbsRel}} از {\fadecimal{۰٫۰۰۰۹}} در {\zoomcropconfig{}} به {\fadecimal{۰٫۰۲۳۱}} در {\focaljitterconfig{}} افزایش یافت (جدول~{\ref{tab:dose_response_summary}}). آزمون‌های حساسیت نیز نشان دادند که مدل واقعاً فاصله کانونی را می‌خواند (بخش~{\ref{sec:camera_sensitivity}}). در گام پایانی، {\proposedmodel{}} {\lr{ViT-L}} آموزش‌دیده با چهار دیتاست در هر سه معیار روی {\lr{NYUv2}}، {\lr{Cityscapes}} و دو حسگر {\lr{Kinect}} در {\lr{SUN RGB-D}} از {\controlmodel{}} و {\publishedbasemodel{}} دقیق‌تر بود (بخش~{\ref{sec:multidomain_results}}؛ جدول~{\ref{tab:multidomain_main}}). در مدل‌های مطلق با هر دو اندازه انکودر، {\proposedmodel{}} در هفت مجموعه از هشت مجموعه آزمون از نظر آماری قابل اتکا بهتر از {\controlmodel{}} بود و در مدل‌های نسبی تفاوت پایداری مشاهده نشد (جدول~{\ref{tab:md_encoder_protocol}}). فصل پنجم این یافته‌ها را جمع‌بندی می‌کند، به سوالات تحقیق پاسخ می‌دهد و محدودیت‌ها و کارهای آینده را بیان می‌کند.}
+\end{eddeleted}
+
+% REVIEW R25
 \begin{edadded}
-خطای \basemodel{} منتشرشده در هر سه مقایسه بین‌دیتاستی تفاوتی از نظر آماری قابل اتکا داشت (جدول~\ref{tab:basic_model_silog})؛ بنابراین مقیاس مطلق آن بین دیتاست‌ها پایدار نیست. در مطالعه کنترل‌شده تک‌دوربینه روی \lr{NYUv2}، در پروتکل نسبی، سهم خالص ماتریس کالیبراسیون دوربین در برابر \controlmodel{} هم‌داده فقط برای انکودر کوچک از نظر آماری قابل اتکا بود (بخش~\ref{sec:controlled_nyu_study}). در ارزیابی مطلق بدون تراز، \proposedmodel{} در هر دو پیکربندی آموزشی از \controlmodel{} بهتر بود و شکاف \lr{AbsRel} از \fadecimal{۰٫۰۰۰۹} در \zoomcropconfig{} به \fadecimal{۰٫۰۲۳۱} در \focaljitterconfig{} افزایش یافت (جدول~\ref{tab:dose_response_summary}). آزمون‌های حساسیت نیز نشان دادند که مدل واقعاً فاصله کانونی را می‌خواند (بخش~\ref{sec:camera_sensitivity}). در گام پایانی، \proposedmodel{} \lr{ViT-L} آموزش‌دیده با چهار دیتاست در هر سه معیار روی \lr{NYUv2}، \lr{Cityscapes} و دو حسگر \lr{Kinect} در \lr{SUN RGB-D} از \controlmodel{} و \publishedbasemodel{} دقیق‌تر بود (بخش~\ref{sec:multidomain_results}؛ جدول~\ref{tab:multidomain_main}). در مدل‌های مطلق با هر دو اندازه انکودر، \proposedmodel{} در هفت مجموعه از ده مجموعه آزمون از نظر آماری قابل اتکا بهتر از \controlmodel{} بود؛ در \lr{DIODE} داخلی و \lr{Middlebury}، \controlmodel{} با انکودر \lr{ViT-L} دقیق‌تر بود و در مدل‌های نسبی تفاوت پایداری مشاهده نشد (جدول~\ref{tab:md_encoder_protocol}). فصل پنجم این یافته‌ها را جمع‌بندی می‌کند، به سوالات تحقیق پاسخ می‌دهد و محدودیت‌ها و کارهای آینده را بیان می‌کند.
+خطای \publishedbasemodel{}، که ماتریس کالیبراسیون دوربین را دریافت نمی‌کند، بین دیتاست‌ها تفاوتی از نظر آماری قابل اتکا داشت؛ بنابراین مقیاس مطلق این مدل پایه بین دیتاست‌ها پایدار نیست. این مشاهده نقطه آغاز بررسی‌های این فصل بود. در ادامه، \proposedmodel{} که ماتریس کالیبراسیون دوربین را به‌صورت ورودی صریح دریافت می‌کند، با \controlmodel{} و همین مدل پایه مقایسه شد. در ارزیابی مطلق، \proposedmodel{} در همه پیکربندی‌های آموزشی مطالعه کنترل‌شده دقیق‌تر از \controlmodel{} بود و با افزایش تغییرپذیری فاصله کانونی در داده‌های آموزشی، این برتری افزایش یافت. آزمون‌های حساسیت نشان دادند که \proposedmodel{} فاصله کانونی را می‌خواند و با تغییر آن، مقیاس خروجی خود را مطابق هندسه تصویربرداری تغییر می‌دهد. در گام پایانی، مدل‌ها با مجموعه‌داده‌هایی از دوربین‌های گوناگون آموزش داده شدند و \proposedmodel{} در تصاویر داخلی و بیرونی، از جمله تصاویر حسگری که در داده آموزشی نبود، از هر دو مدل دیگر دقیق‌تر بود. همچنین، \proposedmodel{} در بیشتر مجموعه‌های آزمون از \controlmodel{} دقیق‌تر عمل کرد. این نتایج نشان می‌دهند که اثر ماتریس کالیبراسیون دوربین در ارزیابی مطلق آشکار می‌شود، زیرا در این ارزیابی مقیاس فیزیکی عمق سنجیده می‌شود، در حالی که تراز جداگانه هر تصویر در ارزیابی نسبی مقیاس را حذف می‌کند. فصل پنجم این یافته‌ها را جمع‌بندی می‌کند، به سوالات تحقیق پاسخ می‌دهد و محدودیت‌ها و کارهای آینده را بیان می‌کند.
 \end{edadded}
 
 % REVIEW R7
@@ -2098,7 +2079,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & \edaddcell $0.0916$ & \edaddce
 این نتایج، همراه با تحلیل توضیحی نقش سازوکار تراز در پنهان‌سازی اطلاعات مقیاس،
 درک دقیق‌تری از شرایط سودمندی اطلاعات هندسی دوربین به‌دست می‌دهند.}
 
-\eddel{آزمایش چندمجموعه‌ای بخش~{\ref{sec:multidomain_results}} این یافته‌ها را از یک دوربین به چند دوربین و از صحنه‌های داخلی به صحنه‌های بیرونی گسترش داد. {\proposedmodel{}} {\lr{ViT-L}} که هم‌زمان بر {\lr{NYUv2}}، {\lr{KITTI}}، {\lr{Virtual KITTI 2}} و {\lr{Cityscapes}} آموزش دید، بر {\lr{NYUv2}}، {\lr{Cityscapes}} و داده‌های دیده‌نشده دو حسگر {\lr{Kinect}} از {\lr{SUN RGB-D}} در هر سه معیار {\lr{AbsRel}}، {$\delta_1$} و {\lr{RMSE}} از {\controlmodel{}} هم‌داده و {\publishedbasemodel{}} بهتر بود. برای نمونه، {\lr{AbsRel}} این مدل بر {\lr{NYUv2}} حدود ۳۴ درصد کمتر از {\controlmodel{}} است (جدول~{\ref{tab:multidomain_main}}) و شیب پیمایش فاصله کانونی آن {\fadecimal{۰٫۹۹}} است. ارزیابی بر ده مجموعه آزمون نشان داد که بزرگ‌ترین برتری بر {\controlmodel{}} بر داده‌های دیده‌نشده {\lr{SUN RGB-D}} رخ می‌دهد و {\controlmodel{}} بر سه حسگر از چهار حسگر این مجموعه حتی از {\publishedbasemodel{}} ضعیف‌تر است؛ اما بر {\lr{DIODE}} و {\lr{Middlebury}}، {\proposedmodel{}} با تصاویر اصلی از {\controlmodel{}} دقیق‌تر نبود. ذخیره‌سازی بدون اتلاف تصاویر آموزشی {\lr{KITTI}} خطای این مجموعه را در هر دو بازو حدود یک‌سوم کاهش داد و زوج حاصل، مقایسه اصلی را در هر دوازده ستون {جدول~{\ref{tab:multidomain_main}}} تکرار کرد.}
 
 \eddel{در مجموع،
 نتایج این فصل نشان می‌دهند که

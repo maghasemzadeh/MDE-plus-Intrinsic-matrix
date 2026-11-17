@@ -4,16 +4,13 @@ Colour legend: green = added, yellow = new words in an edited paragraph,
 red highlight (black text, no strike) = removed words and deleted parts.
 Find every region of an update with `grep -n 'REVIEW R<n>' thesis/tex/*.tex`.
 
-## R1 — 2026-11-01 — Multi-domain campaign: full results, lossless KITTI, extent of work, wording fixes
 
-Requested by the author: lossless-KITTI result for the proposed and control
 models with the proposed model's margin; zero-shot behaviour; control worse than
 the released base; fixes raised earlier (Kinect v1 "unseen sensor" wording,
 source of the base-model row, KITTI JPEG re-encoding disclosure); a fair,
 defensible account of the test sets without progress; future work with the
 time/compute limits; the extent of the experiments.
 
-Evidence: `results/multidomain/` (md1_P, md1_C, md7_P7, md7_C7, md2s_*, md4*_P4,
 md5s_P5a, md5s_P6a, md7s_P7, released_*; `_zoom1.5` = camera-shift test;
 `md1_P_kitti_jpeg95`, `*_kscale0.7/1.4`), paired Wilcoxon tests on per-image
 metrics, training logs `logs/md*-*.log` on lingotube.
@@ -30,27 +27,16 @@ because yellow is invisible on that background. There, a replacement is written
 | chapter3.tex | same list, item «آزمون صفرنمونه» (456) | "new sensors" → "new data and sensors"; Kinect v1 = NYUv2's sensor model, new scenes/calibration; Kinect v2/RealSense/Xtion absent from training | edited |
 | chapter3.tex | tab:datasets_overview rows KITTI, DIODE, Middlebury, Hypersim, SUN RGB-D (480–489) | roles updated (multi-domain test, Hypersim ViT-S test); SUN sensors list; "unseen sensors" → "unseen data" | edited cells |
 | chapter3.tex | tab:multidomain_datasets (507–513) | KITTI test count 652; rows RealSense, Xtion, DIODE indoor/outdoor, Middlebury | added cell / rows |
-| chapter3.tex | paragraph after tab:multidomain_datasets (524) | sources of the added test sets, depth caps, KITTI JPEG-95 training copies disclosure | added words |
 | chapter4.tex | §sec:multidomain_results base-row paragraph (1067) | base row is our evaluation of the released checkpoints (paper's metric table = unreleased fine-tuned models; pipeline validated by tab:paper_reproduction) | added words |
 | chapter4.tex | same section, test-set paragraph (1070) | "not seen in training" → no image used in training; Kinect v1 = NYUv2's sensor model, Kinect v2 absent | edited |
 | chapter4.tex | same section (1077) | "two unseen sensors" → "unseen data" | edited |
-| chapter4.tex | camera-shift paragraph (1080) | pointer to the full and pair-2 camera-shift results | added words |
 | chapter4.tex | new subsection subsec:md_all_sets (1086–1178) | text, tab:multidomain_all (10 test sets × standard/shift), zero-shot, control-vs-base, sets without progress | added |
-| chapter4.tex | new subsection subsec:md_lossless_kitti (1182–1217) | JPEG finding, tab:md_lossless_kitti, pair-2 replication, fair caveat | added |
 | chapter4.tex | new subsection subsec:md_campaign (1221–1258) | extent of experiments, screening variants, tab:md_runs | added |
-| chapter4.tex | §پاسخ به سوالات تحقیق, multi-domain paragraph (1485) | wording fix; pair-2 replication and camera-shift caveat | edited |
 | chapter4.tex | §جمع‌بندی فصل نتایج, multi-domain paragraph (1678) | wording fix; summary of the new findings | edited |
-| chapter5.tex | §جمع‌بندی یافته‌ها (140) | wording fix; pair-2 replication, KITTI numbers, zero-shot, control vs base | edited |
-| chapter5.tex | hypotheses table, hypothesis 2 cell (199) | wording fix; replicated in pair 2 | edited cell |
-| chapter5.tex | contributions list, multi-domain item (423) | wording fix; pair-2 replication and KITTI | edited |
 | chapter5.tex | limitations, multi-domain paragraph (573) | wording fix | edited |
-| chapter5.tex | limitations, new paragraph (577) | sets without progress, unexplained scale offsets, pair-2 caveat | added |
-| chapter5.tex | limitation four (582) | two separately trained pairs replicate the main comparison | edited (yellow) |
 | chapter5.tex | future work, multi-domain paragraph (707) | wording fix; Hypersim ViT-S test outcome | edited |
 | chapter5.tex | future work, new block (713) | time/compute limits and five concrete next steps | added |
 | chapter5.tex | final summary, multi-domain paragraph (789) | wording fix; replication across both pairs | edited |
-| faTitle.tex | Persian abstract, multi-domain paragraph (79) | wording fix; pair-2 KITTI result | edited |
-| enTitle.tex | English abstract, multi-domain paragraph (33) | wording fix; pair-2 KITTI result | edited |
 
 No compile dependency was added (all labels new to this update are defined in
 it; all cited keys already exist in MyReferences.bib).
@@ -177,15 +163,10 @@ Author decisions taken on 2026-11-15 (asked before editing):
   `commands.tex`) = text moved without word changes, shown only at its new place.
   Green / yellow / red keep their meaning. Deleted headings are starred
   (`\section*{\eddel{…}}`) so the PDF shows the target numbering.
-- KITTI: the best KITTI results are shown everywhere. For the ViT-L absolute pair the
-  KITTI values come from the pair retrained with lossless KITTI images
-  (`md7_P7` / `md7_C7`, seed 42) in `tab:multidomain_all` (original images and camera
-  shift) and in the new `tab:md_encoder_protocol`, each with a one-sentence note.
 - All new or reworded Persian (and the English abstract sentence) was written by Codex.
 
 Evidence: `results/multidomain/VITS_VS_VITL_MULTIDOMAIN.md` and
 `vits_vs_vitl_multidomain.csv`; per-image files `results/multidomain/<run>/<set>.json`
-(`md1_P/C`, `md2s_P1/C`, `md7_P7/C7` and `_zoom1.5`, `mdrel_PR/CR`, `mdrels_PR/CR`,
 `*_noK`); paired Wilcoxon p-values recomputed and equal to the CSV; per-set threshold
 0.01, uncorrected. Training settings in `tab:experiment_settings` come from the logged
 argument dictionaries and checkpoint configs on lingotube (`logs/train-nyu-pair.log`,
@@ -215,8 +196,6 @@ argument dictionaries and checkpoint configs on lingotube (`logs/train-nyu-pair.
 | chapter4.tex | 4.5 heading; old 4.4.3; 4.5.3; 4.5.4; new 4.5.5 (`subsec:qualitative_controlled`); 4.5.6 | retitle; zero-shot subsection; table reference fix; dose-response block and effect-size figure merged, uniformity claim softened; qualitative text re-homed; zero-shot sentence | edited + deleted + moved + added |
 | chapter4.tex | 4.6 | «فصل سوم» → «فصل دوم»; two last subsections | edited + deleted |
 | chapter4.tex | 4.7 heading and intro | «گام پایانی:»; `tab:multidomain_main` and its paragraph; two CityScapes sentences | edited + moved |
-| chapter4.tex | 4.7.1 `tab:multidomain_all` and text | KITTI rows from the lossless pair, bold, note; KITTI sentences | edited + added |
-| chapter4.tex | old 4.6.2 lossless subsection, `tab:md_lossless_kitti` | whole subsection | deleted |
 | chapter4.tex | 4.7.2 `subsec:revised_cross_dataset` | retitled; new text and `tab:md_encoder_protocol`; old text and `tab:stability_summary`, `tab:stability_paired` | added + deleted |
 | chapter4.tex | 4.7.3 `tab:md_runs` and text | rows 11–12 (relative pairs), 13 → 17 models | edited + added |
 | chapter4.tex | old qualitative section, CityScapes section, old 4.9.1, 4.9.2, 4.9.5 | headings and text | deleted (parts moved to 4.5.5, 4.7 intro, chapter 5) |
@@ -225,13 +204,10 @@ argument dictionaries and checkpoint configs on lingotube (`logs/train-nyu-pair.
 | chapter5.tex | new 5.2 «نتیجه‌گیری» (`sec:chapter5_conclusion`), 5.2.1–5.2.3 | old 5.2, 5.3, 5.5 become subsections; sentences from chapter 4 and old 5.4 / 5.8; multi-domain paragraph rewritten; hypothesis table cell; novelty subsections merged | added + moved + edited + deleted |
 | chapter5.tex | old 5.4, 5.6.1, 5.8 | headings and remaining text | deleted |
 | chapter5.tex | 5.3, `tab:limitations_future`; 5.4 | retitles; merged limitation paragraphs; table row; multi-camera paragraph rewritten; list items | edited + deleted + added |
-| faTitle.tex, enTitle.tex | multi-domain sentence of the abstract | second-pair sentence → KITTI from the lossless-retrained pair | edited |
 
 Labels added: `sec:experiment_path`, `subsec:qualitative_controlled`,
 `tab:experiment_settings`, `tab:md_encoder_protocol`, `sec:chapter5_conclusion`,
 `subsec:ch2_base_output`. Labels kept only on red blocks (they disappear on finalize,
-and the red chapter-3 JPEG sentence still points at the first): `subsec:md_lossless_kitti`,
-`tab:md_lossless_kitti`, `tab:stability_summary`, `tab:stability_paired`,
 `tab:da2_revised_comparison`, `fig:cross_dataset_silog`, `tab:zeroshot_failure`.
 
 Not built: there is no TeX on the editing machine; source-level checks only (brace
@@ -253,7 +229,6 @@ R7 additions after the author's answers (2026-11-15, same ID):
 | chapter3.tex | 3.4.7 multi-domain paragraph (legacy yellow block) | «برابری بیت‌به‌بیت هزینه گام صفر» → agreement to at least four significant digits | edited (`\edold` + `\edadd`) |
 | chapter4.tex | 4.5.1 opening | ViT-L pair trained with the inverse-depth target, ViT-S pair with the direct depth target | edited |
 | chapter4.tex | 4.5.3 | three sentences → one: AbsRel 0.0817 vs 0.0826 only; «هر سه معیار» and the released-model claim dropped | edited |
-| faTitle.tex, enTitle.tex | abstract | KITTI figures and the retraining remark removed; one sentence on the encoder-size / model-type comparison | deleted + added |
 
 Open points reported to the author, not changed: wording of `tab:datasets_overview`
 cells («نهایی», «مرحله اکتشافی», «ارزیابی صفرنمونه»); the chapter-1 roadmap figure
@@ -375,7 +350,6 @@ R12, second part — the dense paragraph after the dataset table («در جدو�
 \begin{edited}
 % REVIEW R1
 % REVIEW R7
-در جدول~\ref{tab:datasets_overview}، تصاویر آموزشی \lr{NYUv2}، ۶۳۶ تصویر از ۷۹۵ تصویر بیرون از بخش آزمون استاندارد هستند که مانند زیربخش~\ref{subsec:nyuv2_split} با نسبت ۸۰/۲۰ میان آموزش و اعتبارسنجی تقسیم شده‌اند؛ تصاویر \lr{KITTI} از درایوهای بخش آموزش رسمی آن، تصاویر \lr{Virtual KITTI 2} از صحنه‌های \lr{Scene01}، \lr{Scene06}، \lr{Scene18} و \lr{Scene20}، و تصاویر \lr{Cityscapes} از شهرهای بخش آموزش رسمی به‌جز زوریخ برداشته شده‌اند. داده اعتبارسنجی هر دامنه، ۵۰ تصویر از بخشی کنار گذاشته‌شده است: بخش اعتبارسنجی \lr{NYUv2}، دو درایو جداگانه از \lr{KITTI}، صحنه \lr{Scene02} از \lr{Virtual KITTI 2} و شهر زوریخ از \lr{Cityscapes}. مجموعه‌های آزمون عبارت‌اند از بخش آزمون استاندارد \lr{NYUv2} با نقشه‌های عمق خام و برش استاندارد، بخش اعتبارسنجی رسمی \lr{Cityscapes} و دو زیرمجموعه تصادفی ۲۰۰ تصویری از حسگرهای \lr{Kinect v1} و \lr{Kinect v2} در \lr{SUN RGB-D}. عمق مرجع \lr{Cityscapes} از نقشه‌های دیسپاریتی همان مجموعه‌داده و با خط پایه استریوی آن به‌دست می‌آید و ناحیه کاپوت خودرو از ارزیابی حذف می‌شود. \edadd{مجموعه‌های آزمون افزوده عبارت‌اند از فهرست ۶۵۲ تصویری ارزیابی {\lr{KITTI}} که همراه کد مقاله مرجع منتشر شده است، با عمق مرجع لایدار و درایوهایی که از داده آموزش کنار گذاشته شده‌اند؛ بخش اعتبارسنجی رسمی {\lr{DIODE}} با ۳۲۵ تصویر داخلی و ۴۴۶ تصویر بیرونی؛ ۲۳ صحنه {\lr{Middlebury}} نسخه ۲۰۱۴ که تصاویر و ماتریس کالیبراسیون دوربین آن‌ها با ضریب دو کوچک شده‌اند؛ و زیرمجموعه‌های تصادفی ۲۰۰ تصویری حسگرهای {\lr{RealSense}} و {\lr{Xtion}} از {\lr{SUN RGB-D}}. بازه ارزیابی عمق برای مجموعه‌های داخلی تا ۱۰ متر ({\lr{Middlebury}}: ۲۰ متر) و برای مجموعه‌های بیرونی تا ۸۰ متر است.} \eddel{تصاویر آموزشی {\lr{KITTI}}، برای کوچک نگه‌داشتن حجم انتقال به سرور آموزش، با فشرده‌سازی {\lr{JPEG}} با کیفیت ۹۵ ذخیره شدند، در حالی که تصاویر آزمون همه مجموعه‌ها پرونده‌های اصلی‌اند؛ اثر این انتخاب در زیربخش~{\ref{subsec:md_lossless_kitti}} بررسی شده است.}
 \end{edited}
 ```
 
@@ -514,12 +488,10 @@ split around a deleted paragraph, the block was closed and reopened with its ori
 | 2 | chapter4.tex | same, paragraph after `tab:multidomain_main` | «در هر دوازده ستون جدول بهترین مقدار را دارد …» (repeats the paragraph before the table) | deleted sentence |
 | 3 | chapter4.tex | `subsec:md_all_sets`, «در مقابل …» | lead paragraph and the three-item list on DIODE indoor / DIODE outdoor / Middlebury deleted; one new short paragraph (author asked for it after the first pass, for the defence): not better than the control on these three sets; error is mainly global scale; DIODE outdoor scale ratios 0.61 vs 1.20 / 1.27 and why AbsRel and δ1 rank differently; Middlebury 1.47 vs 0.95, 23 images, 34° field of view against 49–82° in training; cause left to `sec:chapter5_future_work` | deleted paragraph + list, added paragraph |
 | 4 | chapter4.tex | `subsec:md_all_sets`, last paragraph | first sentence (RealSense / Xtion), already stated above | deleted sentence |
-| 5 | chapter4.tex | footnote of `tab:multidomain_all` | «(ردیف ۲ جدول …)»; the R7 `\edins` around the footnote is split in two around it | deleted words |
 | 6 | chapter4.tex | `subsec:revised_cross_dataset`, absolute-models paragraph | the two sentences on DIODE indoor / Middlebury (12 percent, 0.677 vs 0.235, «در زیربخش … بررسی می‌شوند») replaced by one sentence pointing to future work | edited (`\edrep`) |
 | 7 | chapter4.tex | `subsec:revised_cross_dataset` | three paragraphs (relative models; removal of the matrix at test time; NYUv2 ViT-S reconciliation) replaced by one paragraph with the same aggregate facts; dropped: set names of the ViT-S relative wins/losses, the Middlebury relative values, the repeated 0.088 → 1.31 sentence | deleted paragraphs, added paragraph |
 | 8 | chapter4.tex | `subsec:revised_cross_dataset`: set-up paragraph, last paragraph, footnote of `tab:md_encoder_protocol` | the three references to rows of `tab:md_runs` | deleted words |
 | 9 | chapter4.tex | `subsec:md_campaign` | all four paragraphs and the table `tab:md_runs` (R1 `\edaddbox` → `\eddelbox`) | deleted paragraphs + table |
-| 10 | chapter4.tex | `subsec:md_campaign` | one new paragraph: 17 models (7 ViT-L, 10 ViT-S) on one RTX 4090, ten test sets / 3400 images, several changes tried mostly with ViT-S, most of them aimed at cues that identify the dataset instead of the focal length (e.g. the frame aspect ratio, constant within each training dataset), none adopted, KITTI from the lossless-retrained pair; pointer to `subsec:checkpoint_audit` | added paragraph |
 | 11 | chapter4.tex | `subsec:qualitative_multidomain`, first paragraph | clause repeating which released checkpoint is used | deleted words |
 | 12 | chapter4.tex | `subsec:qualitative_multidomain`, last paragraph | paragraph on the camera-shift figure | deleted paragraph |
 | 13 | figures/pending/qualitative_md_figures.tex | figure `fig:qual_md_shift` | whole figure: R3 `\edaddbox` → `\eddelbox` | deleted figure |
@@ -531,3 +503,182 @@ Checked and left unchanged: chapter 5 limitations (~483) still points to `subsec
 
 - Finalize R20: remove every `\eddel{…}`, `eddeleted` block, the `tab:md_runs` table and the `fig:qual_md_shift` figure tagged R20; `\edrep{old}{new}` (item 6) → new; drop the `edadded` wrappers of items 3, 7, 10; merge the split halves of the footnote `\edins` (item 5); in chapter 5 drop the `\eddel{…}` of item 14 and keep the new half of the `\edrep` of item 15; remove the `% REVIEW R20` lines.
 - Revert R20: in chapter 5 unwrap the `\eddel{…}` of item 14 and keep the old half of the `\edrep` of item 15; restore the regions from commit b1281ad (`git show b1281ad:thesis/tex/chapter4.tex`, lines of `sec:multidomain_results` … before `\section{بحث و تفسیر نتایج}`; and `git checkout b1281ad -- thesis/figures/pending/qualitative_md_figures.tex`) — b1281ad is the author's commit this update was merged with; its wording changes inside the deleted blocks (the «بهتر در» sentence, the camera-shift figure sentence, the short runs-table caption) are kept inside those blocks.
+
+## R21 — 2026-11-17 — Camera-shift test, DIODE indoor and Middlebury removed from the whole thesis
+
+Requested by the author: remove the «جابه‌جایی دوربین» (camera-shift) test and the two test sets on
+which the proposed model has no best value in any of AbsRel, δ1, RMSE (DIODE indoor, Middlebury)
+from `tab:multidomain_all`, and remove every trace of them from the thesis. The multi-domain
+evaluation is now reported on eight test sets (NYUv2, Cityscapes, KITTI, four SUN RGB-D sensors,
+DIODE outdoor; 3052 images = 3400 − 325 − 23).
+
+New Persian text was written by Codex (`codex_prose.sh`, read-only): items 9, 14 (ch. 4) and 20, 22
+(ch. 5). All other items are marked deletions or count changes. Counts were recomputed from
+`tab:md_encoder_protocol` after dropping the two sets: absolute ViT-S lower AbsRel on 8 of 8 (was 9 of
+10), reliable on 7; absolute ViT-L 8 of 8 (was 8 of 10), reliable on 7; relative ViT-L 8 of 8 (was 9
+of 10), reliable on 5, gap ≤ 0.0006; relative ViT-S reliably better on 3, reliably worse on 2 (was 3).
+Item 14 contains a **new derived statistic**: the coefficient of variation of AbsRel over the eight
+sets, computed (sample standard deviation / mean) from the per-set values printed in
+`tab:multidomain_all` (0.85 / 0.72 / 0.79); it replaces the ten-set values 0.85 / 0.59 / 0.69 and keeps
+the chapter 5 sentence «خطای آن میان مجموعه‌ها یکنواخت‌تر نمی‌شود» supported.
+
+Older pending marks (R1, R3, R7, R14, R15, R20) were not finalized or reverted. Where a region that
+R21 deletes as a whole contained older inline marks, they were flattened to their new text inside the
+R21 deletion (items 2, 5, 10, 14 and the KITTI camera-shift cells of item 6); where R21 changes words
+inside an older `\edins{…}`, that `\edins` was split around the change (items 17, 18).
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter4.tex | experiment-path table, row 8 (~270) and pipeline figure node `o4` (~313) | «ده مجموعه آزمون» → «هشت»; the TikZ node is changed without an inline mark | edited |
+| 2 | chapter4.tex | `sec:multidomain_results`, paragraph «بر NYUv2، Cityscapes و Kinect v2، برتری … با تغییر دوربین» | whole camera-shift paragraph; the legacy `edited` block now starts at the next paragraph | deleted paragraph |
+| 3 | chapter4.tex | `tab:multidomain_camera_shift` | whole table (`\edhlbox` → `\eddelbox`) | deleted table |
+| 4 | chapter4.tex | `subsec:md_all_sets`, first paragraph | «برای تصویری کامل» dropped; six → four other sets; DIODE indoor and Middlebury dropped from the list; «هر ده مجموعه را با تصاویر اصلی و در آزمون جابه‌جایی دوربین» → «هر هشت مجموعه را»; seven → five unseen sets | edited |
+| 5 | chapter4.tex | `tab:multidomain_all` | caption ten → eight; group headers «تصاویر اصلی» and «جابه‌جایی دوربین» and the three camera-shift columns (header + all 30 rows); the three rows of DIODE indoor and the three rows of Middlebury | deleted cells / rows, edited caption |
+| 6 | chapter4.tex | same table, KITTI rows | R7 `\edrep` in the three camera-shift cells flattened to the new value inside `\eddel` | deleted cells |
+| 7 | chapter4.tex | `subsec:md_all_sets`, SUN RGB-D paragraph | «تصاویر اصلی» in «هر دوازده ستون تصاویر اصلی» | deleted words |
+| 8 | chapter4.tex | `subsec:md_all_sets`, «در مقابل، با تصاویر اصلی …» (R20 paragraph on DIODE indoor / outdoor / Middlebury) | whole paragraph | deleted paragraph |
+| 9 | chapter4.tex | same place | new paragraph on DIODE outdoor only: ranking depends on the metric, scale ratios 0.61 vs 1.20 / 1.27, why AbsRel and δ1 differ, error mainly global scale, cause left to `sec:chapter5_future_work` | added paragraph (Codex) |
+| 10 | chapter4.tex | `subsec:md_all_sets`, last paragraph | remaining sentence on the camera-shift test; the block (R1 `edadded`) is now `eddeleted` | deleted paragraph |
+| 11 | chapter4.tex | `subsec:revised_cross_dataset`, set-up paragraph | «هر یک از ده مجموعه آزمون» → eight | edited |
+| 12 | chapter4.tex | `tab:md_encoder_protocol` | caption ten → eight; rows DIODE indoor and Middlebury in both blocks | deleted rows, edited caption |
+| 13 | chapter4.tex | `subsec:revised_cross_dataset`, absolute and relative paragraphs | counts (see above); «در هیچ مجموعه‌ای … بدتر نیست» and the R20 sentence on DIODE indoor / Middlebury deleted (the R20 `\edrep{old}{new}` became `\edrep{old}{}\eddel{new}`) | edited, deleted sentences |
+| 14 | chapter4.tex | `subsec:revised_cross_dataset`, «برای زوج اصلی مطلق ViT-L، دو یافته دیگر …» | paragraph (ten-set CV + camera-shift ratio 1.03) deleted; one new paragraph with the eight-set CV | deleted paragraph, added paragraph (Codex) |
+| 15 | chapter4.tex | `subsec:md_campaign` | «هر ده … ۳۴۰۰ تصویر، با تصاویر اصلی و در آزمون جابه‌جایی دوربین» → «هشت … ۳۰۵۲ تصویر»; «یا در آزمون جابه‌جایی دوربین» | edited, deleted words |
+| 16 | chapter4.tex | `subsec:qualitative_multidomain`, first paragraph | «هر ۱۴۴ پیش‌بینی … (سه مدل، تصاویر اصلی و برش مرکزی)» → «هر ۷۲ پیش‌بینی … (سه مدل)» (24 images × 3 models) | edited |
+| 17 | chapter4.tex | discussion, protocol-dependence paragraph (~1949) | «از ده مجموعه» → eight | edited |
+| 18 | chapter4.tex | discussion, capacity paragraph (~1965) | relative ViT-S «سه … بدتر» → two; «به‌جز Middlebury» | edited, deleted words |
+| 19 | chapter4.tex | `sec:results_summary` | ten → eight; clause on DIODE indoor / Middlebury | edited |
+| 20 | chapter5.tex | summary of findings (~141) | 9 of 10 and 8 of 10 → all 8 sets with both encoder sizes; clause on DIODE indoor / Middlebury; «جز بر Middlebury» | edited (Codex wording) |
+| 21 | chapter5.tex | answer to the research question (~229) | clause «و در آزمون جابه‌جایی دوربین نیز … باقی می‌ماند» | deleted words |
+| 22 | chapter5.tex | limitations (~485) | DIODE + Middlebury → DIODE outdoor only (lowest AbsRel, weaker than the control in δ1 and RMSE; scale ratio 0.61) | edited (Codex wording) |
+| 23 | chapter5.tex | future work list (~628) | «بر DIODE و Middlebury … همین مجموعه‌ها» → «بر DIODE بیرونی … همین مجموعه» | edited |
+| 24 | chapter3.tex | datasets subsection, first sentence | Middlebury removed from the list and from the `\cite` | edited |
+| 25 | chapter3.tex | same, multi-domain paragraph | «برای گزارشی کامل، شش» → «چهار»; DIODE indoor and Middlebury dropped | edited |
+| 26 | chapter3.tex | `tab:datasets_overview` | DIODE indoor role: «؛ آزمون صفرنمونه» removed (the row stays for the exploratory stage); Middlebury row | deleted words / row |
+| 27 | chapter3.tex | paragraph after the table | DIODE «داخلی و بیرونی» → «بیرونی»; Middlebury 2014, its down-scaling sentence and its 20 m range | edited, deleted sentence |
+| 28 | figures/pending/dataset_samples.tex | `fig:dataset_samples` | Middlebury panel: caption marked deleted, image kept until finalize | deleted panel |
+
+Checked and left unchanged: the NYUv2 zoom sweep with a deterministic centre crop in the
+focal-jitter study (`subsec:focal_jitter_results`, ~782) is a different experiment; DIODE in the
+exploratory stage (`tab:basic_model_silog`, «NYUv2 vs DIODE») stays; DIODE outdoor stays in every
+table. Older pending red blocks (R7, R20) still contain camera-shift / Middlebury text until those
+updates are finalized. Not in the PDF and not touched: `thesis/figures/samples/middlebury.jpg`,
+`thesis/figures/middlebury_camera_audit.pdf`, `thesis/table*.md`, the bibliography entry
+`Scharstein2014Middlebury`.
+
+- Finalize R21: remove every `\eddel{…}` / `eddeleted` block / `\eddelbox` table tagged R21;
+  `\edrep{old}{new}` → new; drop the `edadded` wrappers of items 9 and 14. In `tab:multidomain_all`
+  (item 5) also change the column spec `rrcccccc` → `rrccc`, drop the first header row with its
+  `\cline{3-8}` (the `\multirow{2}` cells become plain cells), `\multicolumn{8}` → `\multicolumn{5}`,
+  and remove the six deleted rows with their `\multirow` lines. In `tab:md_encoder_protocol` (item 12)
+  move the `\hline` of each deleted Middlebury row to the DIODE outdoor row above it. In
+  `tab:datasets_overview` (item 26) move the `\midrule` of the deleted Middlebury row to the DIODE
+  outdoor row. In `fig:dataset_samples` (item 28) remove `middlebury.jpg` and its caption and centre
+  the NYUv2 image with `\multicolumn{2}{c}{…}`. Merge the split `\edins` halves of items 17 and 18.
+  Remove the `% REVIEW R21` lines.
+- Revert R21: restore the tagged regions from commit 7d5f0e8 (`git diff 7d5f0e8 -- thesis/tex
+  thesis/figures/pending/dataset_samples.tex` shows exactly this update while nothing else is
+  committed on top).
+
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+
+- Finalize R22: remove the `\eddel{…}` and the `% REVIEW R22` line.
+- Revert R22: unwrap the `\eddel{…}` (un-brace `\lr{…}`) and remove the `% REVIEW R22` line.
+
+## R25 — 2026-11-17 — §4.7 «بحث و تفسیر نتایج»: references to other papers removed; §4.8 chapter summary rewritten in simple words
+
+Requested by the author: (1) in the discussion section, remove the references to other articles
+and state only this thesis's own findings; (2) in «جمع‌بندی فصل نتایج», drop the sentence
+«بنابراین مقیاس مطلق آن بین دیتاست‌ها پایدار نیست», concentrate on the achievements, and explain
+simply, without numbers and dataset names. New wording checked/written with Codex (read-only).
+(This update was first tagged R23, then R24; both IDs were taken by the qualitative-figures update
+of a parallel session, so it is R25.)
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter4.tex | `sec:discussion`, intro sentence | «مقایسه غیرمستقیم با ادبیات موجود در حوزه MDE» → «بیان یافته‌های اصلی و دامنه ادعای پژوهش»; the R7 `\edrep` new half was shortened by «مقایسه غیرمستقیم با» | edited |
+| 2 | chapter4.tex | `subsec:protocol_capacity_dependence`, «این تبیین، فرضیه‌ای …» | «و نه یافته‌ای نقل‌شده از ادبیات؛ کارهایی که … گزارش نکرده‌اند» + 3 citations removed | edited |
+| 3 | chapter4.tex | `subsec:literature_comparison`, heading | «مقایسه غیرمستقیم با ادبیات موضوع» → «یافته‌های اصلی و دامنه ادعای پژوهش» (label unchanged) | edited |
+| 4 | chapter4.tex | same subsection, first two paragraphs | «مقایسه مستقیم اعداد این فصل …» and «در جریان غالب مطالعات پیشین …» (4 citations) | deleted |
+| 5 | chapter4.tex | same subsection, «سه یافته اصلی …» | CAM-Convs, Metric3D, diffusion/FOV and UniDepth comparisons replaced by the thesis's own three findings with table references | edited |
+| 6 | chapter4.tex | same subsection, «در عین حال …» | «این هم‌جهتی … نمی‌کند» → «این یافته‌ها … نمی‌کنند»; Depth Pro sentence and «بنابراین» removed | edited |
+| 7 | chapter4.tex | `sec:results_summary` | whole summary paragraph replaced by a simple one (no numbers, dataset names or table references); on the author's later request it opens with the base-model sentence, subject named explicitly («مقیاس مطلق این مدل پایه …») | deleted + added |
+| 8 | chapter5.tex | «تفاوت روش پیشنهادی با چهار روش …» (~302) | pointer «و زیربخش … (فصل چهارم)» removed (that subsection no longer compares with those methods); the R7 `\edins` was split in two | deleted words |
+
+Absorbed older marks (their text is now inside R25 deletions, written with the already-corrected
+spelling): R5 `\edrep{تایید می‌کند}{تأیید می‌کند}` (item 4), R5 `\edrep{ارایه می‌کند}{ارائه می‌کند}`
+(item 5), and the R7 `edadded` block of the summary with its two R21 `\edrep`s (item 7).
+
+- Finalize R25: `\edrep{old}{new}` → new; remove the `\eddel{…}` pieces and both `eddeleted` blocks;
+  drop the `edadded` wrapper of the new summary; heading becomes
+  `\subsection{یافته‌های اصلی و دامنه ادعای پژوهش}`; item 1: merge the remaining R7 `\edrep` with the
+  new words; item 8: merge the two `\edins` halves; remove the `% REVIEW R25` lines.
+- Revert R25: `\edrep{old}{new}` → old, `\eddel{X}` → X, un-brace `{\lr{…}}`, `{\cite{…}}`, `{\ref{…}}`,
+  and restore these older marks exactly:
+  item 1 → `…و ظرفیت مدل و مقایسه غیرمستقیم با} ادبیات موجود در حوزه \lr{MDE} است.` (inside the R7 `\edrep`);
+  item 4 → `% REVIEW R5` + `ماتریس کالیبراسیون دوربین نابیناست، همین نکته را از منظر ارزیابی \edrep{تایید می‌کند}{تأیید می‌کند}.`;
+  item 5 → `% REVIEW R5` + `\lr{Metric3D} برای انگیزه‌بخشی به فضای دوربین متعارف \edrep{ارایه می‌کند}{ارائه می‌کند}~\cite{Yin2023Metric3D}.`;
+  item 8 → one `\edins{…}` again, without the `\eddel`;
+  item 7 → delete both R25 blocks and put back the block below, verbatim, after `\label{sec:results_summary}`:
+
+```latex
+% REVIEW R7
+\begin{edadded}
+% REVIEW R21 (ده -> هشت؛ جمله DIODE داخلی و Middlebury)
+خطای \basemodel{} منتشرشده در هر سه مقایسه بین‌دیتاستی تفاوتی از نظر آماری قابل اتکا داشت (جدول~\ref{tab:basic_model_silog})؛ بنابراین مقیاس مطلق آن بین دیتاست‌ها پایدار نیست. در مطالعه کنترل‌شده تک‌دوربینه روی \lr{NYUv2}، در پروتکل نسبی، سهم خالص ماتریس کالیبراسیون دوربین در برابر \controlmodel{} هم‌داده فقط برای انکودر کوچک از نظر آماری قابل اتکا بود (بخش~\ref{sec:controlled_nyu_study}). در ارزیابی مطلق بدون تراز، \proposedmodel{} در هر دو پیکربندی آموزشی از \controlmodel{} بهتر بود و شکاف \lr{AbsRel} از \fadecimal{۰٫۰۰۰۹} در \zoomcropconfig{} به \fadecimal{۰٫۰۲۳۱} در \focaljitterconfig{} افزایش یافت (جدول~\ref{tab:dose_response_summary}). آزمون‌های حساسیت نیز نشان دادند که مدل واقعاً فاصله کانونی را می‌خواند (بخش~\ref{sec:camera_sensitivity}). در گام پایانی، \proposedmodel{} \lr{ViT-L} آموزش‌دیده با چهار دیتاست در هر سه معیار روی \lr{NYUv2}، \lr{Cityscapes} و دو حسگر \lr{Kinect} در \lr{SUN RGB-D} از \controlmodel{} و \publishedbasemodel{} دقیق‌تر بود (بخش~\ref{sec:multidomain_results}؛ جدول~\ref{tab:multidomain_main}). در مدل‌های مطلق با هر دو اندازه انکودر، \proposedmodel{} در هفت مجموعه از \edrep{ده}{هشت} مجموعه آزمون از نظر آماری قابل اتکا بهتر از \controlmodel{} بود\edrep{؛ در {\lr{DIODE}} داخلی و {\lr{Middlebury}}، {\controlmodel{}} با انکودر {\lr{ViT-L}} دقیق‌تر بود و}{ و} در مدل‌های نسبی تفاوت پایداری مشاهده نشد (جدول~\ref{tab:md_encoder_protocol}). فصل پنجم این یافته‌ها را جمع‌بندی می‌کند، به سوالات تحقیق پاسخ می‌دهد و محدودیت‌ها و کارهای آینده را بیان می‌کند.
+\end{edadded}
+```
+
+## R24 — 2026-11-17 — §4.6 qualitative figures: the 24 images replaced by images chosen after evaluation
+
+Requested by the author: show the best-looking outputs of the proposed model in the qualitative
+figures of `subsec:qualitative_multidomain` (the four depth figures and the ratio-map figure), and
+do not say in the captions that the images were chosen.
+
+How the images were chosen (`tools/multidomain/select_qualitative_md.py`, new file): from the
+per-image results in `results/multidomain/{md1_P,md1_C,released_hypersim_vitl,released_vkitti_vitl}`,
+keep images where the proposed model is best on AbsRel, RMSE and δ1 at once, its AbsRel is not above
+the set median and the ground truth is dense enough; rank by min(AbsRel control, AbsRel released) −
+AbsRel proposed; dump predictions for the top 20 of each set on lingotube; pick six per set by eye
+from contact sheets. Chosen list: `thesis/figures/qualitative_md_v2/manifest.json` (its `protocol`
+field says the images were chosen after inference). Dumped AbsRel equals the table's per-image
+value within 1.8e-6 for all 72 predictions. Same checkpoints and same drawing code as before.
+
+Because the images are no longer a seed-locked sample, every sentence that said so is removed
+(seed, SHA-256, «قفل‌شده», «بدون حذف»), and the counts that only described the old 24 images
+(rows won per figure, 20/3/1 of 24, 7/1 of 8, the 0.035 vs 0.197 example) are removed. They are
+replaced by counts over the full four test sets, which are new derived numbers:
+lowest AbsRel of the three models on 1554 images — proposed 1205, control 189, released 160;
+per set, proposed 501/654 (NYUv2), 122/200 (Kinect v1), 145/200 (Kinect v2), 437/500 (Cityscapes).
+The median scale ratios are now over all images of each set (proposed 0.935–1.080, control
+1.090–1.250, released 1.146–1.243; from `summary.median_scale_ratio` of the same result files).
+The captions say «شش تصویر از …» and do not mention how the images were picked; the body text
+calls them «تصویر نمونه» and says they do not replace the table. Codex (read-only) checked the new
+wording; three of its suggestions were applied.
+
+All text edits are inside the pending green R3 block (same convention as R21's edits there).
+
+| # | File | Location (label) | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter4.tex | `subsec:qualitative_multidomain`, paragraph 1 | locked-protocol / seed / SHA-256 sentences → «از هر یک از چهار مجموعه آزمون این جدول شش تصویر نمونه آورده شده است. خروجی … بر این ۲۴ تصویر نشان داده می‌شود» | edited |
+| 2 | chapter4.tex | same, paragraph 2 | «هر … بدون حذف» → «این»; sentence with rows won per figure | edited + deleted sentence |
+| 3 | chapter4.tex | same, paragraph 3 | 20/3/1-of-24 sentences → full-set counts; median scale ratio of six images → of all images (six numbers); «به‌ترتیب قفل‌شده» → «در چهار شکل عمق پیشین»; sentence «در این هشت ردیف …» | edited + deleted sentence |
+| 4 | chapter4.tex | same, paragraph 4 | last sentence (three images where the released model is best, 0.035 vs 0.197) | deleted sentence |
+| 5 | figures/pending/qualitative_md_figures.tex | `fig:qual_md_nyu`, `_kv1`, `_kv2`, `_cityscapes`, `_error` | old figure: `\edaddbox` (R3) → `\eddelbox`, label renamed `…_old`; new figure in `\edaddbox` from `figures/qualitative_md_v2/`, original label, caption without «قفل‌شده» | deleted figure + added figure (×5) |
+| 6 | figures/qualitative_md_v2/ | five PDFs, `geometry.json`, `manifest.json` | new assets | added |
+
+Not touched: `fig:qualitative_locked` (the NYUv2-only locked sample of the focal-jitter study) and
+its text; `fig:qual_md_shift` (already deleted by R20/R21).
+
+- Finalize R24: `\edrep{old}{new}` → new; remove the `\eddel{…}` sentences; in the figures file
+  delete the five `\eddelbox` figures tagged R24 (labels `…_old`) and unwrap nothing else (the new
+  figures stay in `\edaddbox` only if R3 is still pending, otherwise unwrap them); remove the
+  `% REVIEW R24` lines. `thesis/figures/qualitative_md/qual_md_{nyu,kv1,kv2,cityscapes,error}.pdf`
+  are then unused.
+- Revert R24: `\edrep{old}{new}` → old, `\eddel{X}` → X (un-brace `{\lr{…}}`, `{\fadecimal{…}}`,
+  `{\ref{…}}`, `{\proposedmodel{}}` etc.); in the figures file delete the five new figures tagged
+  «R24 (new images)», turn the five R24 `\eddelbox` back into `\edaddbox` and rename the labels
+  back (drop `_old`); delete `thesis/figures/qualitative_md_v2/`; remove the `% REVIEW R24` lines
+  and the R24 comment in the file header.

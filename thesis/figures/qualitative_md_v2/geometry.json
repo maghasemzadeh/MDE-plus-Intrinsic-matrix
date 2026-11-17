@@ -1,0 +1,364 @@
+{
+ "protocol": "chosen after inference: proposed model best on AbsRel, RMSE and d1, ranked by AbsRel margin over both other models, final images picked by eye",
+ "sha256": "f811243bd0eee3c2f60a315bacbe46297270bf396726d435f1030df73eb02619",
+ "max_absrel_difference_to_tables": 1.7801296062214256e-06,
+ "figures": {
+  "qual_md_nyu": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.8228,
+   "rows": [
+    {
+     "set": "nyu",
+     "index": 402,
+     "id": "nyu_0960",
+     "base": 0.2247,
+     "control": 0.1569,
+     "proposed": 0.0344
+    },
+    {
+     "set": "nyu",
+     "index": 255,
+     "id": "nyu_0618",
+     "base": 0.2444,
+     "control": 0.2059,
+     "proposed": 0.058
+    },
+    {
+     "set": "nyu",
+     "index": 129,
+     "id": "nyu_0325",
+     "base": 0.531,
+     "control": 0.1759,
+     "proposed": 0.0694
+    },
+    {
+     "set": "nyu",
+     "index": 291,
+     "id": "nyu_0693",
+     "base": 0.1936,
+     "control": 0.1689,
+     "proposed": 0.0374
+    },
+    {
+     "set": "nyu",
+     "index": 482,
+     "id": "nyu_1130",
+     "base": 0.2076,
+     "control": 0.1695,
+     "proposed": 0.0578
+    },
+    {
+     "set": "nyu",
+     "index": 495,
+     "id": "nyu_1153",
+     "base": 0.2482,
+     "control": 0.1825,
+     "proposed": 0.0754
+    }
+   ],
+   "rule": [
+    [
+     "nyu",
+     6
+    ]
+   ]
+  },
+  "qual_md_kv1": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.8347,
+   "rows": [
+    {
+     "set": "sunrgbd_kv1",
+     "index": 145,
+     "id": "img_0673",
+     "base": 0.1267,
+     "control": 0.3431,
+     "proposed": 0.0558
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 113,
+     "id": "img_0497",
+     "base": 0.1145,
+     "control": 0.2282,
+     "proposed": 0.052
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 182,
+     "id": "img_0794",
+     "base": 0.2503,
+     "control": 0.233,
+     "proposed": 0.0907
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 38,
+     "id": "img_0175",
+     "base": 0.3801,
+     "control": 0.1938,
+     "proposed": 0.0771
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 173,
+     "id": "img_0767",
+     "base": 0.2948,
+     "control": 0.1104,
+     "proposed": 0.0708
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 111,
+     "id": "img_0488",
+     "base": 0.4116,
+     "control": 0.1563,
+     "proposed": 0.059
+    }
+   ],
+   "rule": [
+    [
+     "sunrgbd_kv1",
+     6
+    ]
+   ]
+  },
+  "qual_md_kv2": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.7971,
+   "rows": [
+    {
+     "set": "sunrgbd_kv2",
+     "index": 197,
+     "id": "2014-12-18_16-22-33_260595134347",
+     "base": 0.3946,
+     "control": 0.2487,
+     "proposed": 0.0736
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 178,
+     "id": "003515_2014-05-21_17-40-56_094959634447_rgbf000100-resize",
+     "base": 0.3551,
+     "control": 0.2732,
+     "proposed": 0.0669
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 37,
+     "id": "000703_2014-06-08_13-26-13_260595134347_rgbf000242-resize",
+     "base": 0.2848,
+     "control": 0.2303,
+     "proposed": 0.079
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 125,
+     "id": "002440_2014-06-28_20-31-12_260595134347_rgbf000113-resize",
+     "base": 0.3103,
+     "control": 0.3225,
+     "proposed": 0.0804
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 79,
+     "id": "001503_2014-06-19_17-52-18_260595134347_rgbf000081-resize",
+     "base": 0.3232,
+     "control": 0.2481,
+     "proposed": 0.0869
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 28,
+     "id": "000628_2014-06-08_16-27-08_260595134347_rgbf000151-resize",
+     "base": 0.3149,
+     "control": 0.2662,
+     "proposed": 0.055
+    }
+   ],
+   "rule": [
+    [
+     "sunrgbd_kv2",
+     6
+    ]
+   ]
+  },
+  "qual_md_cityscapes": {
+   "centres": [
+    0.1192,
+    0.3016,
+    0.484,
+    0.6664,
+    0.8488
+   ],
+   "height_over_width": 0.5552,
+   "rows": [
+    {
+     "set": "cityscapes",
+     "index": 428,
+     "id": "munster_000102_000019",
+     "base": 0.2204,
+     "control": 0.1555,
+     "proposed": 0.072
+    },
+    {
+     "set": "cityscapes",
+     "index": 303,
+     "id": "lindau_000036_000019",
+     "base": 0.2641,
+     "control": 0.1183,
+     "proposed": 0.0652
+    },
+    {
+     "set": "cityscapes",
+     "index": 287,
+     "id": "lindau_000020_000019",
+     "base": 0.2058,
+     "control": 0.105,
+     "proposed": 0.058
+    },
+    {
+     "set": "cityscapes",
+     "index": 3,
+     "id": "frankfurt_000000_001236",
+     "base": 0.2233,
+     "control": 0.1571,
+     "proposed": 0.1005
+    },
+    {
+     "set": "cityscapes",
+     "index": 298,
+     "id": "lindau_000031_000019",
+     "base": 0.2282,
+     "control": 0.1309,
+     "proposed": 0.0873
+    },
+    {
+     "set": "cityscapes",
+     "index": 332,
+     "id": "munster_000006_000019",
+     "base": 0.1995,
+     "control": 0.1814,
+     "proposed": 0.0959
+    }
+   ],
+   "rule": [
+    [
+     "cityscapes",
+     6
+    ]
+   ]
+  },
+  "qual_md_error": {
+   "centres": [
+    0.142,
+    0.37,
+    0.598,
+    0.826
+   ],
+   "height_over_width": 1.2543,
+   "rows": [
+    {
+     "set": "nyu",
+     "index": 402,
+     "id": "nyu_0960",
+     "base": 0.2247,
+     "control": 0.1569,
+     "proposed": 0.0344
+    },
+    {
+     "set": "nyu",
+     "index": 255,
+     "id": "nyu_0618",
+     "base": 0.2444,
+     "control": 0.2059,
+     "proposed": 0.058
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 145,
+     "id": "img_0673",
+     "base": 0.1267,
+     "control": 0.3431,
+     "proposed": 0.0558
+    },
+    {
+     "set": "sunrgbd_kv1",
+     "index": 113,
+     "id": "img_0497",
+     "base": 0.1145,
+     "control": 0.2282,
+     "proposed": 0.052
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 197,
+     "id": "2014-12-18_16-22-33_260595134347",
+     "base": 0.3946,
+     "control": 0.2487,
+     "proposed": 0.0736
+    },
+    {
+     "set": "sunrgbd_kv2",
+     "index": 178,
+     "id": "003515_2014-05-21_17-40-56_094959634447_rgbf000100-resize",
+     "base": 0.3551,
+     "control": 0.2732,
+     "proposed": 0.0669
+    },
+    {
+     "set": "cityscapes",
+     "index": 428,
+     "id": "munster_000102_000019",
+     "base": 0.2204,
+     "control": 0.1555,
+     "proposed": 0.072
+    },
+    {
+     "set": "cityscapes",
+     "index": 303,
+     "id": "lindau_000036_000019",
+     "base": 0.2641,
+     "control": 0.1183,
+     "proposed": 0.0652
+    }
+   ],
+   "rule": [
+    [
+     "nyu",
+     2
+    ],
+    [
+     "sunrgbd_kv1",
+     2
+    ],
+    [
+     "sunrgbd_kv2",
+     2
+    ],
+    [
+     "cityscapes",
+     2
+    ]
+   ]
+  }
+ }
+}

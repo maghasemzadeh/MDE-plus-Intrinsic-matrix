@@ -263,5 +263,12 @@
   "261": "Resize",
   "262": "LayerScale",
   "263": "TestPFMReading",
-  "264": "DA3Metric"
+  "264": "DA3Metric",
+  "265": ".load_from_checkpoint",
+  "266": "j",
+  "267": "Thesis defense deck (v2)",
+  "268": "summarize_descabl.py",
+  "269": ".get_item_output_dir",
+  "270": "run_descriptor_ablation.sh",
+  "273": "build.py"
 }

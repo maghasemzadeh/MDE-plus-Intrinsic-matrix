@@ -240,8 +240,8 @@
     "semantic_hash": "75cd726fe2a92f1d51d10922b346ee93"
   },
   "train.py": {
-    "mtime": 1793467622.4054198,
-    "ast_hash": "7f4f8457de00f18382b2f70018cb934f",
+    "mtime": 1794998498.866463,
+    "ast_hash": "04a9530429db21a4336419cb5ac37be4",
     "semantic_hash": ""
   },
   "train_vkitti.sh": {
@@ -325,8 +325,8 @@
     "semantic_hash": "26b27eed76f24056f895c8b0cdd5edb6"
   },
   "thesis/main.pdf": {
-    "mtime": 1794913570.2279482,
-    "ast_hash": "3371da954f8d57bdef4728782d7bdb13",
+    "mtime": 1795023243.0623345,
+    "ast_hash": "879105077b64057832651b9f3eff7270",
     "semantic_hash": ""
   },
   "correctness_check/depth_base_basic_vits_nyu_vkitti_diode_lr5e-6_.png": {
@@ -410,8 +410,8 @@
     "semantic_hash": ""
   },
   "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/cam_enc.py": {
-    "mtime": 1793277854.9507,
-    "ast_hash": "93c782a100e7af12dbfe442934b16644",
+    "mtime": 1794998498.862463,
+    "ast_hash": "9e476fdc64db72bacbfbea70f3389e59",
     "semantic_hash": ""
   },
   "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/config.py": {
@@ -465,8 +465,8 @@
     "semantic_hash": ""
   },
   "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dpt.py": {
-    "mtime": 1780584373.828475,
-    "ast_hash": "5da04dfa88a9ddfda620713792d1a163",
+    "mtime": 1794998498.866463,
+    "ast_hash": "36913dbd552238d4683d9ce3e09dd8b2",
     "semantic_hash": ""
   },
   "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/model_loader.py": {
@@ -1265,8 +1265,8 @@
     "semantic_hash": ""
   },
   "tools/multidomain/eval_multidomain.py": {
-    "mtime": 1794740644.098954,
-    "ast_hash": "38531442048b50caf60c67e027c93718",
+    "mtime": 1794998498.866463,
+    "ast_hash": "ea6e0f59f7984d7d61f4f53e08e9ff48",
     "semantic_hash": ""
   },
   "tools/multidomain/fetch_kitti_rgb.py": {
@@ -1710,8 +1710,8 @@
     "semantic_hash": ""
   },
   "thesis/REVIEW_PENDING.md": {
-    "mtime": 1794913745.649465,
-    "ast_hash": "671ef08e4275ed2df9818cb28d88821c",
+    "mtime": 1795023312.702849,
+    "ast_hash": "464500d4d4aed04f65b8016354df670c",
     "semantic_hash": ""
   },
   "thesis/figures/qualitative_md/geometry.json": {
@@ -1867,6 +1867,166 @@
   "thesis/figures/qualitative_md_v2/qual_md_nyu.pdf": {
     "mtime": 1794912801.9176252,
     "ast_hash": "978986d1b64b3029254b15239f2248ef",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
+    "mtime": 1795012712.7540174,
+    "ast_hash": "fd85e2769021557198c459de0d063182",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
+    "mtime": 1795011164.483894,
+    "ast_hash": "f4e1ebdc2d32cfb3d40663302c96c4ff",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/build.py": {
+    "mtime": 1795012712.7540174,
+    "ast_hash": "58e3269e5cd77aca031923157d1d86d3",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/content/fa.json": {
+    "mtime": 1795012008.244775,
+    "ast_hash": "cc3e2ed2ac75f279edc5973f4d1868fc",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/run_descriptor_ablation.sh": {
+    "mtime": 1794998630.1275806,
+    "ast_hash": "c39a7d7b56e54a526a6168f9e10e7246",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/summarize_descabl.py": {
+    "mtime": 1794998781.0010526,
+    "ast_hash": "0fbb894c44ce411899d514d0f41d2a61",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/README.md": {
+    "mtime": 1795012926.1836648,
+    "ast_hash": "bb7239a23739ec06644b0da6ee222180",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
+    "mtime": 1795011164.487894,
+    "ast_hash": "88985b4355a8a44627dde041f10aba75",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/index.html": {
+    "mtime": 1795012926.2996657,
+    "ast_hash": "ca93d499544e6d49719eb060fed5a409",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/shell.html": {
+    "mtime": 1795011887.7519364,
+    "ast_hash": "b33d85796fc6fbf9e583a0cfa333213e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/01-opening-problem.html": {
+    "mtime": 1795012712.7500172,
+    "ast_hash": "c0452c18c9d73dd9de9986fbdf8c1afc",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
+    "mtime": 1795012712.7540174,
+    "ast_hash": "1890757f50dc9f02ba2e84bbf0672779",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
+    "mtime": 1795012712.7540174,
+    "ast_hash": "84491e5569d9a81b20ef133a693948bc",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
+    "mtime": 1795012712.7540174,
+    "ast_hash": "6a9bf29353ab7467ad351948676d808e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/cityscapes.jpg": {
+    "mtime": 1795011472.8173316,
+    "ast_hash": "ea675cad4a046ba4dbc890cd49b0d49f",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/da2-teaser.jpg": {
+    "mtime": 1795011524.6576245,
+    "ast_hash": "25b053b3afd4b267dd47cdd2ea310bed",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/error-a.jpg": {
+    "mtime": 1795011523.9936206,
+    "ast_hash": "8a13d6012e43691bee7879ee51aac241",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/error-b.jpg": {
+    "mtime": 1795011524.0056207,
+    "ast_hash": "4d417a2e596ec04cf0b2b1c0d293bbca",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/intro-depth.jpg": {
+    "mtime": 1795011538.9337072,
+    "ast_hash": "26517f323419c986f234ef348f07752e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/intro-rgb.jpg": {
+    "mtime": 1795011538.9297073,
+    "ast_hash": "194251df98eafab695644350016bff09",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/kitti.jpg": {
+    "mtime": 1795011472.8173316,
+    "ast_hash": "7dfea1bb5195e3a78b10586b52053ec4",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/kntu-logo.png": {
+    "mtime": 1795011473.1893334,
+    "ast_hash": "ac3d43ce11a9989c31fcf7b706e743db",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/nyu.jpg": {
+    "mtime": 1795011472.8133314,
+    "ast_hash": "393bb2e23aa22054552ff80dd98555de",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-cityscapes.jpg": {
+    "mtime": 1795012008.3447757,
+    "ast_hash": "b471238846f527d7da4f6bce45c0addf",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-kv2.jpg": {
+    "mtime": 1795012008.3087754,
+    "ast_hash": "b08e8b86f5e7f180efa8b370c6e1410f",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-nyu.jpg": {
+    "mtime": 1795011523.8176198,
+    "ast_hash": "e5978f1ab0674ebca2d34e9839060207",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/video/scale-ambiguity.mp4": {
+    "mtime": 1795011472.8133314,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/scripts/figcheck.sh": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "1e9c3f7f05c22e1cfee09adc3ea7b1d2",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/scripts/mkfigs.py": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "78a679e6c84a7114124c36b48a236b48",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/CHANGELOG.md": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "d261b885b81cb5101efa5bed189de9f1",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/SKILL.md": {
+    "mtime": 1795023291.7546942,
+    "ast_hash": "5c88633c42a7a68d9fbc384e90260c12",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/references/snippets.md": {
+    "mtime": 1795023291.746694,
+    "ast_hash": "f45307033af55ef87d4f7c102bc60c8b",
     "semantic_hash": ""
   }
 }

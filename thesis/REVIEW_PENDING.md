@@ -53,7 +53,7 @@ acknowledgement edits came from Codex (read-only) on a fixed brief.
 | 28 | main.tex | English abstract, second page | carried the Persian running head — `\pagestyle{empty}` like its first page | layout fix |
 
 - Finalize R33: `\edrep{old}{new}` → new, `\edins{X}`/`\edadd{X}` → X (un-brace `{\lr{…}}`, `{\cite{…}}`, `{\ref{…}}`, `{\fadecimal{…}}`, `{$K$}`), drop the `\eddel{…}` sentence in chapter 3, remove the `% REVIEW R33` lines. Items without markup need nothing.
-- Revert R33: `\edrep{old}{new}` → old, remove `\edins`/`\edadd`, `\eddel{X}` → X; for the unmarked items restore the files from commit `git show <finalize commit>:<file>` (the commit before this update on `refactor/final`).
+- Revert R33: `\edrep{old}{new}` → old, remove `\edins`/`\edadd`, `\eddel{X}` → X; for the unmarked items restore the files from `git show 670b1b1:<file>` (the commit before this update on `refactor/final`).
 
 ## R34 — 2026-11-18 — §4.6.3 stale model count (author to decide)
 

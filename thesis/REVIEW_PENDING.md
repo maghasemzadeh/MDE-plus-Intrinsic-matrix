@@ -21,6 +21,7 @@ its own session); its remaining marks are listed below. The macros in `tex/comma
 
 ## Still pending (chapter 5 only)
 
+- R30 (entry below): §3.2.4 one-word fix «مقیاس واقعی» → «هندسه تصویربرداری».
 - R26 (full entry below): §5.2.2 research-question answers and Table 5.1.
 - Older marks inside `chapter5.tex` that were not touched: R1, R2 (one), R6, R7 (gray/green/red blocks and the
   contributions / limitations tables), R20 items 14–15, R21 items 20–23, R25 item 8. Their ledger entries
@@ -73,3 +74,35 @@ All text regions are inside the gray R7 `edmoved` block of this subsection; the 
   answers and for the first and third piece of item 7 (un-brace the fragile units; the middle piece
   stays as R21 markup); remove the `% REVIEW R26` lines. Check against
   `git show 1f2833a:thesis/tex/chapter5.tex`.
+
+## R31 — 2026-11-18 — §3 «مدیریت و نرمال‌سازی پارامترهای درونی دوربین»: duplicate 4-D d_cam removed, points to the 9-D descriptor
+
+- `tex/chapter3.tex`, subsec:camera_descriptor (~l.76): added `\label{eq:camera_descriptor}` to the 9-D d_cam equation (compile dependency, no markup).
+- `tex/chapter3.tex`, «مدیریت و نرمال‌سازی…» (~l.340–375):
+  - edited: end of the "به‌منظور جلوگیری از ناپایداری عددی…" sentence now refers to §subsec:camera_descriptor and Eq. eq:camera_descriptor.
+  - deleted: duplicate normalization equation (f̃x=fx/W …), its "که در آن W و H…" sentence, "بردار نهایی پارامترهای دوربین به‌صورت", the 4-D d_cam equation, and "تعریف شده و همراه با … تشکیل می‌دهد.".
+  - edited: «این بردار» → «بردار d_cam».
+- Note: the two deleted equations were `equation` (numbered); while pending they are shown as `equation*` inside `\eddelbox` so they take no number. On REVERT restore them as numbered `equation` environments.
+
+
+## R30 — 2026-11-18 — §3.2.4 «مزایای مورد انتظار از ادغام صریح پارامترهای درونی»: camera "scale" → camera imaging geometry
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter3.tex | §3.2.4, first paragraph (~line 249) | «با در نظر گرفتن مقیاس واقعی دوربین» → «با در نظر گرفتن هندسه تصویربرداری دوربین» | edited |
+
+Only use of «مقیاس» in the thesis that attributed a "scale" to the camera; all other uses (absolute/physical/scene/depth scale, scale alignment) were checked and left unchanged.
+- Finalize: `\edrep{مقیاس واقعی}{هندسه تصویربرداری}` → `هندسه تصویربرداری`; remove the `% REVIEW R30` line.
+- Revert: → `مقیاس واقعی`; remove the `% REVIEW R30` line.
+
+
+## R32 — 2026-11-18 — remove every mention of Depth Anything 3 (author: the work does not use DA3 or its ideas)
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | tex/chapter3.tex | §3.2.3, paragraph «این طراحی با راهکارهای پیشین تفاوت ساختاری دارد» (~l.116) | last sentence «ساختار این انکودر از CameraEnc در Depth Anything 3 … افزوده شده است.» | deleted |
+| 2 | tex/enTitle.tex | English abstract, first paragraph (~l.30) | clause ", and Depth Anything 3 uses a camera token only for cross-view consistency with multi-view input" removed; " and" inserted before "UniDepth and Depth Pro" to close the list | deleted + edited |
+
+The bib entry `DepthAnything3` in MyReferences.bib is left in place: with no `\cite` and no `\nocite{*}` it is not printed.
+- Finalize: drop the `\eddel{…}` in both files (tidy the space before it), `\edins{ and}` → ` and`; remove the `% REVIEW R32` lines.
+- Revert: `\eddel{X}` → X (un-brace `{\lr{…}}` / `~{\cite{…}}` in chapter 3); delete `\edins{ and}`; remove the `% REVIEW R32` lines.

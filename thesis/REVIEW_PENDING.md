@@ -55,17 +55,18 @@ acknowledgement edits came from Codex (read-only) on a fixed brief.
 - Finalize R33: `\edrep{old}{new}` → new, `\edins{X}`/`\edadd{X}` → X (un-brace `{\lr{…}}`, `{\cite{…}}`, `{\ref{…}}`, `{\fadecimal{…}}`, `{$K$}`), drop the `\eddel{…}` sentence in chapter 3, remove the `% REVIEW R33` lines. Items without markup need nothing.
 - Revert R33: `\edrep{old}{new}` → old, remove `\edins`/`\edadd`, `\eddel{X}` → X; for the unmarked items restore the files from `git show 670b1b1:<file>` (the commit before this update on `refactor/final`).
 
-## R34 — 2026-11-18 — §4.6.3 stale model count (author to decide)
+## R35 — 2026-11-18 — hypothesis 1 without metric names (author's choice)
 
 | # | File | Location | Change | Kind |
 |---|---|---|---|---|
-| 1 | chapter4.tex | `subsec:md_campaign` (p. 85) | «ده مدل …: سه مدل با ViT-L و هفت مدل با ViT-S» → «بیش از ده مدل با دو اندازه انکودر ViT-S و ViT-L»; the old breakdown predates the relative pairs — Table 4.16 alone shows four ViT-L models, and `results/multidomain/` holds more than ten trained models | edited |
+| 1 | chapter1.tex | `sec:research_hypotheses`, hypothesis 1 (p. 5) | «در معیارهای مطلق (AbsRel و RMSE)» → «در ارزیابی مطلق», so that the hypothesis matches its evidence table (`tab:basic_model_silog`, SiLog) | edited |
 
-- Finalize: `\edrep{old}{new}` → new; remove the `% REVIEW R34` line. Revert: → old.
+- Finalize: `\edrep{old}{new}` → new; remove the `% REVIEW R35` line. Revert: → old (un-brace the two `{\lr{…}}`).
+
+R34 (§4.6.3, «بیش از ده مدل با دو اندازه انکودر») was accepted by the author on 2026-11-18 and is final.
 
 ## Noted in the final read, left unchanged (author decisions)
 
-- Hypothesis 1 (§1.6) names AbsRel and RMSE, but its evidence table (`tab:basic_model_silog`) reports SiLog.
 - The first paragraph of the Persian abstract is general, the English one names CAM-Convs / Metric3D / UniDepth / Depth Pro.
 - Abstract: «از نظر علی ضروری»; §4.7.2: the findings «ادعای لزوم … را اثبات نمی‌کنند» (model-level reliance vs necessity in principle).
 - `alg:training_pipeline` writes the camera encoder as `MLP(d_cam)`; the text defines it as MLP + four transformer blocks + gate.

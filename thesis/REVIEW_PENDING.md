@@ -72,6 +72,15 @@ R34 (§4.6.3, «بیش از ده مدل با دو اندازه انکودر») w
 - `alg:training_pipeline` writes the camera encoder as `MLP(d_cam)`; the text defines it as MLP + four transformer blocks + gate.
 - §4.6 opening: «این زنجیره همان AbsRel برابر ۰٫۲۰۷ را … (زیربخش 4.4.3)» — that subsection does not print 0.207.
 
+## R36 — 2026-11-18 — external judge changed (author's request)
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | faTitle.tex | `\externaljudge` (committee page, p. 6) | «دکتر محمدرضا محمدی» → «دکتر محمدحسین رهبان»; rank «استادیار» unchanged | metadata, unmarked |
+| 2 | faTitle.tex | acknowledgement | same name change, marked with `\edrep` | edited |
+
+- Finalize: `\edrep{old}{new}` → new; remove the `% REVIEW R36` line. Revert: → old, and restore `\externaljudge{دکتر محمدرضا محمدی}`.
+
 ## R37 — 2026-11-18 — abstract rewritten to one page, keywords updated (author's request)
 
 Author's brief: motivate the problem, state current solutions and their gap briefly (without
@@ -92,3 +101,57 @@ what the benefit is; one page in the final state. Content and numbers fixed by C
 - One-page check: with `\showreviewfalse` in an isolated copy, the Persian abstract with its keywords ends on one page (19 text lines, about one line to spare) and the English one on one page. While marked, old and new text together take more than one page.
 - Finalize: drop both `eddeleted` blocks, keep the bodies of the `edadded` blocks without the environment lines; in `\keywords`: `\edrep{old}{new}` → new, drop `\eddel{…}`, `\edins{X}` → X; in `\latinkeywords`: each `\texorpdfstring{…}{X}` → X (the one with an empty second argument is dropped); remove the four `% REVIEW R37` lines.
 - Revert: drop the `edadded` blocks, unwrap the `eddeleted` blocks (`\eddel{X}` → X, un-brace `{\lr{…}}`, `{\fadecimal{…}}`, `{$\delta_1$}`), restore both keyword lists; reference commit for the old text: ec0e0ad.
+
+## R38 — 2026-11-18 — first-of-its-kind parenthetical removed from the conclusion (author's request)
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter5.tex | chapter 5 conclusion, sentence starting «روش پیشنهادی … ماتریس کالیبراسیون معلوم را» (line ≈ 218) | parenthetical «(تا آنجا که نویسنده اطلاع دارد، برای نخستین‌بار در یک مدل بنیادین عمق تک‌تصویری)» removed; the rest of the sentence is unchanged | deleted (inline, `\edrep{old}{}`) |
+
+- Finalize: delete the `\edrep{…}{}` call and one of the two spaces around it; remove the `% REVIEW R38` line. Revert: `\edrep{old}{}` → old; remove the `% REVIEW R38` line.
+
+## R39 — 2026-11-18 — DIODE outdoor scale error removed from the limitations (author's request)
+
+Author's instruction: the DIODE outdoor scale-error discussion must not be in the limitations, and the
+thesis should not keep pointing at it.
+
+| # | File | Location | Change | Kind |
+|---|---|---|---|---|
+| 1 | chapter5.tex | §5.3 limitations, paragraph «مهم‌ترین محدودیت مدل نهایی…» | clause «؛ در DIODE بیرونی نیز خطای مقیاس سراسری با نسبت مقیاس ۰٫۶۱ دیده شد که علت آن تعیین نشد» removed; the sentence now ends at «هم‌تراز بود.» | deleted (inline, `\edrep{old}{}`) |
+| 2 | chapter5.tex | `tab:limitations_future` | row «خطای مقیاس در DIODE بیرونی» removed | deleted row (`\eddelrow`) |
+
+| 3 | chapter5.tex | §5.4 future work, paragraph «آزمایش چندمجموعه‌ای … مسیر مشخص دیگری نیز پیش می‌گذارد» | the two-item list is dropped: its DIODE item («بررسی منشا خطای مقیاس سراسری … بر DIODE بیرونی…») is removed and its first item (repeat with several seeds) is folded into one sentence; «چند مسیر مشخص دیگر» → «مسیر مشخص دیگری» | edited + deleted list (`eddeleted`) |
+| 4 | chapter4.tex | §4.6, last sentence of the paragraph «در DIODE بیرونی، رتبه‌بندی سه مدل…» | «علت این خطای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در بخش … واگذار می‌شود.» removed | deleted (inline, `\edrep{old}{}`) |
+
+- Items 3 and 4 were chosen by the author in a follow-up question the same day. Still in the thesis by the author's choice: the rest of the §4.6 paragraph that explains the DIODE outdoor row of `tab:multidomain_all` (scale ratio 0.61) and the coefficient-of-variation sentence after `tab:md_encoder_protocol`.
+- Codex read-only pass on item 3: meaning of the first list item kept, grammar and half-spaces fine. Its rewrite was not adopted (it moved «به‌ویژه» onto «حسگرهای دیده‌نشده» and dropped «مستقیما»). It noted that the sentence overlaps with the preceding paragraph on multiple seeds; that overlap was already there with the list.
+- Finalize: items 1 and 4: delete the `\edrep{…}{}` call (item 4 with the space before it); item 2: delete the three `\eddelrow` row lines; item 3: `\edrep{old}{new}` → new (twice) and delete the whole `eddeleted` block; remove the five `% REVIEW R39` lines.
+- Revert: items 1 and 4: `\edrep{old}{}` → old (un-brace `{\lr{DIODE}}`, `{\fadecimal{۰٫۶۱}}`, `{بخش~\ref{…}}`); item 2: drop `\eddelrow`, unwrap the three `\eddel{…}` cells; item 3: `\edrep{old}{new}` → old (twice), unwrap the `eddeleted` block and its two `\eddel{…}` (un-brace `{\proposedmodel{}}`, `{\lr{DIODE}}`); remove the five `% REVIEW R39` lines.
+
+## R40 — 2026-11-18 — figures with overlapping boxes, labels or legends redrawn (author's request)
+
+The author reported charts whose text and shapes ran into each other. Every vector figure was rendered
+and checked; nine were redrawn. No number, label wording, colour or caption changed; only layout.
+Figures are not colour-highlighted (same convention as the R33 figure fixes): each redrawn drawing
+starts with a `% REVIEW R40 (figure redrawn: …)` comment line.
+
+| # | File | Location (printed page) | Change | Kind |
+|---|---|---|---|---|
+| 1 | commands.tex | before the `thblock` style block | `\tikzset{every picture/.append style={execute at begin picture={\setstretch{1}}}}`: single line spacing inside every tikzpicture (the body's double spacing made multi-line nodes taller than their layout). Also tightens the multi-line nodes of the figures that were not redrawn (1.1, 2.3, 4.1) | added |
+| 2 | chapter2.tex | `fig:scale_ambiguity`, Fig. 2.1 (p. 12) | panel titles moved inside taller panels; camera boxes placed relative to each other; equation no longer on the panel edge; «تصویر ثبت‌شده یکسان» broken as two lines | edited (layout) |
+| 3 | chapter3.tex | `fig:proposed_architecture`, Fig. 3.1 (p. 37) | camera branch stacked below the encoder with relative positioning (boxes overlapped before); token-sequence caption above the tokens; loss note above the decoder; γ note beside the gate with a dotted connector; `\resizebox` replaced by `adjustbox` `max width=\textwidth` | edited (layout) |
+| 4 | chapter3.tex | `fig:conditioning_mechanisms`, Fig. 3.2 (p. 38) | three equal panels 4.6 cm wide and tall enough for the notes (notes ran over the panel frame before) | edited (layout) |
+| 5 | chapter3.tex | `fig:focal_jitter`, Fig. 3.4 (p. 48) | the α distribution sits on the branch between the input and the two samples (it covered both sample boxes before); arms placed below the samples | edited (layout) |
+| 6 | chapter4.tex | `fig:eval_protocols`, Fig. 4.2 (p. 67) | three separate columns (the two note boxes covered the left and right columns before); protocol names on the horizontal run of each branch; orthogonal dashed connector to the absolute branch | edited (layout) |
+| 7 | chapter4.tex | `fig:fov_generalization`, Fig. 4.4 (p. 70) | y ticks as fixed decimals (were «۹·۱۰⁻²»); legend moved to the empty lower-right corner (it covered the control line); marker fill follows the line colour | edited (layout) |
+| 8 | chapter4.tex | `fig:intrinsics_sensitivity`, Fig. 4.8 (p. 76) | legend moved above the axis (it covered the response line); marker fill follows the line colour | edited (layout) |
+| 9 | chapter4.tex | `fig:k_knockout`, Fig. 4.9 (p. 78) | legend moved above the axis in two columns; the floating label «خطای پایه مدل پیشنهادی در حالت صحیح» is now a legend entry for the dashed line; `ymax` 0.60 → 0.50 (headroom for the old legend no longer needed). The pending `% REVIEW R33` comment inside this figure is kept | edited (layout) |
+| 10 | chapter4.tex | `fig:multidomain_absrel`, Fig. 4.10 (p. 80) | bars 18 pt wide with 3 pt gaps so each value label fits over its own bar (labels ran into the neighbouring bars); one swatch per legend entry | edited (layout) |
+
+- Checked and left as they were: Figs. 1.1, 2.2, 2.3, 4.1, 4.3, 4.5 and the external PDF of Fig. 4.7.
+- Method: each figure was drawn and rendered in an isolated copy with
+  `.claude/skills/tikz-figure-review/scripts/figcheck.sh`, then `thesis/build.sh` was run and all fifteen
+  vector figures were inspected in `main.pdf` (149 pages, no LaTeX error).
+- Finalize: remove the ten `% REVIEW R40` comment lines (one in `commands.tex`, nine above the drawings).
+- Revert: restore the drawing of each figure (the lines between `\centering` and `\caption`) and remove
+  the `\tikzset{every picture…}` line with its comments; reference commit for the old drawings: 7e087c3.

@@ -18,12 +18,18 @@
 
 \begin{figure}[htbp]
  \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
 %
-  \begin{tikzpicture}[font=\small]
+  \begin{tikzpicture}[font=\footnotesize]
+ \tikzset{
+  ptitle/.style={font=\footnotesize, anchor=north, text=thInk},
+  cam/.style={thblock, fill=white, text width=2.5cm, font=\footnotesize},
+ }
 
     %%% ---------- پنل (الف): ابهام مقیاس روی یک پرتو دید (سمت راست) ----------
  \begin{scope}[xshift=7.7cm]
-        \fill[thPanel, rounded corners=3pt] (-0.55,-2.35) rectangle (6.35,2.45);
+        \fill[thPanel, rounded corners=3pt] (-0.55,-2.90) rectangle (6.35,2.90);
+        \node[ptitle] at (2.90,2.72) {\rl{(الف) ابهام مقیاس روی یک پرتو دید}};
 
         % بدنه دوربین و مرکز نوری
         \draw[thick, draw=thInk, fill=white] (-0.10,-0.30) rectangle (0.50,0.30);
@@ -43,36 +49,34 @@
 
         % جسم نزدیک و کوچک
         \fill[thControl, opacity=0.9] (2.28,-0.51) rectangle (2.52,0.51);
-        \node[thnote, text=thControl, anchor=north, align=center] at (2.40,-0.60)
+        \node[thnote, text=thControl, anchor=north, align=center] at (2.40,-0.75)
    {\rl{جسم نزدیک}\\ \rl{و کوچک}};
 
         % جسم دور و بزرگ
         \fill[thIdeal, opacity=0.9] (4.88,-1.21) rectangle (5.12,1.21);
-        \node[thnote, text=thIdeal, anchor=north, align=center] at (5.00,-1.30)
+        \node[thnote, text=thIdeal, anchor=north, align=center] at (5.00,-1.50)
    {\rl{جسم دور}\\ \rl{و بزرگ}};
-
-        \node[font=\small, anchor=south] at (2.90,1.95) {\rl{(الف) ابهام مقیاس روی یک پرتو دید}};
  \end{scope}
 
     %%% ---------- پنل (ب): هم‌ارزی $(f,Z)$ و $(\alpha f, \alpha Z)$ (سمت چپ) ----------
  \begin{scope}
-        \fill[thPanelAlt, rounded corners=3pt] (-0.55,-2.35) rectangle (6.35,2.45);
+        \fill[thPanelAlt, rounded corners=3pt] (-0.55,-2.90) rectangle (6.35,2.90);
+        \node[ptitle] at (2.90,2.72) {\rl{(ب) هم‌ارزی دقیق کانون و مقیاس}};
 
-        \node[thblock, fill=white, text width=2.55cm] (camA) at (1.15,1.05)
+        \node[cam] (camA) at (1.25,1.25)
    {\rl{دوربین ۱}\\[1pt] \rl{کانون $f$}\\ \rl{عمق صحنه $Z$}};
-        \node[thblock, fill=white, text width=2.55cm] (camB) at (1.15,-1.05)
+        \node[cam, below=4mm of camA] (camB)
    {\rl{دوربین ۲}\\[1pt] \rl{کانون $\alpha f$}\\ \rl{عمق صحنه $\alpha Z$}};
 
-        \node[thdata, fill=white, text width=1.9cm] (img) at (4.75,0)
-   {\rl{تصویر ثبت‌شده یکسان}};
+        \node[thdata, fill=white, text width=1.9cm, font=\footnotesize] (img)
+   at ($(camA.south)!0.5!(camB.north)+(3.65,0)$)
+   {\rl{تصویر ثبت‌شده}\\ \rl{یکسان}};
 
-        \draw[tharrow] (camA) -- (img);
-        \draw[tharrow] (camB) -- (img);
+        \draw[tharrow] (camA.east) -- (img);
+        \draw[tharrow] (camB.east) -- (img);
 
-        \node[thnote, anchor=north, text width=5.7cm] at (2.90,-1.75)
+        \node[font=\footnotesize, anchor=north, text=thInk] at ($(camB.south)+(1.65,-0.20)$)
    {$u=\dfrac{f X}{Z}=\dfrac{\alpha f X}{\alpha Z}$};
-
-        \node[font=\small, anchor=south] at (2.90,1.95) {\rl{(ب) هم‌ارزی دقیق کانون و مقیاس}};
  \end{scope}
 
  \end{tikzpicture}

@@ -275,6 +275,11 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  },
 }
 
+% REVIEW R40 (figure fix: single line spacing inside every tikzpicture)
+% متن بدنه با فاصله خط دوبرابر حروف‌چینی می‌شود؛ درون شکل‌ها این فاصله جعبه‌های
+% چندسطری را بلندتر از چیدمان طراحی‌شده می‌کند و گره‌ها روی هم می‌افتند.
+% بنابراین درون هر tikzpicture فاصله خط یک‌برابر است.
+\tikzset{every picture/.append style={execute at begin picture={\setstretch{1}}}}
 \tikzset{
  thblock/.style={draw=thInk!60, thick, rounded corners=2pt, align=center,
          inner sep=5pt, font=\small},

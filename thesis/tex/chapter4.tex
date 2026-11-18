@@ -391,46 +391,45 @@
 
 \begin{figure}[htbp]
   \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}[font=\scriptsize]
   \tikzset{
-   st/.style={thblock, fill=white, text width=3.55cm, minimum height=0.75cm,
+   st/.style={thblock, fill=white, text width=3.5cm, minimum height=0.8cm,
          inner sep=3pt, font=\scriptsize},
+   an/.style={thblock, text width=3.9cm, inner sep=4pt, font=\scriptsize},
   }
-    \node[thdata, text width=3.6cm, minimum height=0.8cm, font=\scriptsize]
-    (src) at (6.9,1.75) {\rl{پیش‌بینی مدل $D^{\mathrm{pred}}$}};
+    % سه ستون جدا از هم: پروتکل مطلق (چپ)، توضیح‌ها (میانه)، پروتکل نسبی (راست)
+    \node[thdata, text width=3.4cm, minimum height=0.8cm, font=\scriptsize]
+    (src) at (0,1.90) {\rl{پیش‌بینی مدل $D^{\mathrm{pred}}$}};
 
     %%% ---------- شاخه راست: پروتکل نسبی ----------
-    \node[st, fill=thPanelAlt] (r1) at (10.6,0.30) {\rl{تبدیل به فضای عمق معکوس}};
-    \node[st, fill=thPanelRed, draw=thControl, line width=1.1pt] (r2) at (10.6,-1.15)
+    \node[st, fill=thPanelAlt] (r1) at (4.9,0.35) {\rl{تبدیل به فضای عمق معکوس}};
+    \node[st, fill=thPanelRed, draw=thControl, line width=1.1pt] (r2) at (4.9,-1.15)
     {\rl{برآورد $s$ و $t$ با کمترین مربعات، به‌ازای هر تصویر}};
-    \node[st, fill=thPanelAlt] (r3) at (10.6,-2.60) {\rl{محدودسازی به بازه معتبر ارزیابی}};
-    \node[st, fill=thPanelGray] (r4) at (10.6,-4.05) {\rl{محاسبه معیارها}};
+    \node[st, fill=thPanelAlt] (r3) at (4.9,-2.65) {\rl{محدودسازی به بازه معتبر ارزیابی}};
+    \node[st, fill=thPanelGray] (r4) at (4.9,-4.15) {\rl{محاسبه معیارها}};
 
-    \draw[tharrow] (src) -| (r1);
+    \draw[tharrow] (src.east) -| node[thnote, pos=0.25, above=1pt] {\rl{پروتکل نسبی}} (r1.north);
     \draw[tharrow] (r1) -- (r2);
     \draw[tharrow] (r2) -- (r3);
     \draw[tharrow] (r3) -- (r4);
-    \node[thnote, anchor=south] at (10.6,0.95) {\rl{پروتکل نسبی}};
 
     %%% ---------- شاخه چپ: پروتکل مطلق ----------
-    \node[st, fill=thPanelGray] (m1) at (3.2,-4.05) {\rl{محاسبه معیارها}};
-    \node[st, fill=thPanelGreen, draw=thIdeal, line width=1.1pt] (m0) at (3.2,-1.15)
+    \node[st, fill=thPanelGray] (m1) at (-4.9,-4.15) {\rl{محاسبه معیارها}};
+    \node[st, fill=thPanelGreen, draw=thIdeal, line width=1.1pt] (m0) at (-4.9,-1.15)
     {\rl{هیچ ترازی اعمال نمی‌شود؛}\\ \rl{عمق مطلق مستقیما با مرجع مقایسه می‌شود}};
-    \draw[tharrow] (src) -| (m0);
+    \draw[tharrow] (src.west) -| node[thnote, pos=0.25, above=1pt] {\rl{پروتکل مطلق}} (m0.north);
     \draw[tharrow] (m0) -- (m1);
-    \node[thnote, anchor=south] at (3.2,0.95) {\rl{پروتکل مطلق}};
 
-    %%% ---------- حاشیه‌نویسی‌ها ----------
-    \node[thblock, fill=thPanelRed, draw=thControl, text width=3.9cm,
-     font=\scriptsize] (note1) at (6.9,-1.15)
+    %%% ---------- حاشیه‌نویسی‌ها (ستون میانه) ----------
+    \node[an, fill=thPanelRed, draw=thControl] (note1) at (0,-1.15)
     {\rl{در این مرحله، مقیاس مطلق صحنه از ارزیابی حذف می‌شود یعنی
      دقیقا همان کمیتی که ماتریس کالیبراسیون دوربین در اختیار مدل می‌گذارد}};
-    \draw[thdashed, draw=thControl] (note1) -- (r2);
+    \draw[thdashed, draw=thControl] (note1.east) -- (r2.west);
 
-    \node[thblock, fill=thPanelGreen, draw=thIdeal, text width=3.9cm,
-     font=\scriptsize] (note2) at (6.9,-3.40)
+    \node[an, fill=thPanelGreen, draw=thIdeal, below=6mm of note1] (note2)
     {\rl{تنها مسیری که سهم پارامترهای درونی دوربین در آن قابل مشاهده است}};
-    \draw[thdashed, draw=thIdeal] (note2) -- (m0);
+    \draw[thdashed, draw=thIdeal] (note2.west) -| ([xshift=9mm]m0.south);
   \end{tikzpicture}
   \caption[مقایسه پروتکل‌های ارزیابی]{مقایسه دو پروتکل ارزیابی}
   \label{fig:eval_protocols}
@@ -537,6 +536,7 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 
 \begin{figure}[htbp]
   \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -545,14 +545,16 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
     ymin=0.078, ymax=0.118,
     xtick={1.0,1.4,1.8},
     xticklabels={{$1.0$},{$1.4$},{$1.8$}},
+    ytick={0.08,0.09,0.10,0.11}, scaled y ticks=false,
+    y tick label style={/pgf/number format/fixed, /pgf/number format/precision=2, /pgf/number format/fixed zerofill},
     xlabel={\rl{ضریب زوم برش مرکزی قطعی (با به‌روزرسانی دقیق ماتریس کالیبراسیون دوربین)}},
     ylabel={\lr{AbsRel}$\downarrow$},
-    legend style={at={(0.03,0.97)}, anchor=north west},
+    legend pos=south east,
   ]
-  \addplot[draw=thControl, mark=square*, mark size=2.6pt]
+  \addplot[color=thControl, mark=square*, mark size=2.6pt]
     coordinates {(1.0,0.107) (1.4,0.107) (1.8,0.112)};
   \addlegendentry{\rl{\controlmodel{}}}
-  \addplot[draw=thProposed, mark=*, mark size=2.6pt]
+  \addplot[color=thProposed, mark=*, mark size=2.6pt]
     coordinates {(1.0,0.084) (1.4,0.092) (1.8,0.101)};
   \addlegendentry{\rl{\proposedmodel{}}}
   \end{axis}
@@ -704,6 +706,7 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 
 \begin{figure}[htbp]
   \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -716,17 +719,18 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
     yticklabels={{$0.6$},{$0.8$},{$1.0$},{$1.25$},{$1.6$}},
     xlabel={\rl{ضریب مقیاس مصنوعی فاصله کانونی}},
     ylabel={\rl{نسبت عمق پیش‌بینی‌شده}},
-    legend style={at={(0.03,0.97)}, anchor=north west},
+    % راهنما بیرون از محور: درون محور روی خط پاسخ مدل می‌افتاد
+    legend style={at={(0.5,1.04)}, anchor=south, legend cell align=right},
   ]
-  \addplot[draw=thIdeal, dashed, line width=1.1pt, mark=none]
+  \addplot[color=thIdeal, dashed, line width=1.1pt, mark=none]
     coordinates {(0.6,0.6) (1.6,1.6)};
   \addlegendentry{\rl{ایده‌آل هندسی، شیب $1$}}
 
-  \addplot[draw=thProposed, mark=*, mark size=2.4pt]
+  \addplot[color=thProposed, mark=*, mark size=2.4pt]
     coordinates {(0.6,0.6240) (0.8,0.7946) (1.0,1.0) (1.25,1.2604) (1.6,1.5997)};
   \addlegendentry{\rl{پیشنهادی، \focaljitterconfig{}، شیب $0.97$}}
 
-  \addplot[draw=thBase, mark=triangle*, mark size=2.8pt]
+  \addplot[color=thBase, mark=triangle*, mark size=2.8pt]
     coordinates {(0.6,0.9698) (0.8,0.9867) (1.0,1.0) (1.25,1.0135) (1.6,1.0286)};
   \addlegendentry{\rl{پیشنهادی، \zoomcropconfig{}، شیب $0.06$}}
 
@@ -769,17 +773,20 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 \begin{figure}[htbp]
   \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
     width=0.80\textwidth, height=6.4cm,
     xmin=0.45, xmax=4.55,
-    ymin=0, ymax=0.60,
+    ymin=0, ymax=0.50,
     xtick={1,2,3,4},
     xticklabels={{\rl{ماتریس کالیبراسیون دوربین صحیح}},{\rl{ماتریس کالیبراسیون دوربین حذف‌شده}},{$f\times 0.7$},{$f\times 1.4$}},
     x tick label style={font=\scriptsize, text width=2.4cm, align=center},
     ylabel={\lr{AbsRel}$\downarrow$},
-    legend style={at={(0.03,0.97)}, anchor=north west},
+    % راهنما بیرون از محور: درون محور روی میله‌ها و ستاره‌ها می‌افتاد
+    legend style={at={(0.5,1.04)}, anchor=south, legend columns=2, legend cell align=right,
+           /tikz/every even column/.append style={column sep=10pt}},
   ]
   \addplot[ybar, area legend, bar width=12pt, bar shift=0pt, draw=thProposed, fill=thProposed!70]
     coordinates {(0.83,0.0836) (1.83,0.1764) (2.83,0.2898) (3.83,0.4332)};
@@ -796,8 +803,8 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
     % REVIEW R33 (figure fix: baseline line restored; legend symbol X -> c as in the text)
     \draw[dashed, thick, draw=thIdeal]
     (axis cs:0.45,0.0836) -- (axis cs:4.55,0.0836);
-    \node[thnote, text=thIdeal, anchor=south west]
-    at (axis cs:0.55,0.190) {\rl{خطای پایه \proposedmodel{} در حالت صحیح}};
+    \addlegendimage{line legend, dashed, thick, draw=thIdeal}
+    \addlegendentry{\rl{خطای پایه \proposedmodel{} در حالت صحیح}}
   \end{axis}
   \end{tikzpicture}
   \caption[مقایسه حذف و تحریف ماتریس دوربین]{مقایسه حذف و تحریف ماتریس دوربین در دو پیکربندی آموزشی با خطای مشاهده‌شده و پیش‌بینی هندسی متناظر.}
@@ -845,24 +852,28 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 \begin{figure}[htbp]
   \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
-    ybar,
+    ybar=3pt,
+    area legend,
     width=0.92\textwidth, height=6.8cm,
-    bar width=11pt,
-    enlarge x limits=0.14,
+    bar width=18pt,
+    enlarge x limits=0.17,
     ymin=0, ymax=0.37,
     symbolic x coords={NYU, City, KOne, KTwo},
     xtick=data,
     xticklabels={{\lr{NYUv2}},{\lr{Cityscapes}},{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v1}}},{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v2}}}},
     x tick label style={font=\scriptsize, align=center},
     nodes near coords,
-    nodes near coords style={font=\tiny, /pgf/number format/fixed,
+    nodes near coords style={font=\tiny, text=thInk, inner sep=1.5pt,
+                 /pgf/number format/fixed,
                  /pgf/number format/precision=3,
                  /pgf/number format/fixed zerofill},
     ylabel={\rl{خطای \lr{AbsRel} (کمتر بهتر است)}},
-    legend style={at={(0.5,-0.24)}, anchor=north, legend columns=-1},
+    legend style={at={(0.5,-0.24)}, anchor=north, legend columns=-1,
+           /tikz/every even column/.append style={column sep=8pt}},
   ]
   \addplot[draw=thBase, fill=thBase!45]
     coordinates {(NYU,0.207) (City,0.243) (KOne,0.196) (KTwo,0.246)};
@@ -945,7 +956,8 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 مقایسه \controlmodel{} با \publishedbasemodel{} نکته مهم دیگری را نشان می‌دهد. \controlmodel{} همان داده، افزونه‌سازی و برنامه آموزشی \proposedmodel{} را دریافت کرد و تنها ماتریس کالیبراسیون دوربین را نمی‌دید؛ با این حال، بر سه حسگر از چهار حسگر \lr{SUN RGB-D} از \publishedbasemodel{} ضعیف‌تر است. \lr{AbsRel} آن بر \lr{Kinect v1}، \lr{RealSense} و \lr{Xtion} به‌ترتیب ۶۱، ۳۷ و ۲۲ درصد بیشتر از \publishedbasemodel{} است و $\delta_1$ آن نیز در هر سه حسگر به‌طور معنادار کمتر است. در همین سه حسگر، \proposedmodel{} بر \lr{Kinect v1} در \lr{AbsRel} و \lr{RMSE} به‌طور معنادار از \publishedbasemodel{} دقیق‌تر و بر \lr{RealSense} و \lr{Xtion} در \lr{AbsRel} و $\delta_1$ هم‌تراز آن است. بنابراین آموزش چندمجموعه‌ای با افزونه‌سازی دوربین، اگر ماتریس کالیبراسیون دوربین در دسترس مدل نباشد، می‌تواند تعمیم صفرنمونه مدل پایه را کاهش دهد؛ همان آموزش با ماتریس کالیبراسیون دوربین این افت را ندارد. این الگو با طراحی آزمایش سازگار است: افزونه‌سازی دوربین هندسه تصویر را بدون تغییر عمق صحنه تغییر می‌دهد و این تغییر تنها در ماتریس کالیبراسیون دوربین به‌روزشده ثبت می‌شود (زیربخش~\ref{subsec:focal_jitter_results})؛ مدلی که این ماتریس را نمی‌بیند، نمی‌تواند تغییر هندسه ناشی از دوربین را از تغییر واقعی عمق تشخیص دهد. خطای اضافه \controlmodel{} نیز عمدتا از جنس مقیاس است: نسبت مقیاس آن بر \lr{Kinect v1} \fadecimal{۱٫۲۵} است، در برابر \fadecimal{۱٫۰۸} برای \proposedmodel{}، در حالی که خطای شکل دو مدل تقریبا برابر است (\fadecimal{۰٫۱۲۲} و \fadecimal{۰٫۱۱۹}).
 
-در \lr{DIODE} بیرونی، رتبه‌بندی سه مدل بر اساس معیار ارزیابی متفاوت است (جدول~\ref{tab:multidomain_all}): \proposedmodel{} کمترین \lr{AbsRel} را دارد، اما $\delta_1$ آن کمتر و \lr{RMSE} آن بیشتر از دو مدل دیگر است. دلیل این تفاوت، جهت خطای مقیاس است؛ \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷}). \lr{AbsRel} برآورد بیش‌ازحد نزدیک را حداکثر به‌اندازهٔ ۱ جریمه می‌کند، اما برای برآورد بیش‌ازحد دور کران بالایی ندارد؛ در مقابل، $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد. خطای \proposedmodel{} در این مجموعه عمدتاً خطای مقیاس سراسری است و خطای شکل آن به خطای دو مدل دیگر نزدیک است. علت این خطای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در بخش~\ref{sec:chapter5_future_work} واگذار می‌شود.
+% REVIEW R39
+در \lr{DIODE} بیرونی، رتبه‌بندی سه مدل بر اساس معیار ارزیابی متفاوت است (جدول~\ref{tab:multidomain_all}): \proposedmodel{} کمترین \lr{AbsRel} را دارد، اما $\delta_1$ آن کمتر و \lr{RMSE} آن بیشتر از دو مدل دیگر است. دلیل این تفاوت، جهت خطای مقیاس است؛ \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷}). \lr{AbsRel} برآورد بیش‌ازحد نزدیک را حداکثر به‌اندازهٔ ۱ جریمه می‌کند، اما برای برآورد بیش‌ازحد دور کران بالایی ندارد؛ در مقابل، $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد. خطای \proposedmodel{} در این مجموعه عمدتاً خطای مقیاس سراسری است و خطای شکل آن به خطای دو مدل دیگر نزدیک است. \edrep{علت این خطای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در {بخش~\ref{sec:chapter5_future_work}} واگذار می‌شود.}{}
 
 \subsection[اثر اندازه انکودر و نوع مدل در آموزش چندمجموعه‌ای: مطلق در برابر نسبی]{اثر اندازه انکودر و نوع مدل در آموزش چندمجموعه‌ای: مطلق در برابر نسبی}
 \label{subsec:revised_cross_dataset}

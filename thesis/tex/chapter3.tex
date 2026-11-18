@@ -125,64 +125,72 @@ f_x & 0 & c_x \\
 
 \begin{figure}[htbp]
  \centering
- \resizebox{\textwidth}{!}{%
-  \begin{tikzpicture}[font=\small]
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
+ \begin{adjustbox}{max width=\textwidth}%
+  \begin{tikzpicture}[font=\footnotesize, node distance=5mm]
  \tikzset{
-  stage/.style={thblock, minimum height=1.35cm, text width=2.75cm},
-  io/.style={thdata, minimum height=1.15cm, text width=2.35cm},
+  stage/.style={thblock, font=\footnotesize, minimum height=1.25cm, text width=2.6cm},
+  io/.style={thdata, font=\footnotesize, minimum height=1.25cm, text width=2.1cm},
+  cam/.style={thblock, font=\footnotesize, minimum height=1.05cm, text width=4.1cm},
   tok/.style={draw=thInk!55, thick, minimum width=0.42cm, minimum height=0.42cm,
      inner sep=0pt, rounded corners=1pt},
  }
 
     %%% ---------- مسیر اصلی تصویر (راست به چپ) ----------
-    \node[io, fill=thPanelGray] (img) at (12.9, 1.30) {\rl{تصویر ورودی $I$}};
-    \node[stage, fill=thPanel] (enc) at ( 9.5, 1.30) {\rl{انکودر بینایی}\\ \lr{DINOv2}\\[1pt] \rl{\scriptsize (فریزشده)}};
-    \node[io, fill=white] (feat) at ( 6.3, 1.30) {\rl{ویژگی‌های چندمقیاسی}};
-    \node[stage, fill=thPanelGreen](dec) at ( 3.1, 1.30) {\rl{دیکودر \lr{DPT}}\\[1pt] \rl{\scriptsize (آموزش‌پذیر)}};
-    \node[io, fill=thPanelGray] (out) at (-0.1, 1.30) {\rl{نقشه عمق مطلق $D$}};
+    \node[stage, fill=thPanel] (enc) {\rl{انکودر بینایی}\\ \lr{DINOv2}\\[1pt] \rl{\scriptsize (فریزشده)}};
+    \node[io, fill=thPanelGray, right=of enc] (img) {\rl{تصویر ورودی $I$}};
+    \node[io, fill=white, left=of enc] (feat) {\rl{ویژگی‌های}\\ \rl{چندمقیاسی}};
+    \node[stage, fill=thPanelGreen, left=of feat](dec) {\rl{دیکودر \lr{DPT}}\\[1pt] \rl{\scriptsize (آموزش‌پذیر)}};
+    \node[io, fill=thPanelGray, left=of dec] (out) {\rl{نقشه عمق}\\ \rl{مطلق $D$}};
 
     \draw[tharrow] (img) -- (enc);
     \draw[tharrow] (enc) -- (feat);
     \draw[tharrow] (feat) -- (dec);
     \draw[tharrow] (dec) -- (out);
 
-    %%% ---------- دنباله توکن ورودی انکودر ----------
-    \node[tok, fill=thAccent!35, draw=thAccent, line width=1pt] (t0) at (11.10,3.35) {};
-    \node[tok, fill=thPanel] (t1) at (10.60,3.35) {};
-    \node[tok, fill=white] (t2) at (10.10,3.35) {};
-    \node[tok, fill=white] (t3) at ( 9.60,3.35) {};
-    \node[tok, fill=white] (t4) at ( 9.10,3.35) {};
-    \node[tok, fill=white] (t5) at ( 8.60,3.35) {};
-    \node[font=\scriptsize, anchor=east] at (8.30,3.35) {$\cdots$};
-    \node[thnote, text=thAccent, anchor=west] at (11.40,3.35) {\rl{توکن دوربین}};
-    \node[thnote, anchor=north] at (9.85,3.05) {\rl{دنباله توکن‌های ورودی انکودر (توکن کلاس و توکن‌های وصله)}};
-    \draw[tharrow] (9.85,3.10) -- (9.85,2.00);
+    %%% ---------- دنباله توکن ورودی انکودر (بالای انکودر) ----------
+    \coordinate (tokc) at ($(enc.north)+(0,1.05)$);
+    \node[tok, fill=thAccent!35, draw=thAccent, line width=1pt] (t0) at ($(tokc)+(1.25,0)$) {};
+    \node[tok, fill=thPanel] (t1) at ($(tokc)+(0.75,0)$) {};
+    \node[tok, fill=white] (t2) at ($(tokc)+(0.25,0)$) {};
+    \node[tok, fill=white] (t3) at ($(tokc)+(-0.25,0)$) {};
+    \node[tok, fill=white] (t4) at ($(tokc)+(-0.75,0)$) {};
+    \node[tok, fill=white] (t5) at ($(tokc)+(-1.25,0)$) {};
+    \node[font=\scriptsize, anchor=east] at ($(tokc)+(-1.55,0)$) {$\cdots$};
+    \node[thnote, text=thAccent, anchor=west] at ($(tokc)+(1.55,0)$) {\rl{توکن دوربین}};
+    \node[thnote, anchor=south] at ($(tokc)+(0,0.32)$)
+  {\rl{دنباله توکن‌های ورودی انکودر (توکن کلاس و توکن‌های وصله)}};
+    \draw[tharrow] ($(tokc)+(0,-0.30)$) -- (enc.north);
 
     %%% ---------- شاخه پارامترهای درونی دوربین (زیر انکودر) ----------
-    \node[io, fill=thPanelAlt] (calmat) at (9.5,-4.85) {\rl{ماتریس کالیبراسیون دوربین}};
-    \node[stage, fill=white] (norm) at (9.5,-3.20) {\rl{نرمال‌سازی و ساخت}\\ \rl{بردار $\mathbf{d}_{\mathrm{cam}}\in\mathbb{R}^{9}$}};
-    \node[stage, fill=thPanelAlt](cenc)at (9.5,-1.55) {\rl{انکودر دوربین $\phi(\cdot)$}\\[1pt] \rl{\scriptsize \lr{MLP} دولایه + ۴ بلوک ترنسفورمر}};
-    \node[stage, fill=thPanelRed, draw=thControl, line width=1pt, minimum height=1.0cm]
-        (gate) at (9.5,-0.05) {\rl{ضریب کنترلی خروجی $\gamma$}\\[1pt] \rl{\scriptsize مقدار اولیه: صفر}};
+    \node[cam, fill=thPanelRed, draw=thControl, line width=1pt, below=11mm of enc] (gate)
+  {\rl{ضریب کنترلی خروجی $\gamma$}\\[1pt] \rl{\scriptsize مقدار اولیه: صفر}};
+    \node[cam, fill=thPanelAlt, below=of gate] (cenc)
+  {\rl{انکودر دوربین $\phi(\cdot)$}\\[1pt] \rl{\scriptsize \lr{MLP} دولایه + ۴ بلوک ترنسفورمر}};
+    \node[cam, fill=white, below=of cenc] (norm)
+  {\rl{نرمال‌سازی و ساخت}\\ \rl{بردار $\mathbf{d}_{\mathrm{cam}}\in\mathbb{R}^{9}$}};
+    \node[thdata, font=\footnotesize, fill=thPanelAlt, minimum height=1.0cm, text width=4.1cm,
+     below=of norm] (calmat) {\rl{ماتریس کالیبراسیون دوربین}};
 
     \draw[tharrow] (calmat) -- (norm);
     \draw[tharrow] (norm) -- (cenc);
     \draw[tharrow] (cenc) -- (gate);
-    \draw[thdashed] (gate) -- node[thnote, text=thAccent, text width=3.8cm,
-      align=right, midway, right=2mm]
-  {\rl{توکن دوربین $\mathbf{z}_{\mathrm{cam}}=\gamma\,\phi(\mathbf{d}_{\mathrm{cam}})$}} (enc);
+    \draw[thdashed] (gate) -- (enc);
+    \node[thnote, text=thAccent, anchor=west] at ($(gate.north)!0.5!(enc.south)+(0.22,0)$)
+  {\rl{توکن دوربین $\mathbf{z}_{\mathrm{cam}}=\gamma\,\phi(\mathbf{d}_{\mathrm{cam}})$}};
 
     %%% ---------- یادداشت‌ها ----------
-    \node[thnote, anchor=north, text width=6.0cm] at (3.1,-0.15)
+    \node[thnote, above=6mm of dec] (loss)
   {\rl{تابع هزینه \lr{SiLog} بر عمق مطلق}\\ \rl{(بدون هیچ تراز مقیاسی)}};
-    \draw[thdashed, draw=thInk!45] (3.1,0.60) -- (3.1,0.10);
+    \draw[thdashed, draw=thInk!45] (dec.north) -- (loss.south);
 
-    \node[thnote, anchor=east, text width=5.6cm] at (7.6,-4.85)
+    \node[thnote, left=8mm of gate, text width=6.4cm] (gnote)
   {\rl{در آغاز آموزش $\gamma=0$ است؛ بنابراین رفتار مدل دقیقا با
    مدل ازپیش‌آموزش‌دیده پایه یکسان می‌ماند و شبکه تنها در صورت
    سودمندبودن اطلاعات دوربین، مقدار آن را افزایش می‌دهد.}};
+    \draw[thick, densely dotted, draw=thInk!45] (gnote.east) -- (gate.west);
  \end{tikzpicture}%
- }
+ \end{adjustbox}
  \caption[معماری مدل پیشنهادی]{معماری مدل پیشنهادی و مسیر تزریق بردار دوربین به انکودر}
  \label{fig:proposed_architecture}
 \end{figure}
@@ -192,54 +200,57 @@ f_x & 0 & c_x \\
 
 \begin{figure}[htbp]
  \centering
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
   \begin{tikzpicture}[font=\scriptsize]
  \tikzset{
-  cmbox/.style={thblock, fill=white, text width=2.55cm, minimum height=0.62cm,
-     inner sep=2.5pt, font=\scriptsize},
-  hd/.style={font=\scriptsize, anchor=north, align=center},
+  cmbox/.style={thblock, fill=white, text width=2.6cm, minimum height=0.66cm,
+     inner sep=3pt, font=\scriptsize},
+  hd/.style={font=\scriptsize, anchor=north, align=center, text width=4.2cm},
+  cmnote/.style={thnote, anchor=north, text width=4.0cm},
  }
+    % هر پنل ۴٫۶ سانتی‌متر پهنا دارد و جعبه‌ها در هر سه پنل روی یک ارتفاع‌اند.
 
     %%% ---------- (الف) الحاق به ورودی (سمت راست) ----------
- \begin{scope}[xshift=9.4cm]
-        \fill[thPanelGray, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
-        \node[hd, text width=3.6cm] at (1.90,0.88) {\rl{(الف) الحاق به ورودی}};
-        \node[cmbox] (ai) at (1.90,-0.55) {\rl{تصویر + کانال‌های ماتریس کالیبراسیون دوربین}};
-        \node[cmbox] (an) at (1.90,-1.70) {\rl{انکودر}};
-        \node[cmbox] (ad) at (1.90,-2.85) {\rl{عمق}};
+ \begin{scope}[xshift=10.0cm]
+        \fill[thPanelGray, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
+        \node[hd] at (2.30,0.80) {\rl{(الف) الحاق به ورودی}};
+        \node[cmbox] (ai) at (2.30,-0.75) {\rl{تصویر + کانال‌های ماتریس کالیبراسیون دوربین}};
+        \node[cmbox] (an) at (2.30,-2.20) {\rl{انکودر}};
+        \node[cmbox] (ad) at (2.30,-3.35) {\rl{عمق}};
         \draw[tharrow] (ai) -- (an);
         \draw[tharrow] (an) -- (ad);
-        \node[thnote, anchor=north, text width=3.6cm, text=thControl] at (1.90,-3.20)
+        \node[cmnote, text=thControl] at (2.30,-3.95)
    {\rl{لایه نخست انکودر ازپیش‌آموزش‌دیده باید تغییر کند}};
  \end{scope}
 
     %%% ---------- (ب) FiLM ----------
- \begin{scope}[xshift=4.75cm]
-        \fill[thPanelAlt, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
-        \node[hd, text width=3.6cm] at (1.90,0.88) {\rl{(ب) تنظیم ویژگی به سبک \lr{FiLM}}};
-        \node[cmbox] (bi) at (1.90,-0.55) {\rl{تصویر}};
-        \node[cmbox] (bn) at (1.90,-1.70) {\rl{انکودر}};
-        \node[cmbox] (bd) at (1.90,-2.85) {\rl{عمق}};
-        \node[thnote, text=thAccent, font=\scriptsize] (bk) at (0.35,-1.08)
+ \begin{scope}[xshift=5.0cm]
+        \fill[thPanelAlt, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
+        \node[hd] at (2.30,0.80) {\rl{(ب) تنظیم ویژگی به سبک \lr{FiLM}}};
+        \node[cmbox] (bi) at (2.30,-0.75) {\rl{تصویر}};
+        \node[cmbox] (bn) at (2.30,-2.20) {\rl{انکودر}};
+        \node[cmbox] (bd) at (2.30,-3.35) {\rl{عمق}};
+        \node[thnote, text=thAccent, font=\scriptsize] (bk) at (0.55,-1.42)
    {$\gamma,\beta$};
         \draw[tharrow] (bi) -- (bn);
         \draw[tharrow] (bn) -- (bd);
         \draw[tharrow, draw=thAccent] (bk.south) -- (bn.west);
-        \node[thnote, anchor=north, text width=3.6cm, text=thControl] at (1.90,-3.20)
+        \node[cmnote, text=thControl] at (2.30,-3.95)
    {\rl{نیازمند دستکاری مستقیم نگاشت‌های ویژگی در هر لایه}};
  \end{scope}
 
     %%% ---------- (ج) تزریق توکن (سمت چپ) ----------
  \begin{scope}
-        \fill[thPanelGreen, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
-        \draw[draw=thIdeal, line width=1.2pt, rounded corners=3pt] (-0.10,-3.85) rectangle (3.90,0.95);
-        \node[hd, text width=3.6cm, text=thIdeal] at (1.90,0.88) {\rl{(ج) تزریق توکن و توجه}};
-        \node[cmbox] (ci) at (1.90,-0.55) {\rl{توکن‌های وصله $+$ توکن ماتریس کالیبراسیون دوربین}};
-        \node[cmbox, fill=thPanelGreen, draw=thIdeal, line width=1pt] (cn) at (1.90,-1.70)
+        \fill[thPanelGreen, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
+        \draw[draw=thIdeal, line width=1.2pt, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
+        \node[hd, text=thIdeal] at (2.30,0.80) {\rl{(ج) تزریق توکن و توجه}};
+        \node[cmbox] (ci) at (2.30,-0.75) {\rl{توکن‌های وصله $+$ توکن ماتریس کالیبراسیون دوربین}};
+        \node[cmbox, fill=thPanelGreen, draw=thIdeal, line width=1pt] (cn) at (2.30,-2.20)
    {\rl{انکودر بدون تغییر}\\ \rl{\tiny (سازوکار توجه ترکیب می‌کند)}};
-        \node[cmbox] (cd) at (1.90,-2.85) {\rl{عمق مطلق}};
+        \node[cmbox] (cd) at (2.30,-3.35) {\rl{عمق مطلق}};
         \draw[tharrow] (ci) -- (cn);
         \draw[tharrow] (cn) -- (cd);
-        \node[thnote, anchor=north, text width=3.6cm, text=thIdeal] at (1.90,-3.20)
+        \node[cmnote, text=thIdeal] at (2.30,-3.95)
    {\rl{انتخاب این پژوهش: وزن‌های ازپیش‌آموخته دست‌نخورده می‌مانند}};
  \end{scope}
  \end{tikzpicture}
@@ -436,32 +447,41 @@ f_x \mapsto \alpha f_x, \qquad f_y \mapsto \alpha f_y, \qquad Z \mapsto \alpha Z
 
 \begin{figure}[htbp]
  \centering
-  \begin{tikzpicture}[font=\small]
+% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
+  \begin{tikzpicture}[font=\footnotesize]
+ \tikzset{
+  smp/.style={thblock, fill=white, font=\footnotesize, text width=4.6cm, anchor=north},
+  arm/.style={thblock, font=\footnotesize, line width=1pt, text width=6.3cm},
+ }
     %%% تصویر ورودی مشترک
-    \node[thdata, fill=thPanelGray, text width=5.4cm, minimum height=1.05cm] (img) at (6.0,3.0)
+    \node[thdata, fill=thPanelGray, font=\footnotesize, text width=6.8cm, minimum height=1.05cm] (img)
   {\rl{تصویر ورودی، بدون هیچ تغییری}\\[1pt]
    \rl{\scriptsize پیکسل‌ها و نقطه اصلی $(c_x,c_y)$ دست‌نخورده می‌مانند}};
 
+    %%% توزیع ضریب مقیاس، روی مسیر انشعاب
+    \node[thnote, draw=thInk!35, rounded corners=2pt, fill=white, inner sep=3pt,
+     below=5mm of img] (alpha)
+  {$\alpha \sim \exp\bigl(\mathcal{U}(-\ln m,\, +\ln m)\bigr)$};
+    \coordinate (fork) at ($(alpha.south)+(0,-0.40)$);
+
     %%% دو نمونه آموزشی با ضرایب متفاوت
-    \node[thblock, fill=white, text width=4.2cm] (s1) at (9.4,1.15)
+    \node[smp] (s1) at ($(fork)+(3.75,-0.55)$)
   {\rl{نمونه آموزشی ۱}\\[1pt] $f\mapsto \alpha_1 f$، $Z\mapsto \alpha_1 Z$};
-    \node[thblock, fill=white, text width=4.2cm] (s2) at (2.6,1.15)
+    \node[smp] (s2) at ($(fork)+(-3.75,-0.55)$)
   {\rl{نمونه آموزشی ۲}\\[1pt] $f\mapsto \alpha_2 f$، $Z\mapsto \alpha_2 Z$};
 
-    \draw[tharrow] (img) -- (s1);
-    \draw[tharrow] (img) -- (s2);
-    \node[thnote, fill=white, inner sep=2pt, text width=5.6cm] at (6.0,1.95)
-  {$\alpha \sim \exp\bigl(\mathcal{U}(-\ln m,\, +\ln m)\bigr)$};
+    \draw[tharrow] (img) -- (alpha);
+    \draw[thick, draw=thInk!75] (alpha.south) -- (fork);
+    \draw[tharrow] (fork) -| (s1.north);
+    \draw[tharrow] (fork) -| (s2.north);
 
     %%% دو بازوی مطالعه
-    \node[thblock, fill=thPanelRed, draw=thControl, line width=1pt, text width=5.6cm]
-  (ctrl) at (9.4,-1.15)
+    \node[arm, fill=thPanelRed, draw=thControl, below=7mm of s1] (ctrl)
   {\rl{\controlmodel{}}\\[2pt]
    \rl{\scriptsize ورودی یکسان، برچسب عمق متناقض $\Rightarrow$
    تنها راه، رگرسیون به میانگین توزیع $\alpha$؛ بخشی از خطا
    کاهش‌ناپذیر می‌شود}};
-    \node[thblock, fill=thPanelGreen, draw=thIdeal, line width=1pt, text width=5.6cm]
-  (prop) at (2.6,-1.15)
+    \node[arm, fill=thPanelGreen, draw=thIdeal, below=7mm of s2] (prop)
   {\rl{\proposedmodel{}}\\[2pt]
    \rl{\scriptsize مقدار $\alpha$ مستقیما از فاصله کانونی ورودی خوانده
    می‌شود $\Rightarrow$ ابهام مقیاس به‌طور کامل رفع می‌گردد}};

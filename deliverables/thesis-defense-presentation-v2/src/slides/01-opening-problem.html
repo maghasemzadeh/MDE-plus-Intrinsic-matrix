@@ -1,0 +1,239 @@
+
+<!-- ============ 1 · title ============ -->
+<section class="slide s-title" data-part="0" data-nochrome data-title="{{meta.title}}">
+  <div class="t-art" aria-hidden="true">
+    <svg viewBox="0 0 640 1080" preserveAspectRatio="xMidYMid slice">
+      <g fill="none" stroke="#a6d8f5" stroke-linecap="round">
+        <path d="M70 540 L610 170 M70 540 L610 910" stroke-width="2.5" opacity=".55"/>
+        <path d="M70 540 L610 540" stroke-width="1.5" stroke-dasharray="3 12" opacity=".5"/>
+        <path d="M250 417 V663" stroke-width="5"/>
+        <path d="M470 266 V814" stroke-width="5" opacity=".9"/>
+        <path d="M70 540 L250 480 L470 393" stroke-width="2" opacity=".8"/>
+        <path d="M70 540 L250 600 L470 687" stroke-width="2" opacity=".8"/>
+      </g>
+      <rect x="236" y="480" width="28" height="120" rx="4" fill="#a6d8f5"/>
+      <rect x="452" y="393" width="36" height="294" rx="4" fill="#ffffff" opacity=".92"/>
+      <circle cx="70" cy="540" r="13" fill="#ffffff"/>
+      <rect x="22" y="512" width="48" height="56" rx="6" fill="none" stroke="#ffffff" stroke-width="4"/>
+    </svg>
+  </div>
+  <div class="t-main">
+    <div class="t-uni">
+      <img src="assets/img/kntu-logo.png" alt="">
+      <div><b>{{meta.university}}</b><span>{{meta.faculty}}</span><span>{{meta.dept}}</span></div>
+    </div>
+    <div class="t-kicker">{{s1.kicker}}</div>
+    <h1>{{meta.title}}</h1>
+    <dl class="t-people">
+      <div><dt>{{s1.author_label}}</dt><dd>{{meta.author}}</dd></div>
+      <div><dt>{{s1.supervisor_label}}</dt><dd>{{meta.supervisor}}</dd></div>
+      <div><dt>{{s1.referees_label}}</dt><dd>{{meta.ref1}} <small>({{s1.internal}})</small><br>{{meta.ref2}} <small>({{s1.external}})</small></dd></div>
+    </dl>
+    <div class="t-date">{{meta.date}}</div>
+  </div>
+  <aside class="notes">{{s1.notes}}</aside>
+</section>
+
+<!-- ============ 2 · outline ============ -->
+<section class="slide s-outline" data-part="0" data-title="{{s2.title}}">
+  <header class="slide-head"><h2>{{s2.title}}</h2></header>
+  <div class="slide-body">
+    <ol class="outline">
+      <li class="frag rise" data-f="1"><b>۱</b><span>{{part.1}}</span></li>
+      <li class="frag rise" data-f="1"><b>۲</b><span>{{part.2}}</span></li>
+      <li class="frag rise" data-f="2"><b>۳</b><span>{{part.3}}</span></li>
+      <li class="frag rise" data-f="2"><b>۴</b><span>{{part.4}}</span></li>
+      <li class="frag rise" data-f="3"><b>۵</b><span>{{part.5}}</span></li>
+      <li class="frag rise key" data-f="3"><b>۶</b><span>{{part.6}}</span></li>
+      <li class="frag rise" data-f="4"><b>۷</b><span>{{part.7}}</span></li>
+    </ol>
+  </div>
+  <aside class="notes">{{s2.notes}}</aside>
+</section>
+
+<!-- ============ 3 · why absolute depth ============ -->
+<section class="slide s-why" data-part="1" data-title="{{s3.title}}">
+  <header class="slide-head"><h2>{{s3.title}}</h2></header>
+  <div class="slide-body">
+    <div class="cols c64">
+      <div class="pair">
+        <figure class="fig"><div class="imgframe"><img src="assets/img/intro-rgb.jpg" alt=""></div><figcaption>{{s3.img_label}}</figcaption></figure>
+        <div class="pair-arrow" aria-hidden="true"></div>
+        <figure class="fig"><div class="imgframe"><img src="assets/img/intro-depth.jpg" alt=""></div><figcaption>{{s3.depth_label}}</figcaption></figure>
+      </div>
+      <div class="stack">
+        <div class="qa frag rise" data-f="1"><span class="qa-l">{{s3.rel_label}}</span><span class="qa-q">{{s3.rel_q}}</span></div>
+        <div class="qa hero frag rise" data-f="2"><span class="qa-l">{{s3.abs_label}}</span><span class="qa-q">{{s3.abs_q}}</span></div>
+        <div class="chips frag rise" data-f="3">
+          <span class="chip">{{s3.chip1}}</span><span class="chip">{{s3.chip2}}</span><span class="chip">{{s3.chip3}}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s3.notes}}</aside>
+</section>
+
+<!-- ============ 4 · scale ambiguity (video) ============ -->
+<section class="slide s-video" data-part="1" data-title="{{s4.title}}">
+  <header class="slide-head"><h2>{{s4.title}}</h2></header>
+  <div class="slide-body">
+    <div class="cols c2">
+      <div class="stack">
+        <p class="phrase l">{{s4.caption}}</p>
+        <div class="nf frag rise" data-f="1">
+          <div class="nf-i"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="46" y="44" width="28" height="56" rx="4" fill="#184f95"/></svg><span>{{s4.near}}</span></div>
+          <div class="nf-eq" aria-hidden="true">=</div>
+          <div class="nf-i"><svg viewBox="0 0 120 120" aria-hidden="true"><rect x="32" y="8" width="56" height="104" rx="5" fill="#c9621f"/></svg><span>{{s4.far}}</span></div>
+        </div>
+        <p class="phrase s frag rise" data-f="2">{{s4.point}}</p>
+      </div>
+      <div class="center">
+        <div class="vframe">
+          <video src="assets/video/scale-ambiguity.mp4" data-autoplay controls playsinline preload="auto" aria-label="{{ui.play}}"></video>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s4.notes}}</aside>
+</section>
+
+<!-- ============ 5 · pinhole and K ============ -->
+<section class="slide s-pinhole" data-part="1" data-title="{{s5.title}}">
+  <header class="slide-head"><h2>{{s5.title}}</h2></header>
+  <div class="slide-body">
+    <div class="cols c64">
+      <div class="ltr">
+        <svg class="dia" viewBox="0 0 940 600" role="img">
+          <!-- similar triangles -->
+          <polygon points="90,330 520,330 520,195" fill="#eef5fc"/>
+          <polygon points="90,330 250,330 250,279.8" fill="#a6d8f5" opacity=".75"/>
+          <!-- optical axis -->
+          <line x1="40" y1="330" x2="900" y2="330" stroke="#0b1f4b" stroke-width="2.5"/>
+          <path d="M900 330 l-16 -8 v16z" fill="#0b1f4b"/>
+          <text x="900" y="366" text-anchor="end" class="d-lab" direction="rtl">{{s5.axis}}</text>
+          <!-- image plane -->
+          <line x1="250" y1="170" x2="250" y2="470" stroke="#184f95" stroke-width="6" stroke-linecap="round"/>
+          <text x="176" y="150" text-anchor="middle" class="d-lab navy" direction="rtl">{{s5.plane}}</text>
+          <!-- ray and point -->
+          <line x1="90" y1="330" x2="520" y2="195" stroke="#0b1f4b" stroke-width="3"/>
+          <line x1="520" y1="330" x2="520" y2="195" stroke="#76819a" stroke-width="2" stroke-dasharray="6 6"/>
+          <circle cx="520" cy="195" r="11" fill="#184f95"/>
+          <text x="538" y="188" class="d-sym">X</text>
+          <circle cx="250" cy="279.8" r="9" fill="#0b1f4b"/>
+          <text x="236" y="266" text-anchor="end" class="d-sym">u</text>
+          <!-- camera centre -->
+          <circle cx="90" cy="330" r="11" fill="#0b1f4b"/>
+          <text x="90" y="300" text-anchor="middle" class="d-sym">C</text>
+          <text x="90" y="372" text-anchor="middle" class="d-lab" direction="rtl">{{s5.center}}</text>
+          <!-- dimensions -->
+          <g stroke="#c9621f" stroke-width="3" fill="#c9621f">
+            <line x1="92" y1="510" x2="248" y2="510"/><path d="M92 510 l12 -6 v12z M248 510 l-12 -6 v12z"/>
+          </g>
+          <text x="170" y="552" text-anchor="middle" class="d-lab orange" direction="rtl">{{s5.focal}} <tspan class="d-symi">f</tspan></text>
+          <g stroke="#184f95" stroke-width="3" fill="#184f95">
+            <line x1="92" y1="440" x2="518" y2="440"/><path d="M92 440 l12 -6 v12z M518 440 l-12 -6 v12z"/>
+          </g>
+          <text x="440" y="424" text-anchor="middle" class="d-lab navy" direction="rtl">{{s5.depth}} <tspan class="d-symi">Z</tspan></text>
+
+          <!-- step 2: (alpha f, alpha Z) gives the same image coordinate -->
+          <g class="frag" data-f="2">
+            <line x1="346" y1="170" x2="346" y2="470" stroke="#c9621f" stroke-width="5" stroke-dasharray="14 9" stroke-linecap="round"/>
+            <line x1="90" y1="330" x2="778" y2="195" stroke="#c9621f" stroke-width="3" stroke-dasharray="10 8"/>
+            <circle cx="778" cy="195" r="11" fill="#c9621f"/>
+            <text x="796" y="188" class="d-sym" fill="#c9621f">X</text>
+            <line x1="520" y1="195" x2="778" y2="195" stroke="#c9621f" stroke-width="2" stroke-dasharray="3 7"/>
+            <line x1="250" y1="279.8" x2="346" y2="279.8" stroke="#0b1f4b" stroke-width="2.5" stroke-dasharray="3 6"/>
+            <circle cx="346" cy="279.8" r="9" fill="#c9621f"/>
+            <text x="346" y="150" text-anchor="middle" class="d-sym" fill="#c9621f">αf</text>
+            <text x="778" y="366" text-anchor="middle" class="d-sym" fill="#c9621f">αZ</text>
+            <line x1="778" y1="330" x2="778" y2="195" stroke="#c9621f" stroke-width="2" stroke-dasharray="6 6"/>
+          </g>
+        </svg>
+      </div>
+      <div class="stack">
+        <div class="eq box"><span class="tex block" data-tex="u \;=\; \dfrac{f\,X}{Z}"></span></div>
+        <div class="eq s frag rise" data-f="1"><span class="tex block" data-tex="K=\begin{bmatrix} f_x & 0 & c_x\\ 0 & f_y & c_y\\ 0 & 0 & 1\end{bmatrix}"></span>
+          <div class="kleg"><span><i class="sq o"></i>{{s5.focal}}</span><span><i class="sq n"></i>{{s5.pp}}</span></div>
+        </div>
+        <div class="frag rise" data-f="2">
+          <div class="eq s box"><span class="tex block" data-tex="\dfrac{f\,X}{Z} \;=\; \dfrac{(\alpha f)\,X}{\alpha Z}"></span></div>
+          <p class="phrase same">{{s5.same}}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s5.notes}}</aside>
+</section>
+
+<!-- ============ 6 · research questions ============ -->
+<section class="slide s-questions" data-part="1" data-title="{{s6.title}}">
+  <header class="slide-head"><h2>{{s6.title}}</h2></header>
+  <div class="slide-body">
+    <ol class="qlist">
+      <li class="frag rise" data-f="1"><b>۱</b><span>{{s6.q1}}</span></li>
+      <li class="frag rise" data-f="2"><b>۲</b><span>{{s6.q2}}</span></li>
+      <li class="frag rise" data-f="3"><b>۳</b><span>{{s6.q3}}</span></li>
+    </ol>
+    <div class="goal frag rise" data-f="4"><span class="goal-l">{{s6.goal_label}}</span><span class="goal-t">{{s6.goal}}</span></div>
+  </div>
+  <aside class="notes">{{s6.notes}}</aside>
+</section>
+
+<!-- ============ 7 · timeline ============ -->
+<section class="slide s-timeline" data-part="2" data-title="{{s7.title}}">
+  <header class="slide-head"><h2>{{s7.title}}</h2></header>
+  <div class="slide-body">
+    <div class="tl">
+      <div class="tl-n frag rise" data-f="1"><span class="yr">2005 – 2014</span><i></i><h4>{{s7.e1}}</h4><p class="ex ltr">Make3D, Eigen et al.</p><p class="ds">{{s7.e1d}}</p></div>
+      <div class="tl-n frag rise" data-f="2"><span class="yr">2017 – 2019</span><i></i><h4>{{s7.e2}}</h4><p class="ex ltr">Monodepth, Zhou et al., Monodepth2</p><p class="ds">{{s7.e2d}}</p></div>
+      <div class="tl-n frag rise" data-f="3"><span class="yr">2019 – 2021</span><i></i><h4>{{s7.e3}}</h4><p class="ex ltr">MiDaS, DPT</p><p class="ds">{{s7.e3d}}</p></div>
+      <div class="tl-n frag rise" data-f="4"><span class="yr">2024</span><i></i><h4>{{s7.e4}}</h4><p class="ex ltr">Depth Anything, Depth Anything V2</p><p class="ds">{{s7.e4d}}</p></div>
+      <div class="tl-n frag rise" data-f="5"><span class="yr">2019 – 2025</span><i></i><h4>{{s7.e5}}</h4><p class="ex ltr">CAM-Convs, ZoeDepth, Metric3D, UniDepth, Depth Pro</p><p class="ds">{{s7.e5d}}</p></div>
+      <div class="tl-n me frag rise" data-f="6"><span class="yr">{{meta.date}}</span><i></i><h4>{{s7.e6}}</h4><p class="ds">{{s7.e6d}}</p></div>
+    </div>
+  </div>
+  <aside class="notes">{{s7.notes}}</aside>
+</section>
+
+<!-- ============ 8 · base model ============ -->
+<section class="slide s-base" data-part="2" data-title="{{s8.title}}">
+  <header class="slide-head"><h2>{{s8.title}}</h2></header>
+  <div class="slide-body">
+    <div class="cols c64 top">
+      <div class="stack">
+        <figure class="fig"><div class="imgframe"><img src="assets/img/da2-teaser.jpg" alt=""></div><figcaption>{{s8.src}}</figcaption></figure>
+        <div class="flow frag rise" data-f="1">
+          <div class="box soft">{{s8.in}}</div><div class="arr"></div>
+          <div class="box">{{s8.enc}}<small class="ltr">ViT-S / B / L / G</small></div><div class="arr"></div>
+          <div class="box">{{s8.dec}}</div><div class="arr"></div>
+          <div class="box soft">{{s8.out}}</div>
+        </div>
+      </div>
+      <div class="stack stats">
+        <div class="stat frag rise" data-f="2"><span class="v m">۵۹۵ هزار</span><span class="l">{{s8.st1}}</span></div>
+        <div class="stat frag rise" data-f="2"><span class="v m">۶۲ میلیون</span><span class="l">{{s8.st2}}</span></div>
+        <div class="stat frag rise" data-f="2"><span class="v s">۲۵ میلیون تا ۱٫۳ میلیارد</span><span class="l">{{s8.st3}}</span></div>
+        <div class="frag rise" data-f="3"><span class="chip warn">{{s8.limit}}</span></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s8.notes}}</aside>
+</section>
+
+<!-- ============ 9 · prior work and gap ============ -->
+<section class="slide s-prior" data-part="2" data-title="{{s9.title}}">
+  <header class="slide-head"><h2>{{s9.title}}</h2></header>
+  <div class="slide-body">
+    <table class="tbl prior">
+      <thead><tr><th class="name">{{s9.h1}}</th><th class="name">{{s9.h2}}</th><th>{{s9.h3}}</th></tr></thead>
+      <tbody>
+        <tr class="frag" data-f="1"><td class="name ltr-cell">CAM-Convs</td><td class="name">{{s9.r1}}</td><td><span class="yes">✓</span></td></tr>
+        <tr class="frag" data-f="2"><td class="name ltr-cell">Metric3D</td><td class="name">{{s9.r2}}</td><td><span class="no">✕</span></td></tr>
+        <tr class="frag" data-f="3"><td class="name ltr-cell">UniDepth, Depth Pro</td><td class="name">{{s9.r3}}</td><td><span class="no">✕</span></td></tr>
+        <tr class="hl frag" data-f="4"><td class="name">{{s9.this}}</td><td class="name">{{s9.r4}}</td><td><span class="yes">✓</span></td></tr>
+      </tbody>
+    </table>
+    <div class="goal frag rise" data-f="5"><span class="goal-l">{{s9.gap_label}}</span><span class="goal-t">{{s9.gap}}</span></div>
+  </div>
+  <aside class="notes">{{s9.notes}}</aside>
+</section>

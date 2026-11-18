@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{meta.title}}</title>
+<link rel="stylesheet" href="assets/vendor/katex/katex.min.css">
+<link rel="stylesheet" href="assets/css/deck.css">
+<link rel="stylesheet" href="assets/css/slides.css">
+</head>
+<body>
+<div id="viewport">
+  <div id="stage">
+<!--SLIDES-->
+    <div id="chrome">
+      <nav id="partnav"></nav>
+      <div id="footer">
+        <div class="who"><img src="assets/img/kntu-logo.png" alt=""><span>{{meta.author}}</span></div>
+        <div id="counter"></div>
+      </div>
+      <div id="progress"><i></i></div>
+    </div>
+  </div>
+</div>
+
+<div id="presenter">
+  <div class="bar">
+    <span><b id="pv-count"></b></span>
+    <span>{{ui.timer}}: <span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">{{ui.reset}}</button></span>
+  </div>
+  <div class="previews">
+    <div class="pv cur"><label>{{ui.current}}</label><iframe title="current"></iframe></div>
+    <div class="pv next"><label>{{ui.next}}</label><iframe title="next"></iframe></div>
+  </div>
+  <div class="notesbox">
+    <h4>{{ui.notes}}</h4>
+    <h3 id="pv-title"></h3>
+    <p id="pv-notes"></p>
+  </div>
+  <div class="hint">{{ui.help}}</div>
+</div>
+
+<div id="overview"><ol></ol></div>
+<div id="help">{{ui.help}}</div>
+
+<script type="application/json" id="deck-config">{{CONFIG}}</script>
+<script src="assets/vendor/katex/katex.min.js"></script>
+<script src="assets/js/deck.js"></script>
+</body>
+</html>

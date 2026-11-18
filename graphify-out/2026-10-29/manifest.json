@@ -1,0 +1,1152 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1783694232.4134057,
+    "ast_hash": "490b97d1792c46fb3ad90c4c3aaf1279",
+    "semantic_hash": ""
+  },
+  "compare_dataset_results.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "c1ecc7d333399fd9575cc5d6b9d2a369",
+    "semantic_hash": "c1ecc7d333399fd9575cc5d6b9d2a369"
+  },
+  "compare_models.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "2487cf3c5efdf5075e2aa424713c1943",
+    "semantic_hash": "2487cf3c5efdf5075e2aa424713c1943"
+  },
+  "compare_two_checkpoints.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "5de5c90cf55680f6388b28abefff3d0f",
+    "semantic_hash": "5de5c90cf55680f6388b28abefff3d0f"
+  },
+  "datasets/__init__.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "eb455c5520e24eccfa699fc62010c5c8",
+    "semantic_hash": "eb455c5520e24eccfa699fc62010c5c8"
+  },
+  "datasets/base.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "7bc9b4f515f24e6d6d73cc2230d29934",
+    "semantic_hash": "7bc9b4f515f24e6d6d73cc2230d29934"
+  },
+  "datasets/cityscapes.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "900779ff239066841eeb70e368e235cd",
+    "semantic_hash": "900779ff239066841eeb70e368e235cd"
+  },
+  "datasets/diode.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "f8aa73bf613d81f7d56e34d702871084",
+    "semantic_hash": "f8aa73bf613d81f7d56e34d702871084"
+  },
+  "datasets/drivingstereo.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "89cf2203b521ea69968fdbf2149898bd",
+    "semantic_hash": "89cf2203b521ea69968fdbf2149898bd"
+  },
+  "datasets/kitti.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "34f2fb8e582293d087104b1ee1253c8a",
+    "semantic_hash": "34f2fb8e582293d087104b1ee1253c8a"
+  },
+  "datasets/middlebury.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "8a5cdf497da35ddd72323c18650a05bd",
+    "semantic_hash": "8a5cdf497da35ddd72323c18650a05bd"
+  },
+  "datasets/nyu.py": {
+    "mtime": 1783192727.471456,
+    "ast_hash": "e3a9c5bb0dda5e2f7519be3cc6b49106",
+    "semantic_hash": ""
+  },
+  "datasets/training_datasets.py": {
+    "mtime": 1783620356.9137876,
+    "ast_hash": "44b888e95ea401394e9cc3d6dba581e7",
+    "semantic_hash": ""
+  },
+  "datasets/vkitti.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "e32649c61f73a2db73033c1e849511ec",
+    "semantic_hash": "e32649c61f73a2db73033c1e849511ec"
+  },
+  "inspect_checkpoint_keys.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "7451f356dae4821e993cbdd1a28ddb5e",
+    "semantic_hash": "7451f356dae4821e993cbdd1a28ddb5e"
+  },
+  "load_checkpoint.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "a487dbd62f125a168699c1d7b33f0438",
+    "semantic_hash": "a487dbd62f125a168699c1d7b33f0438"
+  },
+  "models/__init__.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "ba6947d6d18df80df8a1b4bb34136e70",
+    "semantic_hash": "ba6947d6d18df80df8a1b4bb34136e70"
+  },
+  "models/base.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "950a48b58812ad55f1c6480b7264c8e3",
+    "semantic_hash": "950a48b58812ad55f1c6480b7264c8e3"
+  },
+  "models/depth_anything_3.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "97af7a28f488adefde95c570dce9a7f0",
+    "semantic_hash": "97af7a28f488adefde95c570dce9a7f0"
+  },
+  "models/depth_anything_v2.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "d674f94b93790b2a0978beab32c41513",
+    "semantic_hash": "d674f94b93790b2a0978beab32c41513"
+  },
+  "models/depth_anything_v2_revised.py": {
+    "mtime": 1783363878.9514148,
+    "ast_hash": "86eb86f932bce23237575efc19e2e38d",
+    "semantic_hash": ""
+  },
+  "models/utils.py": {
+    "mtime": 1783363871.2833438,
+    "ast_hash": "66d4a22ab6913a4bda251d31f73e8073",
+    "semantic_hash": ""
+  },
+  "prepare_vkitti.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4d2272ea9817ef0fea09cfb74c1a73cc",
+    "semantic_hash": "4d2272ea9817ef0fea09cfb74c1a73cc"
+  },
+  "print_intrinsics.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f40f58e1ba319b610ed44dedc5d0de0f",
+    "semantic_hash": "f40f58e1ba319b610ed44dedc5d0de0f"
+  },
+  "show_absrel_calculation.py": {
+    "mtime": 1783620356.9137876,
+    "ast_hash": "17825e67e4fae26b83149dec514abda4",
+    "semantic_hash": ""
+  },
+  "src/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a2cf2f07e4c4ddf88e80bf7f161ffbe0",
+    "semantic_hash": "a2cf2f07e4c4ddf88e80bf7f161ffbe0"
+  },
+  "src/metrics.py": {
+    "mtime": 1783191908.6525424,
+    "ast_hash": "7139ac521e218d1e49590ebd4114996c",
+    "semantic_hash": ""
+  },
+  "src/paths.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "db79e28e8e2555284b71262376ccf478",
+    "semantic_hash": "db79e28e8e2555284b71262376ccf478"
+  },
+  "src/pipeline.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "b91f1c3fa676a70dcf61a289ac44ff0f",
+    "semantic_hash": ""
+  },
+  "src/tools/depth_visualizer.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "0c06c8712bd50c24e77ffc407d92400e",
+    "semantic_hash": "0c06c8712bd50c24e77ffc407d92400e"
+  },
+  "src/tools/generate_visualizations.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "cfea09bb94231826f830c90ff9024863",
+    "semantic_hash": "cfea09bb94231826f830c90ff9024863"
+  },
+  "src/tools/inspect_ttest_scene.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "21a64e749d7d21297f24f15a70410afa",
+    "semantic_hash": "21a64e749d7d21297f24f15a70410afa"
+  },
+  "src/visualization.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "c89144bc763fcb28cbab35de05a88676",
+    "semantic_hash": "c89144bc763fcb28cbab35de05a88676"
+  },
+  "test_checkpoint_loading.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4dddc79ab0e03bc2a709fc690c63b38d",
+    "semantic_hash": "4dddc79ab0e03bc2a709fc690c63b38d"
+  },
+  "test_train_setup.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "471b92789528cb0fcb260c01d23467ba",
+    "semantic_hash": "471b92789528cb0fcb260c01d23467ba"
+  },
+  "tests/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "fb20eef6e0ed964862cd99c17cb494a0",
+    "semantic_hash": "fb20eef6e0ed964862cd99c17cb494a0"
+  },
+  "tests/conftest.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "cf9c1faf4b9b1d300e37ce915ec32242",
+    "semantic_hash": "cf9c1faf4b9b1d300e37ce915ec32242"
+  },
+  "tests/run_tests.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "523c03f783004ac172b5a7e03ce1ee3f",
+    "semantic_hash": "523c03f783004ac172b5a7e03ce1ee3f"
+  },
+  "tests/test_data_loading.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "1e934cc89689db4a45fb204216fedca6",
+    "semantic_hash": "1e934cc89689db4a45fb204216fedca6"
+  },
+  "tests/test_error_calculation.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f5030ebc7bff995536fb029bfc6027d1",
+    "semantic_hash": "f5030ebc7bff995536fb029bfc6027d1"
+  },
+  "tests/test_integration.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "20223d9a592539f28eefb7322e002e7a",
+    "semantic_hash": "20223d9a592539f28eefb7322e002e7a"
+  },
+  "tests/test_metrics.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "9e417a35a2e3c0e912f07937fb317e16",
+    "semantic_hash": "9e417a35a2e3c0e912f07937fb317e16"
+  },
+  "tests/test_scale_factor.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a48617987967afb7b9fe268b3a663308",
+    "semantic_hash": "a48617987967afb7b9fe268b3a663308"
+  },
+  "tests/test_statistical_tests.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "bc91aa5be54769f60aa8940f7125da91",
+    "semantic_hash": "bc91aa5be54769f60aa8940f7125da91"
+  },
+  "thesis/build.sh": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "8f37d94b561ebc20c6a2ae1fc0cfc217",
+    "semantic_hash": "8f37d94b561ebc20c6a2ae1fc0cfc217"
+  },
+  "thesis/code/MatlabExample.m": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "6dcef0b2fe20f334fafe305170b63ff5",
+    "semantic_hash": "6dcef0b2fe20f334fafe305170b63ff5"
+  },
+  "thesis/kntu-thesis.cls": {
+    "mtime": 1783693922.7827418,
+    "ast_hash": "d0ae25eeda8d81ec069ec4f190a3184f",
+    "semantic_hash": ""
+  },
+  "thesis/main.toc": {
+    "mtime": 1781881961.1525118,
+    "ast_hash": "75cd726fe2a92f1d51d10922b346ee93",
+    "semantic_hash": "75cd726fe2a92f1d51d10922b346ee93"
+  },
+  "train.py": {
+    "mtime": 1783620356.9137876,
+    "ast_hash": "395e85a53c8901baa494cd49a2ff6c63",
+    "semantic_hash": ""
+  },
+  "train_vkitti.sh": {
+    "mtime": 1780584374.084477,
+    "ast_hash": "edd0434dc7f9123040a1893b52c54db2",
+    "semantic_hash": "edd0434dc7f9123040a1893b52c54db2"
+  },
+  ".claude/agents/mde-results-evaluator.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "f504ca02741ce20a9835b7968c746dda",
+    "semantic_hash": "f504ca02741ce20a9835b7968c746dda"
+  },
+  "ARCHITECTURE_SIZES.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "71801552889de7dec89565c7b8ae00c0",
+    "semantic_hash": "71801552889de7dec89565c7b8ae00c0"
+  },
+  "CHECKPOINT_USAGE.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "5805ea0f125347c26638ee67b7f81533",
+    "semantic_hash": "5805ea0f125347c26638ee67b7f81533"
+  },
+  "CLAUDE.md": {
+    "mtime": 1783194791.2384598,
+    "ast_hash": "2a0d04923ea6b598c2f95353097597f4",
+    "semantic_hash": ""
+  },
+  "README_TRAINING.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "74e8a0136ecb687ff05f4ffebea4cf21",
+    "semantic_hash": "74e8a0136ecb687ff05f4ffebea4cf21"
+  },
+  "TRAINING_COMMANDS.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "0ab5eef8a34ee6c48ec1cb438d9c74c7",
+    "semantic_hash": "0ab5eef8a34ee6c48ec1cb438d9c74c7"
+  },
+  "gpu/SKILL.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "a19361b2f271a69fd0d2d1bba0f770c9",
+    "semantic_hash": ""
+  },
+  "important_commands.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "60af44c07f4106aaa13911829898a1ae",
+    "semantic_hash": "60af44c07f4106aaa13911829898a1ae"
+  },
+  "requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "5054f1429a83d3f0d1a2287719b4a76e",
+    "semantic_hash": "5054f1429a83d3f0d1a2287719b4a76e"
+  },
+  "tests/README.md": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "8c4eb522f964ed82bb8204f60bb0a498",
+    "semantic_hash": "8c4eb522f964ed82bb8204f60bb0a498"
+  },
+  "tests/test_report.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "004690bf0608852d7aa7a28df5598015",
+    "semantic_hash": "004690bf0608852d7aa7a28df5598015"
+  },
+  "thesis/README.md": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "155ee77fc3195b02ebef8520c533c469",
+    "semantic_hash": "155ee77fc3195b02ebef8520c533c469"
+  },
+  "tools/gpu-skill/SKILL.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "a19361b2f271a69fd0d2d1bba0f770c9",
+    "semantic_hash": ""
+  },
+  "thesis/Guide.pdf": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "58b08df91fb144cd0f6e8b8bca8a2107",
+    "semantic_hash": "58b08df91fb144cd0f6e8b8bca8a2107"
+  },
+  "thesis/img/IDMJ.pdf": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "26b27eed76f24056f895c8b0cdd5edb6",
+    "semantic_hash": "26b27eed76f24056f895c8b0cdd5edb6"
+  },
+  "thesis/main.pdf": {
+    "mtime": 1781881961.1525118,
+    "ast_hash": "a89e6636018082fdcf22072f99fab0c1",
+    "semantic_hash": "a89e6636018082fdcf22072f99fab0c1"
+  },
+  "correctness_check/depth_base_basic_vits_nyu_vkitti_diode_lr5e-6_.png": {
+    "mtime": 1781881961.0645113,
+    "ast_hash": "3bc09c75876878cfbb994264cc32eca3",
+    "semantic_hash": "3bc09c75876878cfbb994264cc32eca3"
+  },
+  "correctness_check/depth_ground_truth.png": {
+    "mtime": 1781881961.0645113,
+    "ast_hash": "e09081476130105a08f8a4694798af3b",
+    "semantic_hash": "e09081476130105a08f8a4694798af3b"
+  },
+  "correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png": {
+    "mtime": 1781881961.0685112,
+    "ast_hash": "42e1bf0d4139d234bc7a8ae2e1f4da11",
+    "semantic_hash": "42e1bf0d4139d234bc7a8ae2e1f4da11"
+  },
+  "correctness_check/input_image_with_sample_pixels.png": {
+    "mtime": 1781881961.0725112,
+    "ast_hash": "1803bf363fe282bbaca8c724a2c059b2",
+    "semantic_hash": "1803bf363fe282bbaca8c724a2c059b2"
+  },
+  "thesis/img/Logo.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": "007cadb817f217b7a34d5046cbea7873"
+  },
+  "thesis/img/addcommand.PNG": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "8529a657eb06923180efe7cca7171c55",
+    "semantic_hash": "8529a657eb06923180efe7cca7171c55"
+  },
+  "thesis/img/besm.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "41927f2e92422f5b4803f784a990d529",
+    "semantic_hash": "41927f2e92422f5b4803f784a990d529"
+  },
+  "thesis/img/gonzalez.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "bd38f52488e3d3a7db526e8433c74e8f",
+    "semantic_hash": "bd38f52488e3d3a7db526e8433c74e8f"
+  },
+  "thesis/img/journal-of-cancer_sample-result.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "2de507250a5ef55a3889c2ec86c0b8a0",
+    "semantic_hash": "2de507250a5ef55a3889c2ec86c0b8a0"
+  },
+  "thesis/img/lion.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "d2c0169c8ed2106b1a35d141a36c278c",
+    "semantic_hash": "d2c0169c8ed2106b1a35d141a36c278c"
+  },
+  "thesis/img/logo-en.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": "007cadb817f217b7a34d5046cbea7873"
+  },
+  "thesis/img/runcommand.PNG": {
+    "mtime": 1781881961.148512,
+    "ast_hash": "73dc4dd611d72b479a31b773d4b85891",
+    "semantic_hash": "73dc4dd611d72b479a31b773d4b85891"
+  },
+  ".claude/settings.json": {
+    "mtime": 1783620356.9217875,
+    "ast_hash": "e51077b6a7f1f67afc748f1a32a1557d",
+    "semantic_hash": ""
+  },
+  "evaluate_paper.py": {
+    "mtime": 1783196403.100111,
+    "ast_hash": "5eddddbb08cc7e1025df6eeebb317ea8",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/app.py": {
+    "mtime": 1780584373.7524745,
+    "ast_hash": "f6a73e5a144b4e692bc426a2f578b897",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1182c9821c544999ce21b7d4ea0d4f5a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/cam_enc.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "f5123bc4f1b1cf7656cd1a4631a8da67",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/config.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "622a0f3327a317da696fa3d3a792bf03",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "cb5ede8d66f80597cd69d5fb65c5b4a3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dpt.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "5da04dfa88a9ddfda620713792d1a163",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/model_loader.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "62c8cc4687c15f0bddf55f3853c319ce",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "58b26ca577bec775069290ffb9f05b4d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/base.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "6c1ac737063d15db96403051a4f97b57",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/depth_anything_v2_basic.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "94c06d08f43569037f6a29c5740be056",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/depth_anything_v2_metric.py": {
+    "mtime": 1783363890.0795176,
+    "ast_hash": "a3d0d9546966dc481dfc78f3b6dfa09d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/registry.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "5c327843f059d5f30a2279806a525d89",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "9896bd91c24d197bce556eb1ff182af7",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/__init__.py": {
+    "mtime": 1780584373.8524752,
+    "ast_hash": "4c51fba262af9129791028d5c2ee8df5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/generic_with_intrinsics.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "54235278e3d49b87209e73bac22ee281",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/hypersim.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "9e88488d5509c51a650a27fe8913efa3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/kitti.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "743feb362143ce9899c535f775186d8e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/transform.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "e0074c2ea6c2636e84f7d1cbad913d33",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/vkitti2.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "7cb97ba5724bb47e207298f2b7e2e1eb",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/cam_enc.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "0e60dbf7c7b42dc0a301ed1df7c9383e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "dcfbf11110b5e9507a3b819960909480",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dpt.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "8c34f46548b5fd2ed738561a7dc1f1f6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_to_pointcloud.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4a46341113b806d46b8000e43b966d32",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dist_train.sh": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "7f1695a84485e9d051128a749c6bf55f",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/prepare_data_example.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4dd16fea38482da623a436171ab27852",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/prepare_vkitti.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "8e9a5706183617bdc085edf4c963b833",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/run.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "9c760f060e75b40884fb1eb01bbd8840",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/train.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "af8dba16e54eeef8d1e0357c65be88f4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/dist_helper.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "3498bea2b10bdc921da7fa291dbe90b5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/loss.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "138c30772c335355475a443a48935245",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/metric.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4ac05bc37d7a4463e5c54f9a44805477",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/utils.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "818d3d299143b7f5b0f285575d2b7b8c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/run.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "b1a1814c3acc5560e2446fe17be5dadd",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/run_video.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "2e62574a5ad6ad6a3870274db0918c8e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/app.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "f6a73e5a144b4e692bc426a2f578b897",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/config.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "622a0f3327a317da696fa3d3a792bf03",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "55ff64d1037ee335f04f244f3de20602",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dpt.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5dd85ace7d11320241a3ee55d8ab2c71",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/model_loader.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "2da7792d1864ec150d76745c925cc710",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/__init__.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "58b26ca577bec775069290ffb9f05b4d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/base.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "6c1ac737063d15db96403051a4f97b57",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/depth_anything_v2_basic.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "b59014c7ffe8873625c3a5e2145aab0d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/depth_anything_v2_metric.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "fafd77f5d94874e3b8e9dc6e9b759b7a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/registry.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5c327843f059d5f30a2279806a525d89",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/hypersim.py": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "9e88488d5509c51a650a27fe8913efa3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/kitti.py": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "4a263eb3e5df7a66784cb2cac3e57247",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/transform.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "52b67e939f7758005bb7918fe85cf8d4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/vkitti2.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "97dedecd35e64cd5694f892b0c9f8c1a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2f21761d7622a4315922ed3b79c13537",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dpt.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f417bcdd74b3d83b6b2cb7b2e7e2d0f4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_to_pointcloud.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4a46341113b806d46b8000e43b966d32",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dist_train.sh": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "7f1695a84485e9d051128a749c6bf55f",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/run.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "e62e9b764ab90aeb2b1812a9edf6006b",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/train.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "6093f12f04a1b6c3e28962abbebbc0f6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/dist_helper.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2d223cb92de7b71fa3b9aae0946262d5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/loss.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "54a9b6b5587d12a260e513156f2c0661",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/metric.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "8a31db34148c91e144698a8a7163a2d4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/utils.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "818d3d299143b7f5b0f285575d2b7b8c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/run.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "b1a1814c3acc5560e2446fe17be5dadd",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/run_video.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2e62574a5ad6ad6a3870274db0918c8e",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20260704_173608_why_does_datasetitem_connect_dataset_item_loading.md": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "2847cb8d775ddcea28b4f9bde19d4cf1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/README.md": {
+    "mtime": 1780584373.7524745,
+    "ast_hash": "048eef9d05e3a59e8c8d187317271e48",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/README.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1f089acd895af8eb0f7c1274f582cda3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/QUICKSTART.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "412ab19a9d94b4804fe59d11fb161fb9",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/README.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1f29ab0aad312887651a67e8e7dbe0c6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/TRAINING_GUIDE.md": {
+    "mtime": 1780584373.832475,
+    "ast_hash": "2eec198355ad68c6c47fdd4208c10ae4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/VKITTI_TRAINING_GUIDE.md": {
+    "mtime": 1780584373.832475,
+    "ast_hash": "32ee80d8f1dbcae07b7fff402da968a3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/hypersim/train.txt": {
+    "mtime": 1780584373.8884754,
+    "ast_hash": "3129043bdcc5cab057ecc9af5202de26",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/hypersim/val.txt": {
+    "mtime": 1780584373.9084756,
+    "ast_hash": "b8ce4bda0e3e3416c07cb7cab31cd4e3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/kitti/val.txt": {
+    "mtime": 1780584373.9084756,
+    "ast_hash": "d5666579f42fc549cdb6b471a0aece86",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/vkitti2/train.txt": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "0f34ec59e324bf4c5b0d033ae2f15d05",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/requirements.txt": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "f13a21f5b14552cb6585e0c23d803331",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/requirements.txt": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "aed1eef782c0d90afa7b7055950eacca",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/README.md": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "048eef9d05e3a59e8c8d187317271e48",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/README.md": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "1f089acd895af8eb0f7c1274f582cda3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/README.md": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "1f29ab0aad312887651a67e8e7dbe0c6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/hypersim/train.txt": {
+    "mtime": 1780584374.0684767,
+    "ast_hash": "3129043bdcc5cab057ecc9af5202de26",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/hypersim/val.txt": {
+    "mtime": 1780584374.0724769,
+    "ast_hash": "b8ce4bda0e3e3416c07cb7cab31cd4e3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/kitti/val.txt": {
+    "mtime": 1780584374.0724769,
+    "ast_hash": "d5666579f42fc549cdb6b471a0aece86",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/vkitti2/train.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "0f34ec59e324bf4c5b0d033ae2f15d05",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "d6723eaa7fec613992f482bbb680f686",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "aed1eef782c0d90afa7b7055950eacca",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/DA-2K.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "82b625826f2deb391116e4944aee9b7e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/DA-2K.md": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "82b625826f2deb391116e4944aee9b7e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/DA-2K.png": {
+    "mtime": 1780584373.7564745,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/teaser.png": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/assets/compare_zoedepth.png": {
+    "mtime": 1780584373.8524752,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/DA-2K.png": {
+    "mtime": 1780584373.9324758,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/teaser.png": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/assets/compare_zoedepth.png": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/examples_video/basketball.mp4": {
+    "mtime": 1780584373.7764747,
+    "ast_hash": "f21e04f5fff02b9a9cc7fc1a31c05353",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/examples_video/ferris_wheel.mp4": {
+    "mtime": 1780584373.7884748,
+    "ast_hash": "637bcd7b8bc4bec3cbdf1cfa66443494",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/examples_video/basketball.mp4": {
+    "mtime": 1780584373.952476,
+    "ast_hash": "f21e04f5fff02b9a9cc7fc1a31c05353",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/examples_video/ferris_wheel.mp4": {
+    "mtime": 1780584373.968476,
+    "ast_hash": "637bcd7b8bc4bec3cbdf1cfa66443494",
+    "semantic_hash": ""
+  },
+  "disable_bad_tensorboard_runs.py": {
+    "mtime": 1783190171.1783428,
+    "ast_hash": "9804df30f7375d94d11f865e1bcbb952",
+    "semantic_hash": ""
+  },
+  "evaludate_da2k.py": {
+    "mtime": 1783190171.1783428,
+    "ast_hash": "0b9f57a5cf6e8b3aef73697091e51078",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/comparison.json": {
+    "mtime": 1783620356.9217875,
+    "ast_hash": "0261d37cc525748b6435908ed5290136",
+    "semantic_hash": ""
+  },
+  "tests/test_focal_jitter.py": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "248956157e7b7979c4fa070f04b63b90",
+    "semantic_hash": ""
+  },
+  "tools/compare_pair_losses.py": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "f2a93265f4197591f8283e3ff0ff5a2c",
+    "semantic_hash": ""
+  },
+  "tools/eval_fov_varied.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "380f633f394be2aadca1a65038b9bec8",
+    "semantic_hash": ""
+  },
+  "tools/k_sweep.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "cb9443b54cd167f900143a5c8e974523",
+    "semantic_hash": ""
+  },
+  "tools/output_difference_viz.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "e9987393edfb847f97f22eaa0e2a8d2d",
+    "semantic_hash": ""
+  },
+  "tools/paired_stats.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "9077860b70aa385911099527cbe5d773",
+    "semantic_hash": ""
+  },
+  "tools/sanity_check_focal_jitter.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "5693008eb0746fdf2bad84fc2f5f319c",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_base_metric_vitl_nyu_lr5e-6_bs2_20260707.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "0a69a6799556dcc2d574b026196c365c",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_ground_truth.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "9cf949f66e6e3038ae26cf98d9928ae8",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_revised_metric_vitl_nyu_intrinsics_lr5e-.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "8d7c02b7ef47034379ffead282d4dd93",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/input_image_with_sample_pixels.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "f1dd8b44f676e06db929c11087e4d3fd",
+    "semantic_hash": ""
+  },
+  "tools/k_knockout.py": {
+    "mtime": 1783633189.145592,
+    "ast_hash": "0d59fa7d6f8716723e66860bb71e233a",
+    "semantic_hash": ""
+  },
+  "thesis-changes.md": {
+    "mtime": 1783694882.9349701,
+    "ast_hash": "bd1b39c5252c5c8b0ed2fa02ca893709",
+    "semantic_hash": ""
+  }
+}

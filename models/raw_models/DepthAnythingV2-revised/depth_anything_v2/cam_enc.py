@@ -6,8 +6,11 @@ import torch
 import torch.nn as nn
 import math
 
+# The descriptor used by every reported model (order matters for old checkpoints).
+DEFAULT_CAM_FEATURES = ('fx', 'fy', 'cx', 'cy', 'fovh', 'fovw', 'aspect', 'favg', 'area')
 
-def intrinsics_to_encoding(intrinsics, image_size_hw):
+
+def intrinsics_to_encoding(intrinsics, image_size_hw, features=DEFAULT_CAM_FEATURES):
     """
     Convert camera intrinsics to a compact encoding.
     
@@ -54,19 +57,24 @@ def intrinsics_to_encoding(intrinsics, image_size_hw):
     cx_norm = cx / W
     cy_norm = cy / H
     
-    # Stack into encoding
-    encoding = torch.stack([
-        fx_norm,
-        fy_norm,
-        cx_norm,
-        cy_norm,
-        fov_h / math.pi,  # Normalize to [0, 1] range
-        fov_w / math.pi,
-        aspect_ratio,
-        focal_length_avg / torch.maximum(H, W),
-        image_area / (1920 * 1080),  # Normalize by typical image size
-    ], dim=-1)  # (B, 9)
-    
+    feats = {
+        'fx': fx_norm,
+        'fy': fy_norm,
+        'cx': cx_norm,
+        'cy': cy_norm,
+        'fovh': fov_h / math.pi,  # Normalize to [0, 1] range
+        'fovw': fov_w / math.pi,
+        'aspect': aspect_ratio,
+        'favg': focal_length_avg / torch.maximum(H, W),
+        'area': image_area / (1920 * 1080),  # Normalize by typical image size
+        # extra candidates, used only by the descriptor ablation
+        'logfx': torch.log(torch.clamp(fx_norm, min=1e-6)),
+        'logfy': torch.log(torch.clamp(fy_norm, min=1e-6)),
+        'invfx': 1.0 / torch.clamp(fx_norm, min=1e-6),
+        'invfy': 1.0 / torch.clamp(fy_norm, min=1e-6),
+    }
+    encoding = torch.stack([feats[k] for k in features], dim=-1)  # (B, len(features))
+
     return encoding
 
 
@@ -89,9 +97,12 @@ class CameraEncoder(nn.Module):
         num_heads: int = 16,  # Number of attention heads (should match dim_out)
         mlp_ratio: int = 4,
         init_values: float = 0.01,
+        features=None,  # descriptor feature names; None = DEFAULT_CAM_FEATURES
         **kwargs,
     ):
         super().__init__()
+        self.features = tuple(features) if features else DEFAULT_CAM_FEATURES
+        dim_in = len(self.features)
         self.dim_out = dim_out
         self.trunk_depth = trunk_depth
         
@@ -155,7 +166,7 @@ class CameraEncoder(nn.Module):
         else:
             H, W = image_size[0], image_size[1]
         
-        pose_encoding = intrinsics_to_encoding(intrinsics, (H, W))  # (B, 9)
+        pose_encoding = intrinsics_to_encoding(intrinsics, (H, W), self.features)  # (B, dim_in)
         
         # Project to embedding dimension
         pose_tokens = self.pose_branch(pose_encoding)  # (B, dim_out)

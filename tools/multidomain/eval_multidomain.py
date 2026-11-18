@@ -168,7 +168,8 @@ def load_model(args, device):
         assert cfg.get('basic_target_space') == 'disparity', cfg
     uses_k = bool(cfg.get('use_camera_intrinsics'))
     model = DepthAnythingV2(**MODEL_CONFIGS[cfg['encoder']], use_camera_intrinsics=uses_k,
-                            cam_token_inject_layer=cfg.get('cam_token_inject_layer'))
+                            cam_token_inject_layer=cfg.get('cam_token_inject_layer'),
+                            cam_features=(cfg['cam_features'].split(',') if cfg.get('cam_features') else None))
     model.load_state_dict(ckpt['model'], strict=True)
     meta = {'checkpoint': os.path.abspath(args.checkpoint), 'epoch': ckpt.get('epoch'),
             'uses_intrinsics': uses_k, 'train_config': cfg, 'encoder': cfg['encoder'],

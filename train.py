@@ -129,6 +129,8 @@ parser.add_argument('--jpeg-aug', action='store_true',
 parser.add_argument('--kitti-rgb', choices=['jpg', 'png'], default='jpg',
                     help='(--multidomain) KITTI training RGB: JPEG-95 copies (jpg) or the '
                          'original lossless PNGs (png), which match the PNG test images')
+parser.add_argument('--cam-features', type=str, default=None,
+                    help='comma-separated camera-descriptor features (see cam_enc.py); default = the 9-D descriptor')
 parser.add_argument('--canonical-focal', type=float, default=0.0,
                     help='(camera-aware models) predict depth in a canonical camera: the output '
                          'is multiplied by f_net / F, f_net = fy * (network-input short side) / '
@@ -834,7 +836,8 @@ Training Run Summary:
     model_kwargs = {
         **model_configs[encoder_to_use],
         'use_camera_intrinsics': args.use_camera_intrinsics,
-        'cam_token_inject_layer': args.cam_token_inject_layer
+        'cam_token_inject_layer': args.cam_token_inject_layer,
+        'cam_features': args.cam_features.split(',') if args.cam_features else None,
     }
 
     if is_metric:
@@ -1343,6 +1346,7 @@ Training Run Summary:
                         'max_depth': args.max_depth,
                         'use_camera_intrinsics': args.use_camera_intrinsics,
                         'cam_token_inject_layer': args.cam_token_inject_layer,
+                        'cam_features': args.cam_features,
                         'model_type': args.model_type,
                         'basic_target_space': None if is_metric else 'disparity',
                         'focal_jitter': args.focal_jitter,
@@ -1609,6 +1613,7 @@ Training Run Summary:
                     'max_depth': args.max_depth,
                     'use_camera_intrinsics': args.use_camera_intrinsics,
                     'cam_token_inject_layer': args.cam_token_inject_layer,
+                    'cam_features': args.cam_features,
                     'model_type': args.model_type,
                     'basic_target_space': None if is_metric else 'disparity',
                     'focal_jitter': args.focal_jitter,

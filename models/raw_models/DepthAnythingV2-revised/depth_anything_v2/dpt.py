@@ -161,6 +161,7 @@ class DepthAnythingV2(nn.Module):
         max_depth=20.0,
         use_camera_intrinsics=False,  # Enable camera intrinsics support
         cam_token_inject_layer=None,  # Layer to inject camera token (None = first layer)
+        cam_features=None,  # camera-descriptor feature names (None = default 9-D)
     ):
         super(DepthAnythingV2, self).__init__()
         
@@ -188,6 +189,7 @@ class DepthAnythingV2(nn.Module):
             self.cam_encoder = CameraEncoder(
                 dim_out=embed_dim,
                 num_heads=num_heads,
+                features=cam_features,
             )
         else:
             self.cam_encoder = None

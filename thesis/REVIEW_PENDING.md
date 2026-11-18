@@ -23,9 +23,7 @@ its own session); its remaining marks are listed below. The macros in `tex/comma
 
 - R30 (entry below): §3.2.4 one-word fix «مقیاس واقعی» → «هندسه تصویربرداری».
 - R26 (full entry below): §5.2.2 research-question answers and Table 5.1.
-- Older marks inside `chapter5.tex` that were not touched: R1, R2 (one), R6, R7 (gray/green/red blocks and the
-  contributions / limitations tables), R20 items 14–15, R21 items 20–23, R25 item 8. Their ledger entries
-  were removed above with the rest; each mark is self-describing (`% REVIEW Rn` line before the region).
+- Older chapter 5 marks (R1, R2, R6, R7, R20) were finalized on 2026-11-18 at the author's request; only the marks of the last two days stay pending in `chapter5.tex`: R21 (four inline marks: summary paragraph, deleted sentence in the R26 block, future-work item), R25 (item 8, one sentence) and R26 (below).
   Finalize rule: `\edrep{old}{new}` → new, `\edadd{X}`/`\edins{X}`/`\edmove{X}` → X, drop `\eddel`,
   `eddeleted` blocks, `\eddelrow` rows and `\eddelbox` tables, unwrap `edadded`/`edmoved`, remove the
   `% REVIEW` lines.

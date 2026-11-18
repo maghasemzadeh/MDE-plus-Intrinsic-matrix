@@ -71,3 +71,24 @@ R34 (§4.6.3, «بیش از ده مدل با دو اندازه انکودر») w
 - Abstract: «از نظر علی ضروری»; §4.7.2: the findings «ادعای لزوم … را اثبات نمی‌کنند» (model-level reliance vs necessity in principle).
 - `alg:training_pipeline` writes the camera encoder as `MLP(d_cam)`; the text defines it as MLP + four transformer blocks + gate.
 - §4.6 opening: «این زنجیره همان AbsRel برابر ۰٫۲۰۷ را … (زیربخش 4.4.3)» — that subsection does not print 0.207.
+
+## R37 — 2026-11-18 — abstract rewritten to one page, keywords updated (author's request)
+
+Author's brief: motivate the problem, state current solutions and their gap briefly (without
+discussing earlier methods that take camera intrinsics), say what was used, how much it improved and
+what the benefit is; one page in the final state. Content and numbers fixed by Claude from chapters
+4–5; Persian wording by Codex (two wording rounds and one read-only review), English written to match.
+
+| # | File | Location (printed page) | Change | Kind |
+|---|---|---|---|---|
+| 1 | faTitle.tex | `\faabstract` (p. 11–12 while marked) | three old paragraphs → three new paragraphs (motivation and gap; method; results and benefit) | deleted + added |
+| 2 | faTitle.tex | `\keywords` | «MDE» → «تخمین عمق تک‌دوربینه»; «یادگیری عمیق بدون نظارت» removed (§3.4 says the fine-tuning is supervised); «ماتریس کالیبراسیون دوربین» added; «هندسه تصویربرداری» → «مدل بنیادین» | edited |
+| 3 | enTitle.tex | `\enabstract` (English abstract, end of the PDF) | same rewrite in English | deleted + added |
+| 4 | enTitle.tex | `\latinkeywords` | same keyword changes; each marked item is wrapped in `\texorpdfstring{markup}{final text}` because this field also feeds the PDF keywords | edited |
+
+- Numbers used, all already in the thesis: AbsRel 0.1065 → 0.0834, about 22 % (`tab:nyu_absolute_focal`); lower AbsRel than the control on 8 of 8 test sets with ViT-S and ViT-L (`tab:md_encoder_protocol`); NYUv2 0.088 / 0.133 / 0.207 and the four-set, three-metric comparison (`tab:multidomain_main`).
+- Left out on purpose to reach one page: the 0.06 → 0.97 slope and the 111 % removal test as numbers (the pinhole sentence stays in words), the four training-set names, the nine-dimensional descriptor, CAM-Convs / Metric3D / UniDepth / Depth Pro (English), «از نظر علی ضروری».
+- This update settles the first two items of "Noted in the final read" above (the two abstracts now say the same thing; «ضروری» is gone).
+- One-page check: with `\showreviewfalse` in an isolated copy, the Persian abstract with its keywords ends on one page (19 text lines, about one line to spare) and the English one on one page. While marked, old and new text together take more than one page.
+- Finalize: drop both `eddeleted` blocks, keep the bodies of the `edadded` blocks without the environment lines; in `\keywords`: `\edrep{old}{new}` → new, drop `\eddel{…}`, `\edins{X}` → X; in `\latinkeywords`: each `\texorpdfstring{…}{X}` → X (the one with an empty second argument is dropped); remove the four `% REVIEW R37` lines.
+- Revert: drop the `edadded` blocks, unwrap the `eddeleted` blocks (`\eddel{X}` → X, un-brace `{\lr{…}}`, `{\fadecimal{…}}`, `{$\delta_1$}`), restore both keyword lists; reference commit for the old text: ec0e0ad.

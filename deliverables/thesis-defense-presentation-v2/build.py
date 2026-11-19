@@ -13,7 +13,7 @@ ROOT = Path(__file__).resolve().parent
 fa = json.loads((ROOT / "content" / "fa.json").read_text(encoding="utf8"))
 
 parts = [fa[f"part.{i}"] for i in range(1, 8)]
-config = {"parts": parts, "backupLabel": fa["b.label"], "of": "از"}
+config = {"parts": parts, "backupLabel": fa["b.label"], "partLabel": fa["ui.part"], "of": "از"}
 
 slides = "".join(p.read_text(encoding="utf8") for p in sorted((ROOT / "src" / "slides").glob("*.html")))
 html = (ROOT / "src" / "shell.html").read_text(encoding="utf8").replace("<!--SLIDES-->", slides)

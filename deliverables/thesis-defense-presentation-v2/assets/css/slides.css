@@ -23,8 +23,8 @@ td.ltr-cell.name, th.ltr-cell.name { text-align: right; }
 
 /* ---------- 1 · title ---------- */
 .slide.s-title { padding: 0; flex-direction: row; }
-.s-title .t-art { flex: 0 0 600px; background: var(--navy-900); order: 2; position: relative; }
-.s-title .t-art svg { width: 100%; height: 100%; display: block; }
+.s-title .t-art { flex: 0 0 600px; background: var(--navy-900); order: 2; position: relative; display: flex; flex-direction: column; justify-content: center; }
+.s-title .t-art video { width: 100%; height: auto; display: block; background: var(--navy-900); pointer-events: none; }
 .s-title .t-main { flex: 1; order: 1; padding: 84px 110px 70px 90px; display: flex; flex-direction: column; }
 .t-uni { display: flex; align-items: center; gap: 24px; }
 .t-uni img { width: 104px; height: auto; }
@@ -45,7 +45,7 @@ ol.outline li b { font-size: 50px; font-weight: 800; color: var(--sky-300); min-
 ol.outline li.key { background: var(--navy-900); border-color: var(--navy-900); color: #fff; }
 ol.outline li.key b { color: var(--sky-200); }
 
-/* ---------- 3 · why absolute depth ---------- */
+/* ---------- 4 · why absolute depth ---------- */
 .pair { display: flex; align-items: center; gap: 0; }
 .pair .fig { flex: 1; }
 .pair .fig figcaption { text-align: center; font-size: 27px; font-weight: 600; color: var(--ink-2); }
@@ -57,15 +57,13 @@ ol.outline li.key b { color: var(--sky-200); }
 .qa.hero { background: var(--navy-900); border-color: var(--navy-900); }
 .qa.hero .qa-l { color: var(--sky-200); } .qa.hero .qa-q { color: #fff; }
 
-/* ---------- 4 · video ---------- */
+/* ---------- 5 · video ---------- */
 .vframe { height: 700px; aspect-ratio: 268 / 480; border-radius: 22px; overflow: hidden; background: var(--navy-950); box-shadow: 0 0 0 10px var(--navy-900); }
 .vframe video { width: 100%; height: 100%; display: block; object-fit: cover; }
-.nf { display: flex; align-items: center; gap: 34px; }
-.nf-i { display: flex; flex-direction: column; align-items: center; gap: 8px; font-size: 32px; font-weight: 700; }
-.nf-i svg { width: 150px; height: 150px; }
-.nf-eq { font-size: 80px; font-weight: 300; color: var(--ink-3); }
+.dia.amb .d-lab { font-size: 30px; font-weight: 700; }
+.dia.amb .d-lab:not(.navy):not(.orange) { font-size: 25px; font-weight: 600; }
 
-/* ---------- 5 · pinhole ---------- */
+/* ---------- 6 · pinhole ---------- */
 .kleg { display: flex; justify-content: center; gap: 40px; margin-top: 10px; font-size: 25px; color: var(--ink-2); font-weight: 600; direction: rtl; }
 .kleg span { display: inline-flex; align-items: center; gap: 10px; }
 .sq { width: 20px; height: 20px; border-radius: 4px; display: inline-block; }
@@ -73,12 +71,12 @@ ol.outline li.key b { color: var(--sky-200); }
 .s-pinhole .same { text-align: center; margin-top: 16px; font-size: 38px; font-weight: 800; color: var(--c-control); }
 .s-pinhole .stack { gap: 20px; }
 
-/* ---------- 6 · questions ---------- */
+/* ---------- 7 · questions ---------- */
 ol.qlist { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 22px; }
 ol.qlist li { display: flex; align-items: center; gap: 34px; font-size: 39px; font-weight: 600; line-height: 1.5; padding: 22px 34px; border: 2px solid var(--line); border-radius: 14px; }
 ol.qlist li b { flex: 0 0 66px; height: 66px; display: grid; place-items: center; font-size: 36px; font-weight: 800; background: var(--sky-100); color: var(--navy-900); border-radius: 50%; }
 
-/* ---------- 7 · timeline ---------- */
+/* ---------- 8 · timeline ---------- */
 .tl { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0; margin-top: 30px; position: relative; }
 .tl::before { content: ""; position: absolute; left: 0; right: 0; top: 78px; height: 5px; background: var(--line); }
 .tl-n { padding: 0 18px; position: relative; }
@@ -93,18 +91,18 @@ ol.qlist li b { flex: 0 0 66px; height: 66px; display: grid; place-items: center
 .tl-n.me > i { background: var(--sky-200); border-color: #fff; }
 .tl-n.me h4 { min-height: 60px; }
 
-/* ---------- 8 · base model ---------- */
+/* ---------- 9 · base model ---------- */
 .s-base .stats { gap: 30px; padding-inline-start: 20px; }
 .s-base .flow .box { font-size: 27px; padding: 18px 12px; }
 .s-base .fig figcaption { font-size: 20px; margin-top: 8px; }
 
-/* ---------- 9 · prior work ---------- */
+/* ---------- 10 · prior work ---------- */
 table.prior { font-size: 33px; }
 table.prior td { padding: 20px 22px; }
 .yes, .no { display: inline-grid; place-items: center; width: 50px; height: 50px; border-radius: 50%; font-size: 30px; font-weight: 800; font-family: "Segoe UI Symbol", "DejaVu Sans", sans-serif; }
 .yes { background: var(--navy-900); color: #fff; } .no { background: #eef0f5; color: var(--ink-3); }
 
-/* ---------- 10 · core idea ---------- */
+/* ---------- 11 · core idea ---------- */
 .idea { display: flex; align-items: center; justify-content: center; gap: 0; margin-top: 6px; }
 .idea-in { display: flex; flex-direction: column; gap: 18px; width: 330px; }
 .idea .fig figcaption { text-align: center; font-size: 26px; font-weight: 600; color: var(--ink-2); margin-top: 8px; }
@@ -122,7 +120,7 @@ table.prior td { padding: 20px 22px; }
 .ieq.ours .lab { color: var(--navy-700); } .ieq.ours .tex { color: var(--navy-900); }
 .s-idea p.center { margin-top: 22px; }
 
-/* ---------- 11 · descriptor ---------- */
+/* ---------- 12 · descriptor ---------- */
 .desc { display: flex; align-items: center; gap: 0; }
 .desc-k { flex: 0 0 400px; display: flex; flex-direction: column; gap: 22px; padding: 30px 10px; border: 3px solid var(--c-control); border-radius: 16px; background: #fdf3ea; }
 .desc-k .eq { font-size: 38px; }
@@ -138,7 +136,7 @@ table.prior td { padding: 20px 22px; }
 .desc-notes { margin-top: 26px; justify-content: center; align-items: center; }
 .desc-notes .chip .tex { font-size: 26px; }
 
-/* ---------- 13 · gate ---------- */
+/* ---------- 14 · gate ---------- */
 .gate-eq { display: flex; align-items: center; justify-content: center; gap: 44px; margin-bottom: 40px; }
 .gate-eq .eq { font-size: 52px; }
 .gate-states { display: grid; grid-template-columns: repeat(3, 1fr); gap: 36px; }
@@ -149,7 +147,7 @@ table.prior td { padding: 20px 22px; }
 .gs .tex { font-size: 44px; color: var(--navy-900); }
 .gs p { margin: 0; font-size: 33px; font-weight: 700; line-height: 1.5; color: var(--ink); }
 
-/* ---------- 14 · paired design ---------- */
+/* ---------- 15 · paired design ---------- */
 .arms { display: grid; grid-template-columns: 1fr 1.25fr 1fr; gap: 0; align-items: stretch; }
 .arm { border-radius: 16px; padding: 40px 30px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 26px; }
 .arm h3 { margin: 0; font-size: 46px; font-weight: 800; }
@@ -162,7 +160,7 @@ table.prior td { padding: 20px 22px; }
 .shared ul { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 14px 20px; }
 .shared li { font-size: 30px; font-weight: 600; padding: 14px 16px; background: var(--sky-50); border-radius: 10px; text-align: center; border-bottom: 4px solid var(--sky-300); }
 
-/* ---------- 15 · datasets ---------- */
+/* ---------- 16 · datasets ---------- */
 table.data td, table.data th { font-size: 25px; }
 table.data td { padding: 7px 14px; }
 .s-data .total { margin-top: 14px; font-weight: 700; color: var(--navy-900); }
@@ -170,7 +168,7 @@ table.data td { padding: 7px 14px; }
 .samples .fig figcaption { margin-top: 4px; font-size: 21px; text-align: left; font-weight: 600; color: var(--ink-2); }
 .samples .fig:first-child img { height: 228px; object-fit: cover; }
 
-/* ---------- 16 · augmentation ---------- */
+/* ---------- 17 · augmentation ---------- */
 .panel.aug { padding: 26px 34px; display: flex; flex-direction: column; gap: 16px; height: 100%; }
 .panel.aug h3 { font-size: 40px; margin: 0; }
 .zc { display: flex; align-items: center; justify-content: center; direction: rtl; }
@@ -188,14 +186,14 @@ table.data td { padding: 7px 14px; }
 .fj-img { width: 240px; height: 180px; border-radius: 10px; background: url("../img/nyu.jpg") center / cover; border: 2px solid var(--line); }
 .fj-eq { font-size: 70px; color: var(--c-control); font-weight: 700; margin-top: 40px; }
 
-/* ---------- 17 · recipe, backup hyperparameters ---------- */
+/* ---------- 18 · recipe, backup hyperparameters ---------- */
 dl.kv { margin: 6px 0 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 26px 30px; }
 dl.kv > div { border-top: 5px solid var(--navy-900); padding: 20px 6px 8px; }
 dl.kv dt { font-size: 26px; font-weight: 600; color: var(--ink-3); margin-bottom: 8px; }
 dl.kv dd { margin: 0; font-size: 34px; font-weight: 700; line-height: 1.5; color: var(--ink); }
 dl.kv dd.ltr { text-align: right; }
 
-/* ---------- 18 · phases ---------- */
+/* ---------- 19 · phases ---------- */
 .phases { display: grid; grid-template-columns: repeat(4, 1fr); gap: 34px; margin-top: 20px; }
 .ph { position: relative; display: flex; flex-direction: column; }
 .ph-n { font-size: 27px; font-weight: 800; color: var(--navy-500); margin-bottom: 10px; }
@@ -204,7 +202,7 @@ dl.kv dd.ltr { text-align: right; }
 .ph > i { display: block; width: 4px; height: 54px; margin: 0 auto; background: repeating-linear-gradient(var(--navy-500) 0 8px, transparent 8px 15px); }
 .ph p { margin: 0; flex: 1; padding: 22px 26px; font-size: 30px; line-height: 1.6; font-weight: 600; color: var(--navy-900); background: var(--sky-50); border: 2px solid var(--sky-300); border-radius: 16px; }
 
-/* ---------- 20 · protocols ---------- */
+/* ---------- 21 · protocols ---------- */
 .proto { display: grid; grid-template-columns: 250px 1fr; gap: 50px; align-items: center; }
 .proto-src { height: 220px; border-radius: 16px; background: var(--navy-900); color: #fff; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 12px; font-size: 32px; font-weight: 700; position: relative; }
 .proto-src .tex { font-size: 42px; color: var(--sky-200); }
@@ -225,7 +223,7 @@ dl.kv dd.ltr { text-align: right; }
 .lane.abs .lane-num em { color: var(--navy-900); font-size: 32px; direction: ltr; }
 .proto-leg { margin-top: 30px; justify-content: center; }
 
-/* ---------- 21–23 · charts with a stat ---------- */
+/* ---------- 22–24 · charts with a stat ---------- */
 .s-leap .legend, .s-knock .legend { justify-content: center; margin-top: 6px; min-height: 40px; }
 .sig { display: flex; flex-direction: column; gap: 6px; font-size: 28px; color: var(--ink-2); font-weight: 600; padding-top: 22px; border-top: 2px solid var(--line); }
 .sig .tex { font-size: 36px; color: var(--navy-900); align-self: flex-end; }
@@ -234,7 +232,7 @@ dl.kv dd.ltr { text-align: right; }
 .s-sweep .eq.box { align-self: flex-start; font-size: 46px; padding: 16px 44px; }
 .s-knock .phrase { font-size: 40px; font-weight: 800; color: var(--navy-900); padding-top: 24px; border-top: 2px solid var(--line); }
 
-/* ---------- 24 · final model ---------- */
+/* ---------- 25 · final model ---------- */
 .final { display: flex; align-items: center; justify-content: center; }
 .fcol { display: flex; flex-direction: column; gap: 16px; width: 500px; }
 .fcol-l { font-size: 28px; font-weight: 700; color: var(--ink-2); text-align: center; }
@@ -255,7 +253,7 @@ dl.kv dd.ltr { text-align: right; }
 .final-facts { justify-content: center; margin-top: 44px; }
 .final-facts .chip { font-size: 30px; padding: 14px 30px; }
 
-/* ---------- 25 / 27 · headline charts ---------- */
+/* ---------- 26 / 28 · headline charts ---------- */
 .headline-foot { display: flex; align-items: center; justify-content: space-between; margin-top: 6px; gap: 30px; }
 .hl-msg { display: flex; flex-direction: column; align-items: flex-end; text-align: left; }
 .hl-msg b { font-size: 36px; font-weight: 800; color: var(--navy-900); }
@@ -265,7 +263,7 @@ dl.kv dd.ltr { text-align: right; }
 .zs-head span:first-child { padding-left: 470px; }
 .s-zeroshot .headline-foot { margin-top: 18px; }
 
-/* ---------- 26 · main table ---------- */
+/* ---------- 27 · main table ---------- */
 table.main { font-size: 28px; margin-top: 20px; }
 table.main th { font-size: 23px; padding: 12px 8px; }
 table.main td { padding: 24px 8px; }
@@ -278,7 +276,13 @@ table.main tr.hl td.name { background: var(--navy-900); color: #fff; }
 .tf-note { font-size: 26px; color: var(--ink-2); font-weight: 600; display: inline-flex; gap: 14px; align-items: baseline; }
 .tf-note b { color: var(--navy-900); font-weight: 800; }
 
-/* ---------- 28–30 · qualitative ---------- */
+/* ---------- 29 · relative vs metres on the same images ---------- */
+table.gap td { padding: 20px 8px; }
+table.gap tr.grp td { padding: 10px 18px; font-size: 25px; }
+table.gap tr.hl td.n { font-weight: 800; color: var(--navy-900); }
+.s-gap .table-foot { margin-top: 36px; }
+
+/* ---------- 30–32 · qualitative ---------- */
 .qwrap { display: grid; grid-template-columns: 1fr 250px; gap: 34px; align-items: start; direction: ltr; }
 .qual { position: relative; padding-top: 44px; }
 .qual img { display: block; width: 100%; height: auto; }
@@ -313,7 +317,7 @@ ul.ekey li::before { content: ""; position: absolute; inset-inline-start: 0; top
 ul.ekey li.r::before { background: #c0392b; } ul.ekey li.w::before { background: #f7f7f7; } ul.ekey li.b::before { background: #2f6fae; }
 .emsg { font-size: 34px !important; font-weight: 800 !important; color: var(--navy-900) !important; }
 
-/* ---------- 31 · wins ---------- */
+/* ---------- 33 · wins ---------- */
 .wins-h { display: flex; align-items: baseline; gap: 20px; font-size: 30px; font-weight: 700; color: var(--navy-900); margin-bottom: 14px; }
 .wins-h .muted { font-size: 26px; font-weight: 500; }
 .wbar { display: flex; gap: 6px; height: 118px; }
@@ -337,7 +341,7 @@ ul.ekey li.r::before { background: #c0392b; } ul.ekey li.w::before { background:
 .ratio .rv { font-size: 23px; font-weight: 700; fill: var(--ink); }
 .legend.sm { font-size: 24px; gap: 26px; justify-content: center; }
 
-/* ---------- 32 · encoder ---------- */
+/* ---------- 34 · encoder ---------- */
 table.heat { font-size: 26px; }
 table.heat td { padding: 8px 14px; }
 table.heat td.n { font-weight: 700; font-size: 27px; border-inline-start: 3px solid #fff; }
@@ -347,7 +351,7 @@ table.heat th { font-size: 26px; }
 .s-encoder .panel .phrase.s { font-size: 29px; font-weight: 600; color: var(--ink-2); margin-top: 8px; }
 .s-encoder .panel h3 { font-size: 27px; font-weight: 600; color: var(--ink-3); }
 
-/* ---------- 33 · applications ---------- */
+/* ---------- 3 · applications ---------- */
 .apps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px; }
 .app { border-top: 6px solid var(--navy-900); padding: 26px 8px 0; }
 .app svg { width: 118px; height: 118px; fill: none; stroke: var(--navy-500); stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
@@ -356,7 +360,7 @@ table.heat th { font-size: 26px; }
 .benefits { margin-top: 44px; justify-content: space-between; }
 .benefits .chip { font-size: 27px; padding: 14px 26px; }
 
-/* ---------- 34 · answers ---------- */
+/* ---------- 35 · answers ---------- */
 .answers { display: flex; flex-direction: column; gap: 24px; }
 .ans { display: grid; grid-template-columns: 200px 1fr 260px; gap: 34px; align-items: center; padding: 26px 34px; border: 2px solid var(--line); border-radius: 16px; }
 .ans-h { font-size: 30px; font-weight: 800; color: var(--navy-500); }
@@ -365,18 +369,18 @@ table.heat th { font-size: 26px; }
 .ans-v { display: inline-flex; align-items: center; justify-content: center; gap: 12px; padding: 14px 20px; border-radius: 999px; background: var(--navy-900); color: #fff; font-size: 28px; font-weight: 800; }
 .ans-v i { font-style: normal; font-family: "Segoe UI Symbol", "DejaVu Sans", sans-serif; color: var(--sky-200); }
 
-/* ---------- 35 · contributions ---------- */
+/* ---------- 36 · contributions ---------- */
 .contrib { display: grid; grid-template-columns: 1fr 1fr 1.25fr; gap: 34px; align-items: stretch; height: 100%; }
 .cc { border-top: 6px solid var(--navy-900); padding: 24px 6px 0; }
 .cc h3 { margin: 0 0 24px; font-size: 42px; font-weight: 800; color: var(--navy-900); }
 .cc ul.pts.s { gap: 18px; } .cc ul.pts.s li { font-size: 30px; font-weight: 600; line-height: 1.6; padding-inline-start: 36px; }
 
-/* ---------- 36 · future ---------- */
+/* ---------- 37 · future ---------- */
 ul.pts.future { gap: 26px; margin-top: 10px; }
 ul.pts.future li { font-size: 40px; padding: 20px 30px 20px 30px; padding-inline-start: 84px; border: 2px solid var(--line); border-radius: 14px; }
 ul.pts.future li::before { inset-inline-start: 34px; top: 50%; margin-top: -3px; width: 26px; }
 
-/* ---------- 37 · thanks ---------- */
+/* ---------- 38 · thanks ---------- */
 .slide.s-thanks { padding: 0; background: var(--navy-900); }
 .s-thanks .th { margin: auto; display: flex; flex-direction: column; align-items: center; gap: 22px; color: #fff; }
 .s-thanks img { width: 170px; filter: brightness(0) invert(1); opacity: .95; margin-bottom: 30px; }
@@ -407,6 +411,7 @@ ol.outline li b { font-size: 58px; }
 .s-pinhole .eq.box { padding: 14px 24px; }
 .s-pinhole .stack { gap: 14px; }
 .s-pinhole .same { font-size: 34px; margin-top: 10px; }
+.s-pinhole .same-term { text-align: center; margin-top: 2px; font-size: 27px; font-weight: 600; color: var(--ink-2); }
 .tl-n h4 { font-size: 31px; min-height: 140px; } .tl-n .ex { font-size: 23px; min-height: 108px; } .tl-n .ds { font-size: 26px; }
 .arch { width: 1540px !important; margin: 0 auto; }
 .arch-leg { justify-content: center; margin-top: 4px; font-size: 25px; }
@@ -428,3 +433,11 @@ ol.outline li b { font-size: 58px; }
 table.heat { font-size: 30px; } table.heat td { padding: 13px 16px; } table.heat td.n { font-size: 31px; } table.heat th { font-size: 28px; padding: 12px; }
 .s-encoder .cap { font-size: 25px; }
 .qset b { white-space: nowrap; font-size: 25px; }
+
+/* backup 5 · Depth Anything 3 */
+.no.part { font-size: 28px; }
+.s-b5 .slide-head { margin-bottom: 14px; } .s-b5 .slide-head .sub { font-size: 24px; }
+.s-b5 .cols.c2 { grid-template-columns: 1fr 1.15fr; gap: 36px; }
+.s-b5 table.full td { font-size: 22px; padding: 7px 10px; line-height: 1.45; }
+.s-b5 table.diff td.asp { font-weight: 700; color: var(--ink-3); white-space: nowrap; }
+.s-b5 table.diff td.us { color: var(--navy-900); font-weight: 600; }

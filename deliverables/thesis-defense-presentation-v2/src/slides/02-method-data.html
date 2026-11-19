@@ -1,30 +1,30 @@
 
-<!-- ============ 10 · core idea ============ -->
-<section class="slide s-idea" data-part="3" data-title="{{s10.title}}">
-  <header class="slide-head"><h2>{{s10.title}}</h2></header>
+<!-- ============ 11 · core idea ============ -->
+<section class="slide s-idea" data-part="3" data-title="{{s11.title}}">
+  <header class="slide-head"><h2>{{s11.title}}</h2></header>
   <div class="slide-body">
     <div class="idea">
       <div class="idea-in">
-        <figure class="fig"><div class="imgframe"><img src="assets/img/intro-rgb.jpg" alt=""></div><figcaption>{{s10.in1}} <span class="tex" data-tex="I"></span></figcaption></figure>
-        <figure class="fig kbox frag rise" data-f="1"><div class="imgframe kmat"><span class="tex" data-tex="\begin{bmatrix} f_x & 0 & c_x\\ 0 & f_y & c_y\\ 0 & 0 & 1\end{bmatrix}"></span></div><figcaption>{{s10.in2}} <span class="tex" data-tex="K"></span></figcaption></figure>
+        <figure class="fig"><div class="imgframe"><img src="assets/img/intro-rgb.jpg" alt=""></div><figcaption>{{s11.in1}} <span class="tex" data-tex="I"></span></figcaption></figure>
+        <figure class="fig kbox frag rise" data-f="1"><div class="imgframe kmat"><span class="tex" data-tex="\begin{bmatrix} f_x & 0 & c_x\\ 0 & f_y & c_y\\ 0 & 0 & 1\end{bmatrix}"></span></div><figcaption>{{s11.in2}} <span class="tex" data-tex="K"></span></figcaption></figure>
       </div>
       <div class="idea-arrow" aria-hidden="true"></div>
-      <div class="idea-model"><span>{{s10.model}}</span><span class="tex" data-tex="f_\theta"></span></div>
+      <div class="idea-model"><span>{{s11.model}}</span><span class="tex" data-tex="f_\theta"></span></div>
       <div class="idea-arrow" aria-hidden="true"></div>
-      <figure class="fig idea-out"><div class="imgframe"><img src="assets/img/intro-depth.jpg" alt=""></div><figcaption>{{s10.out}} <span class="tex" data-tex="D"></span></figcaption></figure>
+      <figure class="fig idea-out"><div class="imgframe"><img src="assets/img/intro-depth.jpg" alt=""></div><figcaption>{{s11.out}} <span class="tex" data-tex="D"></span></figcaption></figure>
     </div>
     <div class="idea-eqs">
-      <div class="ieq base"><span class="lab">{{s10.base}}</span><span class="tex" data-tex="f_\theta : I \;\rightarrow\; D"></span></div>
-      <div class="ieq ours frag rise" data-f="1"><span class="lab">{{s10.ours}}</span><span class="tex" data-tex="f_\theta : (I,\,K) \;\rightarrow\; D"></span></div>
+      <div class="ieq base"><span class="lab">{{s11.base}}</span><span class="tex" data-tex="f_\theta : I \;\rightarrow\; D"></span></div>
+      <div class="ieq ours frag rise" data-f="1"><span class="lab">{{s11.ours}}</span><span class="tex" data-tex="f_\theta : (I,\,K) \;\rightarrow\; D"></span></div>
     </div>
-    <p class="phrase s center frag" data-f="2">{{s10.principle}}</p>
+    <p class="phrase s center frag" data-f="2">{{s11.principle}}</p>
   </div>
-  <aside class="notes">{{s10.notes}}</aside>
+  <aside class="notes">{{s11.notes}}</aside>
 </section>
 
-<!-- ============ 11 · nine-dimensional descriptor ============ -->
-<section class="slide s-desc" data-part="3" data-title="{{s11.title}}">
-  <header class="slide-head"><h2>{{s11.title}}</h2></header>
+<!-- ============ 12 · nine-dimensional descriptor ============ -->
+<section class="slide s-desc" data-part="3" data-title="{{s12.title}}">
+  <header class="slide-head"><h2>{{s12.title}}</h2></header>
   <div class="slide-body">
     <div class="desc">
       <div class="desc-k">
@@ -33,25 +33,25 @@
       </div>
       <div class="desc-arrow" aria-hidden="true"></div>
       <div class="desc-groups">
-        <div class="dg frag rise" data-f="1"><span class="dg-l">{{s11.g1}}</span>
+        <div class="dg frag rise" data-f="1"><span class="dg-l">{{s12.g1}}</span>
           <div class="cells ltr"><span class="cell"><i>1</i><span class="tex" data-tex="\dfrac{f_x}{W}"></span></span><span class="cell"><i>2</i><span class="tex" data-tex="\dfrac{f_y}{H}"></span></span></div></div>
-        <div class="dg frag rise" data-f="2"><span class="dg-l">{{s11.g2}}</span>
+        <div class="dg frag rise" data-f="2"><span class="dg-l">{{s12.g2}}</span>
           <div class="cells ltr"><span class="cell"><i>3</i><span class="tex" data-tex="\dfrac{c_x}{W}"></span></span><span class="cell"><i>4</i><span class="tex" data-tex="\dfrac{c_y}{H}"></span></span></div></div>
-        <div class="dg frag rise" data-f="3"><span class="dg-l">{{s11.g3}}</span>
+        <div class="dg frag rise" data-f="3"><span class="dg-l">{{s12.g3}}</span>
           <div class="cells ltr"><span class="cell"><i>5</i><span class="tex" data-tex="\dfrac{\mathrm{fov}_h}{\pi}"></span></span><span class="cell"><i>6</i><span class="tex" data-tex="\dfrac{\mathrm{fov}_w}{\pi}"></span></span></div></div>
-        <div class="dg frag rise" data-f="4"><span class="dg-l">{{s11.g4}}</span>
+        <div class="dg frag rise" data-f="4"><span class="dg-l">{{s12.g4}}</span>
           <div class="cells ltr"><span class="cell"><i>7</i><span class="tex" data-tex="\dfrac{W}{H}"></span></span><span class="cell wide"><i>8</i><span class="tex" data-tex="\dfrac{f_x+f_y}{2\max(H,W)}"></span></span><span class="cell wide"><i>9</i><span class="tex" data-tex="\dfrac{HW}{1920\times1080}"></span></span></div></div>
       </div>
     </div>
-    <div class="chips desc-notes frag" data-f="5"><span class="chip solid">{{s11.note1}}</span><span class="chip solid">{{s11.note2}}</span>
+    <div class="chips desc-notes frag" data-f="5"><span class="chip solid">{{s12.note1}}</span><span class="chip solid">{{s12.note2}}</span><span class="chip solid">{{s12.note3}}</span>
       <span class="chip"><span class="tex" data-tex="\mathrm{fov}_w = 2\arctan\!\left(\dfrac{W}{2f_x}\right)"></span></span></div>
   </div>
-  <aside class="notes">{{s11.notes}}</aside>
+  <aside class="notes">{{s12.notes}}</aside>
 </section>
 
-<!-- ============ 12 · architecture ============ -->
-<section class="slide s-arch" data-part="3" data-title="{{s12.title}}">
-  <header class="slide-head"><h2>{{s12.title}}</h2></header>
+<!-- ============ 13 · architecture ============ -->
+<section class="slide s-arch" data-part="3" data-title="{{s13.title}}">
+  <header class="slide-head"><h2>{{s13.title}}</h2></header>
   <div class="slide-body">
     <div class="ltr">
     <svg class="dia arch" viewBox="0 0 1680 700" role="img">
@@ -65,19 +65,19 @@
       <!-- lane A: image -> patches -> image tokens -->
       <image href="assets/img/intro-rgb.jpg" x="1470" y="120" width="190" height="111" preserveAspectRatio="xMidYMid slice" clip-path="url(#r1)"/>
       <rect x="1470" y="120" width="190" height="111" rx="10" fill="none" stroke="#0b1f4b" stroke-width="3"/>
-      <text x="1565" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s12.img}}</text>
+      <text x="1565" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s13.img}}</text>
       <line x1="1462" y1="176" x2="1442" y2="176" class="d-arrow" marker-end="url(#ah)"/>
       <g fill="#d9ecfa" stroke="#184f95" stroke-width="2">
         <rect x="1300" y="120" width="30" height="33"/><rect x="1334" y="120" width="30" height="33"/><rect x="1368" y="120" width="30" height="33"/><rect x="1402" y="120" width="30" height="33"/>
         <rect x="1300" y="159" width="30" height="33"/><rect x="1334" y="159" width="30" height="33"/><rect x="1368" y="159" width="30" height="33"/><rect x="1402" y="159" width="30" height="33"/>
         <rect x="1300" y="198" width="30" height="33"/><rect x="1334" y="198" width="30" height="33"/><rect x="1368" y="198" width="30" height="33"/><rect x="1402" y="198" width="30" height="33"/>
       </g>
-      <text x="1366" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s12.patches}}</text>
+      <text x="1366" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s13.patches}}</text>
       <line x1="1292" y1="176" x2="1262" y2="176" class="d-arrow" marker-end="url(#ah)"/>
       <g fill="#184f95">
         <rect x="1030" y="160" width="32" height="32" rx="5"/><rect x="1068" y="160" width="32" height="32" rx="5"/><rect x="1106" y="160" width="32" height="32" rx="5"/><rect x="1144" y="160" width="32" height="32" rx="5"/><rect x="1182" y="160" width="32" height="32" rx="5"/><rect x="1220" y="160" width="32" height="32" rx="5"/>
       </g>
-      <text x="1141" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s12.imgtok}}</text>
+      <text x="1141" y="270" text-anchor="middle" class="d-lab" direction="rtl">{{s13.imgtok}}</text>
       <line x1="1020" y1="176" x2="858" y2="176" class="d-arrow" marker-end="url(#ah)"/>
 
       <!-- lane B: K -> descriptor -> camera encoder -> gate -> camera token -->
@@ -88,30 +88,30 @@
           <text x="1530" y="544">0</text><text x="1580" y="544">fy</text><text x="1630" y="544">cy</text>
           <text x="1530" y="580">0</text><text x="1580" y="580">0</text><text x="1630" y="580">1</text>
         </g>
-        <text x="1580" y="452" text-anchor="middle" class="d-lab" direction="rtl">{{s12.k}}</text>
+        <text x="1580" y="452" text-anchor="middle" class="d-lab" direction="rtl">{{s13.k}}</text>
         <line x1="1492" y1="532" x2="1470" y2="532" class="d-arrow" marker-end="url(#ah)"/>
         <g fill="#fdf3ea" stroke="#c9621f" stroke-width="2">
           <rect x="1290" y="508" width="18" height="48"/><rect x="1310" y="508" width="18" height="48"/><rect x="1330" y="508" width="18" height="48"/><rect x="1350" y="508" width="18" height="48"/><rect x="1370" y="508" width="18" height="48"/><rect x="1390" y="508" width="18" height="48"/><rect x="1410" y="508" width="18" height="48"/><rect x="1430" y="508" width="18" height="48"/><rect x="1450" y="508" width="18" height="48"/>
         </g>
-        <text x="1379" y="634" text-anchor="middle" class="d-lab" direction="rtl">{{s12.desc}}</text>
+        <text x="1379" y="634" text-anchor="middle" class="d-lab" direction="rtl">{{s13.desc}}</text>
         <line x1="1282" y1="532" x2="1262" y2="532" class="d-arrow" marker-end="url(#ah)"/>
         <rect x="1070" y="474" width="184" height="116" rx="12" fill="#fdf3ea" stroke="#c9621f" stroke-width="3.5"/>
-        <text x="1162" y="542" text-anchor="middle" class="d-box" direction="rtl">{{s12.camenc}}</text>
-        <text x="1162" y="672" text-anchor="middle" class="d-lab small" direction="rtl">{{s12.camenc_d}}</text>
+        <text x="1162" y="542" text-anchor="middle" class="d-box" direction="rtl">{{s13.camenc}}</text>
+        <text x="1162" y="672" text-anchor="middle" class="d-lab small" direction="rtl">{{s13.camenc_d}}</text>
         <line x1="1062" y1="532" x2="1042" y2="532" class="d-arrow" marker-end="url(#ah)"/>
         <circle cx="1008" cy="532" r="28" fill="#fff" stroke="#c9621f" stroke-width="3.5"/>
         <text x="1008" y="541" text-anchor="middle" class="d-sym small" fill="#c9621f">× g</text>
-        <text x="1008" y="460" text-anchor="middle" class="d-lab small" direction="rtl">{{s12.gate}}</text>
+        <text x="1008" y="460" text-anchor="middle" class="d-lab small" direction="rtl">{{s13.gate}}</text>
         <line x1="1008" y1="470" x2="1008" y2="498" stroke="#c9621f" stroke-width="2" stroke-dasharray="4 5"/>
         <line x1="974" y1="532" x2="954" y2="532" class="d-arrow" marker-end="url(#ah)"/>
         <rect x="908" y="514" width="36" height="36" rx="6" fill="#c9621f"/>
-        <text x="926" y="596" text-anchor="middle" class="d-lab small" direction="rtl">{{s12.camtok}}</text>
+        <text x="926" y="596" text-anchor="middle" class="d-lab small" direction="rtl">{{s13.camtok}}</text>
         <line x1="900" y1="532" x2="858" y2="532" class="d-arrow" marker-end="url(#ah)"/>
       </g>
 
       <!-- encoder with self-attention -->
       <rect x="560" y="60" width="290" height="600" rx="16" fill="#eef5fc" stroke="#0b1f4b" stroke-width="4"/>
-      <text x="705" y="108" text-anchor="middle" class="d-box" direction="rtl">{{s12.enc}}</text>
+      <text x="705" y="108" text-anchor="middle" class="d-box" direction="rtl">{{s13.enc}}</text>
       <g fill="#184f95">
         <rect x="770" y="160" width="32" height="32" rx="5"/><rect x="770" y="216" width="32" height="32" rx="5"/><rect x="770" y="272" width="32" height="32" rx="5"/><rect x="770" y="328" width="32" height="32" rx="5"/><rect x="770" y="384" width="32" height="32" rx="5"/>
       </g>
@@ -120,85 +120,85 @@
         <g fill="none" stroke="#c9621f" stroke-width="3" opacity=".85">
           <path d="M768 532 C 640 520, 640 190, 770 176"/><path d="M768 532 C 660 520, 660 245, 770 232"/><path d="M768 532 C 680 520, 680 300, 770 288"/><path d="M768 532 C 700 520, 700 356, 770 344"/><path d="M768 532 C 720 520, 720 412, 770 400"/>
         </g>
-        <text x="652" y="150" text-anchor="middle" class="d-lab orange" direction="rtl">{{s12.attn}}</text>
+        <text x="652" y="150" text-anchor="middle" class="d-lab orange" direction="rtl">{{s13.attn}}</text>
       </g>
-      <g transform="translate(600 584)"><rect x="0" y="0" width="210" height="48" rx="24" fill="#0b1f4b"/><text x="105" y="33" text-anchor="middle" class="d-badge" direction="rtl">❄ {{s12.frozen}}</text></g>
+      <g transform="translate(600 584)"><rect x="0" y="0" width="210" height="48" rx="24" fill="#0b1f4b"/><text x="105" y="33" text-anchor="middle" class="d-badge" direction="rtl">❄ {{s13.frozen}}</text></g>
 
       <!-- decoder and output -->
       <g class="frag" data-f="3">
         <line x1="552" y1="357" x2="524" y2="357" class="d-arrow" marker-end="url(#ah)"/>
         <polygon points="516,190 330,262 330,452 516,524" fill="#fdf3ea" stroke="#c9621f" stroke-width="3.5" stroke-linejoin="round"/>
-        <text x="423" y="366" text-anchor="middle" class="d-box" direction="rtl">{{s12.dec}}</text>
+        <text x="423" y="366" text-anchor="middle" class="d-box" direction="rtl">{{s13.dec}}</text>
         <line x1="322" y1="357" x2="282" y2="357" class="d-arrow" marker-end="url(#ah)"/>
         <image href="assets/img/intro-depth.jpg" x="40" y="290" width="230" height="134" preserveAspectRatio="xMidYMid slice" clip-path="url(#r2)"/>
         <rect x="40" y="290" width="230" height="134" rx="10" fill="none" stroke="#0b1f4b" stroke-width="3"/>
-        <text x="155" y="466" text-anchor="middle" class="d-lab" direction="rtl">{{s12.out}}</text>
+        <text x="155" y="466" text-anchor="middle" class="d-lab" direction="rtl">{{s13.out}}</text>
       </g>
 
     </svg>
     </div>
-    <div class="legend arch-leg"><span class="k"><i class="sw fz"></i>{{s12.frozen}}</span><span class="k"><i class="sw tr"></i>{{s12.trainable}}</span></div>
-  </div>
-  <aside class="notes">{{s12.notes}}</aside>
-</section>
-
-<!-- ============ 13 · learnable gate ============ -->
-<section class="slide s-gate" data-part="3" data-title="{{s13.title}}">
-  <header class="slide-head"><h2>{{s13.title}}</h2></header>
-  <div class="slide-body">
-    <div class="gate-eq">
-      <div class="eq box"><span class="tex" data-tex="\mathbf{z}_{\mathrm{cam}} \;=\; g \cdot \phi\!\left(\mathbf{d}_{\mathrm{cam}}\right)"></span></div>
-      <span class="chip solid">{{s13.g0}}</span>
-    </div>
-    <div class="gate-states">
-      <div class="gs"><span class="gs-t">{{s13.st1}}</span><div class="gs-bar"><i style="--g:0"></i></div><span class="tex" data-tex="g = 0"></span><p>{{s13.p1}}</p></div>
-      <div class="gs frag rise" data-f="1"><span class="gs-t">{{s13.st2}}</span><div class="gs-bar"><i style="--g:.45"></i></div><span class="tex" data-tex="g \,\uparrow"></span><p>{{s13.p2}}</p></div>
-      <div class="gs frag rise" data-f="2"><span class="gs-t">{{s13.st3}}</span><div class="gs-bar"><i style="--g:1"></i></div><span class="tex" data-tex="g = g^{\ast}"></span><p>{{s13.p3}}</p></div>
-    </div>
+    <div class="legend arch-leg"><span class="k"><i class="sw fz"></i>{{s13.frozen}}</span><span class="k"><i class="sw tr"></i>{{s13.trainable}}</span></div>
   </div>
   <aside class="notes">{{s13.notes}}</aside>
 </section>
 
-<!-- ============ 14 · paired design ============ -->
-<section class="slide s-pair" data-part="3" data-title="{{s14.title}}">
+<!-- ============ 14 · learnable gate ============ -->
+<section class="slide s-gate" data-part="3" data-title="{{s14.title}}">
   <header class="slide-head"><h2>{{s14.title}}</h2></header>
   <div class="slide-body">
-    <div class="arms">
-      <div class="arm p"><h3>{{g.proposed_l}}</h3><span class="chip solid">{{s14.a_in}}</span></div>
-      <div class="shared frag rise" data-f="1">
-        <span class="shared-l">{{s14.shared_label}}</span>
-        <ul><li>{{s14.sh1}}</li><li>{{s14.sh2}}</li><li>{{s14.sh3}}</li><li>{{s14.sh4}}</li><li>{{s14.sh5}}</li><li>{{s14.sh6}}</li></ul>
-      </div>
-      <div class="arm c"><h3>{{g.control_l}}</h3><span class="chip">{{s14.b_in}}</span></div>
+    <div class="gate-eq">
+      <div class="eq box"><span class="tex" data-tex="\mathbf{z}_{\mathrm{cam}} \;=\; g \cdot \phi\!\left(\mathbf{d}_{\mathrm{cam}}\right)"></span></div>
+      <span class="chip solid">{{s14.g0}}</span>
     </div>
-    <div class="goal frag rise" data-f="2"><span class="goal-l">{{s14.diff}}</span><span class="goal-t">{{s14.check}}</span></div>
+    <div class="gate-states">
+      <div class="gs"><span class="gs-t">{{s14.st1}}</span><div class="gs-bar"><i style="--g:0"></i></div><span class="tex" data-tex="g = 0"></span><p>{{s14.p1}}</p></div>
+      <div class="gs frag rise" data-f="1"><span class="gs-t">{{s14.st2}}</span><div class="gs-bar"><i style="--g:.45"></i></div><span class="tex" data-tex="g \,\uparrow"></span><p>{{s14.p2}}</p></div>
+      <div class="gs frag rise" data-f="2"><span class="gs-t">{{s14.st3}}</span><div class="gs-bar"><i style="--g:1"></i></div><span class="tex" data-tex="g = g^{\ast}"></span><p>{{s14.p3}}</p></div>
+    </div>
   </div>
   <aside class="notes">{{s14.notes}}</aside>
 </section>
 
-<!-- ============ 15 · datasets ============ -->
-<section class="slide s-data" data-part="4" data-title="{{s15.title}}">
+<!-- ============ 15 · paired design ============ -->
+<section class="slide s-pair" data-part="3" data-title="{{s15.title}}">
   <header class="slide-head"><h2>{{s15.title}}</h2></header>
+  <div class="slide-body">
+    <div class="arms">
+      <div class="arm p"><h3>{{g.proposed_l}}</h3><span class="chip solid">{{s15.a_in}}</span></div>
+      <div class="shared frag rise" data-f="1">
+        <span class="shared-l">{{s15.shared_label}}</span>
+        <ul><li>{{s15.sh1}}</li><li>{{s15.sh2}}</li><li>{{s15.sh3}}</li><li>{{s15.sh4}}</li><li>{{s15.sh5}}</li><li>{{s15.sh6}}</li></ul>
+      </div>
+      <div class="arm c"><h3>{{g.control_l}}</h3><span class="chip">{{s15.b_in}}</span></div>
+    </div>
+    <div class="goal frag rise" data-f="2"><span class="goal-l">{{s15.diff}}</span><span class="goal-t">{{s15.check}}</span></div>
+  </div>
+  <aside class="notes">{{s15.notes}}</aside>
+</section>
+
+<!-- ============ 16 · datasets ============ -->
+<section class="slide s-data" data-part="4" data-title="{{s16.title}}">
+  <header class="slide-head"><h2>{{s16.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c73 top">
       <div>
         <table class="tbl compact data">
-          <thead><tr><th class="name">{{s15.h_ds}}</th><th class="name">{{s15.h_scene}}</th><th>{{s15.h_fov}}</th><th>{{s15.h_train}}</th><th>{{s15.h_test}}</th></tr></thead>
+          <thead><tr><th class="name">{{s16.h_ds}}</th><th class="name">{{s16.h_scene}}</th><th>{{s16.h_fov}}</th><th>{{s16.h_train}}</th><th>{{s16.h_test}}</th></tr></thead>
           <tbody>
-            <tr class="grp"><td colspan="5">{{s15.train_group}}</td></tr>
-            <tr><td class="name ltr-cell">NYUv2</td><td class="name">{{s15.indoor}}</td><td class="n">63°</td><td class="n">636</td><td class="n">654</td></tr>
-            <tr><td class="name ltr-cell">KITTI</td><td class="name">{{s15.road}}</td><td class="n">82°</td><td class="n">9,148</td><td class="n">652</td></tr>
-            <tr><td class="name ltr-cell">Virtual KITTI 2</td><td class="name">{{s15.synth}}</td><td class="n">81°</td><td class="n">37,860</td><td class="n">—</td></tr>
-            <tr><td class="name ltr-cell">Cityscapes</td><td class="name">{{s15.urban}}</td><td class="n">49°</td><td class="n">2,852</td><td class="n">500</td></tr>
-            <tr class="grp frag" data-f="1"><td colspan="5">{{s15.unseen_group}}</td></tr>
-            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Kinect v1</td><td class="name">{{s15.indoor}}</td><td class="n">57°</td><td class="n">—</td><td class="n">200</td></tr>
-            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Kinect v2</td><td class="name">{{s15.indoor}}</td><td class="n">69°</td><td class="n">—</td><td class="n">200</td></tr>
-            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · RealSense</td><td class="name">{{s15.indoor}}</td><td class="n">52°</td><td class="n">—</td><td class="n">200</td></tr>
-            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Xtion</td><td class="name">{{s15.indoor}}</td><td class="n">55°</td><td class="n">—</td><td class="n">200</td></tr>
-            <tr class="frag" data-f="1"><td class="name ltr-cell">DIODE</td><td class="name">{{s15.outdoor}}</td><td class="n">60°</td><td class="n">—</td><td class="n">446</td></tr>
+            <tr class="grp"><td colspan="5">{{s16.train_group}}</td></tr>
+            <tr><td class="name ltr-cell">NYUv2</td><td class="name">{{s16.indoor}}</td><td class="n">63°</td><td class="n">636</td><td class="n">654</td></tr>
+            <tr><td class="name ltr-cell">KITTI</td><td class="name">{{s16.road}}</td><td class="n">82°</td><td class="n">9,148</td><td class="n">652</td></tr>
+            <tr><td class="name ltr-cell">Virtual KITTI 2</td><td class="name">{{s16.synth}}</td><td class="n">81°</td><td class="n">37,860</td><td class="n">—</td></tr>
+            <tr><td class="name ltr-cell">Cityscapes</td><td class="name">{{s16.urban}}</td><td class="n">49°</td><td class="n">2,852</td><td class="n">500</td></tr>
+            <tr class="grp frag" data-f="1"><td colspan="5">{{s16.unseen_group}}</td></tr>
+            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Kinect v1</td><td class="name">{{s16.indoor}}</td><td class="n">57°</td><td class="n">—</td><td class="n">200</td></tr>
+            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Kinect v2</td><td class="name">{{s16.indoor}}</td><td class="n">69°</td><td class="n">—</td><td class="n">200</td></tr>
+            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · RealSense</td><td class="name">{{s16.indoor}}</td><td class="n">52°</td><td class="n">—</td><td class="n">200</td></tr>
+            <tr class="frag" data-f="1"><td class="name ltr-cell">SUN RGB-D · Xtion</td><td class="name">{{s16.indoor}}</td><td class="n">55°</td><td class="n">—</td><td class="n">200</td></tr>
+            <tr class="frag" data-f="1"><td class="name ltr-cell">DIODE</td><td class="name">{{s16.outdoor}}</td><td class="n">60°</td><td class="n">—</td><td class="n">446</td></tr>
           </tbody>
         </table>
-        <p class="phrase s total frag" data-f="1">{{s15.total}}</p>
+        <p class="phrase s total frag" data-f="1">{{s16.total}}</p>
       </div>
       <div class="samples">
         <figure class="fig"><div class="imgframe"><img src="assets/img/nyu.jpg" alt=""></div><figcaption class="ltr">NYUv2 · 63°</figcaption></figure>
@@ -207,54 +207,54 @@
       </div>
     </div>
   </div>
-  <aside class="notes">{{s15.notes}}</aside>
+  <aside class="notes">{{s16.notes}}</aside>
 </section>
 
-<!-- ============ 16 · camera-aware augmentation ============ -->
-<section class="slide s-aug" data-part="4" data-title="{{s16.title}}">
-  <header class="slide-head"><h2>{{s16.title}}</h2></header>
+<!-- ============ 17 · camera-aware augmentation ============ -->
+<section class="slide s-aug" data-part="4" data-title="{{s17.title}}">
+  <header class="slide-head"><h2>{{s17.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c2 top">
       <div class="panel line aug">
-        <h3>{{s16.a_title}}</h3>
+        <h3>{{s17.a_title}}</h3>
         <div class="zc">
-          <div class="zc-src"><span class="zc-win"></span><em>{{s16.win}}</em></div>
+          <div class="zc-src"><span class="zc-win"></span><em>{{s17.win}}</em></div>
           <div class="pair-arrow" aria-hidden="true"></div>
-          <div class="zc-out"><em>{{s16.net}}</em></div>
+          <div class="zc-out"><em>{{s17.net}}</em></div>
         </div>
         <div class="eq xs"><span class="tex block" data-tex="f' = f\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\qquad c_x' = (c_x - x_0)\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span></div>
-        <ul class="pts s"><li>{{s16.a1}}</li><li>{{s16.a2}}</li><li>{{s16.a3}}</li></ul>
+        <ul class="pts s"><li>{{s17.a1}}</li><li>{{s17.a2}}</li><li>{{s17.a3}}</li></ul>
       </div>
       <div class="panel line aug frag rise" data-f="1">
-        <h3>{{s16.b_title}}</h3>
+        <h3>{{s17.b_title}}</h3>
         <div class="fj">
           <div class="fj-c"><span class="tex" data-tex="(f,\;Z)"></span><div class="fj-img"></div></div>
           <div class="fj-eq" aria-hidden="true">=</div>
           <div class="fj-c"><span class="tex" data-tex="(\alpha f,\;\alpha Z)"></span><div class="fj-img"></div></div>
         </div>
         <div class="eq xs"><span class="tex block" data-tex="\alpha \sim \exp\!\big(\mathcal{U}(-\ln m,\; +\ln m)\big),\qquad m = 1.6"></span></div>
-        <ul class="pts s"><li>{{s16.b1}}</li><li>{{s16.b2}}</li><li>{{s16.b3}}</li></ul>
+        <ul class="pts s"><li>{{s17.b1}}</li><li>{{s17.b2}}</li><li>{{s17.b3}}</li></ul>
       </div>
     </div>
   </div>
-  <aside class="notes">{{s16.notes}}</aside>
+  <aside class="notes">{{s17.notes}}</aside>
 </section>
 
-<!-- ============ 17 · training recipe ============ -->
-<section class="slide s-recipe" data-part="4" data-title="{{s17.title}}">
-  <header class="slide-head"><h2>{{s17.title}}</h2></header>
+<!-- ============ 18 · training recipe ============ -->
+<section class="slide s-recipe" data-part="4" data-title="{{s18.title}}">
+  <header class="slide-head"><h2>{{s18.title}}</h2></header>
   <div class="slide-body">
     <dl class="kv">
-      <div><dt>{{s17.l1}}</dt><dd>{{s17.v1}}</dd></div>
-      <div><dt>{{s17.l2}}</dt><dd>{{s17.v2}}</dd></div>
-      <div><dt>{{s17.l3}}</dt><dd>{{s17.v3}}</dd></div>
-      <div class="frag rise" data-f="1"><dt>{{s17.l4}}</dt><dd class="ltr">SiLog, <span class="tex" data-tex="\lambda = 0.5"></span></dd></div>
-      <div class="frag rise" data-f="1"><dt>{{s17.l7}}</dt><dd class="ltr">AdamW, <span class="tex" data-tex="\mathrm{lr}=5\times10^{-6}"></span></dd></div>
-      <div class="frag rise" data-f="1"><dt>{{s17.l5}}</dt><dd>{{s17.v5}}</dd></div>
-      <div class="frag rise" data-f="2"><dt>{{s17.l6}}</dt><dd>{{s17.v6}}</dd></div>
-      <div class="frag rise" data-f="2"><dt>{{s17.l9}}</dt><dd>{{s17.v9}}</dd></div>
-      <div class="frag rise" data-f="2"><dt>{{s17.l8}}</dt><dd>{{s17.v8}}</dd></div>
+      <div><dt>{{s18.l1}}</dt><dd>{{s18.v1}}</dd></div>
+      <div><dt>{{s18.l2}}</dt><dd>{{s18.v2}}</dd></div>
+      <div><dt>{{s18.l3}}</dt><dd>{{s18.v3}}</dd></div>
+      <div class="frag rise" data-f="1"><dt>{{s18.l4}}</dt><dd class="ltr">SiLog, <span class="tex" data-tex="\lambda = 0.5"></span></dd></div>
+      <div class="frag rise" data-f="1"><dt>{{s18.l7}}</dt><dd class="ltr">AdamW, <span class="tex" data-tex="\mathrm{lr}=5\times10^{-6}"></span></dd></div>
+      <div class="frag rise" data-f="1"><dt>{{s18.l5}}</dt><dd>{{s18.v5}}</dd></div>
+      <div class="frag rise" data-f="2"><dt>{{s18.l6}}</dt><dd>{{s18.v6}}</dd></div>
+      <div class="frag rise" data-f="2"><dt>{{s18.l9}}</dt><dd>{{s18.v9}}</dd></div>
+      <div class="frag rise" data-f="2"><dt>{{s18.l8}}</dt><dd>{{s18.v8}}</dd></div>
     </dl>
   </div>
-  <aside class="notes">{{s17.notes}}</aside>
+  <aside class="notes">{{s18.notes}}</aside>
 </section>

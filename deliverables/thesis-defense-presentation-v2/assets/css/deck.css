@@ -107,6 +107,10 @@ body {
 #partnav .p.cur::after { content: ""; position: absolute; left: 22px; right: 22px; bottom: -1px; height: 5px; background: var(--navy-900); }
 #partnav .p.cur:first-child::after { right: 0; }
 #partnav.backup .p { display: none; }
+/* audience window: a part name jumps to the first slide of that part */
+body.main #partnav .p { pointer-events: auto; cursor: pointer; }
+body.main #partnav .p:hover { color: var(--navy-900); }
+body.main #chrome.hidden #partnav .p { pointer-events: none; }
 #partnav .bk { display: none; font-size: 22px; font-weight: 800; color: var(--navy-900); }
 #partnav.backup .bk { display: block; }
 
@@ -129,6 +133,14 @@ body {
 .frag.rise.on { transform: none; }
 .frag.dim-after.on.past { opacity: .38; }
 svg .frag { transition: opacity 420ms var(--ease); }
+
+/* ---------- auto sequence: items enter one after another when the slide opens (no key press) ---------- */
+.auto { opacity: 0; transition: opacity 420ms var(--ease), transform 420ms var(--ease); }
+.auto.rise { transform: translateY(18px); }
+.slide.active .auto, .slide.leaving .auto { opacity: 1; transform: none; }
+.slide.active .auto { transition-delay: calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 230ms)); }
+/* stepping back to the slide, and the presenter previews, show the finished state at once */
+.slide.active.back .auto, .embed .slide.active .auto { transition-delay: 0s; }
 
 /* ---------- maths ---------- */
 .tex { direction: ltr; unicode-bidi: isolate; display: inline-block; }
@@ -261,17 +273,31 @@ body.presenter #presenter {
 }
 #presenter .bar { grid-column: 1 / -1; display: flex; align-items: center; justify-content: space-between; font-size: 20px; color: #9fb0cf; }
 #presenter .bar b { color: #fff; font-size: 26px; }
+#presenter .where { display: flex; align-items: center; gap: 18px; }
+#pv-part { font-size: 24px; font-weight: 700; color: #a6d8f5; padding-inline-start: 18px; border-inline-start: 2px solid #33425f; }
+#pv-part:empty { display: none; }
 #presenter .clock { font-size: 40px; font-weight: 800; color: #fff; direction: ltr; font-variant-numeric: tabular-nums; }
 #presenter button { font: inherit; font-size: 17px; background: #1c2740; color: #cfd9ee; border: 1px solid #33425f; border-radius: 8px; padding: 6px 14px; cursor: pointer; }
 #presenter .previews { display: flex; flex-direction: column; gap: 16px; min-height: 0; }
 #presenter .pv { position: relative; flex: 1 1 0; min-height: 0; }
 #presenter .pv.next { flex: 0.62 1 0; opacity: .9; }
 #presenter .pv label { position: absolute; top: -2px; right: 0; font-size: 15px; color: #9fb0cf; z-index: 2; background: #0c1220; padding: 0 8px 4px; border-radius: 0 0 0 8px; }
-#presenter iframe { width: 100%; height: 100%; border: 1px solid #2a3653; border-radius: 10px; background: #fff; }
+/* previews are display only: a click must not move the keyboard focus into them */
+#presenter iframe { pointer-events: none; width: 100%; height: 100%; border: 1px solid #2a3653; border-radius: 10px; background: #fff; }
+#pv-video { flex: 0 0 auto; display: flex; flex-wrap: wrap; align-items: center; gap: 10px; direction: ltr; background: #121a2e; border: 1px solid #2a3653; border-radius: 10px; padding: 12px 14px; }
+#pv-video[hidden] { display: none; }
+#pv-vseek { flex: 1 1 calc(100% - 150px); min-width: 0; accent-color: #a6d8f5; cursor: pointer; }
+#pv-vtime { flex: 0 0 auto; font-size: 20px; font-weight: 700; color: #fff; font-variant-numeric: tabular-nums; min-width: 128px; text-align: right; }
+#pv-video button { flex: 1 1 auto; direction: rtl; white-space: nowrap; font-size: 16px; padding: 6px 10px; }
+#pv-video button.main { background: #184f95; border-color: #2a6cc0; color: #fff; font-weight: 700; }
+#pv-video kbd { font: inherit; font-size: 13px; color: #8fa3c8; border: 1px solid #33425f; border-radius: 4px; padding: 0 5px; margin-inline-start: 6px; }
+#pv-video .if-playing, #pv-video .if-sound, #pv-video.playing .if-paused, #pv-video.sound .if-muted { display: none; }
+#pv-video.playing .if-playing, #pv-video.sound .if-sound { display: inline; }
 #presenter .notesbox { background: #121a2e; border: 1px solid #2a3653; border-radius: 12px; padding: 26px 30px; overflow: auto; min-height: 0; }
 #presenter .notesbox h4 { margin: 0 0 6px; font-size: 17px; color: #8fa3c8; font-weight: 600; }
 #presenter .notesbox h3 { margin: 0 0 16px; font-size: 27px; color: #fff; font-weight: 800; }
 #presenter .notesbox p { margin: 0; font-size: 22px; line-height: 1.95; color: #e8edf7; white-space: pre-line; }
+#presenter .notesbox p .en { white-space: nowrap; unicode-bidi: isolate; color: #a6d8f5; font-size: .92em; }
 #presenter .hint { grid-column: 1 / -1; font-size: 15px; color: #7285a8; text-align: center; }
 
 #overview { position: fixed; inset: 0; background: rgba(5, 16, 42, .96); z-index: 50; display: none; overflow: auto; padding: 46px 60px; direction: rtl; }
@@ -288,13 +314,14 @@ body.presenter #presenter {
 
 @media (prefers-reduced-motion: reduce) {
   .slide, .frag, .chart .bar, .chart .ln, .chart .dot { transition-duration: 1ms !important; }
+  .auto { transition-duration: 1ms !important; transition-delay: 0s !important; }
 }
 @media print {
   html, body { overflow: visible; background: #fff; height: auto; }
   #viewport { position: static; }
   #stage { position: static; transform: none !important; box-shadow: none; height: auto; overflow: visible; }
   .slide { position: relative; opacity: 1; visibility: visible; transform: none; height: 1080px; page-break-after: always; }
-  .frag { opacity: 1 !important; }
+  .frag, .auto { opacity: 1 !important; transform: none !important; }
   #chrome { display: none; }
   @page { size: 1920px 1080px; margin: 0; }
 }

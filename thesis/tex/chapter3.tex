@@ -5,8 +5,7 @@
 % sec 1
 \section{مقدمه}
 
-% REVIEW R33
-در این فصل، روش پیشنهادی برای شرطی‌سازی یک مدل بنیادین تخمین عمق \edrep{تک‌چشمی}{تک‌دوربینه} با پارامترهای درونی دوربین تشریح می‌شود. تمرکز اصلی بر معماری، نحوه ادغام اطلاعات هندسی و فرآیند واقعی آموزش و ارزیابی است. \basemodel{} ازپیش‌آموزش دیده است، اما مرحله نهایی تنظیم دقیق‌پارامترها در این پژوهش با عمق مرجع انجام شده است.
+در این فصل، روش پیشنهادی برای شرطی‌سازی یک مدل بنیادین تخمین عمق تک‌دوربینه با پارامترهای درونی دوربین تشریح می‌شود. تمرکز اصلی بر معماری، نحوه ادغام اطلاعات هندسی و فرآیند واقعی آموزش و ارزیابی است. \basemodel{} ازپیش‌آموزش دیده است، اما مرحله نهایی تنظیم دقیق‌پارامترها در این پژوهش با عمق مرجع انجام شده است.
 
 بر این اساس، در روش پیشنهادی این پژوهش، ماتریس کالیبراسیون دوربین به‌عنوان یک ورودی اضافی و ساختاریافته به بخش \lr{encoder} مدل افزوده شده است. هدف از این کار، فراهم‌کردن امکان استفاده مستقیم از اطلاعات هندسی دوربین در فرآیند یادگیری و تاثیرگذاری آن بر مکانیزم \lr{attention} در لایه‌های \lr{Transformer} است. بدین ترتیب، مدل قادر خواهد بود نگاشت تصویر به عمق را نه‌تنها بر اساس محتوای بصری صحنه، بلکه با درنظرگرفتن ویژگی‌های تصویربرداری دوربین انجام دهد.
 
@@ -29,8 +28,7 @@
 \begin{equation}
 f_{\theta} : (I, K) \rightarrow D,
 \end{equation}
-% REVIEW R33
-که در آن، $I$ تصویر ورودی، \edins{{$K$}} ماتریس کالیبراسیون دوربین، و $D$ نگاشت عمق خروجی است. در این صورت‌بندی، ماتریس کالیبراسیون دوربین به‌عنوان بخشی از ورودی مدل در نظر گرفته می‌شود و مدل می‌آموزد که چگونه اطلاعات هندسی دوربین را در فرآیند استنتاج عمق لحاظ کند.
+که در آن، $I$ تصویر ورودی، $K$ ماتریس کالیبراسیون دوربین، و $D$ نگاشت عمق خروجی است. در این صورت‌بندی، ماتریس کالیبراسیون دوربین به‌عنوان بخشی از ورودی مدل در نظر گرفته می‌شود و مدل می‌آموزد که چگونه اطلاعات هندسی دوربین را در فرآیند استنتاج عمق لحاظ کند.
 
  در این پژوهش روشی برای ادغام صریح ماتریس کالیبراسیون دوربین در معماری \lr{Depth Anything V2} پیشنهاد می‌شود. ایده اصلی این روش، فراهم‌کردن امکان دسترسی مستقیم مدل به اطلاعات هندسی فرآیند تصویربرداری است، به‌گونه‌ای که شبکه به‌جای استنتاج ضمنی و ناپایدار این اطلاعات از روی داده، بتواند از قیود فیزیکی دوربین به‌صورت ساخت‌یافته بهره‌مند شود.
 
@@ -87,7 +85,7 @@ f_x & 0 & c_x \\
 \label{tab:camera_descriptor}
 \small
 \renewcommand{\arraystretch}{1.35}
-\begin{tabularx}{\textwidth}{@{}c c >{\raggedright\arraybackslash}X@{}}
+\begin{tabularx}{\textwidth}{@{}c c >{\raggedleft\arraybackslash}X@{}}
 \toprule
 شماره مولفه & تعریف & نقش هندسی \\ \midrule
 ۱ & $f_x/W$ & فاصله کانونی افقی، مستقل از رزولوشن \\
@@ -125,7 +123,6 @@ f_x & 0 & c_x \\
 
 \begin{figure}[htbp]
  \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
  \begin{adjustbox}{max width=\textwidth}%
   \begin{tikzpicture}[font=\footnotesize, node distance=5mm]
  \tikzset{
@@ -195,69 +192,6 @@ f_x & 0 & c_x \\
  \label{fig:proposed_architecture}
 \end{figure}
 
-شکل~\ref{fig:conditioning_mechanisms} این انتخاب طراحی را در برابر دو
-گزینه متداول دیگر قرار می‌دهد.
-
-\begin{figure}[htbp]
- \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
-  \begin{tikzpicture}[font=\scriptsize]
- \tikzset{
-  cmbox/.style={thblock, fill=white, text width=2.6cm, minimum height=0.66cm,
-     inner sep=3pt, font=\scriptsize},
-  hd/.style={font=\scriptsize, anchor=north, align=center, text width=4.2cm},
-  cmnote/.style={thnote, anchor=north, text width=4.0cm},
- }
-    % هر پنل ۴٫۶ سانتی‌متر پهنا دارد و جعبه‌ها در هر سه پنل روی یک ارتفاع‌اند.
-
-    %%% ---------- (الف) الحاق به ورودی (سمت راست) ----------
- \begin{scope}[xshift=10.0cm]
-        \fill[thPanelGray, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
-        \node[hd] at (2.30,0.80) {\rl{(الف) الحاق به ورودی}};
-        \node[cmbox] (ai) at (2.30,-0.75) {\rl{تصویر + کانال‌های ماتریس کالیبراسیون دوربین}};
-        \node[cmbox] (an) at (2.30,-2.20) {\rl{انکودر}};
-        \node[cmbox] (ad) at (2.30,-3.35) {\rl{عمق}};
-        \draw[tharrow] (ai) -- (an);
-        \draw[tharrow] (an) -- (ad);
-        \node[cmnote, text=thControl] at (2.30,-3.95)
-   {\rl{لایه نخست انکودر ازپیش‌آموزش‌دیده باید تغییر کند}};
- \end{scope}
-
-    %%% ---------- (ب) FiLM ----------
- \begin{scope}[xshift=5.0cm]
-        \fill[thPanelAlt, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
-        \node[hd] at (2.30,0.80) {\rl{(ب) تنظیم ویژگی به سبک \lr{FiLM}}};
-        \node[cmbox] (bi) at (2.30,-0.75) {\rl{تصویر}};
-        \node[cmbox] (bn) at (2.30,-2.20) {\rl{انکودر}};
-        \node[cmbox] (bd) at (2.30,-3.35) {\rl{عمق}};
-        \node[thnote, text=thAccent, font=\scriptsize] (bk) at (0.55,-1.42)
-   {$\gamma,\beta$};
-        \draw[tharrow] (bi) -- (bn);
-        \draw[tharrow] (bn) -- (bd);
-        \draw[tharrow, draw=thAccent] (bk.south) -- (bn.west);
-        \node[cmnote, text=thControl] at (2.30,-3.95)
-   {\rl{نیازمند دستکاری مستقیم نگاشت‌های ویژگی در هر لایه}};
- \end{scope}
-
-    %%% ---------- (ج) تزریق توکن (سمت چپ) ----------
- \begin{scope}
-        \fill[thPanelGreen, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
-        \draw[draw=thIdeal, line width=1.2pt, rounded corners=3pt] (0,-5.15) rectangle (4.6,0.95);
-        \node[hd, text=thIdeal] at (2.30,0.80) {\rl{(ج) تزریق توکن و توجه}};
-        \node[cmbox] (ci) at (2.30,-0.75) {\rl{توکن‌های وصله $+$ توکن ماتریس کالیبراسیون دوربین}};
-        \node[cmbox, fill=thPanelGreen, draw=thIdeal, line width=1pt] (cn) at (2.30,-2.20)
-   {\rl{انکودر بدون تغییر}\\ \rl{\tiny (سازوکار توجه ترکیب می‌کند)}};
-        \node[cmbox] (cd) at (2.30,-3.35) {\rl{عمق مطلق}};
-        \draw[tharrow] (ci) -- (cn);
-        \draw[tharrow] (cn) -- (cd);
-        \node[cmnote, text=thIdeal] at (2.30,-3.95)
-   {\rl{انتخاب این پژوهش: وزن‌های ازپیش‌آموخته دست‌نخورده می‌مانند}};
- \end{scope}
- \end{tikzpicture}
- \caption[مقایسه سازوکارهای شرطی‌سازی دوربین]{مقایسه سه سازوکار شرطی‌سازی دوربین و دلیل انتخاب تزریق توکن با وزن‌های ازپیش‌آموخته دست‌نخورده.}
- \label{fig:conditioning_mechanisms}
-\end{figure}
-
 \subsection{مزایای مورد انتظار از ادغام صریح پارامترهای درونی}
 
 ادغام صریح ماتریس کالیبراسیون دوربین، چند مزیت کلیدی را به همراه دارد. نخست آنکه مدل قادر خواهد بود نگاشت میان پیکسل و عمق را با در نظر گرفتن هندسه تصویربرداری دوربین انجام دهد و از این طریق، دقت تخمین عمق مطلق افزایش یابد. دوم آنکه وابستگی مدل به توزیع خاصی از دوربین‌ها در داده آموزشی کاهش می‌یابد و تعمیم‌پذیری آن در مواجهه با داده‌های چنددوربینه بهبود پیدا می‌کند. در نهایت، این طراحی امکان توسعه مدل به سناریوهای پیشرفته‌تر، نظیر یادگیری انتقالی میان مجموعه‌داده‌های با میدان دید متفاوت، را نیز فراهم می‌کند.
@@ -298,22 +232,22 @@ f_x & 0 & c_x \\
 \renewcommand{\arraystretch}{1.3}
 \setlength{\tabcolsep}{2.5pt}
 \begin{tabularx}{\linewidth}{@{}
- >{\raggedright\arraybackslash}p{0.13\linewidth}
- >{\raggedright\arraybackslash}p{0.15\linewidth}
+ >{\raggedleft\arraybackslash}p{0.17\linewidth}
+ >{\raggedleft\arraybackslash}p{0.15\linewidth}
  c c c c c
- >{\raggedright\arraybackslash}X@{}}
+ >{\raggedleft\arraybackslash}X@{}}
 \toprule
 مجموعه‌داده & محیط و منبع عمق مرجع & $f_y/H$ & \makecell{میدان دید\\افقی (درجه)} & آموزش & \makecell{اعتبار-\\سنجی} & آزمون & نقش در این پژوهش \\ \midrule
 \lr{NYUv2}~\cite{Silberman2012NYUv2} & داخلی، واقعی؛ حسگر \lr{Kinect} & $1.08$ & ۶۳ & ۶۳۶ & ۵۰ & ۶۵۴ & مطالعه کنترل‌شده؛ پروتکل استاندارد؛ آموزش و آزمون چندمجموعه‌ای \\
 \lr{KITTI}~\cite{Geiger2012KITTI} & بیرونی، واقعی؛ لایدار & $1.91$--$1.92$ & ۸۲ & ۹۱۴۸ & ۵۰ & ۶۵۲ & ارزیابی صفرنمونه و راستی‌آزمایی؛ آموزش و آزمون چندمجموعه‌ای \\
-\makecell[r]{\lr{Virtual KITTI 2}\\\cite{Gaidon2016VKITTI,Cabon2020VKITTI2}} & بیرونی، مصنوعی؛ رندر دقیق & $1.93$ & ۸۱ & ۳۷۸۶۰ & ۵۰ & & مرحله اکتشافی (با نسخه ۱)؛ آموزش چندمجموعه‌ای \\
+\rcell{\lr{Virtual KITTI 2}\\\cite{Gaidon2016VKITTI,Cabon2020VKITTI2}} & بیرونی، مصنوعی؛ رندر دقیق & $1.93$ & ۸۱ & ۳۷۸۶۰ & ۵۰ & & مرحله اکتشافی (با نسخه ۱)؛ آموزش چندمجموعه‌ای \\
 \lr{Cityscapes}~\cite{Cordts2016Cityscapes} & شهری، واقعی؛ تطبیق استریو & $2.21$ & ۴۹ & ۲۸۵۲ & ۵۰ & ۵۰۰ & آموزش و آزمون چندمجموعه‌ای \\ \midrule
-\makecell[r]{\lr{SUN RGB-D}\\\lr{Kinect v1}~\cite{Song2015SUNRGBD}} & داخلی، واقعی؛ حسگر \lr{Kinect v1} & $1.22$ & ۵۷ & & & ۲۰۰ & آزمون صفرنمونه \\
-\makecell[r]{\lr{SUN RGB-D}\\\lr{Kinect v2}} & داخلی، واقعی؛ حسگر \lr{Kinect v2} & $1.00$ & ۶۹ & & & ۲۰۰ & آزمون صفرنمونه \\
-\makecell[r]{\lr{SUN RGB-D}\\\lr{RealSense}} & داخلی، واقعی؛ حسگر \lr{RealSense} & $1.31$ & ۵۲ & & & ۲۰۰ & آزمون صفرنمونه \\
-\makecell[r]{\lr{SUN RGB-D}\\\lr{Xtion}} & داخلی، واقعی؛ حسگر \lr{Xtion} & $1.29$ & ۵۵ & & & ۲۰۰ & آزمون صفرنمونه \\
-\makecell[r]{\lr{DIODE}~\cite{Vasiljevic2019DIODE}\\داخلی} & داخلی، واقعی؛ اسکنر لیزری & $1.21$ & ۶۰ & & & ۳۲۵ & مرحله اکتشافی \\
-\makecell[r]{\lr{DIODE}\\بیرونی} & بیرونی، واقعی؛ اسکنر لیزری & $1.21$ & ۶۰ & & & ۴۴۶ & مرحله اکتشافی؛ آزمون صفرنمونه \\ \midrule
+\rcell{\lr{SUN RGB-D}\\\lr{Kinect v1}~\cite{Song2015SUNRGBD}} & داخلی، واقعی؛ حسگر \lr{Kinect v1} & $1.22$ & ۵۷ & & & ۲۰۰ & آزمون صفرنمونه \\
+\rcell{\lr{SUN RGB-D}\\\lr{Kinect v2}} & داخلی، واقعی؛ حسگر \lr{Kinect v2} & $1.00$ & ۶۹ & & & ۲۰۰ & آزمون صفرنمونه \\
+\rcell{\lr{SUN RGB-D}\\\lr{RealSense}} & داخلی، واقعی؛ حسگر \lr{RealSense} & $1.31$ & ۵۲ & & & ۲۰۰ & آزمون صفرنمونه \\
+\rcell{\lr{SUN RGB-D}\\\lr{Xtion}} & داخلی، واقعی؛ حسگر \lr{Xtion} & $1.29$ & ۵۵ & & & ۲۰۰ & آزمون صفرنمونه \\
+\rcell{\lr{DIODE}~\cite{Vasiljevic2019DIODE}\\داخلی} & داخلی، واقعی؛ اسکنر لیزری & $1.21$ & ۶۰ & & & ۳۲۵ & مرحله اکتشافی \\
+\rcell{\lr{DIODE}\\بیرونی} & بیرونی، واقعی؛ اسکنر لیزری & $1.21$ & ۶۰ & & & ۴۴۶ & مرحله اکتشافی؛ آزمون صفرنمونه \\ \midrule
 \lr{Hypersim}~\cite{Roberts2021Hypersim} & داخلی، مصنوعی؛ رندر دقیق & & & & & & نقطهٔ وارسی\footnotemark{} مطلق مدل پایه؛ افزودن به آموزش چندمجموعه‌ای (\lr{ViT-S}) \\
 \bottomrule
 \end{tabularx}
@@ -338,8 +272,7 @@ f_x & 0 & c_x \\
 
 تمامی تصاویر ورودی پیش از ورود به شبکه، به‌صورت یکنواخت پیش‌پردازش می‌شوند. در تنظیم پایه، تصاویر با حفظ نسبت ابعاد به کران پایین $518$\fafootnote{مقاله \lr{Depth Anything V2}، بخش ۷٫۱، بند نخست («\lr{Details}»): همه تصاویر با تفکیک‌پذیری $518\times518$ آموزش داده می‌شوند؛ اندازه کوتاه‌تر به ۵۱۸ تغییر می‌کند و سپس برش تصادفی انجام می‌شود.} پیکسل تغییر اندازه داده شده و سپس برش‌های تصادفی $518 \times 518$ برای یکسان‌سازی ابعاد دسته در مرحله آموزش اعمال می‌گردد؛ راهبردی مطابق با تنظیمات \basemodel{} \cite{DepthAnythingV2}. در آزمایش‌های نهایی مبتنی بر افزونه‌سازی زوم‌ـ‌برش (بخش \ref{subsec:fov_augmentation})، این برش تصادفی ساده ناآگاه از ماتریس کالیبراسیون دوربین کنار گذاشته شده و کل زنجیره برش و تغییر اندازه به‌صورت آگاه از پارامترهای دوربین و با به‌روزرسانی دقیق ماتریس کالیبراسیون دوربین انجام می‌شود؛ در این حالت، چارچوب ورودی شبکه به‌صورت ثابت $518 \times 686$ (قاب کامل ۴:۳ در کران پایین ۵۱۸ و مضرب ۱۴) انتخاب شده است.
 
-% REVIEW R33
-مقادیر پیکسل تصاویر به بازه $[0,1]$ نرمال‌سازی شده و سپس با استفاده از میانگین و \edrep{واریانس}{انحراف معیار} داده‌های \lr{ImageNet} استانداردسازی می‌شوند:
+مقادیر پیکسل تصاویر به بازه $[0,1]$ نرمال‌سازی شده و سپس با استفاده از میانگین و انحراف معیار داده‌های \lr{ImageNet} استانداردسازی می‌شوند:
 
 \begin{equation}
 I_{norm} = \frac{I - \mu_{ImageNet}}{\sigma_{ImageNet}},
@@ -418,15 +351,12 @@ c_y' &= (c_y-y_0)\frac{H_{\mathrm{net}}}{h_{\mathrm{win}}}.
 \end{equation}
 که در آن $(H_{\mathrm{net}}, W_{\mathrm{net}})$ ابعاد ثابت چارچوب ورودی شبکه (در پیاده‌سازی حاضر $518 \times 686$، مضرب اندازه وصله‌های ترنسفورمر) است. مقادیر عمق در این تبدیل تغییر نمی‌کنند، زیرا نقاط صحنه همان نقاط پیشین هستند.
 
-% REVIEW R33
-\eddel{این زنجیره به‌صورت شماتیک تشریح می‌شود.}
 
 
 
 وارونه‌سازی افقی نیز هم‌زمان بر تصویر، نگاشت عمق، ماسک اعتبار و ماتریس کالیبراسیون دوربین اعمال می‌شود. در این حالت، مختصه افقی نقطه اصلی مطابق $c_x'=W-c_x$ اصلاح می‌گردد. همچنین ابعاد چارچوبی که ماتریس کالیبراسیون دوربین در آن تعریف شده است همراه هر نمونه نگهداری می‌شود تا نرمال‌سازی مولفه‌های دوربین در آموزش و استنتاج دقیقا در یک دستگاه مختصات انجام شود. این کنترل‌ها ضروری‌اند، زیرا تغییر تصویر بدون تبدیل متناظر ماتریس کالیبراسیون دوربین، حتی در صورت اجرای بی‌خطای برنامه، ورودی هندسی ناسازگار تولید می‌کند.
 
-% REVIEW R33
-از منظر هندسی، این افزونه‌سازی معادل شبیه‌سازی دوربین‌هایی با میدان دید متفاوت از یک صحنه واحد است: بزرگ‌نمایی $s$ میدان دید موثر را از حدود ۶۳ درجه (قاب کامل \lr{NYUv2}) تا حدود \edrep{۳۳}{۳۱} درجه تغییر می‌دهد. بدین ترتیب، \proposedmodel{} در طول آموزش با زوج‌های (تصویر، ماتریس کالیبراسیون دوربین) مواجه می‌شود که در آن‌ها ابهام میان مقیاس صحنه و میدان دید به‌صورت واقعی وجود دارد و تنها از طریق اطلاعات ماتریس کالیبراسیون دوربین قابل رفع است؛ در حالی که \controlmodel{}، دقیقا همین تصاویر افزونه‌سازی‌شده را بدون اطلاعات ماتریس کالیبراسیون دوربین دریافت می‌کند. این طراحی، مبنای مطالعه کنترل‌شده فصل چهارم برای سنجش سهم واقعی پارامترهای درونی دوربین است.
+از منظر هندسی، این افزونه‌سازی معادل شبیه‌سازی دوربین‌هایی با میدان دید متفاوت از یک صحنه واحد است: بزرگ‌نمایی $s$ میدان دید موثر را از حدود ۶۳ درجه (قاب کامل \lr{NYUv2}) تا حدود ۳۱ درجه تغییر می‌دهد. بدین ترتیب، \proposedmodel{} در طول آموزش با زوج‌های (تصویر، ماتریس کالیبراسیون دوربین) مواجه می‌شود که در آن‌ها ابهام میان مقیاس صحنه و میدان دید به‌صورت واقعی وجود دارد و تنها از طریق اطلاعات ماتریس کالیبراسیون دوربین قابل رفع است؛ در حالی که \controlmodel{}، دقیقا همین تصاویر افزونه‌سازی‌شده را بدون اطلاعات ماتریس کالیبراسیون دوربین دریافت می‌کند. این طراحی، مبنای مطالعه کنترل‌شده فصل چهارم برای سنجش سهم واقعی پارامترهای درونی دوربین است.
 
 \subsection{افزونه‌سازی لرزش کانونی: غیرقابل‌حل‌کردن مقیاس بدون ماتریس کالیبراسیون دوربین}
 \label{subsec:focal_jitter}
@@ -447,7 +377,6 @@ f_x \mapsto \alpha f_x, \qquad f_y \mapsto \alpha f_y, \qquad Z \mapsto \alpha Z
 
 \begin{figure}[htbp]
  \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
   \begin{tikzpicture}[font=\footnotesize]
  \tikzset{
   smp/.style={thblock, fill=white, font=\footnotesize, text width=4.6cm, anchor=north},
@@ -512,33 +441,30 @@ f_x \mapsto \alpha f_x, \qquad f_y \mapsto \alpha f_y, \qquad Z \mapsto \alpha Z
 \begin{algorithm}[htbp]
 \caption{روند آموزش مدل با پارامترهای هندسی}
 \label{alg:training_pipeline}
+\begin{latin}\raggedright
 \begin{algorithmic}[1]
-\REQUIRE مجموعه داده آموزش $D = \{(I_i, K_i, D^{GT}_i)\}_{i=1}^N$، \basemodel{} با وزن‌های $\theta_{enc}$ (فریز شده)، $\theta_{dec}$ (قابل آموزش)، $\theta_{cam}$ (شبکه انکودر دوربین)
-\ENSURE مدل نهایی آموزش‌دیده
-\FOR{\rl{\persianfont هر \lr{epoch} از آموزش}}
- \FOR{\rl{\persianfont هر دسته داده (\lr{batch}) از } $D$}
-  \STATE $I \gets \text{\rl{\persianfont تصویر}}$
-  \STATE $K \gets \text{\rl{\persianfont ماتریس کالیبراسیون دوربین}}$
-  \STATE $D^{GT} \gets \text{\rl{\persianfont نقشه عمق مرجع}}$
-
-  \STATE \COMMENT{پیش‌پردازش و کدگذاری پارامترهای دوربین}
-  \STATE $\mathbf{d}_{\mathrm{cam}} \gets \text{\rl{\persianfont نرمال‌سازی}}(K, W, H)$
+\REQUIRE Training dataset $D = \{(I_i, K_i, D^{GT}_i)\}_{i=1}^N$; base model (Depth Anything V2) with weights $\theta_{enc}$ (frozen) and $\theta_{dec}$ (trainable); camera-encoder network $\theta_{cam}$
+\ENSURE Final trained model
+\FOR{each training epoch}
+ \FOR{each batch of $D$}
+  \STATE $I \gets \text{image}$
+  \STATE $K \gets \text{camera calibration matrix}$
+  \STATE $D^{GT} \gets \text{reference depth map}$
+  \STATE \COMMENT{Preprocess and encode the camera parameters}
+  \STATE $\mathbf{d}_{\mathrm{cam}} \gets \text{Normalize}(K, W, H)$
   \STATE $\mathbf{z}_{\mathrm{cam}} \gets MLP(\mathbf{d}_{\mathrm{cam}}, \theta_{cam})$
-
-  \STATE \COMMENT{استخراج ویژگی‌های بصری با تزریق توکن دوربین در انکودر}
+  \STATE \COMMENT{Extract visual features, injecting the camera token into the encoder}
   \STATE $F \gets Encoder(I, \mathbf{z}_{\mathrm{cam}}, \theta_{enc})$
-
-  \STATE \COMMENT{تخمین عمق}
+  \STATE \COMMENT{Estimate depth}
   \STATE $D^{pred} \gets Decoder(F, \theta_{dec})$
-
-  \STATE \COMMENT{محاسبه تابع هزینه مطلق}
+  \STATE \COMMENT{Compute the metric-depth loss}
   \STATE $\mathcal{L} \gets \mathcal{L}_{SiLog}(D^{pred}, D^{GT})$
-
-  \STATE \COMMENT{به‌روزرسانی وزن‌ها}
+  \STATE \COMMENT{Update the weights}
   \STATE $\theta_{dec}, \theta_{cam} \gets Optimizer.step(\nabla \mathcal{L})$
  \ENDFOR
 \ENDFOR
 \end{algorithmic}
+\end{latin}
 \end{algorithm}
 
 در مجموع، راهبرد نهایی بر تنظیم دقیق‌پارامترهای نظارتی و کنترل‌شده یک مدل قدرتمند ازپیش‌آموزش‌یافته، فریزکردن انکودر، آموزش سر عمق و انکودر دوربین، و زوج‌سازی کامل \proposedmodel{} با \controlmodel{} استوار است.
@@ -585,10 +511,10 @@ f_x \mapsto \alpha f_x, \qquad f_y \mapsto \alpha f_y, \qquad Z \mapsto \alpha Z
 \small
 \renewcommand{\arraystretch}{1.35}
 \begin{tabularx}{\textwidth}{@{}
- >{\raggedright\arraybackslash}p{0.125\textwidth}
- >{\raggedright\arraybackslash}p{0.215\textwidth}
- >{\raggedright\arraybackslash}p{0.170\textwidth}
- >{\raggedright\arraybackslash}X@{}}
+ >{\raggedleft\arraybackslash}p{0.125\textwidth}
+ >{\raggedleft\arraybackslash}p{0.215\textwidth}
+ >{\raggedleft\arraybackslash}p{0.170\textwidth}
+ >{\raggedleft\arraybackslash}X@{}}
 \toprule
 حالت مدل & فضای هدف آموزش & تابع هزینه & پروتکل ارزیابی و دلالت آن \\ \midrule
 نسبی\\ \lr{(relative)} &
@@ -624,7 +550,7 @@ f_x \mapsto \alpha f_x, \qquad f_y \mapsto \alpha f_y, \qquad Z \mapsto \alpha Z
 
 در مطالعه کنترل‌شده، که مدل‌های مختلف روی مجموعه آزمون یکسان ارزیابی می‌شوند، خطای هر مدل برای هر تصویر به‌صورت زوجی محاسبه می‌شود. معناداری تفاوت میانگین خطاها با آزمون \lr{t} زوجی\enfootnote{Paired t-test} سنجیده می‌شود و، چون توزیع خطاهای تک‌تصویری لزوما نرمال نیست، آزمون ناپارامتری علامت‌دار ویلکاکسون\enfootnote{Wilcoxon Signed-rank Test}~\cite{Wilcoxon1945} نیز به‌عنوان تحلیل استحکام گزارش می‌شود. طرح زوجی اثر دشواری متفاوت تصاویر را کنترل می‌کند.
 
-برای برآورد عدم‌قطعیت و کاهش وابستگی به فرضیات توزیعی، از بازنمونه‌گیری بوت‌استرپ\enfootnote{Bootstrap Resampling}~\cite{Efron1993Bootstrap} با ده‌هزار بازنمونه از تفاضل‌های زوجی خطا استفاده می‌شود و بازه اطمینان $95\%$ گزارش می‌گردد. این آزمون‌ها برای استنباط درباره تفاوت عملکرد در نمونه‌های ارزیابی به‌کار می‌روند؛ آموزش با چند بذر مستقل در این پژوهش تکرار نشده است و بنابراین پراکندگی میان اجراهای آموزشی برآورد نمی‌شود.
+این آزمون‌ها برای استنباط درباره تفاوت عملکرد در نمونه‌های ارزیابی به‌کار می‌روند؛ آموزش با چند بذر مستقل در این پژوهش تکرار نشده است و بنابراین پراکندگی میان اجراهای آموزشی برآورد نمی‌شود.
 
 
 \section{جمع‌بندی فصل}

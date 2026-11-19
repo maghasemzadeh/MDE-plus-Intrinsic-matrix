@@ -17,11 +17,11 @@
 
 \documentclass[
 twoside
-% ,openany
+,openany
 ,msc
 ,irfonts
 % ,draft
-]{./kntu-thesis}
+]{kntu-thesis}
 
 % فایل commands.tex را مطالعه کنید؛ چون دستورات مربوط به فراخوانی بسته‌ها، فونت و دستورات خاص در این فایل قرار دارد.
 \input{./tex/commands}
@@ -37,6 +37,8 @@ twoside
 \input{./tex/acronyms.tex}
 
 \begin{document}
+% بدون صفحه سفید: فصل‌ها و بخش‌های آغازین روی صفحه بعدی شروع می‌شوند، نه لزوماً صفحه فرد.
+\let\cleardoublepage\clearpage
 
 \pagenumbering{adadi} % یک، دو، ...
 \input{./tex/thesis_preamble}
@@ -47,23 +49,16 @@ twoside
 \include{./tex/chapter1}		% فصل اول: مقدمه
 \include{./tex/chapter2}		% فصول دوم: مروری بر مطالعات انجام شده
 \include{./tex/chapter3}		% فصل سوم: معرفی معماری POLO
-\include{./tex/chapter4}		% فصل چهارم: نتایج
-\include{./tex/chapter5}		% فصل پنجم: بحث و نتیجه‌گیری
+\include{./tex/chapter4}		% فصل چهارم: ارزیابی مدل پیشنهادی
+\include{./tex/chapter5}		% فصل پنجم: نتیجه‌گیری و پیشنهادها
 
-% فهرست‌های اصلی در انتهای متن می‌آیند تا فهرست مطالب با فصل اول آغاز شود.
-\cleardoublepage
-\addcontentsline{toc}{chapter}{\listfigurename}
-\listoffigures
-\addcontentsline{toc}{chapter}{\listtablename}
-\listoftables
-\addcontentsline{toc}{chapter}{فهرست اختصارات}
-% فهرست اختصارات در این پایان‌نامه به‌صورت جدول دستی چاپ می‌شود.
-\printabbreviationmanual
 
 % مراجع
 % اگر از استیل‌های natbib استفاده می‌کنید باید دو خط را در فایل commands.tex تغییر دهید.
 \pagestyle{empty}
 {
+% xepersian نام «کتاب‌نامه» را در آغاز سند بازنشانی می‌کند؛ اینجا دوباره «مراجع» می‌شود.
+\renewcommand{\bibname}{مراجع}\renewcommand{\refname}{مراجع}
 \small
 \onehalfspacing
 \bibliographystyle{unsrt-fa} % or plainnat-fa for author-date

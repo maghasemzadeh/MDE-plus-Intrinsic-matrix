@@ -111,34 +111,37 @@
 \newcommand{\printabbreviationmanual}{%
 \clearpage
 \chapter*{\rl{فهرست اختصارات}}
-\renewcommand{\leftmark}{فهرست اختصارات}% سربرگ این بخش (پیش‌تر «فهرست جداول» می‌ماند)
+\markboth{فهرست اختصارات}{فهرست اختصارات}% سربرگ این بخش
 \small
-\begin{longtable}{@{}>{\raggedleft\arraybackslash}p{0.31\textwidth} >{\centering\arraybackslash}p{0.13\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth}@{}}
+% جدول چپ‌به‌راست: از چپ، اختصار و صورت کامل انگلیسی (چپ‌چین)، سپس معادل فارسی (راست‌چین)
+\begin{LTR}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.13\textwidth} >{\raggedright\arraybackslash}p{0.46\textwidth} >{\raggedleft\arraybackslash}p{0.31\textwidth}@{}}
 \toprule
-معادل فارسی & اختصار & صورت کامل انگلیسی \\
+\rl{اختصار} & \rl{صورت کامل انگلیسی} & \rl{معادل فارسی} \\
 \midrule
 \endhead
-بینایی ماشین & \lr{CV} & \lr{Computer Vision} \\
-تخمین عمق تک‌دوربینه & \lr{MDE} & \lr{Monocular Depth Estimation} \\
-شبکه عصبی کانولوشنی & \lr{CNN} & \lr{Convolutional Neural Network} \\
-میدان دید & \lr{FoV} & \lr{Field of View} \\
-سیستم‌های کمک‌راننده پیشرفته & \lr{ADAS} & \lr{Advanced Driver-Assistance Systems} \\
-ترنسفورمر بینایی & \lr{ViT} & \lr{Vision Transformer} \\
-ترنسفورمر پیش‌بینی چگال & \lr{DPT} & \lr{Dense Prediction Transformer} \\
-قرمز سبز آبی & \lr{RGB} & \lr{Red--Green--Blue} \\
-قرمز سبز آبی و عمق & \lr{RGB-D} & \lr{Red--Green--Blue--Depth} \\
-پرسپترون چندلایه & \lr{MLP} & \lr{Multi-Layer Perceptron} \\
-تعدیل خطی در سطح ویژگی & \lr{FiLM} & \lr{Feature-wise Linear Modulation} \\
-واحد خطی خطای گاوسی & \lr{GELU} & \lr{Gaussian Error Linear Unit} \\
-واحد خطی یکسوشده & \lr{ReLU} & \lr{Rectified Linear Unit} \\
-واحد پردازش گرافیکی & \lr{GPU} & \lr{Graphics Processing Unit} \\
-ریشه میانگین مربعات خطا & \lr{RMSE} & \lr{Root Mean Squared Error} \\
-خطای نسبی مطلق & \lr{AbsRel} & \lr{Absolute Relative Error} \\
-خطای نسبی مربعی & \lr{SqRel} & \lr{Squared Relative Error} \\
-تابع هزینه لگاریتمی تغییرناپذیر نسبت به مقیاس & \lr{SiLog} & \lr{Scale-Invariant Logarithmic Loss} \\
-عمق مطلق صفرنمونه & \lr{DMD} & \lr{Zero-Shot Metric Depth} \\
+\lr{CV} & \lr{Computer Vision} & \rl{بینایی ماشین} \\
+\lr{MDE} & \lr{Monocular Depth Estimation} & \rl{تخمین عمق تک‌دوربینه} \\
+\lr{CNN} & \lr{Convolutional Neural Network} & \rl{شبکه عصبی کانولوشنی} \\
+\lr{FoV} & \lr{Field of View} & \rl{میدان دید} \\
+\lr{ADAS} & \lr{Advanced Driver-Assistance Systems} & \rl{سیستم‌های کمک‌راننده پیشرفته} \\
+\lr{ViT} & \lr{Vision Transformer} & \rl{ترنسفورمر بینایی} \\
+\lr{DPT} & \lr{Dense Prediction Transformer} & \rl{ترنسفورمر پیش‌بینی چگال} \\
+\lr{RGB} & \lr{Red--Green--Blue} & \rl{قرمز سبز آبی} \\
+\lr{RGB-D} & \lr{Red--Green--Blue--Depth} & \rl{قرمز سبز آبی و عمق} \\
+\lr{MLP} & \lr{Multi-Layer Perceptron} & \rl{پرسپترون چندلایه} \\
+\lr{FiLM} & \lr{Feature-wise Linear Modulation} & \rl{تعدیل خطی در سطح ویژگی} \\
+\lr{GELU} & \lr{Gaussian Error Linear Unit} & \rl{واحد خطی خطای گاوسی} \\
+\lr{ReLU} & \lr{Rectified Linear Unit} & \rl{واحد خطی یکسوشده} \\
+\lr{GPU} & \lr{Graphics Processing Unit} & \rl{واحد پردازش گرافیکی} \\
+\lr{RMSE} & \lr{Root Mean Squared Error} & \rl{ریشه میانگین مربعات خطا} \\
+\lr{AbsRel} & \lr{Absolute Relative Error} & \rl{خطای نسبی مطلق} \\
+\lr{SqRel} & \lr{Squared Relative Error} & \rl{خطای نسبی مربعی} \\
+\lr{SiLog} & \lr{Scale-Invariant Logarithmic Loss} & \rl{تابع هزینه لگاریتمی تغییرناپذیر نسبت به مقیاس} \\
+\lr{DMD} & \lr{Zero-Shot Metric Depth} & \rl{عمق مطلق صفرنمونه} \\
 \bottomrule
 \end{longtable}
+\end{LTR}
 \normalsize
 \clearpage
 }%
@@ -166,9 +169,9 @@
 \clearpage
 \addcontentsline{toc}{chapter}{واژه‌نامه فارسی به انگلیسی}
 \chapter*{\rl{واژه‌نامه فارسی به انگلیسی}}
-\renewcommand{\leftmark}{واژه‌نامه فارسی به انگلیسی}% سربرگ این بخش (پیش‌تر «فهرست جداول» می‌ماند)
+\markboth{واژه‌نامه فارسی به انگلیسی}{واژه‌نامه فارسی به انگلیسی}% سربرگ این بخش
 \small
-\begin{longtable}{@{}>{\raggedleft\arraybackslash}p{0.45\textwidth} >{\raggedright\arraybackslash}p{0.45\textwidth}@{}}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.45\textwidth} >{\raggedleft\arraybackslash}p{0.45\textwidth}@{}}
 \toprule
 معادل فارسی & معادل انگلیسی \\
 \midrule
@@ -178,7 +181,6 @@
 اعوجاج & \lr{Distortion} \\
 افزونه‌سازی & \lr{Augmentation} \\
 انکودر دوربین & \lr{Camera Encoder} \\
-بازنمونه‌گیری بوت‌استرپ & \lr{Bootstrap Resampling} \\
 بدساخت & \lr{Ill-posed} \\
 بذر تصادفی & \lr{Random Seed} \\
 برش تصادفی & \lr{Random Crop} \\
@@ -222,57 +224,59 @@
 \clearpage
 \addcontentsline{toc}{chapter}{واژه‌نامه انگلیسی به فارسی}
 \chapter*{\rl{واژه‌نامه انگلیسی به فارسی}}
-\renewcommand{\leftmark}{واژه‌نامه انگلیسی به فارسی}% سربرگ این بخش (پیش‌تر «فهرست جداول» می‌ماند)
+\markboth{واژه‌نامه انگلیسی به فارسی}{واژه‌نامه انگلیسی به فارسی}% سربرگ این بخش
 \small
-\begin{longtable}{@{}>{\raggedleft\arraybackslash}p{0.45\textwidth} >{\raggedright\arraybackslash}p{0.45\textwidth}@{}}
+% جدول چپ‌به‌راست: انگلیسی در ستون چپ (چپ‌چین)، فارسی در ستون راست (راست‌چین)
+\begin{LTR}
+\begin{longtable}{@{}>{\raggedright\arraybackslash}p{0.45\textwidth} >{\raggedleft\arraybackslash}p{0.45\textwidth}@{}}
 \toprule
-معادل انگلیسی & معادل فارسی \\
+\rl{معادل انگلیسی} & \rl{معادل فارسی} \\
 \midrule
 \endhead
-\lr{Absolute Depth} & عمق مطلق \\
-\lr{Augmentation} & افزونه‌سازی \\
-\lr{Bootstrap Resampling} & بازنمونه‌گیری بوت‌استرپ \\
-\lr{Camera Calibration Matrix} & ماتریس کالیبراسیون دوربین \\
-\lr{Camera Encoder} & انکودر دوربین \\
-\lr{Camera Intrinsics} & پارامترهای درونی دوربین \\
-\lr{Checkpoint} & نقطهٔ وارسی \\
-\lr{Control Coefficient} & ضریب کنترلی \\
-\lr{Control Model} & مدل کنترل \\
-\lr{Learnable-gated Token} & توکن با گیت یادگیری‌پذیر \\
-\lr{Depth Map} & نقشه عمق \\
-\lr{Distortion} & اعوجاج \\
-\lr{Field of View} & میدان دید \\
-\lr{Fine-tuning} & تنظیم دقیق \\
-\lr{Focal Length} & فاصله کانونی \\
-\lr{Foundation Model} & مدل بنیادین \\
-\lr{Generalization} & تعمیم \\
-\lr{Gradient Accumulation} & تجمع گرادیان \\
-\lr{Gradient Clipping} & محدودسازی گرادیان \\
-\lr{Head Layers} & سر شبکه \\
-\lr{Ill-posed} & بدساخت \\
-\lr{Indoor} & محیط‌های داخلی \\
-\lr{Inverse Depth (Disparity)} & عمق معکوس (دیسپاریتی) \\
-\lr{Learning Rate} & نرخ یادگیری \\
-\lr{Loss Function} & تابع هزینه \\
-\lr{Monocular Depth Estimation} & تخمین عمق تک‌دوربینه \\
-\lr{Outdoor} & محیط‌های بیرونی \\
-\lr{Overfitting} & بیش‌برازش \\
-\lr{Pinhole Camera} & دوربین سوراخ‌سوزنی \\
-\lr{Pre-training} & پیش‌آموزش \\
-\lr{Principal Point} & نقطه اصلی \\
-\lr{Proposed Model} & مدل پیشنهادی \\
-\lr{Random Crop} & برش تصادفی \\
-\lr{Random Seed} & بذر تصادفی \\
-\lr{Relative Depth} & عمق نسبی \\
-\lr{Scale Ambiguity} & ابهام مقیاس \\
-\lr{Self-supervised Learning} & یادگیری خودنظارتی \\
-\lr{Synthetic Dataset} & مجموعه‌داده مصنوعی \\
-\lr{Token} & توکن \\
-\lr{Transformer} & ترنسفورمر \\
-\lr{Wilcoxon Signed-rank Test} & آزمون ویلکاکسون \\
-\lr{Zero-shot} & صفرنمونه \\
+\lr{Absolute Depth} & \rl{عمق مطلق} \\
+\lr{Augmentation} & \rl{افزونه‌سازی} \\
+\lr{Camera Calibration Matrix} & \rl{ماتریس کالیبراسیون دوربین} \\
+\lr{Camera Encoder} & \rl{انکودر دوربین} \\
+\lr{Camera Intrinsics} & \rl{پارامترهای درونی دوربین} \\
+\lr{Checkpoint} & \rl{نقطهٔ وارسی} \\
+\lr{Control Coefficient} & \rl{ضریب کنترلی} \\
+\lr{Control Model} & \rl{مدل کنترل} \\
+\lr{Learnable-gated Token} & \rl{توکن با گیت یادگیری‌پذیر} \\
+\lr{Depth Map} & \rl{نقشه عمق} \\
+\lr{Distortion} & \rl{اعوجاج} \\
+\lr{Field of View} & \rl{میدان دید} \\
+\lr{Fine-tuning} & \rl{تنظیم دقیق} \\
+\lr{Focal Length} & \rl{فاصله کانونی} \\
+\lr{Foundation Model} & \rl{مدل بنیادین} \\
+\lr{Generalization} & \rl{تعمیم} \\
+\lr{Gradient Accumulation} & \rl{تجمع گرادیان} \\
+\lr{Gradient Clipping} & \rl{محدودسازی گرادیان} \\
+\lr{Head Layers} & \rl{سر شبکه} \\
+\lr{Ill-posed} & \rl{بدساخت} \\
+\lr{Indoor} & \rl{محیط‌های داخلی} \\
+\lr{Inverse Depth (Disparity)} & \rl{عمق معکوس (دیسپاریتی)} \\
+\lr{Learning Rate} & \rl{نرخ یادگیری} \\
+\lr{Loss Function} & \rl{تابع هزینه} \\
+\lr{Monocular Depth Estimation} & \rl{تخمین عمق تک‌دوربینه} \\
+\lr{Outdoor} & \rl{محیط‌های بیرونی} \\
+\lr{Overfitting} & \rl{بیش‌برازش} \\
+\lr{Pinhole Camera} & \rl{دوربین سوراخ‌سوزنی} \\
+\lr{Pre-training} & \rl{پیش‌آموزش} \\
+\lr{Principal Point} & \rl{نقطه اصلی} \\
+\lr{Proposed Model} & \rl{مدل پیشنهادی} \\
+\lr{Random Crop} & \rl{برش تصادفی} \\
+\lr{Random Seed} & \rl{بذر تصادفی} \\
+\lr{Relative Depth} & \rl{عمق نسبی} \\
+\lr{Scale Ambiguity} & \rl{ابهام مقیاس} \\
+\lr{Self-supervised Learning} & \rl{یادگیری خودنظارتی} \\
+\lr{Synthetic Dataset} & \rl{مجموعه‌داده مصنوعی} \\
+\lr{Token} & \rl{توکن} \\
+\lr{Transformer} & \rl{ترنسفورمر} \\
+\lr{Wilcoxon Signed-rank Test} & \rl{آزمون ویلکاکسون} \\
+\lr{Zero-shot} & \rl{صفرنمونه} \\
 \bottomrule
 \end{longtable}
+\end{LTR}
 \normalsize
 \clearpage
 }%

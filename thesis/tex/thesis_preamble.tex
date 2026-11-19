@@ -2,7 +2,7 @@
 \coverPage
 % بررسی حالت پیش‌نویس
 \ifoptiondraft{}{% 
-    \titlePage
+%    \titlePage % حذف شد: تکرار صفحه جلد بود
     \besmPage
 % چنانچه مایل به چاپ صفحات «تقدیم»، «نیایش» و «سپاس‌گزاری» در خروجی نیستید، خط‌های زیر را با گذاشتن ٪  در ابتدای آنها غیرفعال کنید.
     \taghdimPage
@@ -17,6 +17,19 @@
 \newpage\cleardoublepage
 \pagenumbering{harfi} % آ، ب، ...
 \tableofcontents \clearpage
+% فهرست تصاویر، جداول و اختصارات بلافاصله پس از فهرست مطالب می‌آیند.
+\phantomsection
+\addcontentsline{toc}{chapter}{\listfigurename}
+\listoffigures
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{\listtablename}
+\listoftables
+\clearpage
+\phantomsection
+\addcontentsline{toc}{chapter}{فهرست اختصارات}
+% فهرست اختصارات در این پایان‌نامه به‌صورت جدول دستی چاپ می‌شود.
+\printabbreviationmanual
 % بررسی حالت پیش‌نویس برای بقیه فهرست‌ها
 \ifoptiondraft{
     \listoftodos

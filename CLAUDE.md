@@ -8,12 +8,6 @@ This is a monocular depth estimation (MDE) research project investigating the im
 
 ## Common Commands
 
-### Setup
-```bash
-# Install dependencies
-pip install -r requirements.txt
-```
-
 ### Training
 ```bash
 # Train with camera intrinsics on VKITTI dataset
@@ -92,83 +86,10 @@ python prepare_vkitti.py \
     --intrinsics-output-dir datasets/raw_data/vkitti/splits/intrinsics
 ```
 
-### Testing
-```bash
-# Run all tests
-pytest -v
-
-# Run tests excluding slow tests
-pytest -v -m "not slow"
-
-# Run specific test file
-pytest tests/test_metrics.py -v
-
-# Run tests with custom output
-python tests/run_tests.py
-```
-
 ## Architecture Overview
 
-### Core Packages
-
-**`src/`** - Core pipeline and utilities
-- `pipeline.py`: `ProcessingPipeline` class orchestrating dataset iteration, model inference, and metric computation
-- `metrics.py`: Depth error metrics (AbsRel, RMSE for metric models; SILog for relative depth)
-- `visualization.py`: Depth map visualization (colormaps, scale overlays, error heatmaps)
-- `paths.py`: Output directory structure management
-- `tools/`: Miscellaneous utility modules
-
-**`datasets/`** - Dataset interfaces and implementations
-- `base.py`: `BaseDataset` abstract class and `DatasetItem` dataclass
-- `cityscapes.py`, `drivingstereo.py`, `middlebury.py`, `vkitti.py`, `diode.py`, `nyu.py`, `kitti.py`: Evaluation datasets with ground truth
-- `training_datasets.py`: PyTorch Dataset wrappers for training (VKITTI2, KITTI, NYU, DIODE, Middlebury, Cityscapes, RobustDataset)
-- Available training datasets in `train.py`: vkitti, kitti, nyu, diode, middlebury, cityscapes, robust
-
-**`models/`** - Model wrappers and integrations
-- `base.py`: `BaseDepthModelWrapper` abstract interface
-- `depth_anything_v2.py`: Wrapper for baseline DepthAnythingV2
-- `depth_anything_v2_revised.py`: Extended DepthAnythingV2 with camera intrinsics encoder
-- `depth_anything_3.py`: Wrapper for Depth-Anything-3
-- `raw_models/`: Unmodified vendor model code
-  - `DepthAnythingV2/`: Original DepthAnythingV2 implementation
-  - `DepthAnythingV2-revised/`: Modified DepthAnythingV2 with intrinsics support and metric training branch
-  - `Depth-Anything-3/`: Depth-Anything-3 implementation
-- `utils.py`: Model initialization and checkpoint handling utilities
-
-**`tests/`** - Test suite
-- `conftest.py`: Pytest fixtures and configuration
-- `test_metrics.py`: Metric computation correctness
-- `test_integration.py`: End-to-end pipeline tests
-- `test_data_loading.py`: Dataset loading and preprocessing
-- `test_scale_factor.py`, `test_statistical_tests.py`: Evaluation-specific tests
-
-### Paper-Protocol Evaluation (verified against DA2 paper)
-
-`evaluate_paper.py` reproduces the DA2 paper's zero-shot relative-depth protocol
-(Table 2) with the released *basic* checkpoints. Verified results (2026-07, lingotube):
-
-| run | ours (AbsRel/δ1) | paper |
-|---|---|---|
-| NYU vitl | 0.043 / 0.979 | 0.045 / 0.979 |
-| NYU vits | 0.051 / 0.973 | 0.053 / 0.973 |
-| KITTI vitl (no crop) | 0.076 / 0.948 | 0.074 / 0.946 |
-| KITTI vits (no crop) | 0.083 / 0.934 | 0.078 / 0.936 |
-
-(KITTI with the garg crop instead: vitl 0.070/0.956, vits 0.077/0.944 — the two
-crop variants bracket the paper numbers; remaining differences are within normal
-reproduction tolerance for this benchmark.)
-
-Protocol essentials (all implemented in `evaluate_paper.py` + `src/metrics.py`):
-- NYU: eigen 654 split (canonical indices from splits.mat), **rawDepths** GT
-  (not the inpainted `depths` field), eigen crop, caps 0.001–10 m.
-- KITTI: DA2's 652-image eigen-val filelist (`datasets/raw_data/kitti/da2_val.txt`
-  on the server; images under `kitti_raw/`), **no crop**, caps 0.001–80 m.
-- Basic model: per-image scale+shift alignment in inverse-depth space, then
-  predictions clipped to the eval depth range (without clipping, near-zero
-  aligned disparities explode and wreck the mean).
-- Paper Table 4 (metric NYU/KITTI) uses in-domain fine-tuned checkpoints that
-  were never released — it is NOT reproducible with the public
-  hypersim/vkitti metric checkpoints.
+### Paper-Protocol Evaluation
+`evaluate_paper.py` reproduces the DA2 paper's zero-shot protocol (Table 2); verified numbers, protocol essentials, and the Table 4 caveat live in the `paper-eval-protocol` skill.
 
 ### Dataset-Specific Evaluation Notes
 
@@ -198,24 +119,6 @@ Protocol essentials (all implemented in `evaluate_paper.py` + `src/metrics.py`):
    - Training uses `training_datasets.py` PyTorch DataLoader wrappers
    - Evaluation uses evaluation dataset classes that provide ground truth for metric computation
 
-### Output Structure
-```
-output_dir/{dataset}/{item_id}/
-├── metric/                    # Metric model outputs (absolute depth)
-│   ├── cam0/
-│   │   ├── numpy_matrix/      # arrays.npz (depth + metrics), metrics.json
-│   │   ├── disp/              # PNG depth visualizations
-│   │   └── error/             # Error map visualizations
-│   └── compare/               # Multi-camera stereo comparison
-│       ├── warped.png         # Reprojection results
-│       └── error_disp.png     # Cross-camera error maps
-└── basic/                     # Non-metric model outputs (relative depth)
-    ├── cam0/
-    │   ├── numpy_matrix/
-    │   └── disp/
-    └── compare/
-```
-
 ### Model Checkpoints
 
 - Baseline DepthAnythingV2: `models/raw_models/DepthAnythingV2/checkpoints/depth_anything_v2_*.pth` (pre-trained, available for download)
@@ -228,32 +131,8 @@ The training script auto-detects encoder type (`vits`/`vitb`/`vitl`/`vitg`) from
 
 **Model type detection**: Metric vs basic cannot be determined from state-dict keys alone — the filename/dirname is the authoritative source for official DA2 checkpoints. Trained checkpoints use an embedded `config` block.
 
-### Testing Results
-
-Run `python tests/run_tests.py` or `pytest tests/` to execute the full test suite. Key test categories:
-- **Unit tests**: Metric computation, scale factor calculation, statistical tests
-- **Integration tests**: Full pipeline on small sample datasets
-- **Data loading tests**: Dataset iteration, intrinsics loading, multi-camera grouping
-
-## Dependencies
-
-Core: PyTorch (`torch`, `torchvision`), NumPy, SciPy, OpenCV, matplotlib, tqdm, tensorboard, pytest
-
-Dataset-specific: h5py (Hypersim), gradio (for interactive demos)
-
-Install all: `pip install -r requirements.txt`
-
 ## Checkpoint and Model Notes
 
 See `CHECKPOINT_USAGE.md` for detailed checkpoint loading and inference workflows.
 See `ARCHITECTURE_SIZES.md` for encoder dimension mappings for all ViT sizes.
 
-## graphify
-
-This project has a knowledge graph at graphify-out/ with god nodes, community structure, and cross-file relationships.
-
-Rules:
-- For codebase questions, first run `graphify query "<question>"` when graphify-out/graph.json exists. Use `graphify path "<A>" "<B>"` for relationships and `graphify explain "<concept>"` for focused concepts. These return a scoped subgraph, usually much smaller than GRAPH_REPORT.md or raw grep output.
-- If graphify-out/wiki/index.md exists, use it for broad navigation instead of raw source browsing.
-- Read graphify-out/GRAPH_REPORT.md only for broad architecture review or when query/path/explain do not surface enough context.
-- After modifying code, run `graphify update .` to keep the graph current (AST-only, no API cost).

@@ -1,5 +1,5 @@
 % !TeX root=../main.tex
-\chapter{نتایج}
+\chapter{ارزیابی مدل پیشنهادی}
 \thispagestyle{fancy}\clearpage
 %\thispagestyle{empty}
 \label{chap:results}
@@ -10,7 +10,7 @@
 به فرآیند تخمین عمق، ناپایداری مقیاس و وابستگی به نوع دوربین را کاهش می‌دهد یا خیر.
 بدین منظور، دو مدل روی دیتاست‌های متنوعی شامل محیط‌های داخلی و خارجی و داده‌های واقعی و مصنوعی
 با معیارهای نسبی و مطلق مقایسه می‌شوند.
-سپس با آزمون‌های آماری و بازه‌های اطمینان بررسی می‌شود که آیا این تفاوت‌ها از نظر آماری معنادار هستند.
+سپس با آزمون‌های آماری بررسی می‌شود که آیا این تفاوت‌ها از نظر آماری معنادار هستند.
 
 ابتدا جزئیات پیاده‌سازی ارائه می‌شود؛ سپس مسیر آزمایش‌ها، راستی‌آزمایی زنجیره ارزیابی و رفتار \basemodel{} در دیتاست‌های مختلف به‌عنوان نقطهٔ شروع تشریح می‌شود. پس از آن آزمایش‌ها در دو مرحله پیش می‌روند: نخست، «مطالعهٔ کنترل‌شدهٔ تک‌دوربینه» روی پروتکل استاندارد \lr{NYUv2} و سپس تحلیل حساسیت به پارامترهای دوربین؛ در گام پایانی، «آموزش چندمجموعه‌ای» با دوربین‌های متفاوت انجام می‌شود. فصل با بحث و جمع‌بندی کوتاه به پایان می‌رسد.
 
@@ -54,9 +54,9 @@
 \small
 \renewcommand{\arraystretch}{1.3}
 \begin{tabularx}{\textwidth}{@{}
- >{\raggedright\arraybackslash}p{0.26\textwidth}
+ >{\raggedleft\arraybackslash}p{0.26\textwidth}
  >{\centering\arraybackslash}p{0.27\textwidth}
- >{\raggedright\arraybackslash}X@{}}
+ >{\raggedleft\arraybackslash}X@{}}
 \toprule
 مولفه & مقدار & توضیح \\
 \midrule
@@ -92,12 +92,12 @@
 \begin{tabular}{rccccccccc}
 \toprule
 آزمایش & انکودر & \makecell{نوع\\مدل} & داده آموزش & \makecell{تعداد\\دوره‌ها} & \makecell{اندازه دسته\\و تجمع گرادیان} & \makecell{چارچوب\\ورودی شبکه} & \makecell{بازه\\زوم‌ـ‌برش} & \makecell{لرزش\\کانونی} & \makecell{دقت عددی\\و قفل بذر} \\ \midrule
-\makecell[r]{پروتکل نسبی \lr{NYUv2}} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & نسبی & \lr{NYUv2} & ۴۰ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ندارد & ندارد & \makecell{۳۲ بیتی\\خیر} \\
-\makecell[r]{پروتکل نسبی\\با زوم‌ـ‌برش} & \lr{ViT-L} & نسبی & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۱٫۷}\\(۴۰ تا ۶۳ درجه)} & ندارد & \makecell{۳۲ بیتی\\خیر} \\
-\makecell[r]{مطلق با زوم‌ـ‌برش} & \lr{ViT-L} & مطلق & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۲٫۲}\\(۳۱ تا ۶۳ درجه)} & ندارد & \makecell{۳۲ بیتی\\خیر} \\
-\makecell[r]{مطلق با لرزش کانونی} & \lr{ViT-L} & مطلق & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۲٫۲}\\(۳۱ تا ۶۳ درجه)} & $m=1.6$ & \makecell{۳۲ بیتی\\بله} \\
-\makecell[r]{آموزش چندمجموعه‌ای،\\مدل‌های مطلق} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & مطلق & \makecell{چهار مجموعه‌داده،\\۶۰۰۰ نمونه در هر دوره} & ۱۲ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ۱ تا ۲ & $m=1.6$ & \makecell{\lr{bfloat16}\\بله} \\
-\makecell[r]{آموزش چندمجموعه‌ای،\\مدل‌های نسبی} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & نسبی & \makecell{چهار مجموعه‌داده،\\۶۰۰۰ نمونه در هر دوره} & ۱۲ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ۱ تا ۲ & ندارد & \makecell{\lr{bfloat16}\\بله} \\
+\rcell{پروتکل نسبی \lr{NYUv2}} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & نسبی & \lr{NYUv2} & ۴۰ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ندارد & ندارد & \makecell{۳۲ بیتی\\خیر} \\
+\rcell{پروتکل نسبی\\با زوم‌ـ‌برش} & \lr{ViT-L} & نسبی & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۱٫۷}\\(۴۰ تا ۶۳ درجه)} & ندارد & \makecell{۳۲ بیتی\\خیر} \\
+\rcell{مطلق با زوم‌ـ‌برش} & \lr{ViT-L} & مطلق & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۲٫۲}\\(۳۱ تا ۶۳ درجه)} & ندارد & \makecell{۳۲ بیتی\\خیر} \\
+\rcell{مطلق با لرزش کانونی} & \lr{ViT-L} & مطلق & \lr{NYUv2} & ۴۰ & \makecell{۲، با تجمع\\گرادیان ۲} & $518\times686$ & \makecell{۱ تا \fadecimal{۲٫۲}\\(۳۱ تا ۶۳ درجه)} & $m=1.6$ & \makecell{۳۲ بیتی\\بله} \\
+\rcell{آموزش چندمجموعه‌ای،\\مدل‌های مطلق} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & مطلق & \makecell{چهار مجموعه‌داده،\\۶۰۰۰ نمونه در هر دوره} & ۱۲ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ۱ تا ۲ & $m=1.6$ & \makecell{\lr{bfloat16}\\بله} \\
+\rcell{آموزش چندمجموعه‌ای،\\مدل‌های نسبی} & \makecell{\lr{ViT-S}\\\lr{ViT-L}} & نسبی & \makecell{چهار مجموعه‌داده،\\۶۰۰۰ نمونه در هر دوره} & ۱۲ & ۴ & \makecell{برش تصادفی\\$518\times518$} & ۱ تا ۲ & ندارد & \makecell{\lr{bfloat16}\\بله} \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -328,7 +328,7 @@
 
 \begin{table}[htbp]
 \centering
-\caption{مقایسه مدل‌ها در پروتکل نسبی ViT-S}
+\caption{مقایسه مدل‌ها در پروتکل نسبی \lr{ViT-S}}
 \label{tab:nyu_basic_vits}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{rrccccc}
@@ -348,7 +348,7 @@
 
 \begin{table}[htbp]
 \centering
-\caption{مقایسه مدل‌ها در پروتکل نسبی ViT-L}
+\caption{مقایسه مدل‌ها در پروتکل نسبی \lr{ViT-L}}
 \label{tab:nyu_basic_vitl}
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{rrcccc}
@@ -391,7 +391,6 @@
 
 \begin{figure}[htbp]
   \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}[font=\scriptsize]
   \tikzset{
    st/.style={thblock, fill=white, text width=3.5cm, minimum height=0.8cm,
@@ -459,17 +458,17 @@
 \begin{adjustbox}{max width=\textwidth}
 \begin{tabular}{rccc}
 \hline
-معیار & \tableproposedmodel{} & \tablecontrolmodel{} & تفاضل [بازه اطمینان ۹۵٪] \\ \hline
-\lr{AbsRel}$\downarrow$ & $\mathbf{0.0834}$ & $0.1065$ & $-0.0231\ [-0.0260, -0.0202]$ \\
-\lr{RMSE}$\downarrow$ & $\mathbf{0.2987}$ & $0.3497$ & $-0.0510\ [-0.0583, -0.0437]$ \\
-$\delta_1\uparrow$ & $\mathbf{0.9554}$ & $0.9173$ & $+0.0381\ [+0.0310, +0.0453]$ \\
-\lr{SiLog}$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139\ [-0.0155, -0.0123]$ \\
-$\log_{10}\downarrow$ & $\mathbf{0.0356}$ & $0.0440$ & $-0.0084\ [-0.0096, -0.0073]$ \\ \hline
+معیار & \tableproposedmodel{} & \tablecontrolmodel{} & تفاضل \\ \hline
+\lr{AbsRel}$\downarrow$ & $\mathbf{0.0834}$ & $0.1065$ & $-0.0231$ \\
+\lr{RMSE}$\downarrow$ & $\mathbf{0.2987}$ & $0.3497$ & $-0.0510$ \\
+$\delta_1\uparrow$ & $\mathbf{0.9554}$ & $0.9173$ & $+0.0381$ \\
+\lr{SiLog}$\downarrow$ & $\mathbf{0.0918}$ & $0.1056$ & $-0.0139$ \\
+$\log_{10}\downarrow$ & $\mathbf{0.0356}$ & $0.0440$ & $-0.0084$ \\ \hline
 \end{tabular}
 \end{adjustbox}
 \end{table}
 
-شکل~\ref{fig:effect_sizes} همان مقادیر را در یک نمودار اندازه اثر گرد می‌آورد تا بتوان جهت، بزرگی و دقت برآورد هر معیار را هم‌زمان دید. خط صفر در این نمودار، خط مبنای نبود تفاوت را نشان می‌دهد.
+شکل~\ref{fig:effect_sizes} همان مقادیر را در یک نمودار اندازه اثر گرد می‌آورد تا بتوان جهت و بزرگی هر معیار را هم‌زمان دید. خط صفر در این نمودار، خط مبنای نبود تفاوت را نشان می‌دهد.
 
 \begin{figure}[htbp]
   \centering
@@ -491,31 +490,16 @@ $\log_{10}\downarrow$ & $\mathbf{0.0356}$ & $0.0440$ & $-0.0084\ [-0.0096, -0.00
     legend style={at={(0.03,0.97)}, anchor=north west},
   ]
     \draw[line width=1pt, draw=thInk!70] (axis cs:0,-0.9) -- (axis cs:0,4.9);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0260,4) -- (axis cs:-0.0202,4);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0260,3.84) -- (axis cs:-0.0260,4.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0202,3.84) -- (axis cs:-0.0202,4.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0583,3) -- (axis cs:-0.0437,3);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0583,2.84) -- (axis cs:-0.0583,3.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0437,2.84) -- (axis cs:-0.0437,3.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:0.0310,2) -- (axis cs:0.0453,2);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:0.0310,1.84) -- (axis cs:0.0310,2.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:0.0453,1.84) -- (axis cs:0.0453,2.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0155,1) -- (axis cs:-0.0123,1);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0155,0.84) -- (axis cs:-0.0155,1.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0123,0.84) -- (axis cs:-0.0123,1.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0096,0) -- (axis cs:-0.0073,0);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0096,-0.16) -- (axis cs:-0.0096,0.16);
-    \draw[line width=1.1pt, draw=thProposed] (axis cs:-0.0073,-0.16) -- (axis cs:-0.0073,0.16);
   \addplot[only marks, mark=*, mark size=2.6pt, draw=thProposed, fill=thProposed]
     coordinates {(-0.0231,4) (-0.0510,3) (0.0381,2) (-0.0139,1) (-0.0084,0)};
   \addlegendentry{\rl{\focaljitterconfig{}}}
   \end{axis}
   \end{tikzpicture}
-  \caption[اندازه اثر زوجی معیارها]{اندازه اثر زوجی معیارها با بازه اطمینان ۹۵ درصد}
+  \caption[اندازه اثر زوجی معیارها]{اندازه اثر زوجی معیارها}
   \label{fig:effect_sizes}
 \end{figure}
 
-نتایج جدول~\ref{tab:nyu_absolute_focal} نشان می‌دهد که افزونه‌سازی لرزش کانونی اثر ماتریس کالیبراسیون دوربین را آشکار کرده است. \proposedmodel{} در همهٔ معیارها از \controlmodel{} بهتر عمل می‌کند و هیچ‌یک از بازه‌های اطمینان ۹۵ درصد اختلاف‌ها صفر را شامل نمی‌شوند. بهبود \lr{AbsRel} در این پیکربندی به \fadecimal{۰٫۰۲۳۱} رسید، در حالی که در \zoomcropconfig{} فقط \fadecimal{۰٫۰۰۰۹} بود. بررسی نسبت مقیاس هر تصویر نیز همین نتیجه را توضیح می‌دهد: نسبت‌های \proposedmodel{} به مقدار ایده‌آل ۱ نزدیک‌تر و پراکندگی آن‌ها کمتر است. در مقابل، تغییرات تصادفی $\alpha$ نسبت‌های \controlmodel{} را از مقدار ایده‌آل دور و پراکنده می‌کند (شکل~\ref{fig:scale_ratio_distribution}). این رفتار با پیش‌بینی تحلیل بخش~\ref{subsec:focal_jitter} سازگار است.
+نتایج جدول~\ref{tab:nyu_absolute_focal} نشان می‌دهد که افزونه‌سازی لرزش کانونی اثر ماتریس کالیبراسیون دوربین را آشکار کرده است. \proposedmodel{} در همهٔ معیارها از \controlmodel{} بهتر عمل می‌کند. بهبود \lr{AbsRel} در این پیکربندی به \fadecimal{۰٫۰۲۳۱} رسید، در حالی که در \zoomcropconfig{} فقط \fadecimal{۰٫۰۰۰۹} بود. بررسی نسبت مقیاس هر تصویر نیز همین نتیجه را توضیح می‌دهد: نسبت‌های \proposedmodel{} به مقدار ایده‌آل ۱ نزدیک‌تر و پراکندگی آن‌ها کمتر است. در مقابل، تغییرات تصادفی $\alpha$ نسبت‌های \controlmodel{} را از مقدار ایده‌آل دور و پراکنده می‌کند (شکل~\ref{fig:scale_ratio_distribution}). این رفتار با پیش‌بینی تحلیل بخش~\ref{subsec:focal_jitter} سازگار است.
 
 تعمیم این نتیجه به میدان دیدهای متفاوت نیز بررسی شد. از مرکز هر تصویر \lr{NYUv2}، برش‌های قطعی با سه ضریب زوم ایجاد شد و ماتریس کالیبراسیون هر برش به‌طور دقیق به‌روز شد. همان‌طور که جدول~\ref{tab:fov_generalization} نشان می‌دهد، \proposedmodel{} در همهٔ ضرایب زوم برتری خود را حفظ می‌کند. با افزایش زوم، فاصلهٔ \lr{AbsRel} دو مدل از حدود \fadecimal{۰٫۰۲۳} به \fadecimal{۰٫۰۱۱} کاهش می‌یابد، اما برتری مدل پیشنهادی حفظ می‌شود.
 
@@ -536,7 +520,6 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 
 \begin{figure}[htbp]
   \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -577,16 +560,15 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 \small
 \renewcommand{\arraystretch}{1.3}
 \begin{adjustbox}{max width=\textwidth}
-\begin{tabular}{rcccccc}
+\begin{tabular}{rccccc}
 \toprule
 پیکربندی آموزشی & افزونه‌سازی زوم‌ـ‌برش & $\lambda$
 & \multicolumn{2}{c}{\lr{AbsRel}$\downarrow$}
-& \multirow{2}{*}{تفاضل}
-& \multirow{2}{*}{$p$ (ویلکاکسون)} \\
+& \multirow{2}{*}{تفاضل} \\
 \cmidrule(lr){4-5}
-& & & \tableproposedmodel{} & \tablecontrolmodel{} & & \\ \midrule
-\zoomcropconfig{} & زوم‌ـ‌برش، ۳۱ تا ۶۳ درجه & $0.5$ & $\mathbf{0.0817}$ & $0.0826$ & $-0.0009$ & $0.040$ \\
-\focaljitterconfig{} & + افزونه‌سازی لرزش کانونی ($m=1.6$) & $0.5$ & $\mathbf{0.0834}$ & $0.1065$ & $-0.0231$ & $3.4\times10^{-45}$ \\
+& & & \tableproposedmodel{} & \tablecontrolmodel{} & \\ \midrule
+\zoomcropconfig{} & زوم‌ـ‌برش، ۳۱ تا ۶۳ درجه & $0.5$ & $\mathbf{0.0817}$ & $0.0826$ & $-0.0009$ \\
+\focaljitterconfig{} & + افزونه‌سازی لرزش کانونی ($m=1.6$) & $0.5$ & $\mathbf{0.0834}$ & $0.1065$ & $-0.0231$ \\
 \bottomrule
 \end{tabular}
 \end{adjustbox}
@@ -597,7 +579,7 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
     \begin{tikzpicture}
   \begin{groupplot}[
     thesisplot,
-    group style={group size=1 by 2, vertical sep=1.5cm},
+    group style={group size=1 by 1},
     width=0.84\textwidth, height=5.0cm,
     xmin=0.55, xmax=2.45,
     xtick={1,2},
@@ -619,23 +601,6 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
     coordinates {(1,0.0817) (2,0.0834)};
   \addlegendentry{\rl{\proposedmodel{}}}
 
-  \nextgroupplot[
-    ylabel={$-\log_{10} p$},
-    ymin=0, ymax=52,
-    ybar, bar width=7pt,
-    legend style={at={(0.02,0.98)}, anchor=north west, legend columns=2},
-  ]
-  \addplot[ybar, draw=thProposed, fill=thProposed!55]
-    coordinates {(1,1.40) (2,44.47)};
-  \addlegendentry{\lr{AbsRel}}
-  \addplot[ybar, draw=thAccent, fill=thAccent!55]
-    coordinates {(1,4.19) (2,39.13)};
-  \addlegendentry{\lr{RMSE}}
-    % REVIEW R33 (figure fix: threshold line restored)
-    \draw[dashed, thick, draw=thControl]
-    (axis cs:0.55,1.301) -- (axis cs:2.45,1.301);
-    \node[thnote, text=thControl, anchor=south east]
-    at (axis cs:2.40,1.55) {\rl{آستانه $p=0.05$}};
 
   \end{groupplot}
   \end{tikzpicture}
@@ -646,13 +611,12 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 با افزایش ابهام مقیاس تحمیل‌شده به داده‌های آموزشی، از \zoomcropconfig{} به \focaljitterconfig{}، برتری \proposedmodel{} نسبت به \controlmodel{} بیشتر شد. این روند با نقش ماتریس کالیبراسیون دوربین سازگار است، اما چون تنها دو پیکربندی مقایسه شدند، این مشاهده به‌تنهایی نوسان تصادفی آموزش را رد نمی‌کند.
 
 معیار \lr{RMSE} نیز همین روند را نشان می‌دهد: کاهش نسبی \lr{RMSE} \proposedmodel{} نسبت به
-\controlmodel{} از حدود ۲ درصد در \zoomcropconfig{} به حدود ۱۵ درصد در \focaljitterconfig{} می‌رسد. مقدار $p$ معیار \lr{RMSE} در \zoomcropconfig{} از آزمون $t$ زوجی
-و سایر مقادیر از آزمون ویلکاکسون آمده‌اند.
+\controlmodel{} از حدود ۲ درصد در \zoomcropconfig{} به حدود ۱۵ درصد در \focaljitterconfig{} می‌رسد.
 
 \subsection[مقایسه کیفی در مطالعه کنترل‌شده]{مقایسه کیفی در مطالعه کنترل‌شده}
 \label{subsec:qualitative_controlled}
 
-شناسه تصاویر نمونه تنها از روی یک بذر تصادفی و پیش از هرگونه استنتاج انتخاب، و چکیده رمزنگاشتی آن پیش از رندر ثبت شد؛ سپس برای هر نمونه، تصویر ورودی، عمق مرجع، خروجی \controlmodel{} و خروجی \proposedmodel{} با یک نگاشت رنگ و بازه عمق یکسان ذخیره گردید. نتیجه در شکل~\ref{fig:qualitative_locked} آمده است. شش تصویر از میان ۶۵۴ تصویر مجموعه آزمون با بذر تصادفی ۲۰۲۶۰۸۲۱ انتخاب شدند و چکیده \lr{SHA-256} فهرست شناسه‌ها (\lr{8086cb124e40}) پیش از بارگذاری هر مدل ثبت شد. ستون‌ها از چپ به راست تصویر ورودی، عمق مرجع، خروجی \controlmodel{} و خروجی \proposedmodel{} را نشان می‌دهند. نوار رنگ هر ردیف برحسب متر است و برای مرجع و هر دو مدل یکسان است؛ بنابراین هیچ برتری بصری از نرمال‌سازی جداگانه تصویرها ناشی نمی‌شود. تفاوت دو مدل عمدتا در مقیاس مطلق صحنه است، نه در جزییات ساختاری، و این الگو با سازوکار پیش‌بینی‌شده در بخش~\ref{subsec:focal_jitter} هم‌خوانی دارد. از آنجا که انتخاب نمونه پیش از مشاهده خروجی‌ها قفل شده است، این شکل برخلاف یک نمایش گزینشی، قابل ممیزی است. افزون بر آن، شکل~\ref{fig:scale_ratio_distribution} توزیع کامل نسبت مقیاس هر تصویر را روی کل مجموعه آزمون نشان می‌دهد و سازوکار عددی برتری گزارش‌شده در جدول~\ref{tab:nyu_absolute_focal} را آشکار می‌سازد. این توزیع هر ۶۵۴ تصویر مجموعه آزمون، یعنی همان نمونه آزمون‌های زوجی بخش~\ref{subsec:focal_jitter_results}، را دربرمی‌گیرد و مقدار ایده‌آل نسبت مقیاس ۱ است. میانه نسبت مقیاس برای \proposedmodel{} و \controlmodel{} به‌ترتیب \fadecimal{۱٫۰۱۵} و \fadecimal{۱٫۰۴۳}، انحراف معیار آن به‌ترتیب \fadecimal{۰٫۰۷۷} و \fadecimal{۰٫۰۹۷} و دامنه میان‌چارکی آن به‌ترتیب \fadecimal{۰٫۰۹۴} و \fadecimal{۰٫۱۲۰} است. \controlmodel{}، که ناچار است به میانگین توزیع $\alpha$ رگرسیون کند، هم اریب‌تر و هم پراکنده‌تر است؛ این همان رفتاری است که تحلیل بدساختی مسئله پیش‌بینی می‌کرد. در سطح تک‌تصویر نیز \proposedmodel{} در ۴۱۸ تصویر از ۶۵۴ تصویر، یعنی ۶۴ درصد، به مقیاس صحیح نزدیک‌تر است.
+شناسه تصاویر نمونه تنها از روی یک بذر تصادفی و پیش از هرگونه استنتاج انتخاب، و چکیده رمزنگاشتی آن پیش از رندر ثبت شد؛ سپس برای هر نمونه، تصویر ورودی، عمق مرجع، خروجی \controlmodel{} و خروجی \proposedmodel{} با یک نگاشت رنگ و بازه عمق یکسان ذخیره گردید. نتیجه در شکل~\ref{fig:qualitative_locked} آمده است. شش تصویر از میان ۶۵۴ تصویر مجموعه آزمون با بذر تصادفی ۲۰۲۶۰۸۲۱ انتخاب شدند و چکیده \lr{SHA-256} فهرست شناسه‌ها (\lr{8086cb124e40}) پیش از بارگذاری هر مدل ثبت شد. ستون‌ها از چپ به راست تصویر ورودی، عمق مرجع، خروجی \controlmodel{} و خروجی \proposedmodel{} را نشان می‌دهند. نوار رنگ هر ردیف برحسب متر است و برای مرجع و هر دو مدل یکسان است؛ بنابراین هیچ برتری بصری از نرمال‌سازی جداگانه تصویرها ناشی نمی‌شود. تفاوت دو مدل عمدتا در مقیاس مطلق صحنه است، نه در جزییات ساختاری، و این الگو با سازوکار پیش‌بینی‌شده در بخش~\ref{subsec:focal_jitter} هم‌خوانی دارد. از آنجا که انتخاب نمونه پیش از مشاهده خروجی‌ها قفل شده است، این شکل برخلاف یک نمایش گزینشی، قابل ممیزی است. افزون بر آن، شکل~\ref{fig:scale_ratio_distribution} توزیع کامل نسبت مقیاس هر تصویر را روی کل مجموعه آزمون نشان می‌دهد و سازوکار عددی برتری گزارش‌شده در جدول~\ref{tab:nyu_absolute_focal} را آشکار می‌سازد. این توزیع هر ۶۵۴ تصویر مجموعه آزمون را دربرمی‌گیرد و مقدار ایده‌آل نسبت مقیاس ۱ است. میانه نسبت مقیاس برای \proposedmodel{} و \controlmodel{} به‌ترتیب \fadecimal{۱٫۰۱۵} و \fadecimal{۱٫۰۴۳}، انحراف معیار آن به‌ترتیب \fadecimal{۰٫۰۷۷} و \fadecimal{۰٫۰۹۷} و دامنه میان‌چارکی آن به‌ترتیب \fadecimal{۰٫۰۹۴} و \fadecimal{۰٫۱۲۰} است. \controlmodel{}، که ناچار است به میانگین توزیع $\alpha$ رگرسیون کند، هم اریب‌تر و هم پراکنده‌تر است؛ این همان رفتاری است که تحلیل بدساختی مسئله پیش‌بینی می‌کرد. در سطح تک‌تصویر نیز \proposedmodel{} در ۴۱۸ تصویر از ۶۵۴ تصویر، یعنی ۶۴ درصد، به مقیاس صحیح نزدیک‌تر است.
 
 در این مطالعه، شواهد اصلی عددی‌اند و از مقایسهٔ زوجی روی کل مجموعهٔ آزمون و آزمون‌های بخش~\ref{sec:camera_sensitivity} به‌دست می‌آیند، نه از قضاوت بصری؛ شکل‌های این زیربخش فقط همین شواهد عددی را به‌صورت تصویری نشان می‌دهند.
 
@@ -706,7 +670,6 @@ $1.8$ & $\mathbf{0.1005}$ & $0.1118$ & $-0.0113$ \\ \hline
 
 \begin{figure}[htbp]
   \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -773,7 +736,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 \begin{figure}[htbp]
   \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -800,7 +762,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
     coordinates {(2.83,0.2930) (3.83,0.3869)};
   \addlegendentry{\rl{پیش‌بینی هندسی $|c^{s}-1|$ با $s=0.97$}}
 
-    % REVIEW R33 (figure fix: baseline line restored; legend symbol X -> c as in the text)
     \draw[dashed, thick, draw=thIdeal]
     (axis cs:0.45,0.0836) -- (axis cs:4.55,0.0836);
     \addlegendimage{line legend, dashed, thick, draw=thIdeal}
@@ -852,7 +813,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 \begin{figure}[htbp]
   \centering
-% REVIEW R40 (figure redrawn: overlapping boxes, labels or legend)
     \begin{tikzpicture}
   \begin{axis}[
     thesisplot,
@@ -884,7 +844,7 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
   \legend{\rl{\publishedbasemodel{}}, \rl{\controlmodel{}}, \rl{\proposedmodel{}}}
   \end{axis}
   \end{tikzpicture}
-  \caption[مقایسه AbsRel پس از آموزش چندمجموعه‌ای]{مقایسه \lr{AbsRel} سه مدل با انکودر \lr{ViT-L} پس از آموزش چندمجموعه‌ای}
+  \caption[مقایسه \lr{AbsRel} پس از آموزش چندمجموعه‌ای]{مقایسه \lr{AbsRel} سه مدل با انکودر \lr{ViT-L} پس از آموزش چندمجموعه‌ای}
   \label{fig:multidomain_absrel}
 \end{figure}
 
@@ -905,7 +865,7 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 \begin{table}[htbp]
 \centering
-\caption[نتایج ارزیابی مطلق زوج اصلی ViT-L و نسخه منتشرشده بر هشت مجموعه آزمون]{نتایج ارزیابی مطلق زوج اصلی \lr{ViT-L} و \publishedbasemodel{} بر هشت مجموعه آزمون}
+\caption[نتایج ارزیابی مطلق زوج اصلی \lr{ViT-L} و نسخه منتشرشده بر هشت مجموعه آزمون]{نتایج ارزیابی مطلق زوج اصلی \lr{ViT-L} و \publishedbasemodel{} بر هشت مجموعه آزمون}
 \label{tab:multidomain_all}
 \footnotesize
 \setlength{\tabcolsep}{4pt}
@@ -928,23 +888,23 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 & \tablecontrolmodel{} & $0.175$ & $0.787$ & $4.403$ \\
 & \tablepublishedmodel{} & $\mathbf{0.146}$ & $\mathbf{0.820}$ & $\mathbf{3.893}$ \\ \hline
 \multicolumn{5}{c}{داده‌های دیده‌نشده در آموزش} \\ \hline
-\multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v1}}}
+\multirow{3}{*}{\rcell{\lr{SUN RGB-D}\\\lr{Kinect v1}}}
 & \tableproposedmodel{} & $\mathbf{0.169}$ & $\mathbf{0.766}$ & $\mathbf{0.369}$ \\
 & \tablecontrolmodel{} & $0.314$ & $0.478$ & $0.532$ \\
 & \tablepublishedmodel{} & $0.196$ & $0.749$ & $0.396$ \\ \hline
-\multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Kinect v2}}}
+\multirow{3}{*}{\rcell{\lr{SUN RGB-D}\\\lr{Kinect v2}}}
 & \tableproposedmodel{} & $\mathbf{0.104}$ & $\mathbf{0.906}$ & $\mathbf{0.351}$ \\
 & \tablecontrolmodel{} & $0.209$ & $0.677$ & $0.470$ \\
 & \tablepublishedmodel{} & $0.246$ & $0.524$ & $0.616$ \\ \hline
-\multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{RealSense}}}
+\multirow{3}{*}{\rcell{\lr{SUN RGB-D}\\\lr{RealSense}}}
 & \tableproposedmodel{} & $0.093$ & $0.935$ & $\mathbf{0.234}$ \\
 & \tablecontrolmodel{} & $0.125$ & $0.862$ & $0.290$ \\
 & \tablepublishedmodel{} & $\mathbf{0.092}$ & $\mathbf{0.941}$ & $0.265$ \\ \hline
-\multirow{3}{*}{\makecell{\lr{SUN RGB-D}\\\lr{Xtion}}}
+\multirow{3}{*}{\rcell{\lr{SUN RGB-D}\\\lr{Xtion}}}
 & \tableproposedmodel{} & $\mathbf{0.176}$ & $0.770$ & $\mathbf{0.430}$ \\
 & \tablecontrolmodel{} & $0.216$ & $0.697$ & $0.493$ \\
 & \tablepublishedmodel{} & $0.178$ & $\mathbf{0.784}$ & $0.472$ \\ \hline
-\multirow{3}{*}{\makecell{\lr{DIODE}\\بیرونی}}
+\multirow{3}{*}{\rcell{\lr{DIODE}\\بیرونی}}
 & \tableproposedmodel{} & $\mathbf{0.517}$ & $0.118$ & $8.322$ \\
 & \tablecontrolmodel{} & $0.606$ & $\mathbf{0.529}$ & $\mathbf{6.810}$ \\
 & \tablepublishedmodel{} & $0.740$ & $0.339$ & $7.474$ \\ \hline
@@ -956,8 +916,7 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 
 مقایسه \controlmodel{} با \publishedbasemodel{} نکته مهم دیگری را نشان می‌دهد. \controlmodel{} همان داده، افزونه‌سازی و برنامه آموزشی \proposedmodel{} را دریافت کرد و تنها ماتریس کالیبراسیون دوربین را نمی‌دید؛ با این حال، بر سه حسگر از چهار حسگر \lr{SUN RGB-D} از \publishedbasemodel{} ضعیف‌تر است. \lr{AbsRel} آن بر \lr{Kinect v1}، \lr{RealSense} و \lr{Xtion} به‌ترتیب ۶۱، ۳۷ و ۲۲ درصد بیشتر از \publishedbasemodel{} است و $\delta_1$ آن نیز در هر سه حسگر به‌طور معنادار کمتر است. در همین سه حسگر، \proposedmodel{} بر \lr{Kinect v1} در \lr{AbsRel} و \lr{RMSE} به‌طور معنادار از \publishedbasemodel{} دقیق‌تر و بر \lr{RealSense} و \lr{Xtion} در \lr{AbsRel} و $\delta_1$ هم‌تراز آن است. بنابراین آموزش چندمجموعه‌ای با افزونه‌سازی دوربین، اگر ماتریس کالیبراسیون دوربین در دسترس مدل نباشد، می‌تواند تعمیم صفرنمونه مدل پایه را کاهش دهد؛ همان آموزش با ماتریس کالیبراسیون دوربین این افت را ندارد. این الگو با طراحی آزمایش سازگار است: افزونه‌سازی دوربین هندسه تصویر را بدون تغییر عمق صحنه تغییر می‌دهد و این تغییر تنها در ماتریس کالیبراسیون دوربین به‌روزشده ثبت می‌شود (زیربخش~\ref{subsec:focal_jitter_results})؛ مدلی که این ماتریس را نمی‌بیند، نمی‌تواند تغییر هندسه ناشی از دوربین را از تغییر واقعی عمق تشخیص دهد. خطای اضافه \controlmodel{} نیز عمدتا از جنس مقیاس است: نسبت مقیاس آن بر \lr{Kinect v1} \fadecimal{۱٫۲۵} است، در برابر \fadecimal{۱٫۰۸} برای \proposedmodel{}، در حالی که خطای شکل دو مدل تقریبا برابر است (\fadecimal{۰٫۱۲۲} و \fadecimal{۰٫۱۱۹}).
 
-% REVIEW R39
-در \lr{DIODE} بیرونی، رتبه‌بندی سه مدل بر اساس معیار ارزیابی متفاوت است (جدول~\ref{tab:multidomain_all}): \proposedmodel{} کمترین \lr{AbsRel} را دارد، اما $\delta_1$ آن کمتر و \lr{RMSE} آن بیشتر از دو مدل دیگر است. دلیل این تفاوت، جهت خطای مقیاس است؛ \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷}). \lr{AbsRel} برآورد بیش‌ازحد نزدیک را حداکثر به‌اندازهٔ ۱ جریمه می‌کند، اما برای برآورد بیش‌ازحد دور کران بالایی ندارد؛ در مقابل، $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد. خطای \proposedmodel{} در این مجموعه عمدتاً خطای مقیاس سراسری است و خطای شکل آن به خطای دو مدل دیگر نزدیک است. \edrep{علت این خطای مقیاس در این پژوهش تعیین نشد و بررسی آن به کارهای آینده در {بخش~\ref{sec:chapter5_future_work}} واگذار می‌شود.}{}
+در \lr{DIODE} بیرونی، رتبه‌بندی سه مدل بر اساس معیار ارزیابی متفاوت است (جدول~\ref{tab:multidomain_all}): \proposedmodel{} کمترین \lr{AbsRel} را دارد، اما $\delta_1$ آن کمتر و \lr{RMSE} آن بیشتر از دو مدل دیگر است. دلیل این تفاوت، جهت خطای مقیاس است؛ \proposedmodel{} صحنه را نزدیک‌تر از واقعیت برآورد می‌کند (نسبت مقیاس \fadecimal{۰٫۶۱})، در حالی که \controlmodel{} و \publishedbasemodel{} آن را دورتر از واقعیت برآورد می‌کنند (\fadecimal{۱٫۲۰} و \fadecimal{۱٫۲۷}). \lr{AbsRel} برآورد بیش‌ازحد نزدیک را حداکثر به‌اندازهٔ ۱ جریمه می‌کند، اما برای برآورد بیش‌ازحد دور کران بالایی ندارد؛ در مقابل، $\delta_1$ هر دو جهت را به یک اندازه می‌سنجد. خطای \proposedmodel{} در این مجموعه عمدتاً خطای مقیاس سراسری است و خطای شکل آن به خطای دو مدل دیگر نزدیک است.
 
 \subsection[اثر اندازه انکودر و نوع مدل در آموزش چندمجموعه‌ای: مطلق در برابر نسبی]{اثر اندازه انکودر و نوع مدل در آموزش چندمجموعه‌ای: مطلق در برابر نسبی}
 \label{subsec:revised_cross_dataset}
@@ -998,13 +957,11 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 \end{adjustbox}
 \end{table}
 
-% REVIEW R33
-در \lr{ViT-S}، \proposedmodel{} در هر هشت مجموعه آزمون \lr{AbsRel} کمتری از \controlmodel{} دارد. در هفت مجموعه، این تفاوت از نظر آماری قابل اتکا است و کاهش خطا بین ۱۱ تا ۳۹ درصد است. در \lr{ViT-L} نیز \proposedmodel{} در هر هشت مجموعه \lr{AbsRel} کمتری دارد و این تفاوت در هفت مجموعه از نظر آماری قابل اتکا است، با کاهش‌هایی بین \edrep{۱۳}{۱۱} تا ۵۰ درصد. در مدل‌های مطلق، سود حاصل از ماتریس کالیبراسیون دوربین در هر دو اندازه انکودر دیده می‌شود و به یک اندازه انکودر محدود نیست.
+در \lr{ViT-S}، \proposedmodel{} در هر هشت مجموعه آزمون \lr{AbsRel} کمتری از \controlmodel{} دارد. در هفت مجموعه، این تفاوت از نظر آماری قابل اتکا است و کاهش خطا بین ۱۱ تا ۳۹ درصد است. در \lr{ViT-L} نیز \proposedmodel{} در هر هشت مجموعه \lr{AbsRel} کمتری دارد و این تفاوت در هفت مجموعه از نظر آماری قابل اتکا است، با کاهش‌هایی بین ۱۱ تا ۵۰ درصد. در مدل‌های مطلق، سود حاصل از ماتریس کالیبراسیون دوربین در هر دو اندازه انکودر دیده می‌شود و به یک اندازه انکودر محدود نیست.
 
 در \lr{ViT-L} نسبی، \proposedmodel{} در هر هشت مجموعه \lr{AbsRel} کمتری دارد و تفاوت در پنج مجموعه از نظر آماری قابل اتکا است؛ بااین‌حال، در هر هشت مجموعه فاصله حداکثر \fadecimal{۰٫۰۰۰۶} \lr{AbsRel}، یعنی حداکثر \fadecimal{۱٫۴} درصد، است. در \lr{ViT-S} نسبی، تفاوت‌ها بزرگ‌تر و تا حدود ۳ درصد هستند، اما در هر دو جهت تغییر می‌کنند: \proposedmodel{} در سه مجموعه از نظر آماری قابل اتکا بهتر و در دو مجموعه از نظر آماری قابل اتکا بدتر است. بنابراین، در مدل‌های نسبی و در هیچ‌یک از دو اندازه انکودر، برتری پایداری برای \proposedmodel{} نسبت به \controlmodel{} دیده نمی‌شود. وقتی ماتریس کالیبراسیون دوربین در زمان آزمون از \proposedmodel{} نسبی حذف می‌شود، \lr{AbsRel} آن در هر مجموعه آزمون حداکثر به‌اندازه \fadecimal{۰٫۰۰۰۵} برای \lr{ViT-S} و \fadecimal{۰٫۰۰۰۸} برای \lr{ViT-L} تغییر می‌کند؛ بنابراین، مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند و تفاوت‌های کوچک را نمی‌توان به ماتریس کالیبراسیون دوربین نسبت داد. این الگو با نقش ماتریس کالیبراسیون دوربین سازگار است، زیرا تراز مقیاس و جابجایی به‌ازای هر تصویر در ارزیابی نسبی دقیقاً اطلاعاتی را حذف می‌کند که ماتریس در اختیار مدل می‌گذارد، یعنی مقیاس مطلق صحنه، چنان‌که در زیربخش~\ref{subsec:protocol_capacity_dependence} توضیح داده شده است. در مطالعه کنترل‌شده \lr{NYUv2}، در پروتکل نسبی با \lr{ViT-S}، \proposedmodel{} بهبود کوچکی اما از نظر آماری قابل اتکا داشت و \lr{AbsRel} آن \fadecimal{۰٫۰۵۰۱} در برابر \fadecimal{۰٫۰۵۰۷} برای \controlmodel{} بود (جدول~\ref{tab:nyu_basic_vits}). زوج نسبی \lr{ViT-S} در آموزش چندمجموعه‌ای نیز در \lr{NYUv2} همین الگو را نشان می‌دهد، با \fadecimal{۰٫۰۴۶۰} در برابر \fadecimal{۰٫۰۴۷۰}، اما این بهبود به مجموعه‌های آزمون دیگر منتقل نمی‌شود.
 
-% REVIEW R33
-برای مدل‌های مطلق \lr{ViT-L}، دقت میانگین بیشتر \proposedmodel{} با یکنواخت‌تر شدن خطا در مجموعه‌های آزمون همراه نیست. ضریب تغییرات \lr{AbsRel} در هشت مجموعه آزمون، که از مقادیر هر مجموعه در جدول~\ref{tab:multidomain_all} محاسبه شده است، برای \proposedmodel{} برابر \edrep{{\fadecimal{۰٫۸۵}}}{{\fadecimal{۰٫۸۰}}}، برای \controlmodel{} برابر \edrep{{\fadecimal{۰٫۷۲}}}{{\fadecimal{۰٫۶۷}}} و برای \publishedbasemodel{} برابر \fadecimal{۰٫۷۹} است و بیشتر این تفاوت از \lr{DIODE} بیرونی ناشی می‌شود. بنابراین، این شواهد نشان نمی‌دهد که خطای \proposedmodel{} در مجموعه‌های آزمون یکنواخت‌تر است.
+برای مدل‌های مطلق \lr{ViT-L}، دقت میانگین بیشتر \proposedmodel{} با یکنواخت‌تر شدن خطا در مجموعه‌های آزمون همراه نیست. ضریب تغییرات \lr{AbsRel} در هشت مجموعه آزمون، که از مقادیر هر مجموعه در جدول~\ref{tab:multidomain_all} محاسبه شده است، برای \proposedmodel{} برابر \fadecimal{۰٫۸۰}، برای \controlmodel{} برابر \fadecimal{۰٫۶۷} و برای \publishedbasemodel{} برابر \fadecimal{۰٫۷۹} است و بیشتر این تفاوت از \lr{DIODE} بیرونی ناشی می‌شود. بنابراین، این شواهد نشان نمی‌دهد که خطای \proposedmodel{} در مجموعه‌های آزمون یکنواخت‌تر است.
 
 \subsection[گستره آزمایش‌های چندمجموعه‌ای]{گستره آزمایش‌های چندمجموعه‌ای}
 \label{subsec:md_campaign}
@@ -1069,8 +1026,6 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 حال آنکه انکودر کوچک‌تر از هر سیگنال کمکی بهره می‌برد.
 این تبیین، فرضیه‌ای برخاسته از داده‌های همین پژوهش است.
 آزمایش چندمجموعه‌ای این الگو را تأیید نکرد. در زوج نسبی \lr{ViT-S}، \proposedmodel{} در سه مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بهتر و در دو مجموعه آزمون با تفاوتی از نظر آماری قابل اتکا بدتر بود. در زوج نسبی \lr{ViT-L}، شکاف‌ها در همه مجموعه‌ها حداکثر \fadecimal{۰٫۰۰۰۶} \lr{AbsRel} بودند (جدول~\ref{tab:md_encoder_protocol})؛ بنابراین وابستگی به ظرفیت انکودر در پروتکل نسبی فقط بر نتیجه تک‌دیتاست \lr{NYUv2} تکیه دارد و همچنان یک فرضیه است.
-آزمون این فرضیه در چند اندازه انکودر، در بخش پیشنهادهای پژوهش آتی
-(بخش~\ref{sec:chapter5_future_work}) مطرح شده است.
 
 سوم، نتایج نشان دادند که بخش قابل توجهی از بهبود مطلق
 نسبت به \publishedbasemodel{}،
@@ -1094,7 +1049,7 @@ $f \times 1.4$ & $0.4332$ & $0.0940$ & $1.1933$ & $0.0916$ & $0.9455$ & $0.3075$
 قابل دفاع از نتایج این فصل چنین است: در رژیم داده محدود و ستون فقرات فریزشده، ورودی صریح ماتریس کالیبراسیون دوربین سیگنالی است که
 مدل در غیاب آن باید با هزینه داده و ظرفیت بسیار بیشتری بازسازی کند.
 
-\section{جمع‌بندی فصل نتایج}
+\section{جمع‌بندی فصل}
 \label{sec:results_summary}
 
 خطای \publishedbasemodel{}، که ماتریس کالیبراسیون دوربین را دریافت نمی‌کند، بین دیتاست‌ها تفاوتی از نظر آماری قابل اتکا داشت؛ بنابراین مقیاس مطلق این مدل پایه بین دیتاست‌ها پایدار نیست. این مشاهده نقطه آغاز بررسی‌های این فصل بود. در ادامه، \proposedmodel{} که ماتریس کالیبراسیون دوربین را به‌صورت ورودی صریح دریافت می‌کند، با \controlmodel{} و همین مدل پایه مقایسه شد. در ارزیابی مطلق، \proposedmodel{} در همه پیکربندی‌های آموزشی مطالعه کنترل‌شده دقیق‌تر از \controlmodel{} بود و با افزایش تغییرپذیری فاصله کانونی در داده‌های آموزشی، این برتری افزایش یافت. آزمون‌های حساسیت نشان دادند که \proposedmodel{} فاصله کانونی را می‌خواند و با تغییر آن، مقیاس خروجی خود را مطابق هندسه تصویربرداری تغییر می‌دهد. در گام پایانی، مدل‌ها با مجموعه‌داده‌هایی از دوربین‌های گوناگون آموزش داده شدند و \proposedmodel{} در تصاویر داخلی و بیرونی، از جمله تصاویر حسگری که در داده آموزشی نبود، از هر دو مدل دیگر دقیق‌تر بود. همچنین، \proposedmodel{} در بیشتر مجموعه‌های آزمون از \controlmodel{} دقیق‌تر عمل کرد. این نتایج نشان می‌دهند که اثر ماتریس کالیبراسیون دوربین در ارزیابی مطلق آشکار می‌شود، زیرا در این ارزیابی مقیاس فیزیکی عمق سنجیده می‌شود، در حالی که تراز جداگانه هر تصویر در ارزیابی نسبی مقیاس را حذف می‌کند. فصل پنجم این یافته‌ها را جمع‌بندی می‌کند، به سوالات تحقیق پاسخ می‌دهد و محدودیت‌ها و کارهای آینده را بیان می‌کند.

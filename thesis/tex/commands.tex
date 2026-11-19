@@ -22,7 +22,7 @@
 \usepackage{multirow}
 \usepackage{rotating}
 \usepackage[final]{listings}
-\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+\usepackage[dvipsnames,svgnames,table]{xcolor}
 \lstset{inputpath=./code/}
 \usepackage[notransparent]{svg}
 \usepackage[final]{pdfpages}
@@ -155,7 +155,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \definecolor{thEditHL}{HTML}{FFF176}
 \newif\ifshowedits
-\showeditstrue
+\showeditsfalse
 \ifshowedits
  % عبارت کوتاه یک‌سطری، مانند عنوان بخش
  \newcommand{\edhl}[1]{\colorbox{thEditHL}{#1}}
@@ -275,7 +275,6 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
  },
 }
 
-% REVIEW R40 (figure fix: single line spacing inside every tikzpicture)
 % متن بدنه با فاصله خط دوبرابر حروف‌چینی می‌شود؛ درون شکل‌ها این فاصله جعبه‌های
 % چندسطری را بلندتر از چیدمان طراحی‌شده می‌کند و گره‌ها روی هم می‌افتند.
 % بنابراین درون هر tikzpicture فاصله خط یک‌برابر است.
@@ -333,6 +332,9 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % Persian decimal numbers need an LTR direction without switching to the
 % Latin font, whose glyph set does not include Persian digits.
 \newcommand{\fadecimal}[1]{\mbox{\beginL#1\endL}}
+% خانه چندسطری راست‌چین در جدول: \makecell[r] در متن راست‌به‌چپ جعبه را وسط یا چپ ستون می‌گذارد؛
+% این جدول تودرتو هم جعبه و هم سطرهایش را راست‌چین نگه می‌دارد.
+\newcommand{\rcell}[1]{\begin{tabular}[c]{@{}r@{}}#1\end{tabular}}
 % نام‌های معیار برای مدل‌های اصلی پژوهش؛ ویژگی نسخه‌های خاص (انکودر،
 % پروتکل، مجموعه‌داده یا پیکربندی آموزش) پس از این نام ثابت افزوده می‌شود.
 \newcommand{\proposedmodel}{مدل پیشنهادی}
@@ -359,7 +361,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 \setlatintextfont[Path={./font/}, BoldFont={LiberationSerif-Bold.ttf}, BoldItalicFont={LiberationSerif-BoldItalic.ttf}, ItalicFont={LiberationSerif-Italic.ttf},Scale=1]{LiberationSerif-Regular.ttf}
 % چنانچه می‌خواهید اعداد در فرمول‌ها، انگلیسی باشد، خط زیر را غیرفعال کنید
 % و گزینه displaymathdigits=persian را از خط ۱۰۹ حذف کنید.
-\setdigitfont[Path={./font/}, Scale=1.2]{IRLotusICEE.ttf}
+\setdigitfont[Path={./font/}, BoldFont={IRLotusICEE_Bold.ttf}, ItalicFont={IRLotusICEE_Iranic.ttf}, BoldItalicFont={IRLotusICEE_BoldIranic.ttf}, Scale=1.2]{IRLotusICEE.ttf}
 % تعریف قلم‌های فارسی و انگلیسی اضافی برای استفاده در بعضی از قسمت‌های متن
 \setiranicfont[Path={./font/}, Scale=1.3]{IRLotusICEE_Iranic.ttf}				% ایرانیک، خوابیده به چپ
 \setmathsfdigitfont[Path={./font/}]{IRTitr.ttf}
@@ -420,7 +422,7 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 % تعریف و نحوه ظاهر شدن عنوان قضیه‌ها، تعریف‌ها، مثال‌ها و ...
 \theoremstyle{definition}
 \newtheorem{definition}{تعریف}[section]
-\theoremstyle{theorem}
+\theoremstyle{plain}
 \newtheorem{theorem}[definition]{قضیه}
 \newtheorem{lemma}[definition]{لم}
 \newtheorem{proposition}[definition]{گزاره}
@@ -480,12 +482,10 @@ colorlinks,linkcolor=blue,citecolor=blue,final]{hyperref}
 %% دستورات زیر سبک صفحات fancy را تغییر می‌دهد:
 % O=Odd, E=Even, L=Left, R=Right
 % در هر دو حالت oneside و twoside، سربرگ بر اساس جای فیزیکی روی صفحه تنظیم می‌شود.
-% سمت چپ: شماره و نام فصل؛ سمت راست: عنوان پایان‌نامه.
+% صفحه زوج: فقط عنوان پایان‌نامه، راست‌چین؛ صفحه فرد: فقط شماره و نام فصل، چپ‌چین؛ هر دو در یک سطر.
 \fancyhead{}
-% عنوان پایان‌نامه تک‌سطری می‌ماند و نام فصل در پهنای باقی‌مانده قرار می‌گیرد
-% تا عنوان‌های بلند فصل به‌جای هم‌پوشانی، در چند سطر شکسته شوند.
-\fancyhead[L]{\settowidth{\@tempdima}{\footnotesize\rl{\@title}}\parbox[b]{\dimexpr\headwidth-\@tempdima-2em\relax}{\setstretch{1}\raggedleft\small\rl{\leftmark}}}
-\fancyhead[R]{\footnotesize\rl{\@title}}
+\fancyhead[ER]{\footnotesize\rl{\@title}}
+\fancyhead[OL]{\small\rl{\leftmark}}
 \fancyfoot{}
 \fancyfoot[C]{\thepage}
 \setlength{\headheight}{28pt}

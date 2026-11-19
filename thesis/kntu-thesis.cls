@@ -109,7 +109,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		% دستورات تک‌آرمه
 		\centerline{{\includegraphics[width=5cm]{Logo.png}}}
 		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \large  \@university}}
-		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \bfseries\@faculty - \@department}}
+		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \@faculty - \@department}}
 		% بعد از آرم‌ها
 		\centering
 		\vskip 0.5cm
@@ -202,7 +202,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 		% دستورات تک‌آرمه
 		\centerline{{\includegraphics[width=5cm]{Logo.png}}}
 		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \large  \@university}}
-		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \bfseries\@faculty - \@department}}
+		\centerline{\textcolor[rgb]{0,0,0.5}{\nast \@faculty - \@department}}
 		% بعد از آرم‌ها
 		\centering
 		\vskip 0.5cm
@@ -538,10 +538,7 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 
 \def\latinabstract{
 	%% Latin abstract Page
-	\cleardoublepage\newpage
-	\thispagestyle{empty}
-	~
-	\newpage
+	\cleardoublepage
 	\thispagestyle{empty}
 	\section*{Abstract}
 	% \addcontentsline{toc}{section}{چکیده}
@@ -562,7 +559,6 @@ Persian thesis document class in XeLaTeX for K. N. Toosi University of Technolog
 	%% Latin title page
 	\clearpage
 	\thispagestyle{empty}
-	~
 	\begin{titlepage}
 		\vspace{-10mm}
 		%% Single logo commands

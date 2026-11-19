@@ -25,12 +25,21 @@
 
 <div id="presenter">
   <div class="bar">
-    <span><b id="pv-count"></b></span>
+    <span class="where"><b id="pv-count"></b><span id="pv-part"></span></span>
     <span>{{ui.timer}}: <span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">{{ui.reset}}</button></span>
   </div>
   <div class="previews">
-    <div class="pv cur"><label>{{ui.current}}</label><iframe title="current"></iframe></div>
-    <div class="pv next"><label>{{ui.next}}</label><iframe title="next"></iframe></div>
+    <div class="pv cur"><label>{{ui.current}}</label><iframe title="current" tabindex="-1"></iframe></div>
+    <div id="pv-video" hidden>
+      <input type="range" id="pv-vseek" min="0" max="1000" value="0" tabindex="-1" aria-label="{{ui.play}}">
+      <span id="pv-vtime"></span>
+      <button data-v="restart" tabindex="-1">{{ui.v_restart}} <kbd>R</kbd></button>
+      <button data-v="back" tabindex="-1">{{ui.v_back}} <kbd>J</kbd></button>
+      <button data-v="toggle" class="main" tabindex="-1"><span class="if-paused">{{ui.v_play}}</span><span class="if-playing">{{ui.v_pause}}</span> <kbd>K</kbd></button>
+      <button data-v="fwd" tabindex="-1">{{ui.v_fwd}} <kbd>L</kbd></button>
+      <button data-v="mute" tabindex="-1"><span class="if-muted">{{ui.v_unmute}}</span><span class="if-sound">{{ui.v_mute}}</span> <kbd>M</kbd></button>
+    </div>
+    <div class="pv next"><label>{{ui.next}}</label><iframe title="next" tabindex="-1"></iframe></div>
   </div>
   <div class="notesbox">
     <h4>{{ui.notes}}</h4>

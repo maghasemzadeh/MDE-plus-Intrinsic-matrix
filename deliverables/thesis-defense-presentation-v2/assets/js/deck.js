@@ -29,6 +29,8 @@
     $$('.frag', s).forEach(function (f) { m = Math.max(m, +f.getAttribute('data-f') || 1); });
     return m;
   });
+  /* .auto items enter by themselves when their slide opens; --i sets each one's place in the sequence */
+  slides.forEach(function (s) { $$('.auto', s).forEach(function (a, n) { a.style.setProperty('--i', n); }); });
   var state = { i: 0, step: 0 };
 
   /* ---------------- maths ---------------- */
@@ -208,6 +210,9 @@
       d.className = 'p'; d.setAttribute('data-part', i + 1);
       d.innerHTML = '<span class="n">' + fa(i + 1) + '</span><span>' + p + '</span>';
       nav.appendChild(d);
+      if (MODE === 'main') d.addEventListener('click', function () {
+        for (var k = 0; k < mainCount; k++) if (+slides[k].getAttribute('data-part') === i + 1) { command({ cmd: 'goto', i: k, step: 0 }); return; }
+      });
     });
     var bk = document.createElement('div'); bk.className = 'bk'; bk.textContent = CFG.backupLabel; nav.appendChild(bk);
   }
@@ -238,20 +243,68 @@
     s.setAttribute('data-step', step);
   }
 
+  /* ---------------- video ---------------- */
+  function activeVideo() { return $('video:not([data-ambient])', slides[state.i]); }
+  function playVideo(v) {
+    /* if the browser refuses to start it with sound, start it silent; a play() cut short by pause() is not retried */
+    try {
+      var p = v.play();
+      if (p && p.catch) p.catch(function (err) {
+        if (!err || err.name !== 'NotAllowedError' || v.muted) return;
+        v.muted = true; var q = v.play(); if (q && q.catch) q.catch(function () {});
+      });
+    } catch (e) {}
+  }
+  /* a video with data-play="N" starts on step N of its slide. `from` is the step we came from on the same slide, or null when the slide was just entered */
+  function syncVideos(s, step, from) {
+    if (MODE !== 'main') return;
+    $$('video[data-play]', s).forEach(function (v) {
+      var n = +v.getAttribute('data-play') || 1;
+      if (from === null || step < n) { v.pause(); try { v.currentTime = 0; } catch (e) {} }
+      else if (from < n && v.paused) { if (v.ended) v.currentTime = 0; playVideo(v); }
+    });
+    /* a video with data-ambient plays by itself, silent and in a loop, whenever its slide is shown; it is paused on leaving like any other video, and the video panel and keys ignore it */
+    $$('video[data-ambient]', s).forEach(function (v) { v.muted = true; v.loop = true; if (v.paused) playVideo(v); });
+  }
+  function videoState() {
+    var v = activeVideo();
+    return v ? { t: v.currentTime || 0, d: v.duration || 0, paused: v.paused, muted: v.muted } : null;
+  }
+  function videoCmd(c) {
+    var v = activeVideo();
+    if (!v || MODE !== 'main') return;
+    var d = v.duration || 0;
+    if (c.act === 'toggle') { if (v.paused) { if (v.ended) v.currentTime = 0; playVideo(v); } else v.pause(); }
+    else if (c.act === 'restart') { v.currentTime = 0; playVideo(v); }
+    else if (c.act === 'nudge') v.currentTime = Math.max(0, Math.min(d, v.currentTime + c.d));
+    else if (c.act === 'seek') v.currentTime = Math.max(0, Math.min(d, +c.t || 0));
+    else if (c.act === 'mute') v.muted = !v.muted;
+    broadcastVideo();
+  }
+  /* preview frame in the presenter window: follow the audience window's video, always silent */
+  function mirrorVideo(st) {
+    var v = activeVideo();
+    if (!v || !st) return;
+    v.muted = true;
+    try { if (Math.abs(v.currentTime - st.t) > 0.4) v.currentTime = st.t; } catch (e) {}
+    if (st.paused) v.pause(); else if (v.paused) playVideo(v);
+  }
+
   function show(i, step, dir, silent) {
     i = Math.max(0, Math.min(slides.length - 1, i));
     step = Math.max(0, Math.min(steps[i], step));
-    var prev = slides[state.i], next = slides[i];
+    var prev = slides[state.i], next = slides[i], from = prev === next ? state.step : null;
     if (prev !== next) {
       stage.style.setProperty('--dir', dir >= 0 ? 1 : -1);
       prev.classList.remove('active'); prev.classList.add('leaving');
       setTimeout(function () { prev.classList.remove('leaving'); }, 500);
       $$('video', prev).forEach(function (v) { v.pause(); });
+      next.classList.toggle('back', dir < 0);
       next.classList.add('active');
-      if (MODE === 'main') $$('video[data-autoplay]', next).forEach(function (v) { try { v.currentTime = 0; var p = v.play(); if (p && p.catch) p.catch(function () {}); } catch (e) {} });
     } else next.classList.add('active');
     state.i = i; state.step = step;
     applyFrags(next, step);
+    syncVideos(next, step, from);
     updateChrome();
     if (MODE === 'main') { try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) { location.hash = i + 1; } }
     if (!silent) broadcast();
@@ -300,34 +353,64 @@
   /* ---------------- sync between windows ---------------- */
   var presenterWin = null;
   function broadcast() {
-    var msg = { type: 'deck-state', i: state.i, step: state.step };
+    var msg = { type: 'deck-state', i: state.i, step: state.step, video: videoState() };
     if (MODE === 'main' && presenterWin && !presenterWin.closed) presenterWin.postMessage(msg, '*');
     if (MODE === 'presenter') updatePresenter();
+  }
+  function broadcastVideo() {
+    if (MODE === 'main' && presenterWin && !presenterWin.closed) presenterWin.postMessage({ type: 'deck-video', video: videoState() }, '*');
   }
   function command(c) {
     if (MODE === 'presenter' && window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'deck-cmd', c: c }, '*'); return; }
     if (c.cmd === 'next') next(); else if (c.cmd === 'prev') prev(); else if (c.cmd === 'goto') show(c.i, c.step || 0, c.i >= state.i ? 1 : -1);
+    else if (c.cmd === 'video') videoCmd(c);
   }
   window.addEventListener('message', function (ev) {
     var d = ev.data || {};
-    if (d.type === 'deck-state') { show(d.i, d.step, d.i >= state.i ? 1 : -1, MODE !== 'presenter'); if (MODE === 'presenter') updatePresenter(); }
+    if (d.type === 'deck-state') { if (MODE === 'presenter') lastVideo = d.video || null; show(d.i, d.step, d.i >= state.i ? 1 : -1, MODE !== 'presenter'); if (MODE === 'presenter') updatePresenter(); }
     else if (d.type === 'deck-cmd' && MODE === 'main') command(d.c);
     else if (d.type === 'deck-hello' && MODE === 'main') { presenterWin = ev.source; broadcast(); }
     else if (d.type === 'deck-ready' && MODE === 'presenter') updatePresenter();
+    else if (d.type === 'deck-key' && MODE === 'presenter') onKey({ key: d.key, code: d.code, preventDefault: function () {} });
+    else if (d.type === 'deck-video' && MODE === 'presenter') { lastVideo = d.video || null; updateVideoPanel(); if (frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage(d, '*'); }
+    else if (d.type === 'deck-video' && MODE === 'embed') mirrorVideo(d.video);
   });
 
   /* ---------------- presenter view ---------------- */
-  var t0 = null, frames = [];
+  var t0 = null, frames = [], lastVideo = null, seeking = false;
+  function clock(s) { s = Math.max(0, Math.floor(s || 0)); return fa(Math.floor(s / 60) + ':' + String(s % 60).padStart(2, '0')); }
+  function updateVideoPanel() {
+    var box = $('#pv-video'), has = !!activeVideo();
+    box.hidden = !has;
+    if (!has) return;
+    var st = lastVideo || { t: 0, d: 0, paused: true, muted: true };
+    box.classList.toggle('playing', !st.paused); box.classList.toggle('sound', !st.muted);
+    if (!seeking) $('#pv-vseek').value = st.d ? Math.round(st.t / st.d * 1000) : 0;
+    $('#pv-vtime').textContent = clock(st.t) + ' / ' + clock(st.d);
+  }
+  /* notes are plain text; an English term in parentheses is kept on one line and set apart by colour */
+  function renderNotes(box, text) {
+    box.textContent = '';
+    text.split(/(\([A-Za-z][A-Za-z0-9 \-]*\))/).forEach(function (part, n) {
+      if (!part) return;
+      if (n % 2) { var sp = document.createElement('span'); sp.className = 'en'; sp.dir = 'ltr'; sp.textContent = part; box.appendChild(sp); }
+      else box.appendChild(document.createTextNode(part));
+    });
+  }
   function updatePresenter() {
     var s = slides[state.i];
     var notes = $('.notes', s);
     $('#pv-title').textContent = s.getAttribute('data-title') || '';
-    $('#pv-notes').textContent = notes ? notes.textContent.trim() : '';
+    renderNotes($('#pv-notes'), notes ? notes.textContent.trim() : '');
     var isBackup = s.classList.contains('backup');
     $('#pv-count').textContent = isBackup ? CFG.backupLabel + ' ' + fa(state.i - mainCount + 1) + ' ' + CFG.of + ' ' + fa(backupCount) : fa(state.i + 1) + ' ' + CFG.of + ' ' + fa(mainCount);
+    var part = isBackup ? 0 : (+s.getAttribute('data-part') || 0);
+    $('#pv-part').textContent = part ? CFG.partLabel + ' ' + fa(part) + ' · ' + CFG.parts[part - 1] : '';
     var nx = state.step < steps[state.i] ? { i: state.i, step: state.step + 1 } : { i: Math.min(slides.length - 1, state.i + 1), step: 0 };
     if (frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage({ type: 'deck-state', i: state.i, step: state.step }, '*');
     if (frames[1] && frames[1].contentWindow) frames[1].contentWindow.postMessage({ type: 'deck-state', i: nx.i, step: nx.step }, '*');
+    updateVideoPanel();
+    if (lastVideo && frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage({ type: 'deck-video', video: lastVideo }, '*');
     if (t0 === null && (state.i > 0 || state.step > 0)) t0 = Date.now();
   }
   function initPresenter() {
@@ -339,24 +422,42 @@
       var mm = String(Math.floor(s / 60)).padStart(2, '0'), ss = String(s % 60).padStart(2, '0');
       $('#pv-clock').textContent = mm + ':' + ss;
     }, 500);
-    $('#pv-reset').addEventListener('click', function () { t0 = Date.now(); });
+    $('#pv-reset').addEventListener('click', function () { t0 = Date.now(); this.blur(); });
+    /* video controls act on the audience window; blur afterwards so Space and the arrows keep driving the slides */
+    $$('#pv-video button').forEach(function (b) {
+      b.addEventListener('click', function () {
+        var a = b.getAttribute('data-v');
+        command(a === 'back' ? { cmd: 'video', act: 'nudge', d: -5 } : a === 'fwd' ? { cmd: 'video', act: 'nudge', d: 5 } : { cmd: 'video', act: a });
+        b.blur();
+      });
+    });
+    var seek = $('#pv-vseek');
+    seek.addEventListener('input', function () { seeking = true; if (lastVideo && lastVideo.d) command({ cmd: 'video', act: 'seek', t: seek.value / 1000 * lastVideo.d }); });
+    seek.addEventListener('change', function () { seeking = false; seek.blur(); });
     if (window.opener) window.opener.postMessage({ type: 'deck-hello' }, '*');
     updatePresenter();
   }
 
   /* ---------------- input ---------------- */
+  /* the deck reads right to left, so the left arrow is 'next' and the right arrow is 'previous' */
   function onKey(e) {
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
+    if (e.code && /^Key[A-Z]$/.test(e.code)) k = e.code.charAt(3).toLowerCase(); /* letter keys by position, so they also work with the Persian layout active */
     if ($('#overview').classList.contains('open')) { if (k === 'Escape' || k === 'o' || k === 'O') toggleOverview(false); return; }
-    if (k === 'ArrowRight' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter' || k === 'n') { e.preventDefault(); command({ cmd: 'next' }); }
-    else if (k === 'ArrowLeft' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); command({ cmd: 'prev' }); }
+    if (k === 'ArrowLeft' || k === 'ArrowDown' || k === 'PageDown' || k === ' ' || k === 'Enter' || k === 'n') { e.preventDefault(); command({ cmd: 'next' }); }
+    else if (k === 'ArrowRight' || k === 'ArrowUp' || k === 'PageUp' || k === 'Backspace') { e.preventDefault(); command({ cmd: 'prev' }); }
     else if (k === 'Home') command({ cmd: 'goto', i: 0 });
     else if (k === 'End') command({ cmd: 'goto', i: mainCount - 1 });
     else if (k === 'b' || k === 'B') command({ cmd: 'goto', i: mainCount });
     else if (k === 'o' || k === 'O' || k === 'g' || k === 'G') toggleOverview();
     else if ((k === 'f' || k === 'F') && MODE === 'main') { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
     else if ((k === 'p' || k === 'P') && MODE === 'main') { presenterWin = window.open((location.pathname.split('/').pop() || 'index.html') + '?presenter=1', 'deck-presenter', 'width=1400,height=860'); }
+    else if (k === 'k' || k === 'K') command({ cmd: 'video', act: 'toggle' });
+    else if (k === 'j' || k === 'J') command({ cmd: 'video', act: 'nudge', d: -5 });
+    else if (k === 'l' || k === 'L') command({ cmd: 'video', act: 'nudge', d: 5 });
+    else if (k === 'r' || k === 'R') command({ cmd: 'video', act: 'restart' });
+    else if (k === 'm' || k === 'M') command({ cmd: 'video', act: 'mute' });
     else if (k === '?' || k === 'h' || k === 'H') flashHelp(5000);
   }
   function flashHelp(ms) { var h = $('#help'); h.classList.add('show'); setTimeout(function () { h.classList.remove('show'); }, ms); }
@@ -370,8 +471,19 @@
   show(startI, qs.has('all') ? steps[startI] : 0, 1, true);
   requestAnimationFrame(function () { requestAnimationFrame(function () { document.body.classList.remove('no-anim'); }); });
 
+  if (MODE === 'main') $$('video:not([data-ambient])').forEach(function (v) {
+    ['play', 'pause', 'timeupdate', 'seeking', 'seeked', 'volumechange', 'loadedmetadata', 'ended'].forEach(function (ev) { v.addEventListener(ev, broadcastVideo); });
+  });
+  else $$('video').forEach(function (v) { v.removeAttribute('controls'); v.muted = true; });
+
   if (MODE === 'embed') {
-    if (window.parent !== window) window.parent.postMessage({ type: 'deck-ready' }, '*');
+    if (window.parent !== window) {
+      window.parent.postMessage({ type: 'deck-ready' }, '*');
+      document.addEventListener('keydown', function (e) {
+        if (e.ctrlKey || e.metaKey || e.altKey) return;
+        window.parent.postMessage({ type: 'deck-key', key: e.key, code: e.code }, '*');
+      });
+    }
   } else {
     document.addEventListener('keydown', onKey);
     if (MODE === 'presenter') initPresenter(); else flashHelp(4500);

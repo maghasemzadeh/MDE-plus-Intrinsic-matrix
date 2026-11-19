@@ -388,20 +388,66 @@
     if (!seeking) $('#pv-vseek').value = st.d ? Math.round(st.t / st.d * 1000) : 0;
     $('#pv-vtime').textContent = clock(st.t) + ' / ' + clock(st.d);
   }
-  /* notes are plain text; an English term in parentheses is kept on one line and set apart by colour */
-  function renderNotes(box, text) {
-    box.textContent = '';
-    text.split(/(\([A-Za-z][A-Za-z0-9 \-]*\))/).forEach(function (part, n) {
+  /* notes are plain text. Inline: an English term in parentheses stays on one line in a lighter colour, and
+     Persian-digit numbers are highlighted. Full notes are broken into short paragraphs; a summary (one item
+     per line: "1. " numbered, "- " bullet, "! " caveat) is rendered as lists. */
+  var EN_RE = /(\([A-Za-z][A-Za-z0-9 \-]*\))/, NUM_RE = /([\u2212+\-]?[\u06F0-\u06F9][\u06F0-\u06F9\u066B\u066C]*(?:%|\u066A)?)/;
+  /* a Latin name such as DA3-Metric or Depth Anything 3 is kept whole and isolated, so the RTL line cannot split it */
+  var LAT_RE = /([A-Za-z][A-Za-z0-9\-.\/×]*(?: [A-Za-z0-9][A-Za-z0-9\-.\/×]*)*)/;
+  function inline(el, text) {
+    text.split(EN_RE).forEach(function (part, n) {
       if (!part) return;
-      if (n % 2) { var sp = document.createElement('span'); sp.className = 'en'; sp.dir = 'ltr'; sp.textContent = part; box.appendChild(sp); }
-      else box.appendChild(document.createTextNode(part));
+      if (n % 2) { var sp = document.createElement('span'); sp.className = 'en'; sp.dir = 'ltr'; sp.textContent = part; el.appendChild(sp); return; }
+      part.split(LAT_RE).forEach(function (r, j) {
+        if (!r) return;
+        if (j % 2) { var l = document.createElement('span'); l.className = 'lat'; l.dir = 'ltr'; l.textContent = r; el.appendChild(l); return; }
+        r.split(NUM_RE).forEach(function (q, m) {
+          if (!q) return;
+          if (m % 2) { var b = document.createElement('span'); b.className = 'num'; b.textContent = q; el.appendChild(b); }
+          else el.appendChild(document.createTextNode(q));
+        });
+      });
+    });
+    return el;
+  }
+  function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+  function renderFull(box, text) {
+    var sents = text.split(/(?<=[.!\u061F])\s+/), para = '', n = 0;
+    function flush() { if (para) box.appendChild(inline(el('p'), para)); para = ''; n = 0; }
+    sents.forEach(function (t) {
+      para = para ? para + ' ' + t : t; n++;
+      if (n >= 3 || para.length > 240) flush();
+    });
+    flush();
+  }
+  function renderSum(box, text) {
+    var list = null;
+    text.split('\n').forEach(function (line) {
+      line = line.trim(); if (!line) return;
+      var m = line.match(/^([0-9\u06F0-\u06F9]+)[.)\-]\s*(.*)$/), u = line.match(/^[-\u2022*]\s*(.*)$/), w = line.match(/^!\s*(.*)$/);
+      var kind = m ? 'ol' : u ? 'ul' : null;
+      if (kind) {
+        if (!list || list.tagName.toLowerCase() !== kind) { list = el(kind); box.appendChild(list); }
+        list.appendChild(inline(el('li'), m ? m[2] : u[1]));
+      } else { list = null; box.appendChild(inline(el('p', w ? 'warn' : ''), w ? w[1] : line)); }
     });
   }
+  var sumOn = false;
+  try { sumOn = localStorage.getItem('deck-notes-sum') === '1'; } catch (e) {}
+  function renderNotes(s) {
+    var box = $('#pv-notes'), full = $('.notes', s), sum = $('.notes-sum', s);
+    box.textContent = '';
+    var useSum = sumOn && sum && sum.textContent.trim();
+    box.classList.toggle('sum', !!useSum);
+    if (useSum) renderSum(box, sum.textContent.trim());
+    else renderFull(box, full ? full.textContent.trim() : '');
+    box.parentNode.scrollTop = 0;
+  }
+  function setSumButton() { $('#pv-sum').setAttribute('aria-pressed', sumOn ? 'true' : 'false'); }
   function updatePresenter() {
     var s = slides[state.i];
-    var notes = $('.notes', s);
     $('#pv-title').textContent = s.getAttribute('data-title') || '';
-    renderNotes($('#pv-notes'), notes ? notes.textContent.trim() : '');
+    renderNotes(s);
     var isBackup = s.classList.contains('backup');
     $('#pv-count').textContent = isBackup ? CFG.backupLabel + ' ' + fa(state.i - mainCount + 1) + ' ' + CFG.of + ' ' + fa(backupCount) : fa(state.i + 1) + ' ' + CFG.of + ' ' + fa(mainCount);
     var part = isBackup ? 0 : (+s.getAttribute('data-part') || 0);
@@ -423,6 +469,13 @@
       $('#pv-clock').textContent = mm + ':' + ss;
     }, 500);
     $('#pv-reset').addEventListener('click', function () { t0 = Date.now(); this.blur(); });
+    /* the summary switch changes only when it is clicked; its state survives slide changes and reopening */
+    setSumButton();
+    $('#pv-sum').addEventListener('click', function () {
+      sumOn = !sumOn;
+      try { localStorage.setItem('deck-notes-sum', sumOn ? '1' : '0'); } catch (e) {}
+      setSumButton(); renderNotes(slides[state.i]); this.blur();
+    });
     /* video controls act on the audience window; blur afterwards so Space and the arrows keep driving the slides */
     $$('#pv-video button').forEach(function (b) {
       b.addEventListener('click', function () {

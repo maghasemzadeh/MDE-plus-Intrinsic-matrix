@@ -21,6 +21,8 @@ Open `index.html` in Chrome or Edge (double-click; no internet or server needed)
 
 Presenter window: press **P** in the audience window (allow pop-ups for the file if the browser asks), drag the new window to the laptop screen and keep the audience window full screen on the projector. Either window can drive the deck; they stay in sync. The top bar of the presenter window shows the slide counter together with the current part number and name. The timer starts on the first slide change.
 
+The **خلاصه** switch above the presenter notes shows a short cue-card version of each slide's notes (numbered steps, bullets, key numbers, and a highlighted caveat line). It changes only when clicked: slide changes never reset it, and the choice is remembered when the presenter window is reopened. With the switch off, the full notes are shown in short paragraphs. In both views numbers are highlighted.
+
 The video on slide 5 does not start by itself: the first press of the next key on that slide plays it, without sound, the second reveals the «small and near / large and far» pair, and the third moves on. The presenter window shows a video panel on that slide (seek bar, time, from the start, back and forward 5 s, play or pause, sound) that controls the video in the audience window; the same actions are on the K, J, L, R and M keys in either window. Letter keys are read by key position, so they also work while the Persian keyboard layout is active.
 
 The outline tiles on slide 2, and the four application tiles and four phrases on slide 3, enter by themselves, one after another, when the slide is reached (about two seconds on slide 2, about three on slide 3); stepping back to the slide shows them all at once.
@@ -29,7 +31,7 @@ A link such as `index.html#25` opens directly on slide 25; adding `?all=1` shows
 
 ## Editing
 
-- All Persian text (slide phrases and presenter notes) is in `content/fa.json`, keyed by slide (`s25.title`, `s25.notes`, ...).
+- All Persian text (slide phrases and presenter notes) is in `content/fa.json`, keyed by slide (`s25.title`, `s25.notes`, ...). The quick-glance summary of a slide's notes is `s25.sum`: one item per line, `1. ` numbered, `- ` bullet, `! ` caveat.
 - Slide markup is in `src/slides/*.html`; the page shell is `src/shell.html`.
 - Styles are in `assets/css/` (`deck.css` engine and shared components, `slides.css` per-slide layout); the engine is `assets/js/deck.js`.
 - A `<video data-play="N">` is started by step N of its slide and is paused and rewound when the slide is entered.

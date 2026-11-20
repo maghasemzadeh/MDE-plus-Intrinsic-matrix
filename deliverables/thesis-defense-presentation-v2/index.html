@@ -28,7 +28,7 @@
     <dl class="t-people">
       <div><dt>نگارش</dt><dd>محمدامین قاسم‌زاده</dd></div>
       <div><dt>استاد راهنما</dt><dd>دکتر بهروز نصیحت‌کن</dd></div>
-      <div><dt>داوران</dt><dd>دکتر حمید ابریشمی مقدم <small>(داور داخلی)</small><br>دکتر محمدرضا محمدی <small>(داور خارجی)</small></dd></div>
+      <div><dt>داوران</dt><dd>دکتر حمید ابریشمی مقدم <small>(داور داخلی)</small><br>دکتر محمدحسین رهبان <small>(داور خارجی)</small></dd></div>
     </dl>
     <div class="t-date">پاییز ۱۴۰۵</div>
   </div>
@@ -385,7 +385,7 @@
     </table>
     <div class="goal frag rise" data-f="6"><span class="goal-l">شکاف پژوهشی</span><span class="goal-t">سهم مستقل K تاکنون اندازه‌گیری نشده است</span></div>
   </div>
-  <aside class="notes" data-key="s10">استفاده از دوربین در تخمین عمق ایده‌ای جدید نیست؛ تفاوت کارها در این است که ماتریس کالیبراسیون (calibration matrix) کجا و چگونه وارد مدل می‌شود. جدول را ردیف‌به‌ردیف توضیح می‌دهیم. ردیف اول، CAM-Convs (Camera-Aware Multi-Scale Convolutions) از Facil و همکاران، CVPR 2019 (Conference on Computer Vision and Pattern Recognition). معماری آن یک شبکه انکودر ـ دیکودر کانولوشنی به سبک DispNet است: انکودر ResNet-50 (Residual Network)، ازپیش‌آموزش‌دیده روی ImageNet، و دیکودری با اتصال‌های پرشی (skip connections) که عمق معکوس، اطمینان (confidence) و نرمال سطح را پیش‌بینی می‌کند. دوربین به این شکل وارد می‌شود: از فاصله کانونی، نقطه اصلی و اندازه حسگر، چند نقشه هم‌اندازه با تصویر ساخته می‌شود؛ نقشه مختصات مرکزی (centered coordinates) مکان هر پیکسل را نسبت به نقطه اصلی نشان می‌دهد، نقشه میدان دید (field of view map) برای هر پیکسل زاویه $\arctan(cc/f)$ را می‌دهد و نقشه مختصات نرمال‌شده (normalized coordinates) نیز ساخته می‌شود. این نقشه‌ها به‌صورت کانال‌های اضافی کنار ویژگی‌ها قرار می‌گیرند و در هر سطح دیکودر و روی هر اتصال پرشی، پیش از کانولوشن، الحاق (concatenate) می‌شوند؛ چون فقط پس از انکودر اضافه می‌شوند، می‌توان از انکودر ازپیش‌آموزش‌دیده استفاده کرد. علاوه بر این، عمق را می‌توان به‌صورت اختیاری نسبت به یک فاصله کانونی پیش‌فرض نرمال کرد تا آموزش سریع‌تر همگرا شود. تفاوت با کار ما این است که K واقعاً درون شبکه قرار دارد، اما به‌صورت کانال‌های مکانی در کانولوشن‌های دیکودر، نه به‌صورت توکن در خودتوجهی یک انکودر ترنسفورمری؛ بنابراین انکودر دوربین را نمی‌بیند. مدل کوچک است و روی داده‌های محدود آموزش دیده و مدل بنیادین نیست. همچنین روش جدید هم‌زمان با شبکه جدید آموزش داده شده است؛ پس مقایسه کنترل‌شده‌ای که فقط اثر K را جدا کند وجود ندارد. ردیف دوم، Metric3D از Yin و همکاران، ICCV 2023 (International Conference on Computer Vision). معماری نسخه اول یک UNet با انکودر ConvNeXt-Large است که روی ImageNet-22K ازپیش‌آموزش‌دیده است؛ این مدل با حدود ۸ میلیون تصویر از ۱۱ مجموعه‌داده و بیش از ۱۰ هزار دوربین متفاوت، روی ۴۸ GPU از نوع A100 و ۵۰۰ هزار گام آموزش دیده است. نسخه دوم، Metric3D v2، انکودر را با ViT (Vision Transformer) جایگزین کرده و نرمال سطح را نیز پیش‌بینی می‌کند. دوربین به این شکل وارد می‌شود: ایده اصلی، فضای دوربین متعارف (canonical camera space) است. همه داده‌ها طوری تبدیل می‌شوند که گویی با دوربینی با فاصله کانونی ثابت $f_c$ گرفته شده‌اند؛ در مقاله $f_c=1000$. دو راه پیشنهاد شده است: یا برچسب عمق در $f_c/f$ ضرب می‌شود و تصویر دست‌نخورده می‌ماند، یا خود تصویر با ضریب $f_c/f$ تغییر اندازه می‌دهد. هنگام استنتاج، خروجی با تبدیل معکوس به متر بازگردانده می‌شود؛ مثلاً $D=\dfrac{f}{f_c}D_c$. هزینه جدیدی نیز با نام RPNL (Random Proposal Normalization Loss) دارد که نرمال‌سازی مقیاس و جابه‌جایی را روی تکه‌های تصادفی انجام می‌دهد تا جزئیات نزدیک حفظ شوند. تفاوت با کار ما این است که K هرگز وارد خود شبکه نمی‌شود؛ فقط پیش و پس از شبکه برای تغییر اندازه یا تغییر مقیاس به‌کار می‌رود. بنابراین شبکه دوربین را نمی‌بیند و فقط از فاصله کانونی استفاده می‌کند، نه از نقطه اصلی و نسبت ابعاد. این همان خانواده روشی است که DA3-Metric نیز از آن پیروی می‌کند. در کار ما، توصیف‌گر نه‌بعدی K درون انکودر وارد می‌شود و شبکه یاد می‌گیرد چگونه از آن استفاده کند. ردیف سوم، UniDepth (Universal Monocular Metric Depth Estimation) از Piccinelli و همکاران، CVPR 2024، و Depth Pro از Apple، ICLR 2025 (International Conference on Learning Representations). این دو هدف دیگری دارند: عمق مطلق بدون نیاز به دانستن دوربین. در UniDepth، انکودر ViT-L (Vision Transformer Large) یا ConvNeXt است. یک ماژول دوربین (camera module) از ویژگی‌های انکودر، چهار مقدار فاصله کانونی و نقطه اصلی را به‌صورت ضریب‌هایی از نصف عرض و ارتفاع تصویر پیش‌بینی می‌کند، پرتو هر پیکسل را می‌سازد و زاویه‌های سمت و ارتفاع (azimuth و elevation) را با هارمونیک‌های کروی (spherical harmonics، ۸۱ هارمونیک) رمزگذاری می‌کند. این نقشه دوربین چگال از طریق یک لایه توجه متقاطع (cross-attention) به ماژول عمق داده می‌شود؛ یعنی عمق به دوربین «القا» (prompt) می‌شود. گرادیان از ماژول دوربین به انکودر قطع شده است. خروجی در فضای شبه‌کروی (سمت، ارتفاع، لگاریتم عمق) است و یک هزینه ناوردایی هندسی (geometric invariance loss) دو برش متفاوت از یک صحنه را سازگار نگه می‌دارد. اگر K واقعی هنگام آزمون در دسترس باشد، می‌توان آن را به‌جای دوربین پیش‌بینی‌شده وارد کرد. در Depth Pro، ViT-L DINOv2 روی تکه‌هایی از تصویر در چند مقیاس، در مجموع ۳۵ تکه، و یک ViT دیگر روی کل تصویر به‌عنوان انکودر زمینه، با دیکودری شبیه DPT (Dense Prediction Transformer)، در وضوح ثابت ۱۵۳۶ در ۱۵۳۶ به‌کار می‌روند؛ این مدل نقشه عمق ۲٫۲۵ مگاپیکسلی را در حدود ۰٫۳ ثانیه تولید می‌کند و بر لبه‌های تیز تمرکز دارد. شبکه عمق معکوس متعارف (canonical inverse depth) C را پیش‌بینی می‌کند و عمق متری با $D_m=\dfrac{f_{px}}{w\,C}$ به‌دست می‌آید. فاصله کانونی یا از متادیتای EXIF می‌آید یا از یک سر جداگانه که میدان دید افقی را از ویژگی‌های فریزشده شبکه پیش‌بینی می‌کند و پس از آموزش عمق، جداگانه آموزش می‌بیند. تفاوت با کار ما این است که هر دو مدل دوربین را از روی تصویر حدس می‌زنند. در UniDepth، دوربین تخمینی از طریق توجه متقاطع درون شبکه اثر می‌گذارد؛ در Depth Pro، فاصله کانونی فقط پس از شبکه خروجی را مقیاس می‌دهد. در هیچ‌کدام K معلوم ورودی اصلی شبکه نیست و اگر تصویر برش داده یا بزرگ‌نمایی شود، مدل باید دوربین را دوباره حدس بزند؛ ما از K معلوم و دقیق استفاده می‌کنیم که در بیشتر کاربردهای رباتیک و خودرو از کالیبراسیون در دسترس است. ردیف چهارم، Depth Anything 3. این مدل توکن دوربین دارد، اما برای وضعیت دوربین (camera pose) در حالت چندنمایی (multi-view): این توکن از انتقال، چرخش و دو میدان دید ساخته می‌شود و فقط زمانی به‌کار می‌رود که وضعیت دوربین چند نما داده شود. مدل‌های تک‌تصویری مطلق (DA3-Metric) و نسبی (DA3-Mono) آن هیچ توکن دوربینی ندارند و مقیاس مطلق پس از شبکه، با ضرب خروجی در فاصله کانونی تقسیم بر ۳۰۰، به‌دست می‌آید؛ یعنی همان ایده فضای دوربین متعارف Metric3D. به همین دلیل در جدول نیم‌علامت دارد؛ جزئیات معماری در آخرین اسلاید پشتیبان آمده است. ردیف آخر، این پژوهش است. مدل پایه Depth Anything V2 است: انکودر DINOv2 (self-DIstillation with NO labels version 2) فریزشده و دیکودر DPT. K معلوم به توصیف‌گری نه‌بعدی و نرمال‌شده تبدیل می‌شود که شامل فاصله‌های کانونی و نقطه اصلی نسبت به ابعاد تصویر، دو میدان دید، نسبت ابعاد، کانون میانگین و مساحت قاب است. یک انکودر دوربین با MLP (Multi-Layer Perceptron) و چهار بلوک ترنسفورمر آن را به یک توکن تبدیل می‌کند و این توکن با گیتی که از صفر شروع می‌شود، به توکن CLS در نخستین لایه انکودر افزوده می‌شود. بنابراین همه توکن‌های تصویر از ابتدا و در همه بلوک‌ها، از طریق خودتوجهی (self-attention)، هندسه دوربین را می‌بینند. چون K در هر برش و تغییر اندازه دقیقاً به‌روز می‌شود و لرزش کانونی تصویر را ثابت نگه می‌دارد، اما مقیاس را تغییر می‌دهد، مدل مجبور است از K استفاده کند. تفاوت اصلی کار ما با همه این کارها این است که در آن‌ها معماری، داده و برنامه آموزش هم‌زمان با ورودی دوربین تغییر کرده‌اند؛ بنابراین سهم خود ماتریس کالیبراسیون ناشناخته مانده است. ما یک زوج مدل پیشنهادی و کنترل داریم که در همه چیز جز دسترسی به K یکسان‌اند و با آزمون پیمایش فاصله کانونی و حذف K نشان می‌دهیم که مدل واقعاً از K استفاده می‌کند. این همان شکاف پژوهشی پایین اسلاید است.</aside><aside class="notes-sum">- تفاوت کارها: شیوه ورود دوربین به مدل
+  <aside class="notes" data-key="s10">استفاده از دوربین در تخمین عمق ایده‌ای جدید نیست؛ تفاوت کارها در این است که ماتریس کالیبراسیون (calibration matrix) کجا و چگونه وارد مدل می‌شود. جدول را ردیف‌به‌ردیف توضیح می‌دهیم. ردیف اول، CAM-Convs (Camera-Aware Multi-Scale Convolutions) از Facil و همکاران، CVPR 2019 (Conference on Computer Vision and Pattern Recognition). معماری آن یک شبکه انکودر ـ دیکودر کانولوشنی به سبک DispNet است: انکودر ResNet-50 (Residual Network)، ازپیش‌آموزش‌دیده روی ImageNet، و دیکودری با اتصال‌های پرشی (skip connections) که عمق معکوس، اطمینان (confidence) و نرمال سطح را پیش‌بینی می‌کند. دوربین به این شکل وارد می‌شود: از فاصله کانونی، نقطه اصلی و اندازه حسگر، چند نقشه هم‌اندازه با تصویر ساخته می‌شود؛ نقشه مختصات مرکزی (centered coordinates) مکان هر پیکسل را نسبت به نقطه اصلی نشان می‌دهد، نقشه میدان دید (field of view map) برای هر پیکسل زاویه $\arctan(cc/f)$ را می‌دهد و نقشه مختصات نرمال‌شده (normalized coordinates) نیز ساخته می‌شود. این نقشه‌ها به‌صورت کانال‌های اضافی کنار ویژگی‌ها قرار می‌گیرند و در هر سطح دیکودر و روی هر اتصال پرشی، پیش از کانولوشن، الحاق (concatenate) می‌شوند؛ چون فقط پس از انکودر اضافه می‌شوند، می‌توان از انکودر ازپیش‌آموزش‌دیده استفاده کرد. علاوه بر این، عمق را می‌توان به‌صورت اختیاری نسبت به یک فاصله کانونی پیش‌فرض نرمال کرد تا آموزش سریع‌تر همگرا شود. تفاوت با کار ما این است که K واقعاً درون شبکه قرار دارد، اما به‌صورت کانال‌های مکانی در کانولوشن‌های دیکودر، نه به‌صورت توکن در خودتوجهی یک انکودر ترنسفورمری؛ بنابراین انکودر دوربین را نمی‌بیند. مدل کوچک است و روی داده‌های محدود آموزش دیده و مدل بنیادین نیست. همچنین روش جدید هم‌زمان با شبکه جدید آموزش داده شده است؛ پس مقایسه کنترل‌شده‌ای که فقط اثر K را جدا کند وجود ندارد. ردیف دوم، Metric3D از Yin و همکاران، ICCV 2023 (International Conference on Computer Vision). معماری نسخه اول یک UNet با انکودر ConvNeXt-Large است که روی ImageNet-22K ازپیش‌آموزش‌دیده است؛ این مدل با حدود ۸ میلیون تصویر از ۱۱ مجموعه‌داده و بیش از ۱۰ هزار دوربین متفاوت، روی ۴۸ GPU از نوع A100 و ۵۰۰ هزار گام آموزش دیده است. نسخه دوم، Metric3D v2، انکودر را با ViT (Vision Transformer) جایگزین کرده و نرمال سطح را نیز پیش‌بینی می‌کند. دوربین به این شکل وارد می‌شود: ایده اصلی، فضای دوربین متعارف (canonical camera space) است. همه داده‌ها طوری تبدیل می‌شوند که گویی با دوربینی با فاصله کانونی ثابت $f_c$ گرفته شده‌اند؛ در مقاله $f_c=1000$. دو راه پیشنهاد شده است: یا برچسب عمق در $f_c/f$ ضرب می‌شود و تصویر دست‌نخورده می‌ماند، یا خود تصویر با ضریب $f_c/f$ تغییر اندازه می‌دهد. هنگام استنتاج، خروجی با تبدیل معکوس به متر بازگردانده می‌شود؛ مثلاً $D=\dfrac{f}{f_c}D_c$. هزینه جدیدی نیز با نام RPNL (Random Proposal Normalization Loss) دارد که نرمال‌سازی مقیاس و جابه‌جایی را روی تکه‌های تصادفی انجام می‌دهد تا جزئیات نزدیک حفظ شوند. تفاوت با کار ما این است که K هرگز وارد خود شبکه نمی‌شود؛ فقط پیش و پس از شبکه برای تغییر اندازه یا تغییر مقیاس به‌کار می‌رود. بنابراین شبکه دوربین را نمی‌بیند و فقط از فاصله کانونی استفاده می‌کند، نه از نقطه اصلی و نسبت ابعاد. این همان خانواده روشی است که DA3-Metric نیز از آن پیروی می‌کند. در کار ما، توصیف‌گر نه‌بعدی K درون انکودر وارد می‌شود و شبکه یاد می‌گیرد چگونه از آن استفاده کند. ردیف سوم، UniDepth (Universal Monocular Metric Depth Estimation) از Piccinelli و همکاران، CVPR 2024، و Depth Pro از Apple، ICLR 2025 (International Conference on Learning Representations). این دو هدف دیگری دارند: عمق مطلق بدون نیاز به دانستن دوربین. در UniDepth، انکودر ViT-L (Vision Transformer Large) یا ConvNeXt است. یک ماژول دوربین (camera module) از ویژگی‌های انکودر، چهار مقدار فاصله کانونی و نقطه اصلی را به‌صورت ضریب‌هایی از نصف عرض و ارتفاع تصویر پیش‌بینی می‌کند، پرتو هر پیکسل را می‌سازد و زاویه‌های سمت و ارتفاع (azimuth و elevation) را با هارمونیک‌های کروی (spherical harmonics، ۸۱ هارمونیک) رمزگذاری می‌کند. این نقشه دوربین چگال از طریق یک لایه توجه متقاطع (cross-attention) به ماژول عمق داده می‌شود؛ یعنی عمق به دوربین «القا» (prompt) می‌شود. گرادیان از ماژول دوربین به انکودر قطع شده است. خروجی در فضای شبه‌کروی (سمت، ارتفاع، لگاریتم عمق) است و یک هزینه ناوردایی هندسی (geometric invariance loss) دو برش متفاوت از یک صحنه را سازگار نگه می‌دارد. اگر K واقعی هنگام آزمون در دسترس باشد، می‌توان آن را به‌جای دوربین پیش‌بینی‌شده وارد کرد. در Depth Pro، ViT-L DINOv2 روی تکه‌هایی از تصویر در چند مقیاس، در مجموع ۳۵ تکه، و یک ViT دیگر روی کل تصویر به‌عنوان انکودر زمینه، با دیکودری شبیه DPT (Dense Prediction Transformer)، در وضوح ثابت ۱۵۳۶ در ۱۵۳۶ به‌کار می‌روند؛ این مدل نقشه عمق ۲٫۲۵ مگاپیکسلی را در حدود ۰٫۳ ثانیه تولید می‌کند و بر لبه‌های تیز تمرکز دارد. شبکه عمق معکوس متعارف (canonical inverse depth) C را پیش‌بینی می‌کند و عمق متری با $D_m=\dfrac{f_{px}}{w\,C}$ به‌دست می‌آید. فاصله کانونی یا از متادیتای EXIF می‌آید یا از یک سر جداگانه که میدان دید افقی را از ویژگی‌های فریزشده شبکه پیش‌بینی می‌کند و پس از آموزش عمق، جداگانه آموزش می‌بیند. تفاوت با کار ما این است که هر دو مدل دوربین را از روی تصویر حدس می‌زنند. در UniDepth، دوربین تخمینی از طریق توجه متقاطع درون شبکه اثر می‌گذارد؛ در Depth Pro، فاصله کانونی فقط پس از شبکه خروجی را مقیاس می‌دهد. در هیچ‌کدام K معلوم ورودی اصلی شبکه نیست و اگر تصویر برش داده یا بزرگ‌نمایی شود، مدل باید دوربین را دوباره حدس بزند؛ ما از K معلوم و دقیق استفاده می‌کنیم که در بیشتر کاربردهای رباتیک و خودرو از کالیبراسیون در دسترس است. ردیف چهارم، Depth Anything 3. این مدل توکن دوربین دارد، اما برای وضعیت دوربین (camera pose) در حالت چندنمایی (multi-view): این توکن از انتقال، چرخش و دو میدان دید ساخته می‌شود و فقط زمانی به‌کار می‌رود که وضعیت دوربین چند نما داده شود. مدل‌های تک‌تصویری مطلق (DA3-Metric) و نسبی (DA3-Mono) آن هیچ توکن دوربینی ندارند و مقیاس مطلق پس از شبکه، با ضرب خروجی در فاصله کانونی تقسیم بر ۳۰۰، به‌دست می‌آید؛ یعنی همان ایده فضای دوربین متعارف Metric3D. به همین دلیل در جدول نیم‌علامت دارد؛ جزئیات معماری در اسلاید پشتیبان «Depth Anything 3: معماری و ایده‌های اصلی» آمده است. ردیف آخر، این پژوهش است. مدل پایه Depth Anything V2 است: انکودر DINOv2 (self-DIstillation with NO labels version 2) فریزشده و دیکودر DPT. K معلوم به توصیف‌گری نه‌بعدی و نرمال‌شده تبدیل می‌شود که شامل فاصله‌های کانونی و نقطه اصلی نسبت به ابعاد تصویر، دو میدان دید، نسبت ابعاد، کانون میانگین و مساحت قاب است. یک انکودر دوربین با MLP (Multi-Layer Perceptron) و چهار بلوک ترنسفورمر آن را به یک توکن تبدیل می‌کند و این توکن با گیتی که از صفر شروع می‌شود، به توکن CLS در نخستین لایه انکودر افزوده می‌شود. بنابراین همه توکن‌های تصویر از ابتدا و در همه بلوک‌ها، از طریق خودتوجهی (self-attention)، هندسه دوربین را می‌بینند. چون K در هر برش و تغییر اندازه دقیقاً به‌روز می‌شود و لرزش کانونی تصویر را ثابت نگه می‌دارد، اما مقیاس را تغییر می‌دهد، مدل مجبور است از K استفاده کند. تفاوت اصلی کار ما با همه این کارها این است که در آن‌ها معماری، داده و برنامه آموزش هم‌زمان با ورودی دوربین تغییر کرده‌اند؛ بنابراین سهم خود ماتریس کالیبراسیون ناشناخته مانده است. ما یک زوج مدل پیشنهادی و کنترل داریم که در همه چیز جز دسترسی به K یکسان‌اند و با آزمون پیمایش فاصله کانونی و حذف K نشان می‌دهیم که مدل واقعاً از K استفاده می‌کند. این همان شکاف پژوهشی پایین اسلاید است.</aside><aside class="notes-sum">- تفاوت کارها: شیوه ورود دوربین به مدل
 - CAM-Convs: کانال مختصات؛ Metric3D: فضای دوربین متعارف
 - UniDepth و Depth Pro: تخمین دوربین از تصویر
 - سهم مستقل K تاکنون ناشناخته است
@@ -735,7 +735,7 @@
 </section>
 
 <!-- ============ 19 · four phases ============ -->
-<section class="slide s-phases" data-part="5" data-title="چهار فاز مسیر آزمایش‌ها">
+<section class="slide s-phases" data-autostep data-part="5" data-title="چهار فاز مسیر آزمایش‌ها">
   <header class="slide-head"><h2>چهار فاز مسیر آزمایش‌ها</h2></header>
   <div class="slide-body">
     <div class="phases">
@@ -753,20 +753,20 @@
 </section>
 
 <!-- ============ 20 · pipeline verification ============ -->
-<section class="slide s-verify" data-part="5" data-title="راستی‌آزمایی زنجیره ارزیابی">
+<section class="slide s-verify" data-autostep data-part="5" data-title="راستی‌آزمایی زنجیره ارزیابی">
   <header class="slide-head"><h2>راستی‌آزمایی زنجیره ارزیابی</h2></header>
   <div class="slide-body">
     <div class="cols c73">
-      <table class="tbl">
+      <table class="tbl verify">
         <thead>
-          <tr><th rowspan="2" class="name">مجموعه‌داده</th><th rowspan="2">انکودر</th><th colspan="2" class="sep">مقاله مرجع (جدول ۲)</th><th colspan="2" class="sep">ارزیابی در این پژوهش</th></tr>
-          <tr><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th></tr>
+          <tr><th rowspan="2" class="name">مجموعه‌داده</th><th rowspan="2">انکودر</th><th colspan="2" class="sep">مقاله مرجع (جدول ۲)</th><th colspan="2" class="sep tint">ارزیابی در این پژوهش</th></tr>
+          <tr><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="sep tint ltr-cell">AbsRel ↓</th><th class="tint ltr-cell">δ₁ ↑</th></tr>
         </thead>
         <tbody>
-          <tr><td class="name ltr-cell">NYUv2</td><td class="n">ViT-S</td><td class="n sep">0.053</td><td class="n">0.973</td><td class="n sep best">0.051</td><td class="n best">0.973</td></tr>
-          <tr><td class="name ltr-cell">NYUv2</td><td class="n">ViT-L</td><td class="n sep">0.045</td><td class="n">0.979</td><td class="n sep best">0.043</td><td class="n best">0.979</td></tr>
-          <tr><td class="name ltr-cell">KITTI</td><td class="n">ViT-S</td><td class="n sep">0.078</td><td class="n">0.936</td><td class="n sep best">0.083</td><td class="n best">0.934</td></tr>
-          <tr><td class="name ltr-cell">KITTI</td><td class="n">ViT-L</td><td class="n sep">0.074</td><td class="n">0.946</td><td class="n sep best">0.076</td><td class="n best">0.948</td></tr>
+          <tr><td rowspan="2" class="name ltr-cell set">NYUv2</td><td class="n">ViT-S</td><td class="n sep">0.053</td><td class="n">0.973</td><td class="n sep tint">0.051</td><td class="n tint">0.973</td></tr>
+          <tr class="end"><td class="n">ViT-L</td><td class="n sep">0.045</td><td class="n">0.979</td><td class="n sep tint">0.043</td><td class="n tint">0.979</td></tr>
+          <tr><td rowspan="2" class="name ltr-cell set">KITTI</td><td class="n">ViT-S</td><td class="n sep">0.078</td><td class="n">0.936</td><td class="n sep tint">0.083</td><td class="n tint">0.934</td></tr>
+          <tr><td class="n">ViT-L</td><td class="n sep">0.074</td><td class="n">0.946</td><td class="n sep tint">0.076</td><td class="n tint">0.948</td></tr>
         </tbody>
       </table>
       <div class="stat frag rise" data-f="1"><span class="v m">۰٫۰۰۵</span><span class="l">اختلاف AbsRel حداکثر ۰٫۰۰۵</span></div>
@@ -780,7 +780,7 @@
 </section>
 
 <!-- ============ 21 · relative vs absolute evaluation ============ -->
-<section class="slide s-proto" data-part="5" data-title="ارزیابی نسبی و مطلق؛ سهم دوربین">
+<section class="slide s-proto" data-autostep data-part="5" data-title="ارزیابی نسبی و مطلق؛ سهم دوربین">
   <header class="slide-head"><h2>ارزیابی نسبی و مطلق؛ سهم دوربین</h2></header>
   <div class="slide-body">
     <div class="proto">
@@ -820,7 +820,7 @@
 </section>
 
 <!-- ============ 22 · focal-jitter leap ============ -->
-<section class="slide s-leap" data-part="5" data-title="جهش لرزش کانونی">
+<section class="slide s-leap" data-autostep data-part="5" data-title="جهش لرزش کانونی">
   <header class="slide-head"><h2>جهش لرزش کانونی</h2></header>
   <div class="slide-body">
     <div class="cols c64">
@@ -847,7 +847,7 @@
 </section>
 
 <!-- ============ 23 · focal-length sweep ============ -->
-<section class="slide s-sweep" data-part="5" data-title="خوانش فاصله کانونی توسط مدل">
+<section class="slide s-sweep" data-autostep data-part="5" data-title="خوانش فاصله کانونی توسط مدل">
   <header class="slide-head"><h2>خوانش فاصله کانونی توسط مدل</h2></header>
   <div class="slide-body">
     <div class="cols c2">
@@ -877,7 +877,7 @@
 </section>
 
 <!-- ============ 24 · knockout ============ -->
-<section class="slide s-knock" data-part="5" data-title="حذف و تحریف ماتریس کالیبراسیون">
+<section class="slide s-knock" data-autostep data-part="5" data-title="حذف و تحریف ماتریس کالیبراسیون">
   <header class="slide-head"><h2>حذف و تحریف ماتریس کالیبراسیون</h2></header>
   <div class="slide-body">
     <div class="cols c64">
@@ -907,7 +907,7 @@
 </section>
 
 <!-- ============ 25 · the final model ============ -->
-<section class="slide s-final" data-part="6" data-title="یک مدل، چهار مجموعه‌داده، دوربین‌های متفاوت">
+<section class="slide s-final" data-autostep data-part="6" data-title="یک مدل، چهار مجموعه‌داده، دوربین‌های متفاوت">
   <header class="slide-head"><h2>یک مدل، چهار مجموعه‌داده، دوربین‌های متفاوت</h2></header>
   <div class="slide-body">
     <div class="final">
@@ -941,7 +941,7 @@
 </section>
 
 <!-- ============ 26 · headline result ============ -->
-<section class="slide s-headline" data-part="6" data-title="کاهش خطا نسبت به مدل‌های مرجع">
+<section class="slide s-headline" data-autostep data-part="6" data-title="کاهش خطا نسبت به مدل‌های مرجع">
   <header class="slide-head"><h2>کاهش خطا نسبت به مدل‌های مرجع</h2></header>
   <div class="slide-body">
     <div class="chart" data-chart="bars"><script type="application/json">
@@ -965,7 +965,7 @@
 </section>
 
 <!-- ============ 27 · three metrics, four test sets ============ -->
-<section class="slide s-main-table" data-part="6" data-title="سه معیار، چهار مجموعه آزمون">
+<section class="slide s-main-table" data-autostep data-part="6" data-title="سه معیار، چهار مجموعه آزمون">
   <header class="slide-head"><h2>سه معیار، چهار مجموعه آزمون</h2></header>
   <div class="slide-body">
     <table class="tbl main">
@@ -1001,7 +1001,7 @@
 </section>
 
 <!-- ============ 28 · zero-shot on unseen sensors ============ -->
-<section class="slide s-zeroshot" data-part="6" data-title="تعمیم صفرنمونه به حسگرهای دیده‌نشده">
+<section class="slide s-zeroshot" data-autostep data-part="6" data-title="تعمیم صفرنمونه به حسگرهای دیده‌نشده">
   <header class="slide-head"><h2>تعمیم صفرنمونه به حسگرهای دیده‌نشده</h2><div class="sub">SUN RGB-D: چهار حسگر، ۸۰۰ تصویر دیده‌نشده</div></header>
   <div class="slide-body">
     <div class="zs">
@@ -1027,7 +1027,7 @@
 </section>
 
 <!-- ============ 29 · relative vs metres on the same images ============ -->
-<section class="slide s-gap" data-part="6" data-title="از ارزیابی نسبی تا متر: همان مدل، همان تصاویر">
+<section class="slide s-gap" data-autostep data-part="6" data-title="از ارزیابی نسبی تا متر: همان مدل، همان تصاویر">
   <header class="slide-head"><h2>از ارزیابی نسبی تا متر: همان مدل، همان تصاویر</h2><div class="sub">خطای AbsRel روی دقیقاً همان تصاویر مجموعه آزمون</div></header>
   <div class="slide-body">
     <table class="tbl main gap">
@@ -1056,7 +1056,7 @@
 </section>
 
 <!-- ============ 30 · qualitative: NYUv2 ============ -->
-<section class="slide s-qual" data-part="6" data-title="مقایسه کیفی نگاشت‌های عمق">
+<section class="slide s-qual" data-autostep data-part="6" data-title="مقایسه کیفی نگاشت‌های عمق">
   <header class="slide-head"><h2>مقایسه کیفی نگاشت‌های عمق</h2><div class="sub ltr">NYUv2</div></header>
   <div class="slide-body">
     <div class="qwrap">
@@ -1079,7 +1079,7 @@
 </section>
 
 <!-- ============ 31 · qualitative: Kinect v2 and Cityscapes ============ -->
-<section class="slide s-qual two" data-part="6" data-title="مقایسه کیفی نگاشت‌های عمق">
+<section class="slide s-qual two" data-autostep data-part="6" data-title="مقایسه کیفی نگاشت‌های عمق">
   <header class="slide-head"><h2>مقایسه کیفی نگاشت‌های عمق</h2></header>
   <div class="slide-body">
     <div class="qwrap">
@@ -1103,7 +1103,7 @@
 </section>
 
 <!-- ============ 32 · signed error map ============ -->
-<section class="slide s-error" data-part="6" data-title="نقشه خطا: نسبت عمق پیش‌بینی‌شده به عمق مرجع">
+<section class="slide s-error" data-autostep data-part="6" data-title="نقشه خطا: نسبت عمق پیش‌بینی‌شده به عمق مرجع">
   <header class="slide-head"><h2>نقشه خطا: نسبت عمق پیش‌بینی‌شده به عمق مرجع</h2></header>
   <div class="slide-body">
     <div class="ewrap">
@@ -1131,7 +1131,7 @@
 </section>
 
 <!-- ============ 33 · scale accuracy, image by image ============ -->
-<section class="slide s-wins" data-part="6" data-title="دقت مقیاس در هر تصویر">
+<section class="slide s-wins" data-autostep data-part="6" data-title="دقت مقیاس در هر تصویر">
   <header class="slide-head"><h2>دقت مقیاس در هر تصویر</h2></header>
   <div class="slide-body">
     <div class="wins">
@@ -1178,64 +1178,150 @@
 - $\rho=\mathrm{median}(\hat D)/\mathrm{median}(D)$؛ مقدار ایده‌آل ۱</aside>
 </section>
 
-<!-- ============ 34 · encoder size and model type ============ -->
-<section class="slide s-encoder" data-part="6" data-title="اثر اندازه انکودر و نوع مدل">
-  <header class="slide-head"><h2>اثر اندازه انکودر و نوع مدل</h2></header>
+<!-- ============ 34 · encoder size and model type: K helps absolute models, not relative ones ============ -->
+<!-- bars: AbsRel reduction of the proposed model vs its control (%), same scale in both panels; data = backup 2 / thesis tab:md_encoder_protocol -->
+<section class="slide s-encoder" data-autostep data-part="6" data-title="اثر اندازه انکودر و نوع مدل">
+  <header class="slide-head"><h2>اثر اندازه انکودر و نوع مدل</h2><div class="sub">اثر افزودن ماتریس کالیبراسیون دوربین، در دو اندازه انکودر و دو نوع مدل</div></header>
   <div class="slide-body">
-    <div class="cols c64 top">
-      <div>
-        <h4 class="h4">مدل‌های مطلق، ارزیابی بدون تراز</h4>
-        <table class="tbl compact heat">
-          <thead><tr><th class="name">مجموعه آزمون</th><th class="ltr-cell">ViT-S</th><th class="ltr-cell">ViT-L</th></tr></thead>
-          <tbody class="ltr-nums">
-            <tr><td class="name ltr-cell">NYUv2</td><td class="n" data-heat="-20.1">−20.1 *</td><td class="n" data-heat="-34.4">−34.4 *</td></tr>
-            <tr><td class="name ltr-cell">Cityscapes</td><td class="n" data-heat="-19.0">−19.0 *</td><td class="n" data-heat="-19.8">−19.8 *</td></tr>
-            <tr><td class="name ltr-cell">KITTI</td><td class="n" data-heat="-10.7">−10.7 *</td><td class="n" data-heat="-10.9">−10.9 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Kinect v1</td><td class="n" data-heat="-38.9">−38.9 *</td><td class="n" data-heat="-46.2">−46.2 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Kinect v2</td><td class="n" data-heat="-23.2">−23.2 *</td><td class="n" data-heat="-50.3">−50.3 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · RealSense</td><td class="n" data-heat="-1.0">−1.0</td><td class="n" data-heat="-26.2">−26.2 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Xtion</td><td class="n" data-heat="-13.5">−13.5 *</td><td class="n" data-heat="-18.6">−18.6 *</td></tr>
-            <tr><td class="name ltr-cell">DIODE</td><td class="n" data-heat="-21.3">−21.3 *</td><td class="n" data-heat="-14.6">−14.6</td></tr>
-          </tbody>
-        </table>
-        <p class="cap">تغییر AbsRel نسبت به مدل کنترل، برحسب درصد</p>
+    <div class="enc-grid">
+      <div class="enc-panel">
+        <div class="enc-h"><b class="ltr">ViT-S</b><span>انکودر کوچک</span></div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
+         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-proposed)","hero":true,"values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
+                   {"color":"var(--c-ideal)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]}]}
+        </script></div>
       </div>
-      <div class="stack">
-        <div class="panel navy frag rise" data-f="1"><p class="phrase msg">خطای کمتر در هر هشت مجموعه آزمون، با هر دو اندازه انکودر</p></div>
-        <div class="panel frag rise" data-f="2"><h3>مدل‌های نسبی، ارزیابی پس از تراز</h3><p class="phrase">دقت نسبی حفظ می‌شود</p><p class="phrase s">با ViT-L: حداکثر اختلاف ۰٫۰۰۰۶ AbsRel</p></div>
+      <div class="enc-panel">
+        <div class="enc-h"><b class="ltr">ViT-L</b><span>انکودر بزرگ</span></div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
+         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]},
+                   {"color":"var(--c-ideal)","f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
+        </script></div>
       </div>
     </div>
+    <div class="enc-foot">
+      <div class="enc-msg abs"><i class="sw proposed"></i><div><h5>مدل‌های مطلق، ارزیابی بدون تراز</h5><p>خطای کمتر در هر ۸ مجموعه، تا ۵۰٪</p></div></div>
+      <div class="enc-msg rel frag rise" data-f="1"><i class="sw ideal"></i><div><h5>مدل‌های نسبی، ارزیابی پس از تراز</h5><p>تغییر حداکثر ۳٪، بدون برتری پایدار</p></div></div>
+      <div class="enc-sig">* معنادار در آزمون ویلکاکسون زوجی، <span class="ltr">p &lt; 0.01</span></div>
+    </div>
   </div>
-  <aside class="notes" data-key="s34">آموزش چندمجموعه‌ای (multi-domain training) در چهار پیکربندی تکرار شد. دو اندازه انکودر از نظر عمق متفاوت‌اند: ViT-S (Vision Transformer Small) دارای ۱۲ بلوک ترنسفورمر (transformer block) با بعد ۳۸۴ و ۶ سر توجه (attention head) است و ViT-L (Vision Transformer Large) دارای ۲۴ بلوک با بعد ۱۰۲۴ و ۱۶ سر است. پیکربندی‌ها شامل انکودرهای ViT-S و ViT-L است که هرکدام یک‌بار به‌صورت مدل مطلق و یک‌بار به‌صورت مدل نسبی، و همواره در قالب زوج مدل پیشنهادی و مدل کنترل، به‌کار رفتند. در مدل‌های مطلق، مدل پیشنهادی در هر هشت مجموعه آزمون و با هر دو اندازه انکودر AbsRel (Absolute Relative Error) کمتری از مدل کنترل دارد؛ این اختلاف در هفت مجموعه از هشت مجموعه از نظر آماری معنادار است و کاهش خطا برای ViT-S بین ۱۱ تا ۳۹ درصد و برای ViT-L بین ۱۱ تا ۵۰ درصد است. بنابراین، سودمندی ماتریس کالیبراسیون دوربین (camera calibration matrix) به یک اندازه انکودر محدود نیست. در مدل‌های نسبی با ViT-L نیز مدل پیشنهادی در هر هشت مجموعه مقدار کمتری دارد و اختلاف حداکثر ۰٫۰۰۰۶ AbsRel است. این نتیجه دقیقاً با نقش K سازگار است، زیرا تراز تصویر‌به‌تصویر مقیاس مطلق را حذف می‌کند و فرضیه سوم را تأیید می‌کند: بهبود عمق مطلق (absolute depth) هم‌زمان با حفظ دقت نسبی به‌دست می‌آید. زمان اجرای مدل (inference) نیز به اندازه انکودر بستگی دارد و مدل روی ویدیو هم کار می‌کند: هر فریم مستقل پردازش می‌شود و چون ماتریس کالیبراسیون دوربین برای کل ویدیو ثابت است، فقط یک‌بار به توکن دوربین تبدیل می‌شود. اعداد زیر روی یک RTX 4090، با اندازه دسته ۱ و دقت ترکیبی FP16 (mixed precision) اندازه‌گیری شده‌اند؛ برای هر اندازه دو ورودی آزموده شد: فریم KITTI به اندازه ۱۲۴۲ در ۳۷۵ که ورودی شبکه آن ۵۱۸ در ۱۷۲۲ می‌شود، و فریم NYUv2 به اندازه ۶۴۰ در ۴۸۰ که ورودی شبکه آن ۵۱۸ در ۶۸۶ می‌شود. فقط شبکه: ViT-S حدود ۱۰٫۳ میلی‌ثانیه، یعنی ۹۷ فریم بر ثانیه (frames per second، FPS)، روی KITTI و ۶٫۳ میلی‌ثانیه، یعنی ۱۵۸ فریم بر ثانیه، روی NYUv2؛ ViT-L حدود ۵۷٫۵ میلی‌ثانیه، یعنی ۱۷ فریم بر ثانیه، روی KITTI و ۲۶٫۸ میلی‌ثانیه، یعنی ۳۷ فریم بر ثانیه، روی NYUv2. با احتساب پیش‌پردازش و پس‌پردازش تصویر، ViT-S به ۸۲ و ۱۳۵ فریم بر ثانیه و ViT-L به ۱۷ و ۳۶ فریم بر ثانیه می‌رسد. برای ViT-B، که در این پایان‌نامه آموزش ندیده است، فقط زمان معماری اندازه‌گیری شد: ۴۴ و ۸۰ فریم بر ثانیه؛ برای ViT-G نیز ۶ و ۱۳٫۶ فریم بر ثانیه. در FP32 سرعت‌ها پایین‌تر است: روی KITTI، ViT-S حدود ۳۰ و ViT-L حدود ۵ فریم بر ثانیه. سرعت به مقدار وزن‌ها وابسته نیست و تصویر ورودی ساختگی بود؛ خواندن فریم از دیسک و نمایش در این اعداد لحاظ نشده است. برای مقایسه، دوربین KITTI با ۱۰ هرتز و ویدیوهای معمول با ۳۰ فریم بر ثانیه کار می‌کنند: ViT-S در هر دو اندازه و ViT-L روی ورودی ۶۴۰ در ۴۸۰ از ۳۰ فریم بر ثانیه بالاترند، و ViT-L روی فریم KITTI حدود ۱٫۷ برابر نرخ دوربین است؛ پس اجرای بی‌درنگ (real-time) در هر دو اندازه ممکن است. تعداد پارامترهای مدل ما با انکودر دوربین برای ViT-S برابر ۳۲٫۰ میلیون، برای ViT-B برابر ۱۲۶٫۱ میلیون، برای ViT-L برابر ۳۸۶٫۲ میلیون و برای ViT-G برابر ۱٫۳۷ میلیارد است؛ این مقدار از پارامترهای مدل پایه، یعنی ۲۴٫۸، ۹۷٫۵، ۳۳۵٫۳ میلیون و ۱٫۳ میلیارد، بیشتر است، زیرا انکودر دوربین به آن اضافه شده است.</aside><aside class="notes-sum">- ۴ پیکربندی: ViT-S/L × مطلق/نسبی، همیشه زوج پیشنهادی/کنترل
-- مطلق: پیشنهادی در هر ۸ مجموعه و هر دو انکودر بهتر
-- معناداری: ۷ از ۸ مجموعه
-- کاهش ViT-S: ۱۱ تا ۳۹٪؛ ViT-L: ۱۱ تا ۵۰٪
-- نسبی ViT-L: اختلاف حداکثر ۰٫۰۰۰۶ AbsRel
+  <aside class="notes" data-key="s34">این اسلاید اثر افزودن ماتریس کالیبراسیون دوربین (camera calibration matrix) را در چهار پیکربندی آموزش چندمجموعه‌ای (multi-domain training) نشان می‌دهد: دو اندازه انکودر و دو نوع مدل، مطلق و نسبی. دو اندازه انکودر از نظر عمق متفاوت‌اند: ViT-S (Vision Transformer Small) دارای ۱۲ بلوک ترنسفورمر (transformer block) با بعد ۳۸۴ و ۶ سر توجه (attention head) است و ViT-L (Vision Transformer Large) دارای ۲۴ بلوک با بعد ۱۰۲۴ و ۱۶ سر است. در هر پیکربندی یک زوج مدل پیشنهادی و مدل کنترل با داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی یکسان آموزش دید و تنها تفاوت آن‌ها دسترسی به ماتریس کالیبراسیون بود. هر میله نشان می‌دهد AbsRel (Absolute Relative Error) مدل پیشنهادی چند درصد کمتر از مدل کنترل است؛ میله رو به راست یعنی خطای کمتر و میله رو به چپ یعنی خطای بیشتر. هر دو نمودار مقیاس یکسانی دارند و ستاره، تفاوت معنادار در آزمون زوجی ویلکاکسون (Wilcoxon signed-rank test) در سطح ۰٫۰۱ را نشان می‌دهد. ابتدا میله‌های سرمه‌ای، یعنی مدل‌های مطلق، دیده می‌شوند که بدون تراز و برحسب متر ارزیابی شدند. با هر دو انکودر، مدل پیشنهادی در هر هشت مجموعه آزمون خطای کمتری دارد و تفاوت در هفت مجموعه از هشت مجموعه معنادار است. کاهش خطا برای ViT-L بین ۱۱ و ۵۰ درصد است؛ برای ViT-S در هفت مجموعه معنادار بین ۱۱ و ۳۹ درصد است و فقط در RealSense حدود ۱ درصد و غیرمعنادار است. بزرگ‌ترین کاهش در هر دو انکودر روی حسگرهای Kinect از SUN RGB-D است که هیچ تصویری از آن‌ها در آموزش به‌کار نرفته است. بنابراین سودمندی ماتریس کالیبراسیون به یک اندازه انکودر محدود نیست. سپس میله‌های خاکستری، یعنی مدل‌های نسبی، ظاهر می‌شوند که پس از تراز مقیاس و جابجایی (scale and shift alignment) به‌ازای هر تصویر ارزیابی شدند. روی همان مقیاس این میله‌ها تقریباً دیده نمی‌شوند و همگی درون نوار ±۳ درصد قرار دارند. با ViT-L مدل پیشنهادی در هر هشت مجموعه اندکی بهتر است، اما اختلاف حداکثر ۰٫۰۰۰۶ AbsRel، یعنی ۱٫۴ درصد، است. با ViT-S تفاوت‌ها تا حدود ۳ درصد می‌رسند، اما جهت ثابتی ندارند: مدل پیشنهادی در سه مجموعه به‌طور معنادار بهتر و در دو مجموعه، Kinect v2 و RealSense، به‌طور معنادار بدتر است. همچنین اگر ماتریس کالیبراسیون در زمان آزمون از مدل نسبی حذف شود، AbsRel آن حداکثر ۰٫۰۰۰۵ برای ViT-S و ۰٫۰۰۰۸ برای ViT-L تغییر می‌کند؛ پس مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند. این الگو با نقش K سازگار است: ماتریس کالیبراسیون مقیاس مطلق صحنه را در اختیار مدل می‌گذارد و تراز تصویر‌به‌تصویر در ارزیابی نسبی دقیقاً همین مقیاس را حذف می‌کند. در زوج اصلی ViT-L این نتیجه فرضیه سوم را نیز تأیید می‌کند: بهبود عمق مطلق (absolute depth) بدون ازدست‌رفتن دقت نسبی به‌دست می‌آید. جدول کامل، با مقدار AbsRel هر دو مدل، در اسلاید پشتیبان ۲ آمده است. زمان اجرای مدل (inference) نیز به اندازه انکودر بستگی دارد و مدل روی ویدیو هم کار می‌کند: هر فریم مستقل پردازش می‌شود و چون ماتریس کالیبراسیون دوربین برای کل ویدیو ثابت است، فقط یک‌بار به توکن دوربین تبدیل می‌شود. اعداد زیر روی یک RTX 4090، با اندازه دسته ۱ و دقت ترکیبی FP16 (mixed precision) اندازه‌گیری شده‌اند؛ برای هر اندازه دو ورودی آزموده شد: فریم KITTI به اندازه ۱۲۴۲ در ۳۷۵ که ورودی شبکه آن ۵۱۸ در ۱۷۲۲ می‌شود، و فریم NYUv2 به اندازه ۶۴۰ در ۴۸۰ که ورودی شبکه آن ۵۱۸ در ۶۸۶ می‌شود. فقط شبکه: ViT-S حدود ۱۰٫۳ میلی‌ثانیه، یعنی ۹۷ فریم بر ثانیه (frames per second، FPS)، روی KITTI و ۶٫۳ میلی‌ثانیه، یعنی ۱۵۸ فریم بر ثانیه، روی NYUv2؛ ViT-L حدود ۵۷٫۵ میلی‌ثانیه، یعنی ۱۷ فریم بر ثانیه، روی KITTI و ۲۶٫۸ میلی‌ثانیه، یعنی ۳۷ فریم بر ثانیه، روی NYUv2. با احتساب پیش‌پردازش و پس‌پردازش تصویر، ViT-S به ۸۲ و ۱۳۵ فریم بر ثانیه و ViT-L به ۱۷ و ۳۶ فریم بر ثانیه می‌رسد. برای ViT-B، که در این پایان‌نامه آموزش ندیده است، فقط زمان معماری اندازه‌گیری شد: ۴۴ و ۸۰ فریم بر ثانیه؛ برای ViT-G نیز ۶ و ۱۳٫۶ فریم بر ثانیه. در FP32 سرعت‌ها پایین‌تر است: روی KITTI، ViT-S حدود ۳۰ و ViT-L حدود ۵ فریم بر ثانیه. سرعت به مقدار وزن‌ها وابسته نیست و تصویر ورودی ساختگی بود؛ خواندن فریم از دیسک و نمایش در این اعداد لحاظ نشده است. برای مقایسه، دوربین KITTI با ۱۰ هرتز و ویدیوهای معمول با ۳۰ فریم بر ثانیه کار می‌کنند: ViT-S روی هر دو ورودی و ViT-L روی ورودی ۶۴۰ در ۴۸۰ از ۳۰ فریم بر ثانیه بالاترند، و ViT-L روی فریم KITTI حدود ۱٫۷ برابر نرخ دوربین است؛ پس اجرای بی‌درنگ (real-time) در هر دو اندازه ممکن است. تعداد پارامترهای مدل ما با انکودر دوربین برای ViT-S برابر ۳۲٫۰ میلیون، برای ViT-B برابر ۱۲۶٫۱ میلیون، برای ViT-L برابر ۳۸۶٫۲ میلیون و برای ViT-G برابر ۱٫۳۷ میلیارد است؛ این مقدار از پارامترهای مدل پایه، یعنی ۲۴٫۸، ۹۷٫۵، ۳۳۵٫۳ میلیون و ۱٫۳ میلیارد، بیشتر است، زیرا انکودر دوربین به آن اضافه شده است.</aside><aside class="notes-sum">- ۴ پیکربندی: ViT-S/L × مطلق/نسبی، همیشه زوج پیشنهادی/کنترل
+- میله = کاهش AbsRel نسبت به کنترل (٪)؛ هر دو نمودار هم‌مقیاس؛ ستاره = ویلکاکسون ۰٫۰۱
+1. مطلق (سرمه‌ای): بهتر در هر ۸ مجموعه با هر دو انکودر؛ معنادار در ۷ از ۸
+- کاهش ViT-L: ۱۱ تا ۵۰٪؛ ViT-S: ۱۱ تا ۳۹٪ (RealSense فقط ۱٪)
+- بیشترین کاهش: Kinect، دیده‌نشده در آموزش
+2. نسبی (خاکستری): همه درون ±۳٪
+- ViT-L: همه اندکی بهتر، حداکثر ۱٫۴٪ (۰٫۰۰۰۶ AbsRel)
+- ViT-S: تا ۳٪ در دو جهت؛ ۳ بهتر و ۲ بدتر (معنادار)
+- حذف K از مدل نسبی: تغییر حداکثر ۰٫۰۰۰۸
+- جدول کامل: پشتیبان ۲
 - اجرا (RTX 4090، FP16، فقط شبکه): ViT-S ≈ ۹۷ و ViT-L ≈ ۱۷ فریم بر ثانیه روی فریم KITTI؛ ۱۵۸ و ۳۷ روی ۶۴۰ در ۴۸۰
 - با پیش‌ و پس‌پردازش: ViT-S ۸۲ و ۱۳۵؛ ViT-L ۱۷ و ۳۶ فریم بر ثانیه؛ روی ویدیو، فریم‌به‌فریم
 - پارامترها با انکودر دوربین: ViT-S ۳۲٫۰ و ViT-L ۳۸۶٫۲ میلیون
-! تراز تصویر‌به‌تصویر مقیاس مطلق را حذف می‌کند</aside>
+! K مقیاس مطلق را می‌دهد؛ تراز هر تصویر همان را حذف می‌کند</aside>
 </section>
 
 <!-- ============ 35 · answers to the research questions ============ -->
-<section class="slide s-answers" data-part="7" data-title="پاسخ به سوالات تحقیق">
+<section class="slide s-answers" data-autostep data-part="7" data-title="پاسخ به سوالات تحقیق">
   <header class="slide-head"><h2>پاسخ به سوالات تحقیق</h2></header>
   <div class="slide-body">
-    <div class="answers">
-      <div class="ans frag rise" data-f="1"><span class="ans-h">فرضیه اول</span><div class="ans-b"><h4>حساسیت مدل پایه به مجموعه‌داده و دوربین</h4><p>تفاوت معنادار میان مجموعه‌داده‌ها؛ نسخه مطلق منتشرشده در NYUv2: AbsRel برابر ۰٫۲۰۷</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
-      <div class="ans frag rise" data-f="2"><span class="ans-h">فرضیه دوم</span><div class="ans-b"><h4>خطای مطلق کمتر با ماتریس کالیبراسیون</h4><p>خطای کمتر از مدل کنترل در هر هشت مجموعه آزمون؛ شیب ۰٫۹۷</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
-      <div class="ans frag rise" data-f="3"><span class="ans-h">فرضیه سوم</span><div class="ans-b"><h4>دقت نسبی حفظ می‌شود</h4><p>با ViT-L، خطا در هیچ‌یک از هشت مجموعه آزمون بیشتر از مدل کنترل نیست</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
+    <div class="rq3">
+      <!-- question 1: base model across datasets -->
+      <article class="rq frag rise" data-f="1">
+        <p class="rq-q"><span class="rq-n">سوال اول:</span>آیا خطای مدل پایه Depth Anything V2 با تغییر دیتاست و شرایط تصویربرداری به‌طور معنادار تغییر می‌کند و آیا مقیاس مطلق آن به دامنه‌ای غیر از دامنه آموزش منتقل می‌شود؟</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">بله</span>خطای مدل پایه در هر سه مقایسه میان دیتاست‌ها تفاوت معنادار دارد (p &lt; 0.05).</p>
+          <div class="rq-bars ltr">
+            <span>VKITTI · DrivingStereo</span><div><i style="width:8.7%"></i></div><b>0.039</b>
+            <span>NYUv2 · DrivingStereo</span><div><i style="width:22.4%"></i></div><b>0.101</b>
+            <span>NYUv2 · DIODE</span><div><i style="width:100%"></i></div><b>0.450</b>
+          </div>
+          <p class="rq-cap">اختلاف میانگین SiLog میان دو دیتاست</p>
+        </div>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v no">خیر</span>مقیاس مطلق منتقل نمی‌شود: نسخه مطلق منتشرشده، که با Hypersim آموزش دیده است، در NYUv2 خطای زیادی دارد.</p>
+          <p class="rq-big"><b class="ltr">0.207</b><span>AbsRel در NYUv2؛ یعنی عمق هر پیکسل به‌طور میانگین حدود ۲۱ درصد خطا دارد</span></p>
+        </div>
+      </article>
+      <!-- question 2: relative evaluation hides the camera's contribution -->
+      <article class="rq frag rise" data-f="2">
+        <p class="rq-q"><span class="rq-n">سوال دوم:</span>آیا ارزیابی نسبی، که مقیاس و جابه‌جایی را برای هر تصویر جداگانه تراز می‌کند، تفاوت مدل‌ها در مقیاس فیزیکی عمق و سهم اطلاعات هندسی دوربین را پنهان می‌کند؟</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">بله</span>با ViT-L، خطای مطلق مدل پیشنهادی در هر هشت مجموعه آزمون ۱۱ تا ۵۰ درصد کمتر از مدل کنترل است؛ در ارزیابی نسبی این فاصله حداکثر ۱٫۴ درصد است.</p>
+          <div class="ltr">
+          <svg class="dia rq-dots" viewBox="0 0 540 330" role="img">
+            <g class="axisg"><line x1="54.5" y1="34" x2="54.5" y2="250"/><line x1="123.6" y1="34" x2="123.6" y2="250"/><line x1="192.7" y1="34" x2="192.7" y2="250"/><line x1="261.8" y1="34" x2="261.8" y2="250"/><line x1="330.9" y1="34" x2="330.9" y2="250"/><line x1="400" y1="34" x2="400" y2="250"/></g>
+            <line x1="54.5" y1="30" x2="54.5" y2="252" stroke="#0b1f4b" stroke-width="2.5"/>
+            <text x="532" y="28" class="grp">ViT-L</text>
+            <text x="532" y="68" class="d-lab small" direction="rtl" text-anchor="start">مطلق</text>
+            <text x="532" y="110" class="d-lab small" direction="rtl" text-anchor="start">نسبی</text>
+            <text x="532" y="152" class="grp">ViT-S</text>
+            <text x="532" y="192" class="d-lab small" direction="rtl" text-anchor="start">مطلق</text>
+            <text x="532" y="234" class="d-lab small" direction="rtl" text-anchor="start">نسبی</text>
+            <g class="dots abs" transform="translate(0,61)"><circle cx="292.2" r="9"/><circle cx="191.3" r="9"/><circle cx="129.9" r="9"/><circle cx="373.7" r="9"/><circle cx="402.1" r="9"/><circle cx="235.6" r="9"/><circle cx="183.1" r="9"/><circle cx="155.4" r="9"/></g>
+            <g class="dots rel" transform="translate(0,103)"><circle cx="55.9" r="9"/><circle cx="58.6" r="9"/><circle cx="55.9" r="9"/><circle cx="61.4" r="9"/><circle cx="64.2" r="9"/><circle cx="62.8" r="9"/><circle cx="57.3" r="9"/><circle cx="55.9" r="9"/></g>
+            <g class="dots abs" transform="translate(0,185)"><circle cx="193.4" r="9"/><circle cx="185.8" r="9"/><circle cx="128.4" r="9"/><circle cx="323.3" r="9"/><circle cx="214.8" r="9"/><circle cx="61.4" r="9"/><circle cx="147.8" r="9"/><circle cx="201.7" r="9"/></g>
+            <g class="dots rel" transform="translate(0,227)"><circle cx="69.7" r="9"/><circle cx="57.3" r="9"/><circle cx="76.6" r="9"/><circle cx="59.3" r="9"/><circle cx="39.3" r="9"/><circle cx="35.9" r="9"/><circle cx="54.5" r="9"/><circle cx="58.0" r="9"/></g>
+            <g class="tick"><text x="54.5" y="280">0</text><text x="123.6" y="280">10</text><text x="192.7" y="280">20</text><text x="261.8" y="280">30</text><text x="330.9" y="280">40</text><text x="400" y="280">50%</text></g>
+            <text x="227" y="318" text-anchor="middle" class="d-lab small" direction="rtl">کاهش AbsRel نسبت به مدل کنترل</text>
+          </svg>
+          </div>
+          <p class="rq-cap">هر نقطه یک مجموعه آزمون است؛ در ViT-S نسبی، تفاوت‌ها در هر دو جهت‌اند.</p>
+        </div>
+      </article>
+      <!-- question 3: explicit K lowers absolute error and makes scale follow focal length -->
+      <article class="rq frag rise" data-f="3">
+        <p class="rq-q"><span class="rq-n">سوال سوم:</span>آیا ورودی صریح ماتریس کالیبراسیون دوربین، در ارزیابی مطلق، خطای مدل را نسبت به مدل کنترل هم‌داده کاهش می‌دهد و مقیاس خروجی را در برابر تغییر فاصله کانونی پایدارتر می‌کند؟</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">بله</span>در مطالعه کنترل‌شده NYUv2، خطای مطلق ۲۲ درصد کمتر از مدل کنترل هم‌داده است.</p>
+          <div class="rq-bars two ltr">
+            <span class="p">پیشنهادی</span><div><i style="width:78.3%"></i></div><b>0.083</b>
+            <span class="c">کنترل</span><div><i class="c" style="width:100%"></i></div><b>0.107</b>
+          </div>
+        </div>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">بله</span>با ۱٫۶ برابر شدن فاصله کانونی ورودی، عمق خروجی هم تقریباً ۱٫۶ برابر می‌شود.</p>
+          <div class="ltr">
+          <svg class="dia rq-sweep" viewBox="0 -8 540 240" role="img">
+            <g class="axisg"><line x1="85.2" y1="14" x2="85.2" y2="172"/><line x1="207" y1="14" x2="207" y2="172"/><line x1="389.6" y1="14" x2="389.6" y2="172"/><line x1="76" y1="163.2" x2="398" y2="163.2"/><line x1="76" y1="109" x2="398" y2="109"/><line x1="76" y1="27.6" x2="398" y2="27.6"/></g>
+            <line x1="85.2" y1="163.2" x2="389.6" y2="27.6" stroke="#76819a" stroke-width="3" stroke-dasharray="8 7"/>
+            <line x1="85.2" y1="109" x2="389.6" y2="109" stroke="#c9621f" stroke-width="4"/>
+            <polyline points="85.2,160 146.1,136.8 207,109 283,73.6 389.6,27.6" fill="none" stroke="#184f95" stroke-width="4.5"/>
+            <g fill="#184f95"><circle cx="85.2" cy="160" r="7.5"/><circle cx="146.1" cy="136.8" r="7.5"/><circle cx="207" cy="109" r="7.5"/><circle cx="283" cy="73.6" r="7.5"/><circle cx="389.6" cy="27.6" r="7.5"/></g>
+            <text x="404" y="27" class="sl p">0.97</text><text x="536" y="27" class="sn p" direction="rtl">پیشنهادی</text>
+            <text x="404" y="62" class="sl i">1</text><text x="536" y="62" class="sn i" direction="rtl">ایده‌آل</text>
+            <text x="404" y="116" class="sl c">0</text><text x="536" y="116" class="sn c" direction="rtl">کنترل</text>
+            <g class="tick"><text x="85.2" y="196">0.6×</text><text x="207" y="196">1×</text><text x="389.6" y="196">1.6×</text></g>
+            <g class="tick y"><text x="66" y="166">0.6×</text><text x="66" y="116">1×</text><text x="66" y="35">1.6×</text></g>
+            <text x="237" y="228" text-anchor="middle" class="d-lab small" direction="rtl">ضریب فاصله کانونی ورودی</text>
+            <text x="84" y="12" text-anchor="end" class="ytitle" direction="rtl">ضریب عمق خروجی ↑</text>
+          </svg>
+          </div>
+          <p class="rq-cap">نسبت مقیاس هر تصویر به ۱ نزدیک‌تر است: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳ برای مدل کنترل.</p>
+        </div>
+      </article>
     </div>
   </div>
-  <aside class="notes" data-key="s35">پاسخ سه سوال تحقیق به این شرح است. پاسخ سوال نخست مثبت است: خطای مدل پایه بین مجموعه‌داده‌ها تفاوت معناداری دارد و مقیاس مطلق آن خارج از دامنه آموزش منتقل نمی‌شود؛ نسخه منتشرشده مدل پایه در NYUv2 (NYU Depth Dataset V2) به AbsRel (Absolute Relative Error) برابر با ۰٫۲۰۷ می‌رسد. پاسخ سوال دوم نیز مثبت است: در ارزیابی نسبی (relative evaluation)، مدل پیشنهادی و مدل کنترل به هم نزدیک‌اند، اما در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی در هر هشت مجموعه آزمون و با هر دو اندازه انکودر، به‌روشنی بهتر است؛ بنابراین، سهم دوربین باید با ارزیابی مطلق سنجیده شود. پاسخ سوال سوم هم مثبت است: استفاده صریح از K خطای مطلق را در مطالعه کنترل‌شده از ۰٫۱۰۶۵ به ۰٫۰۸۳۴ کاهش می‌دهد و مقیاس خروجی از فاصله کانونی (focal length) با شیب ۰٫۹۷ پیروی می‌کند؛ در نتیجه، هر سه فرضیه تأیید می‌شوند.</aside><aside class="notes-sum">- سوال اول: مثبت؛ NYUv2 پایه منتشرشده AbsRel برابر ۰٫۲۰۷
-- سوال دوم: مثبت؛ نسبی نزدیک، مطلق پیشنهادی بهتر در ۸ مجموعه
-- سوال سوم: مثبت؛ خطا از ۰٫۱۰۶۵ به ۰٫۰۸۳۴
-- شیب مقیاس نسبت به فاصله کانونی: ۰٫۹۷
-- هر سه فرضیه تأیید شدند</aside>
+  <aside class="notes" data-key="s35">در این اسلاید به سه سوال تحقیق پاسخ می‌دهیم. سوال اول دو بخش دارد. بخش نخست می‌پرسد آیا خطای مدل پایه با تغییر دیتاست و شرایط تصویربرداری به‌طور معنادار تغییر می‌کند؛ پاسخ مثبت است. معیار SiLog (Scale-Invariant Logarithmic loss) نسخه منتشرشده مدل پایه در هر سه مقایسه میان دیتاست‌ها تفاوت معنادار دارد و p در همه کمتر از ۰٫۰۵ است: اختلاف میانگین میان VKITTI (Virtual KITTI) و DrivingStereo برابر ۰٫۰۳۹، میان NYUv2 (NYU Depth Dataset V2) و DrivingStereo برابر ۰٫۱۰۱ و میان NYUv2 و DIODE (Dense Indoor and Outdoor DEpth) برابر ۰٫۴۵۰ است. این دیتاست‌ها در نوع صحنه، گستره عمق و حسگر عمق مرجع هم با هم فرق دارند؛ پس این آزمون به‌تنهایی نشان نمی‌دهد که تفاوت فقط از دوربین است و نقش خود دوربین را آزمون‌های حساسیت می‌سنجند. بخش دوم می‌پرسد آیا مقیاس مطلق مدل پایه به دامنه‌ای غیر از دامنه آموزش منتقل می‌شود؛ پاسخ منفی است. نسخه مطلق منتشرشده، که با Hypersim آموزش دیده است، در NYUv2 به AbsRel (Absolute Relative Error) برابر ۰٫۲۰۷ می‌رسد؛ یعنی عمق هر پیکسل به‌طور میانگین حدود ۲۱ درصد خطا دارد. در Cityscapes و دو حسگر Kinect از SUN RGB-D نیز این مقدار بین ۰٫۱۹۶ و ۰٫۲۴۶ است. این پاسخ فرضیه اول را تأیید می‌کند. سوال دوم می‌پرسد آیا ارزیابی نسبی (relative evaluation)، که مقیاس و جابه‌جایی (scale and shift) را برای هر تصویر جداگانه تراز می‌کند، سهم دوربین را پنهان می‌کند؛ پاسخ مثبت است. در نمودار، هر نقطه یک مجموعه آزمون است و محور افقی درصد کاهش AbsRel مدل پیشنهادی نسبت به مدل کنترل را نشان می‌دهد. در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی با هر دو اندازه انکودر در هر هشت مجموعه آزمون خطای کمتری دارد: با ViT-L (Vision Transformer Large) بین ۱۱ تا ۵۰ درصد و با ViT-S (Vision Transformer Small) بین ۱ تا ۳۹ درصد، و برای هر دو اندازه این تفاوت در هفت مجموعه از هشت مجموعه معنادار است. در ارزیابی نسبی، همین مقایسه تقریباً فاصله‌ای نشان نمی‌دهد: با ViT-L حداکثر ۰٫۰۰۰۶ AbsRel، یعنی ۱٫۴ درصد، و با ViT-S تفاوت‌ها تا حدود ۳ درصد و در هر دو جهت است. علت این است که تراز هر تصویر دقیقاً همان مقیاس مطلقی را حذف می‌کند که ماتریس کالیبراسیون دوربین (camera calibration matrix) در اختیار مدل می‌گذارد؛ پس سهم دوربین باید با ارزیابی مطلق سنجیده شود. نزدیک‌بودن دو مدل در ارزیابی نسبی همچنین نشان می‌دهد که بهبود عمق مطلق بدون کاهش دقت نسبی به‌دست آمده است، که با فرضیه سوم سازگار است. سوال سوم هم دو بخش دارد و پاسخ هر دو مثبت است. بخش نخست می‌پرسد آیا ورودی صریح ماتریس کالیبراسیون دوربین خطای مطلق را نسبت به مدل کنترل هم‌داده کاهش می‌دهد. در مطالعه کنترل‌شده NYUv2 با پیکربندی لرزش کانونی (focal jitter)، AbsRel مدل پیشنهادی ۰٫۰۸۳۴ و مدل کنترل ۰٫۱۰۶۵ است، یعنی حدود ۲۲ درصد کاهش؛ پس از آموزش چندمجموعه‌ای (multi-domain training) نیز مدل پیشنهادی در هر هشت مجموعه آزمون و با هر دو اندازه انکودر خطای کمتری دارد. بخش دوم می‌پرسد آیا مقیاس خروجی در برابر تغییر فاصله کانونی (focal length) پایدارتر می‌شود. در آزمون پیمایش فاصله کانونی (focal-length sweep)، تصویر ثابت می‌ماند و فقط فاصله کانونی ورودی در ضرایب ۰٫۶ تا ۱٫۶ ضرب می‌شود؛ طبق مدل دوربین روزنه‌ای (pinhole camera model)، تصویری یکسان با فاصله کانونی ۱٫۶ برابر فقط با صحنه‌ای ۱٫۶ برابر دورتر سازگار است. شیب عمق خروجی مدل پیشنهادی نسبت به فاصله کانونی، در مقیاس لگاریتمی، ۰٫۹۷ با انحراف معیار ۰٫۰۳ روی ۲۰ تصویر است و به مقدار ایده‌آل ۱ بسیار نزدیک است؛ شیب مدل کنترل صفر است، چون این مدل اصلاً ماتریس کالیبراسیون دوربین را دریافت نمی‌کند و این صفر از ساختار آن می‌آید، نه از اندازه‌گیری. افزون بر این، نسبت مقیاس هر تصویر در مدل پیشنهادی به ۱ نزدیک‌تر و کم‌پراکنده‌تر است: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳ و دامنه میان‌چارکی (interquartile range) ۰٫۰۹۴ در برابر ۰٫۱۲۰ برای مدل کنترل. این پاسخ فرضیه دوم را تأیید می‌کند؛ بنابراین هر سه فرضیه تأیید می‌شوند.</aside><aside class="notes-sum">1. سوال اول، بخش نخست: بله؛ تفاوت SiLog در هر ۳ مقایسه معنادار (p &lt; 0.05)
+- اختلاف میانگین: ۰٫۰۳۹، ۰٫۱۰۱، ۰٫۴۵۰
+2. سوال اول، بخش دوم: خیر؛ نسخه مطلق منتشرشده در NYUv2 AbsRel برابر ۰٫۲۰۷ (حدود ۲۱٪ خطا)
+3. سوال دوم: بله؛ مطلق در ۸ از ۸ بهتر، نسبی تقریباً برابر
+- ViT-L: مطلق ۱۱ تا ۵۰٪، نسبی حداکثر ۱٫۴٪
+- ViT-S: مطلق ۱ تا ۳۹٪، نسبی تا ۳٪ در دو جهت
+4. سوال سوم، بخش نخست: بله؛ AbsRel ۰٫۰۸۳۴ در برابر ۰٫۱۰۶۵ (۲۲٪ کمتر)
+5. سوال سوم، بخش دوم: بله؛ شیب پیمایش فاصله کانونی ۰٫۹۷ (ایده‌آل ۱، کنترل ۰)
+- نسبت مقیاس: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳
+! تفاوت دیتاست‌ها فقط از دوربین نیست؛ نقش دوربین را آزمون حساسیت می‌سنجد</aside>
 </section>
 
 <!-- ============ 36 · contributions ============ -->
-<section class="slide s-contrib" data-part="7" data-title="نوآوری‌ها و دستاوردها">
+<section class="slide s-contrib" data-autostep data-part="7" data-title="نوآوری‌ها و دستاوردها">
   <header class="slide-head"><h2>نوآوری‌ها و دستاوردها</h2></header>
   <div class="slide-body">
     <div class="contrib">
@@ -1252,25 +1338,59 @@
 </section>
 
 <!-- ============ 37 · future directions ============ -->
-<section class="slide s-future" data-part="7" data-title="مسیرهای آینده">
+<section class="slide s-future" data-autostep data-part="7" data-title="مسیرهای آینده">
   <header class="slide-head"><h2>مسیرهای آینده</h2></header>
   <div class="slide-body">
     <ul class="pts future">
       <li class="frag rise" data-f="1">پایداری نسبت به ماتریس کالیبراسیون نویزی یا برآوردشده</li>
       <li class="frag rise" data-f="2">یادگیری هم‌زمان عمق و پارامترهای دوربین</li>
-      <li class="frag rise" data-f="3">آموزش چندمجموعه‌ای بزرگ‌تر با داده بیشتر و زمان‌بندی طولانی‌تر</li>
-      <li class="frag rise" data-f="4">گسترش به چندنما و ویدیو</li>
-      <li class="frag rise" data-f="5">انکودرها و دیکودرهای دیگر</li>
+      <li class="frag rise" data-f="3">استفاده از ماتریس کالیبراسیون برای ایجاد پرتوها و پیش‌بینی عمق</li>
+      <li class="frag rise" data-f="4">آموزش چندمجموعه‌ای بزرگ‌تر با داده بیشتر و زمان‌بندی طولانی‌تر</li>
+      <li class="frag rise" data-f="5">گسترش به چندنما و ویدیو</li>
+      <li class="frag rise" data-f="6">انکودرها و دیکودرهای دیگر</li>
     </ul>
   </div>
-  <aside class="notes" data-key="s37">پیشنهاد می‌شود رفتار مدل در شرایط نویزی بودن یا صرفاً برآورد شدن ماتریس کالیبراسیون (calibration matrix) بررسی شود. مسیر بعدی، یادگیری مشترک عمق و پارامترهای دوربین است؛ طراحی کنترل‌شده ما امکان مقایسه ماتریس برآوردشده با ماتریس مرجع را فراهم می‌کند. پیشنهاد می‌شود آموزش چندمجموعه‌ای (multi-domain training) گسترش یابد؛ تمام آموزش‌های این پایان‌نامه روی یک RTX 4090، با انکودر فریز و یک اجرا برای هر پیکربندی انجام شده است، و استفاده از داده بیشتر، آموزش طولانی‌تر و چند بذر تصادفی (random seed) ادامه مستقیم این مسیر خواهد بود. پیشنهاد می‌شود روش به داده‌های چندنمایی (multi-view) و ویدیو تعمیم داده شود؛ اجرای فریم‌به‌فریم روی ویدیو هم‌اکنون ممکن است و بی‌درنگ است، اما تعمیم یعنی استفاده از هم‌بستگی زمانی میان فریم‌ها. همچنین، بررسی انکودرها و دیکودرهای دیگر به‌عنوان مسیر آینده پیشنهاد می‌شود.</aside><aside class="notes-sum">- بررسی K نویزی یا صرفاً برآوردشده
+  <aside class="notes" data-key="s37">پیشنهاد می‌شود رفتار مدل در شرایط نویزی بودن یا صرفاً برآورد شدن ماتریس کالیبراسیون (calibration matrix) بررسی شود. مسیر بعدی، یادگیری مشترک عمق و پارامترهای دوربین است؛ طراحی کنترل‌شده ما امکان مقایسه ماتریس برآوردشده با ماتریس مرجع را فراهم می‌کند. مسیر دیگر، استفاده از ماتریس کالیبراسیون برای ایجاد پرتوهای دوربین (camera rays) است، به‌طوری‌که مدل عمق را در امتداد این پرتوها پیش‌بینی کند. پیشنهاد می‌شود آموزش چندمجموعه‌ای (multi-domain training) گسترش یابد؛ تمام آموزش‌های این پایان‌نامه روی یک RTX 4090، با انکودر فریز و یک اجرا برای هر پیکربندی انجام شده است، و استفاده از داده بیشتر، آموزش طولانی‌تر و چند بذر تصادفی (random seed) ادامه مستقیم این مسیر خواهد بود. پیشنهاد می‌شود روش به داده‌های چندنمایی (multi-view) و ویدیو تعمیم داده شود؛ اجرای فریم‌به‌فریم روی ویدیو هم‌اکنون ممکن است و بی‌درنگ است، اما تعمیم یعنی استفاده از هم‌بستگی زمانی میان فریم‌ها. همچنین، بررسی انکودرها و دیکودرهای دیگر به‌عنوان مسیر آینده پیشنهاد می‌شود.</aside><aside class="notes-sum">- بررسی K نویزی یا صرفاً برآوردشده
 - یادگیری مشترک عمق و پارامترهای دوربین
+- ساخت پرتوها از ماتریس کالیبراسیون و پیش‌بینی عمق
 - آموزش چندمجموعه‌ای بزرگ‌تر: داده بیشتر، زمان طولانی‌تر، چند بذر
 - همه آموزش‌ها: یک RTX 4090، انکودر فریز، یک اجرا برای هر پیکربندی
 - گسترش به چندنما، ویدیو، انکودرها و دیکودرهای دیگر</aside>
 </section>
 
-<!-- ============ 38 · thanks ============ -->
+<!-- ============ 38 · references (only the works named on the main slides) ============ -->
+<section class="slide s-refs" data-part="7" data-title="منابع">
+  <header class="slide-head"><h2>منابع</h2><div class="sub">مهم‌ترین آثاری که این کار بر آن‌ها بنا شده است؛ فهرست کامل در اسلایدهای پشتیبان</div></header>
+  <div class="slide-body">
+    <div class="refs key">
+      <div class="rcol">
+        <h4>روش‌ها و مدل پایه</h4>
+        <ul>
+          <li><b>Eigen et al., 2014.</b> Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network. <i>NeurIPS</i></li>
+          <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
+          <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
+          <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
+          <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
+        </ul>
+      </div>
+      <div class="rcol">
+        <h4>روش‌های دوربین‌محور و داده</h4>
+        <ul>
+          <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
+          <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
+          <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
+          <li><b>Silberman et al., 2012.</b> Indoor Segmentation and Support Inference from RGBD Images (NYUv2). <i>ECCV</i></li>
+          <li><b>Geiger et al., 2012.</b> Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>CVPR</i></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <aside class="notes" data-key="sref">این اسلاید فقط مهم‌ترین منابع را نشان می‌دهد. ستون نخست روش‌ها و مدل پایه است: کار Eigen و همکاران که نخستین شبکه عمیق برای تخمین عمق تک‌تصویری بود، MiDaS و DPT (Dense Prediction Transformer) که آموزش روی مجموعه‌داده‌های ترکیبی و دیکودر این کار را آوردند، و Depth Anything V2 همراه انکودر DINOv2 که مدل پایه ماست. ستون دوم روش‌های دوربین‌محور پیشین، یعنی CAM-Convs، Metric3D و UniDepth، و دو مجموعه‌داده اصلی NYUv2 و KITTI را دربر دارد. فهرست کامل همه آثاری که روی اسلایدها نام برده شدند، در چهار گروه، در چهار اسلاید پشتیبان پایانی آمده است و فهرست کامل منابع در پایان‌نامه است. این اسلاید را کوتاه نشان می‌دهیم و به اسلاید سپاسگزاری می‌رویم.</aside><aside class="notes-sum">- فقط مهم‌ترین منابع: روش‌ها و مدل پایه، روش‌های دوربین‌محور و داده
+- فهرست کامل در چهار گروه: چهار اسلاید پشتیبان پایانی
+! کوتاه نشان بده و برو به سپاسگزاری</aside>
+</section>
+
+<!-- ============ 39 · thanks ============ -->
 <section class="slide s-thanks" data-part="7" data-nochrome data-title="سپاسگزاری و پرسش‌ها">
   <div class="th">
     <img src="assets/img/kntu-logo.png" alt="">
@@ -1302,16 +1422,15 @@
           <tr><td rowspan="3" class="name ltr-cell set">KITTI</td><td class="name">پیشنهادی</td><td class="n">0.156</td><td class="n">0.811</td><td class="n">4.063</td></tr>
           <tr><td class="name">کنترل</td><td class="n">0.175</td><td class="n">0.787</td><td class="n">4.403</td></tr>
           <tr class="end"><td class="name">پایه منتشرشده</td><td class="n best">0.146</td><td class="n best">0.820</td><td class="n best">3.893</td></tr>
-          <tr class="grp"><td colspan="5">داده‌های دیده‌نشده در آموزش</td></tr>
-          <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v1</td><td class="name">پیشنهادی</td><td class="n best">0.169</td><td class="n best">0.766</td><td class="n best">0.369</td></tr>
-          <tr><td class="name">کنترل</td><td class="n">0.314</td><td class="n">0.478</td><td class="n">0.532</td></tr>
-          <tr class="end"><td class="name">پایه منتشرشده</td><td class="n">0.196</td><td class="n">0.749</td><td class="n">0.396</td></tr>
         </tbody>
       </table>
       <table class="tbl compact full">
         <thead><tr><th class="name">مجموعه آزمون</th><th class="name">مدل</th><th class="ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="ltr-cell">RMSE ↓</th></tr></thead>
         <tbody>
           <tr class="grp"><td colspan="5">داده‌های دیده‌نشده در آموزش</td></tr>
+          <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v1</td><td class="name">پیشنهادی</td><td class="n best">0.169</td><td class="n best">0.766</td><td class="n best">0.369</td></tr>
+          <tr><td class="name">کنترل</td><td class="n">0.314</td><td class="n">0.478</td><td class="n">0.532</td></tr>
+          <tr class="end"><td class="name">پایه منتشرشده</td><td class="n">0.196</td><td class="n">0.749</td><td class="n">0.396</td></tr>
           <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v2</td><td class="name">پیشنهادی</td><td class="n best">0.104</td><td class="n best">0.906</td><td class="n best">0.351</td></tr>
           <tr><td class="name">کنترل</td><td class="n">0.209</td><td class="n">0.677</td><td class="n">0.470</td></tr>
           <tr class="end"><td class="name">پایه منتشرشده</td><td class="n">0.246</td><td class="n">0.524</td><td class="n">0.616</td></tr>
@@ -1442,51 +1561,6 @@
 </section>
 
 <!-- ============ backup 5 · Depth Anything 3 ============ -->
-<section class="slide backup s-b5" data-title="مقایسه با Depth Anything 3">
-  <header class="slide-head"><h2>مقایسه با Depth Anything 3</h2><div class="sub">تصاویر آزمون و معیارهای یکسان؛ AbsRel کمتر بهتر است</div></header>
-  <div class="slide-body">
-    <div class="cols c2 top">
-      <div>
-        <h4 class="h4">برتری مدل پیشنهادی کجاست؟</h4>
-        <table class="tbl compact full">
-          <thead><tr><th class="name">مجموعه آزمون</th><th class="name">مدل Depth Anything 3</th><th>پیشنهادی</th><th class="ltr-cell">DA3</th><th>تصاویر با برتری ما</th></tr></thead>
-          <tbody>
-            <tr class="grp"><td colspan="5">ارزیابی مطلق، برحسب متر</td></tr>
-            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="name"><span class="ltr">DA3-Metric</span><br>K واقعی</td><td class="n best">0.109</td><td class="n">0.175</td><td class="n">89%</td></tr>
-            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="3" class="name"><span class="ltr">DA3-Metric</span><br>دوربین برآوردشده توسط DA3</td><td class="n best">0.088</td><td class="n">0.105</td><td class="n">66%</td></tr>
-            <tr><td class="name ltr-cell set">KITTI</td><td class="n best">0.156</td><td class="n">0.221</td><td class="n">75%</td></tr>
-            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="n best">0.109</td><td class="n">0.305</td><td class="n">96%</td></tr>
-            <tr class="grp"><td colspan="5">ارزیابی نسبی، تراز مقیاس و جابجایی برای هر تصویر</td></tr>
-            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="2" class="name ltr-cell">DA3-Mono</td><td class="n best">0.037</td><td class="n">0.056</td><td class="n">82%</td></tr>
-            <tr class="end"><td class="name ltr-cell set">KITTI</td><td class="n best">0.070</td><td class="n">0.100</td><td class="n">87%</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <h4 class="h4">نحوه استفاده از دوربین</h4>
-        <table class="tbl compact full diff">
-          <thead><tr><th class="name">جنبه</th><th class="name">این پژوهش</th><th class="name ltr-cell">Depth Anything 3</th></tr></thead>
-          <tbody>
-            <tr><td class="name asp">K کجا وارد می‌شود؟</td><td class="name us">توکن از لایه نخست انکودر، با گیت، برای هر تصویر</td><td class="name">توکن از لایه ۸ ViT-L، فقط با وضعیت دوربین؛ مدل‌های مطلق و نسبی: ندارد</td></tr>
-            <tr><td class="name asp">کدام اطلاعات دوربین؟</td><td class="name us">توصیف‌گر ۹بعدی: فاصله کانونی، نقطه اصلی، میدان دید، نسبت ابعاد، مساحت</td><td class="name">دو میدان دید به‌همراه وضعیت دوربین (انتقال، چرخش)</td></tr>
-            <tr><td class="name asp">مقیاس مطلق</td><td class="name us">یادگیری‌شده درون شبکه از K</td><td class="name">خروجی × فاصله کانونی / ۳۰۰، پس از شبکه</td></tr>
-            <tr><td class="name asp">ارائه K واقعی، تک‌تصویر</td><td class="name us">کاهش چشمگیر خطا نسبت به کنترل</td><td class="name">بدون اثر: در ۸ مورد از ۱۰ مجموعه آزمون تفاوت معناداری نیست</td></tr>
-            <tr><td class="name asp">هزینه آموزش</td><td class="name us">۷۲ هزار نمونه، ۲٫۸ ساعت، یک RTX 4090</td><td class="name">حدود ۱۰ میلیون نمونه، خوشه‌ای از GPUهای H100</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <aside class="notes" data-key="b5">این اسلاید پشتیبان است و فقط اگر کمیته درباره Depth Anything 3 پرسش کند، آن را نشان می‌دهیم. همه اعداد از اجرای خودمان روی نقاط وارسی منتشرشده Depth Anything 3 و دقیقاً همان تصاویر آزمون به‌دست آمده‌اند؛ چارچوب ما مقدار گزارش‌شده در مقاله را روی NYUv2 (NYU Depth Dataset V2) بازتولید می‌کند: AbsRel (absolute relative error) برابر ۰٫۰۷۳، در برابر مقدار گزارش‌شده ۰٫۰۷۰. در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی در Cityscapes با AbsRel برابر ۰٫۱۰۹، در برابر ۰٫۱۷۵ برای DA3-Metric (Depth Anything 3 Metric) با فاصله کانونی واقعی (true focal length)، در ۸۹ درصد تصاویر بهتر است. وقتی دوربین معلوم نیست و Depth Anything 3 باید آن را برآورد کند، خطای آن در NYUv2 برابر ۰٫۱۰۵، در KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) برابر ۰٫۲۲۱ و در Cityscapes برابر ۰٫۳۰۵ می‌شود؛ فاصله کانونی برآوردشده در Cityscapes حدود ۰٫۶۴ فاصله کانونی واقعی است. مدل پیشنهادی با K معلوم، به‌ترتیب، مقادیر ۰٫۰۸۸، ۰٫۱۵۶ و ۰٫۱۰۹ را می‌دهد. در ارزیابی نسبی (relative evaluation)، روی NYUv2 و KITTI، دو بنچمارک گزارش‌شده در مقاله Depth Anything 3، مدل پیشنهادی پس از تنظیم دقیق کوتاه (short fine-tuning) به ۰٫۰۳۷ و ۰٫۰۷۰ می‌رسد؛ مقادیر DA3-Mono برابر ۰٫۰۵۶ و ۰٫۱۰۰ و DA3-Large برابر ۰٫۰۵۱ و ۰٫۰۸۲ هستند. باید صریح بگویم که تقسیم‌های آموزشی NYUv2 و KITTI بخشی از آموزش ما بودند، اما برای Depth Anything 3 صفرنمونه (zero-shot) محسوب می‌شوند. با فاصله کانونی واقعی، DA3-Metric در NYUv2، KITTI و حسگرهای SUN RGB-D (Scene Understanding RGB-D) دقیق‌تر است و با داده بسیار بیشتری آموزش دیده است. تفاوت اصلی این است که در Depth Anything 3، توکن دوربین ابزار چندنمایی است: وضعیت دوربین و دو میدان دید را رمزگذاری می‌کند، در لایه ۸ جایگزین توکن کلاس می‌شود و فقط هنگام ارائه وضعیت دوربین وجود دارد. دادن K واقعی به یک تصویر منفرد اثری نداشت. در مدل پیشنهادی، توصیف‌گر نه‌بعدی کامل از لایه نخست، با گیت یادگیری‌پذیر (learnable gate)، برای هر تصویر وارد می‌شود و خود شبکه مقیاس مطلق را از K یاد می‌گیرد. معماری، ایده‌ها و آموزش DA3 در آخرین اسلاید پشتیبان، «Depth Anything 3: معماری و ایده‌های اصلی»، توضیح داده شده است.</aside><aside class="notes-sum">- فقط در صورت پرسش کمیته درباره Depth Anything 3
-- بازتولید NYUv2: ۰٫۰۷۳ در برابر ۰٫۰۷۰ گزارش‌شده
-- Cityscapes مطلق: پیشنهادی ۰٫۱۰۹؛ DA3-Metric ۰٫۱۷۵؛ برتری در ۸۹٪ تصاویر
-- DA3 بدون دوربین معلوم: NYUv2 ۰٫۱۰۵؛ KITTI ۰٫۲۲۱؛ Cityscapes ۰٫۳۰۵
-- پیشنهادی با K: ۰٫۰۸۸، ۰٫۱۵۶، ۰٫۱۰۹
-- نسبی پس از fine-tuning کوتاه: پیشنهادی ۰٫۰۳۷ و ۰٫۰۷۰
-! NYUv2 و KITTI برای ما آموزشی، برای DA3 صفرنمونه‌اند</aside>
-</section>
-
-<!-- ============ backup 6 · all formulas (1): metrics, alignment, losses ============ -->
 <section class="slide backup s-fx s-b6" data-title="فرمول‌ها (۱): معیارها، تراز و توابع هزینه">
   <header class="slide-head"><h2>فرمول‌ها (۱): معیارها، تراز و توابع هزینه</h2><div class="sub">برای پرسش و پاسخ؛ همه فرمول‌های ارزیابی و آموزش</div></header>
   <div class="slide-body">
@@ -1570,6 +1644,51 @@
 </section>
 
 <!-- ============ backup 8 · Depth Anything 3 ============ -->
+<section class="slide backup s-b5" data-title="مقایسه با Depth Anything 3">
+  <header class="slide-head"><h2>مقایسه با Depth Anything 3</h2><div class="sub">تصاویر آزمون و معیارهای یکسان؛ AbsRel کمتر بهتر است</div></header>
+  <div class="slide-body">
+    <div class="cols c2 top">
+      <div>
+        <h4 class="h4">برتری مدل پیشنهادی کجاست؟</h4>
+        <table class="tbl compact full">
+          <thead><tr><th class="name">مجموعه آزمون</th><th class="name">مدل Depth Anything 3</th><th>پیشنهادی</th><th class="ltr-cell">DA3</th><th>تصاویر با برتری ما</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="5">ارزیابی مطلق، برحسب متر</td></tr>
+            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="name"><span class="ltr">DA3-Metric</span><br>K واقعی</td><td class="n best">0.109</td><td class="n">0.175</td><td class="n">89%</td></tr>
+            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="3" class="name"><span class="ltr">DA3-Metric</span><br>دوربین برآوردشده توسط DA3</td><td class="n best">0.088</td><td class="n">0.105</td><td class="n">66%</td></tr>
+            <tr><td class="name ltr-cell set">KITTI</td><td class="n best">0.156</td><td class="n">0.221</td><td class="n">75%</td></tr>
+            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="n best">0.109</td><td class="n">0.305</td><td class="n">96%</td></tr>
+            <tr class="grp"><td colspan="5">ارزیابی نسبی، تراز مقیاس و جابجایی برای هر تصویر</td></tr>
+            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="2" class="name ltr-cell">DA3-Mono</td><td class="n best">0.037</td><td class="n">0.056</td><td class="n">82%</td></tr>
+            <tr class="end"><td class="name ltr-cell set">KITTI</td><td class="n best">0.070</td><td class="n">0.100</td><td class="n">87%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 class="h4">نحوه استفاده از دوربین</h4>
+        <table class="tbl compact full diff">
+          <thead><tr><th class="name">جنبه</th><th class="name">این پژوهش</th><th class="name ltr-cell">Depth Anything 3</th></tr></thead>
+          <tbody>
+            <tr><td class="name asp">K کجا وارد می‌شود؟</td><td class="name us">توکن از لایه نخست انکودر، با گیت، برای هر تصویر</td><td class="name">توکن از لایه ۸ ViT-L، فقط با وضعیت دوربین؛ مدل‌های مطلق و نسبی: ندارد</td></tr>
+            <tr><td class="name asp">کدام اطلاعات دوربین؟</td><td class="name us">توصیف‌گر ۹بعدی: فاصله کانونی، نقطه اصلی، میدان دید، نسبت ابعاد، مساحت</td><td class="name">دو میدان دید به‌همراه وضعیت دوربین (انتقال، چرخش)</td></tr>
+            <tr><td class="name asp">مقیاس مطلق</td><td class="name us">یادگیری‌شده درون شبکه از K</td><td class="name">خروجی × فاصله کانونی / ۳۰۰، پس از شبکه</td></tr>
+            <tr><td class="name asp">ارائه K واقعی، تک‌تصویر</td><td class="name us">کاهش چشمگیر خطا نسبت به کنترل</td><td class="name">بدون اثر: در ۸ مورد از ۱۰ مجموعه آزمون تفاوت معناداری نیست</td></tr>
+            <tr><td class="name asp">هزینه آموزش</td><td class="name us">۷۲ هزار نمونه، ۲٫۸ ساعت، یک RTX 4090</td><td class="name">حدود ۱۰ میلیون نمونه، خوشه‌ای از GPUهای H100</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <aside class="notes" data-key="b5">این اسلاید پشتیبان است و فقط اگر کمیته درباره Depth Anything 3 پرسش کند، آن را نشان می‌دهیم. همه اعداد از اجرای خودمان روی نقاط وارسی منتشرشده Depth Anything 3 و دقیقاً همان تصاویر آزمون به‌دست آمده‌اند؛ چارچوب ما مقدار گزارش‌شده در مقاله را روی NYUv2 (NYU Depth Dataset V2) بازتولید می‌کند: AbsRel (absolute relative error) برابر ۰٫۰۷۳، در برابر مقدار گزارش‌شده ۰٫۰۷۰. در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی در Cityscapes با AbsRel برابر ۰٫۱۰۹، در برابر ۰٫۱۷۵ برای DA3-Metric (Depth Anything 3 Metric) با فاصله کانونی واقعی (true focal length)، در ۸۹ درصد تصاویر بهتر است. وقتی دوربین معلوم نیست و Depth Anything 3 باید آن را برآورد کند، خطای آن در NYUv2 برابر ۰٫۱۰۵، در KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) برابر ۰٫۲۲۱ و در Cityscapes برابر ۰٫۳۰۵ می‌شود؛ فاصله کانونی برآوردشده در Cityscapes حدود ۰٫۶۴ فاصله کانونی واقعی است. مدل پیشنهادی با K معلوم، به‌ترتیب، مقادیر ۰٫۰۸۸، ۰٫۱۵۶ و ۰٫۱۰۹ را می‌دهد. در ارزیابی نسبی (relative evaluation)، روی NYUv2 و KITTI، دو بنچمارک گزارش‌شده در مقاله Depth Anything 3، مدل پیشنهادی پس از تنظیم دقیق کوتاه (short fine-tuning) به ۰٫۰۳۷ و ۰٫۰۷۰ می‌رسد؛ مقادیر DA3-Mono برابر ۰٫۰۵۶ و ۰٫۱۰۰ و DA3-Large برابر ۰٫۰۵۱ و ۰٫۰۸۲ هستند. باید صریح بگویم که تقسیم‌های آموزشی NYUv2 و KITTI بخشی از آموزش ما بودند، اما برای Depth Anything 3 صفرنمونه (zero-shot) محسوب می‌شوند. با فاصله کانونی واقعی، DA3-Metric در NYUv2، KITTI و حسگرهای SUN RGB-D (Scene Understanding RGB-D) دقیق‌تر است و با داده بسیار بیشتری آموزش دیده است. تفاوت اصلی این است که در Depth Anything 3، توکن دوربین ابزار چندنمایی است: وضعیت دوربین و دو میدان دید را رمزگذاری می‌کند، در لایه ۸ جایگزین توکن کلاس می‌شود و فقط هنگام ارائه وضعیت دوربین وجود دارد. دادن K واقعی به یک تصویر منفرد اثری نداشت. در مدل پیشنهادی، توصیف‌گر نه‌بعدی کامل از لایه نخست، با گیت یادگیری‌پذیر (learnable gate)، برای هر تصویر وارد می‌شود و خود شبکه مقیاس مطلق را از K یاد می‌گیرد. معماری، ایده‌ها و آموزش DA3 در اسلاید پشتیبان بعدی، «Depth Anything 3: معماری و ایده‌های اصلی»، توضیح داده شده است.</aside><aside class="notes-sum">- فقط در صورت پرسش کمیته درباره Depth Anything 3
+- بازتولید NYUv2: ۰٫۰۷۳ در برابر ۰٫۰۷۰ گزارش‌شده
+- Cityscapes مطلق: پیشنهادی ۰٫۱۰۹؛ DA3-Metric ۰٫۱۷۵؛ برتری در ۸۹٪ تصاویر
+- DA3 بدون دوربین معلوم: NYUv2 ۰٫۱۰۵؛ KITTI ۰٫۲۲۱؛ Cityscapes ۰٫۳۰۵
+- پیشنهادی با K: ۰٫۰۸۸، ۰٫۱۵۶، ۰٫۱۰۹
+- نسبی پس از fine-tuning کوتاه: پیشنهادی ۰٫۰۳۷ و ۰٫۰۷۰
+! NYUv2 و KITTI برای ما آموزشی، برای DA3 صفرنمونه‌اند</aside>
+</section>
+
+<!-- ============ backup 6 · all formulas (1): metrics, alignment, losses ============ -->
 <section class="slide backup s-b8" data-title="Depth Anything 3: معماری و ایده‌های اصلی">
   <header class="slide-head"><h2>Depth Anything 3: معماری و ایده‌های اصلی</h2><div class="sub">اسلاید پشتیبان؛ برای اطلاعات بیشتر درباره مدل</div></header>
   <div class="slide-body">
@@ -1770,6 +1889,80 @@
 - کنترل پرنوسان؛ checkpoint: پیشنهادی دوره ۱۲، کنترل دوره ۱۱ (۰٫۱۲۳۷)
 - نرخ یادگیری: ۵×۱۰⁻⁵ تا نزدیک صفر در پایان دوره ۱۲
 ! تخت‌شدن پایانی هم‌زمان با نرخ یادگیری نزدیک صفر است؛ فلات اثبات نمی‌شود</aside>
+</section>
+
+<!-- ============ backup 10 · references (1 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="منابع (۱ از ۴): سیر تحول روش‌ها">
+  <header class="slide-head"><h2>منابع (۱ از ۴): سیر تحول روش‌ها</h2><div class="sub">سیر تحول روش‌ها</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Hoiem et al., 2005.</b> Automatic Photo Pop-up. <i>SIGGRAPH</i></li>
+          <li><b>Saxena et al., 2009.</b> Make3D: Learning 3D Scene Structure from a Single Still Image. <i>TPAMI</i></li>
+          <li><b>Eigen et al., 2014.</b> Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network. <i>NeurIPS</i></li>
+          <li><b>Godard et al., 2017.</b> Unsupervised Monocular Depth Estimation with Left-Right Consistency (Monodepth). <i>CVPR</i></li>
+          <li><b>Zhou et al., 2017.</b> Unsupervised Learning of Depth and Ego-Motion from Video (SfMLearner). <i>CVPR</i></li>
+          <li><b>Godard et al., 2019.</b> Digging Into Self-Supervised Monocular Depth Estimation (Monodepth2). <i>ICCV</i></li>
+          <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
+          <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes" data-key="b10">این اسلاید پشتیبان آثاری را فهرست می‌کند که در اسلایدهای خط زمانی سیر تحول روش‌ها نام برده شدند: از Photo Pop-up و Make3D، از روش‌های پیش از یادگیری عمیق، تا شبکه چندمقیاسی Eigen و همکاران، روش‌های خودنظارتی (self-supervised) Monodepth، SfMLearner و Monodepth2، و MiDaS و DPT (Dense Prediction Transformer). همه از فهرست منابع پایان‌نامه‌اند جز Automatic Photo Pop-up که خط زمانی نام می‌برد اما پایان‌نامه به آن ارجاع نمی‌دهد.</aside><aside class="notes-sum">- خط زمانی: Photo Pop-up تا MiDaS و DPT
+! Photo Pop-up در پایان‌نامه ارجاع ندارد</aside>
+</section>
+
+<!-- ============ backup 11 · references (2 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="منابع (۲ از ۴): مدل پایه و انکودر">
+  <header class="slide-head"><h2>منابع (۲ از ۴): مدل پایه و انکودر</h2><div class="sub">مدل پایه و انکودر</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Yang et al., 2024.</b> Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data. <i>CVPR</i></li>
+          <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
+          <li><b>Dosovitskiy et al., 2021.</b> An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale (ViT). <i>ICLR</i></li>
+          <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes" data-key="b11">این اسلاید پشتیبان منابع مدل پایه را فهرست می‌کند: Depth Anything و Depth Anything V2، مدل پایه این کار، و انکودر آن، یعنی ViT (Vision Transformer) و DINOv2 که وزن‌های پیش‌آموخته (pretrained weights) انکودر از آن می‌آید.</aside><aside class="notes-sum">- Depth Anything، Depth Anything V2، ViT و DINOv2</aside>
+</section>
+
+<!-- ============ backup 12 · references (3 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="منابع (۳ از ۴): دوربین و عمق مطلق">
+  <header class="slide-head"><h2>منابع (۳ از ۴): دوربین و عمق مطلق</h2><div class="sub">دوربین و عمق مطلق</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
+          <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
+          <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
+          <li><b>Bochkovskii et al., 2025.</b> Depth Pro: Sharp Monocular Metric Depth in Less Than a Second. <i>ICLR</i></li>
+          <li><b>Lin et al., 2025.</b> Depth Anything 3: Recovering the Visual Space from Any Views. <i>arXiv:2511.10647</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes" data-key="b12">این اسلاید پشتیبان روش‌های دوربین‌محور و عمق مطلق (metric depth) را فهرست می‌کند که در کارهای پیشین نام برده شدند: CAM-Convs، Metric3D، UniDepth، Depth Pro و Depth Anything 3.</aside><aside class="notes-sum">- CAM-Convs، Metric3D، UniDepth، Depth Pro و Depth Anything 3</aside>
+</section>
+
+<!-- ============ backup 13 · references (4 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="منابع (۴ از ۴): مجموعه‌داده‌ها، آموزش و آزمون آماری">
+  <header class="slide-head"><h2>منابع (۴ از ۴): مجموعه‌داده‌ها، آموزش و آزمون آماری</h2><div class="sub">مجموعه‌داده‌ها، آموزش و آزمون آماری</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Silberman et al., 2012.</b> Indoor Segmentation and Support Inference from RGBD Images (NYUv2). <i>ECCV</i></li>
+          <li><b>Geiger et al., 2012.</b> Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>CVPR</i></li>
+          <li><b>Cabon et al., 2020.</b> Virtual KITTI 2. <i>arXiv:2001.10773</i></li>
+          <li><b>Cordts et al., 2016.</b> The Cityscapes Dataset for Semantic Urban Scene Understanding. <i>CVPR</i></li>
+          <li><b>Song et al., 2015.</b> SUN RGB-D: A RGB-D Scene Understanding Benchmark Suite. <i>CVPR</i></li>
+          <li><b>Vasiljevic et al., 2019.</b> DIODE: A Dense Indoor and Outdoor DEpth Dataset. <i>arXiv:1908.00463</i></li>
+          <li><b>Loshchilov &amp; Hutter, 2019.</b> Decoupled Weight Decay Regularization (AdamW). <i>ICLR</i></li>
+          <li><b>Wilcoxon, 1945.</b> Individual Comparisons by Ranking Methods. <i>Biometrics Bulletin</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes" data-key="b13">این اسلاید پشتیبان منابع مجموعه‌داده‌ها، بهینه‌ساز و آزمون آماری را فهرست می‌کند: NYUv2، KITTI، Virtual KITTI 2، Cityscapes، SUN RGB-D و DIODE، بهینه‌ساز AdamW، و آزمون ویلکاکسون (Wilcoxon signed-rank test) که برای سنجش معناداری تفاوت دو مدل به کار رفت.</aside><aside class="notes-sum">- شش مجموعه‌داده، AdamW و آزمون ویلکاکسون</aside>
 </section>
 
     <div id="chrome">

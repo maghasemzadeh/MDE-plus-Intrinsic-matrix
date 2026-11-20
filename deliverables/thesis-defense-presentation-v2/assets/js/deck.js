@@ -196,6 +196,51 @@
     });
   }
 
+  /* horizontal grouped bars around zero: one row per category, one thin bar per series; sig[i] adds a star */
+  function chartHBars(box, spec) {
+    var W = spec.w || 820, rowH = spec.rowH || 52, bh = spec.barH || 19, gap = spec.gap === undefined ? 4 : spec.gap;
+    var m = { l: spec.ml || 150, r: spec.mr || 84, t: spec.mt || 40, b: spec.mb || 84 };
+    var n = spec.rows.length, ns = spec.series.length;
+    var H = m.t + m.b + rowH * n;
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img' }, box);
+    var x0 = m.l, x1 = W - m.r, yb = m.t + rowH * n;
+    var sx = function (v) { return x0 + (v - spec.min) / (spec.max - spec.min) * (x1 - x0); };
+    var grid = el('g', { 'class': 'grid' }, svg);
+    spec.ticks.forEach(function (t) {
+      el('line', { x1: sx(t), x2: sx(t), y1: m.t, y2: yb }, grid);
+      el('text', { 'class': 'tick', x: sx(t), y: yb + 32, 'text-anchor': 'middle' }, svg, String(t));
+    });
+    (spec.bands || []).forEach(function (b) {
+      var g = el('g', { 'class': 'hband' }, svg);
+      fragAttrs(g, b.f);
+      el('rect', { x: sx(b.from), y: m.t, width: sx(b.to) - sx(b.from), height: yb - m.t }, g);
+      if (b.label) el('text', { 'class': 'band-lab', x: (sx(b.from) + sx(b.to)) / 2, y: m.t - 10, 'text-anchor': 'middle' }, g, b.label);
+    });
+    if (spec.xlabel) {
+      var xl = el('text', { 'class': 'ylab', x: (x0 + x1) / 2, y: H - 10, 'text-anchor': 'middle', direction: 'rtl' }, svg, spec.xlabel);
+      xl.style.unicodeBidi = 'plaintext';
+    }
+    var groupH = bh * ns + gap * (ns - 1);
+    spec.rows.forEach(function (r, i) {
+      var cy = m.t + rowH * (i + 0.5);
+      el('text', { 'class': 'cat', x: x0 - 16, y: cy + 9, 'text-anchor': 'end' }, svg, r.label);
+      spec.series.forEach(function (s, si) {
+        var v = s.values[i];
+        if (v === null || v === undefined) return;
+        var y = cy - groupH / 2 + si * (bh + gap);
+        var g = el('g', { 'class': 'hb-g' }, svg);
+        fragAttrs(g, s.f);
+        var xa = sx(Math.min(0, v)), xw = Math.abs(sx(v) - sx(0));
+        var bar = el('rect', { 'class': 'hb' + (v < 0 ? ' neg' : ''), x: xa, y: y, width: Math.max(xw, 0.01), height: bh, rx: Math.min(4, xw / 2), fill: s.color || colorOf(s.key) }, g);
+        bar.style.transitionDelay = (i * 70) + 'ms';
+        var star = s.sig && s.sig[i] ? '*' : '';
+        var txt = (v < 0 ? '−' : '') + fmt(Math.abs(v), spec.dec === undefined ? 1 : spec.dec) + star;
+        el('text', { 'class': 'val' + (s.hero ? ' hero' : ''), x: v < 0 ? sx(v) - 9 : sx(v) + 9, y: y + bh / 2 + 8, 'text-anchor': v < 0 ? 'end' : 'start' }, g, txt);
+      });
+    });
+    el('line', { 'class': 'zero', x1: sx(0), x2: sx(0), y1: m.t - 4, y2: yb }, svg);
+  }
+
   function renderCharts() {
     $$('.chart[data-chart]').forEach(function (box) {
       var spec = JSON.parse($('script', box).textContent);
@@ -203,6 +248,7 @@
       if (kind === 'bars') chartBars(box, spec);
       else if (kind === 'line') chartLine(box, spec);
       else if (kind === 'dumbbell') chartDumbbell(box, spec);
+      else if (kind === 'hbars') chartHBars(box, spec);
     });
     $$('[data-heat]').forEach(function (td) {
       var v = parseFloat(td.getAttribute('data-heat'));
@@ -319,6 +365,20 @@
     updateChrome();
     if (MODE === 'main') { try { history.replaceState(null, '', '#' + (i + 1)); } catch (e) { location.hash = i + 1; } }
     if (!silent) broadcast();
+    autoStep(next, i, step, dir, from === null);
+  }
+  /* a slide with data-autostep runs its click steps by itself, one after another, when it is reached moving forward
+     (value = ms between steps, default AUTO_STEP_MS). Only the audience window drives it, so the presenter and phone
+     views follow through the usual broadcast. A key press still steps at once and the rest carries on from there;
+     after a step back nothing advances by itself. */
+  var AUTO_STEP_MS = 900, autoT = null;
+  function autoStep(s, i, step, dir, entered) {
+    clearTimeout(autoT);
+    if (MODE !== 'main' || !s.hasAttribute('data-autostep') || dir < 0 || step >= steps[i]) return;
+    var gap = +s.getAttribute('data-autostep') || AUTO_STEP_MS;
+    /* on entering, wait for the slide transition and for the slide's own .auto items to finish entering */
+    var wait = entered ? Math.max(600, 320 + $$('.auto', s).length * 450 + 200) : gap;
+    autoT = setTimeout(function () { if (state.i === i && state.step === step) show(i, step + 1, 1); }, wait);
   }
   function next() {
     if (state.step < steps[state.i]) show(state.i, state.step + 1, 1);
@@ -545,10 +605,10 @@
     });
     return el;
   }
-  function el(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
+  function hel(tag, cls) { var e = document.createElement(tag); if (cls) e.className = cls; return e; }
   function renderFull(box, text) {
     var sents = text.split(/(?<=[.!\u061F])\s+/), para = '', n = 0;
-    function flush() { if (para) box.appendChild(inline(el('p'), para)); para = ''; n = 0; }
+    function flush() { if (para) box.appendChild(inline(hel('p'), para)); para = ''; n = 0; }
     sents.forEach(function (t) {
       para = para ? para + ' ' + t : t; n++;
       if (n >= 3 || para.length > 240) flush();
@@ -562,9 +622,9 @@
       var m = line.match(/^([0-9\u06F0-\u06F9]+)[.)\-]\s*(.*)$/), u = line.match(/^[-\u2022*]\s*(.*)$/), w = line.match(/^!\s*(.*)$/);
       var kind = m ? 'ol' : u ? 'ul' : null;
       if (kind) {
-        if (!list || list.tagName.toLowerCase() !== kind) { list = el(kind); box.appendChild(list); }
-        list.appendChild(inline(el('li'), m ? m[2] : u[1]));
-      } else { list = null; box.appendChild(inline(el('p', w ? 'warn' : ''), w ? w[1] : line)); }
+        if (!list || list.tagName.toLowerCase() !== kind) { list = hel(kind); box.appendChild(list); }
+        list.appendChild(inline(hel('li'), m ? m[2] : u[1]));
+      } else { list = null; box.appendChild(inline(hel('p', w ? 'warn' : ''), w ? w[1] : line)); }
     });
   }
   /* ---------------- editing notes (laptop presenter window only) ----------------
@@ -894,5 +954,19 @@
     if (MODE === 'presenter') initPresenter(); else flashHelp(4500);
   }
   connectServer();
-  window.__deck = { show: show, state: state, steps: steps, count: slides.length };
+  /* editing aid, only with ?live=1 through serve.py: reload when the built deck or its styles/engine change (the #N slide is kept) */
+  if (qs.has('live') && location.protocol.indexOf('http') === 0) {
+    var liveFiles = ['index.html', 'assets/css/deck.css', 'assets/css/slides.css', 'assets/js/deck.js'], liveSeen = {};
+    setInterval(function () {
+      liveFiles.forEach(function (f) {
+        fetch(f, { method: 'HEAD', cache: 'no-store' }).then(function (r) {
+          var m = r.headers.get('Last-Modified');
+          if (!m) return;
+          if (liveSeen[f] && liveSeen[f] !== m) location.reload();
+          liveSeen[f] = m;
+        }).catch(function () {});
+      });
+    }, 1000);
+  }
+  window.__deck ={ show: show, state: state, steps: steps, count: slides.length };
 })();

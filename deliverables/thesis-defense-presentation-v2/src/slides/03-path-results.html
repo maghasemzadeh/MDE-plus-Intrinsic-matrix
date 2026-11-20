@@ -1,6 +1,6 @@
 
 <!-- ============ 19 · four phases ============ -->
-<section class="slide s-phases" data-part="5" data-title="{{s19.title}}">
+<section class="slide s-phases" data-autostep data-part="5" data-title="{{s19.title}}">
   <header class="slide-head"><h2>{{s19.title}}</h2></header>
   <div class="slide-body">
     <div class="phases">
@@ -14,20 +14,20 @@
 </section>
 
 <!-- ============ 20 · pipeline verification ============ -->
-<section class="slide s-verify" data-part="5" data-title="{{s20.title}}">
+<section class="slide s-verify" data-autostep data-part="5" data-title="{{s20.title}}">
   <header class="slide-head"><h2>{{s20.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c73">
-      <table class="tbl">
+      <table class="tbl verify">
         <thead>
-          <tr><th rowspan="2" class="name">{{s20.h_ds}}</th><th rowspan="2">{{s20.h_enc}}</th><th colspan="2" class="sep">{{s20.h_paper}}</th><th colspan="2" class="sep">{{s20.h_ours}}</th></tr>
-          <tr><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th></tr>
+          <tr><th rowspan="2" class="name">{{s20.h_ds}}</th><th rowspan="2">{{s20.h_enc}}</th><th colspan="2" class="sep">{{s20.h_paper}}</th><th colspan="2" class="sep tint">{{s20.h_ours}}</th></tr>
+          <tr><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="sep tint ltr-cell">AbsRel ↓</th><th class="tint ltr-cell">δ₁ ↑</th></tr>
         </thead>
         <tbody>
-          <tr><td class="name ltr-cell">NYUv2</td><td class="n">ViT-S</td><td class="n sep">0.053</td><td class="n">0.973</td><td class="n sep best">0.051</td><td class="n best">0.973</td></tr>
-          <tr><td class="name ltr-cell">NYUv2</td><td class="n">ViT-L</td><td class="n sep">0.045</td><td class="n">0.979</td><td class="n sep best">0.043</td><td class="n best">0.979</td></tr>
-          <tr><td class="name ltr-cell">KITTI</td><td class="n">ViT-S</td><td class="n sep">0.078</td><td class="n">0.936</td><td class="n sep best">0.083</td><td class="n best">0.934</td></tr>
-          <tr><td class="name ltr-cell">KITTI</td><td class="n">ViT-L</td><td class="n sep">0.074</td><td class="n">0.946</td><td class="n sep best">0.076</td><td class="n best">0.948</td></tr>
+          <tr><td rowspan="2" class="name ltr-cell set">NYUv2</td><td class="n">ViT-S</td><td class="n sep">0.053</td><td class="n">0.973</td><td class="n sep tint">0.051</td><td class="n tint">0.973</td></tr>
+          <tr class="end"><td class="n">ViT-L</td><td class="n sep">0.045</td><td class="n">0.979</td><td class="n sep tint">0.043</td><td class="n tint">0.979</td></tr>
+          <tr><td rowspan="2" class="name ltr-cell set">KITTI</td><td class="n">ViT-S</td><td class="n sep">0.078</td><td class="n">0.936</td><td class="n sep tint">0.083</td><td class="n tint">0.934</td></tr>
+          <tr><td class="n">ViT-L</td><td class="n sep">0.074</td><td class="n">0.946</td><td class="n sep tint">0.076</td><td class="n tint">0.948</td></tr>
         </tbody>
       </table>
       <div class="stat frag rise" data-f="1"><span class="v m">۰٫۰۰۵</span><span class="l">{{s20.stat}}</span></div>
@@ -37,7 +37,7 @@
 </section>
 
 <!-- ============ 21 · relative vs absolute evaluation ============ -->
-<section class="slide s-proto" data-part="5" data-title="{{s21.title}}">
+<section class="slide s-proto" data-autostep data-part="5" data-title="{{s21.title}}">
   <header class="slide-head"><h2>{{s21.title}}</h2></header>
   <div class="slide-body">
     <div class="proto">
@@ -71,7 +71,7 @@
 </section>
 
 <!-- ============ 22 · focal-jitter leap ============ -->
-<section class="slide s-leap" data-part="5" data-title="{{s22.title}}">
+<section class="slide s-leap" data-autostep data-part="5" data-title="{{s22.title}}">
   <header class="slide-head"><h2>{{s22.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c64">
@@ -93,7 +93,7 @@
 </section>
 
 <!-- ============ 23 · focal-length sweep ============ -->
-<section class="slide s-sweep" data-part="5" data-title="{{s23.title}}">
+<section class="slide s-sweep" data-autostep data-part="5" data-title="{{s23.title}}">
   <header class="slide-head"><h2>{{s23.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c2">
@@ -119,7 +119,7 @@
 </section>
 
 <!-- ============ 24 · knockout ============ -->
-<section class="slide s-knock" data-part="5" data-title="{{s24.title}}">
+<section class="slide s-knock" data-autostep data-part="5" data-title="{{s24.title}}">
   <header class="slide-head"><h2>{{s24.title}}</h2></header>
   <div class="slide-body">
     <div class="cols c64">
@@ -144,7 +144,7 @@
 </section>
 
 <!-- ============ 25 · the final model ============ -->
-<section class="slide s-final" data-part="6" data-title="{{s25.title}}">
+<section class="slide s-final" data-autostep data-part="6" data-title="{{s25.title}}">
   <header class="slide-head"><h2>{{s25.title}}</h2></header>
   <div class="slide-body">
     <div class="final">
@@ -172,7 +172,7 @@
 </section>
 
 <!-- ============ 26 · headline result ============ -->
-<section class="slide s-headline" data-part="6" data-title="{{s26.title}}">
+<section class="slide s-headline" data-autostep data-part="6" data-title="{{s26.title}}">
   <header class="slide-head"><h2>{{s26.title}}</h2></header>
   <div class="slide-body">
     <div class="chart" data-chart="bars"><script type="application/json">
@@ -190,7 +190,7 @@
 </section>
 
 <!-- ============ 27 · three metrics, four test sets ============ -->
-<section class="slide s-main-table" data-part="6" data-title="{{s27.title}}">
+<section class="slide s-main-table" data-autostep data-part="6" data-title="{{s27.title}}">
   <header class="slide-head"><h2>{{s27.title}}</h2></header>
   <div class="slide-body">
     <table class="tbl main">
@@ -213,7 +213,7 @@
 </section>
 
 <!-- ============ 28 · zero-shot on unseen sensors ============ -->
-<section class="slide s-zeroshot" data-part="6" data-title="{{s28.title}}">
+<section class="slide s-zeroshot" data-autostep data-part="6" data-title="{{s28.title}}">
   <header class="slide-head"><h2>{{s28.title}}</h2><div class="sub">{{s28.sub}}</div></header>
   <div class="slide-body">
     <div class="zs">
@@ -233,7 +233,7 @@
 </section>
 
 <!-- ============ 29 · relative vs metres on the same images ============ -->
-<section class="slide s-gap" data-part="6" data-title="{{s29.title}}">
+<section class="slide s-gap" data-autostep data-part="6" data-title="{{s29.title}}">
   <header class="slide-head"><h2>{{s29.title}}</h2><div class="sub">{{s29.sub}}</div></header>
   <div class="slide-body">
     <table class="tbl main gap">

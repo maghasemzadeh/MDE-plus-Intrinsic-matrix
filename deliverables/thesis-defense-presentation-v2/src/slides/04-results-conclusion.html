@@ -1,6 +1,6 @@
 
 <!-- ============ 30 · qualitative: NYUv2 ============ -->
-<section class="slide s-qual" data-part="6" data-title="{{s30.title}}">
+<section class="slide s-qual" data-autostep data-part="6" data-title="{{s30.title}}">
   <header class="slide-head"><h2>{{s30.title}}</h2><div class="sub ltr">NYUv2</div></header>
   <div class="slide-body">
     <div class="qwrap">
@@ -19,7 +19,7 @@
 </section>
 
 <!-- ============ 31 · qualitative: Kinect v2 and Cityscapes ============ -->
-<section class="slide s-qual two" data-part="6" data-title="{{s31.title}}">
+<section class="slide s-qual two" data-autostep data-part="6" data-title="{{s31.title}}">
   <header class="slide-head"><h2>{{s31.title}}</h2></header>
   <div class="slide-body">
     <div class="qwrap">
@@ -39,7 +39,7 @@
 </section>
 
 <!-- ============ 32 · signed error map ============ -->
-<section class="slide s-error" data-part="6" data-title="{{s32.title}}">
+<section class="slide s-error" data-autostep data-part="6" data-title="{{s32.title}}">
   <header class="slide-head"><h2>{{s32.title}}</h2></header>
   <div class="slide-body">
     <div class="ewrap">
@@ -62,7 +62,7 @@
 </section>
 
 <!-- ============ 33 · scale accuracy, image by image ============ -->
-<section class="slide s-wins" data-part="6" data-title="{{s33.title}}">
+<section class="slide s-wins" data-autostep data-part="6" data-title="{{s33.title}}">
   <header class="slide-head"><h2>{{s33.title}}</h2></header>
   <div class="slide-body">
     <div class="wins">
@@ -103,52 +103,128 @@
   <aside class="notes">{{s33.notes}}</aside>
 </section>
 
-<!-- ============ 34 · encoder size and model type ============ -->
-<section class="slide s-encoder" data-part="6" data-title="{{s34.title}}">
-  <header class="slide-head"><h2>{{s34.title}}</h2></header>
+<!-- ============ 34 · encoder size and model type: K helps absolute models, not relative ones ============ -->
+<!-- bars: AbsRel reduction of the proposed model vs its control (%), same scale in both panels; data = backup 2 / thesis tab:md_encoder_protocol -->
+<section class="slide s-encoder" data-autostep data-part="6" data-title="{{s34.title}}">
+  <header class="slide-head"><h2>{{s34.title}}</h2><div class="sub">{{s34.sub}}</div></header>
   <div class="slide-body">
-    <div class="cols c64 top">
-      <div>
-        <h4 class="h4">{{s34.abs}}</h4>
-        <table class="tbl compact heat">
-          <thead><tr><th class="name">{{g.testset}}</th><th class="ltr-cell">ViT-S</th><th class="ltr-cell">ViT-L</th></tr></thead>
-          <tbody class="ltr-nums">
-            <tr><td class="name ltr-cell">NYUv2</td><td class="n" data-heat="-20.1">−20.1 *</td><td class="n" data-heat="-34.4">−34.4 *</td></tr>
-            <tr><td class="name ltr-cell">Cityscapes</td><td class="n" data-heat="-19.0">−19.0 *</td><td class="n" data-heat="-19.8">−19.8 *</td></tr>
-            <tr><td class="name ltr-cell">KITTI</td><td class="n" data-heat="-10.7">−10.7 *</td><td class="n" data-heat="-10.9">−10.9 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Kinect v1</td><td class="n" data-heat="-38.9">−38.9 *</td><td class="n" data-heat="-46.2">−46.2 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Kinect v2</td><td class="n" data-heat="-23.2">−23.2 *</td><td class="n" data-heat="-50.3">−50.3 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · RealSense</td><td class="n" data-heat="-1.0">−1.0</td><td class="n" data-heat="-26.2">−26.2 *</td></tr>
-            <tr><td class="name ltr-cell">SUN RGB-D · Xtion</td><td class="n" data-heat="-13.5">−13.5 *</td><td class="n" data-heat="-18.6">−18.6 *</td></tr>
-            <tr><td class="name ltr-cell">DIODE</td><td class="n" data-heat="-21.3">−21.3 *</td><td class="n" data-heat="-14.6">−14.6</td></tr>
-          </tbody>
-        </table>
-        <p class="cap">{{s34.cell}}</p>
+    <div class="enc-grid">
+      <div class="enc-panel">
+        <div class="enc-h"><b class="ltr">ViT-S</b><span>{{s34.small}}</span></div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
+         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-proposed)","hero":true,"values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
+                   {"color":"var(--c-ideal)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]}]}
+        </script></div>
       </div>
-      <div class="stack">
-        <div class="panel navy frag rise" data-f="1"><p class="phrase msg">{{s34.msg1}}</p></div>
-        <div class="panel frag rise" data-f="2"><h3>{{s34.rel}}</h3><p class="phrase">{{s34.msg2}}</p><p class="phrase s">{{s34.rel_stat}}</p></div>
+      <div class="enc-panel">
+        <div class="enc-h"><b class="ltr">ViT-L</b><span>{{s34.large}}</span></div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
+         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]},
+                   {"color":"var(--c-ideal)","f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
+        </script></div>
       </div>
+    </div>
+    <div class="enc-foot">
+      <div class="enc-msg abs"><i class="sw proposed"></i><div><h5>{{s34.abs}}</h5><p>{{s34.abs_msg}}</p></div></div>
+      <div class="enc-msg rel frag rise" data-f="1"><i class="sw ideal"></i><div><h5>{{s34.rel}}</h5><p>{{s34.rel_msg}}</p></div></div>
+      <div class="enc-sig">{{s34.sig}} <span class="ltr">p &lt; 0.01</span></div>
     </div>
   </div>
   <aside class="notes">{{s34.notes}}</aside>
 </section>
 
 <!-- ============ 35 · answers to the research questions ============ -->
-<section class="slide s-answers" data-part="7" data-title="{{s35.title}}">
+<section class="slide s-answers" data-autostep data-part="7" data-title="{{s35.title}}">
   <header class="slide-head"><h2>{{s35.title}}</h2></header>
   <div class="slide-body">
-    <div class="answers">
-      <div class="ans frag rise" data-f="1"><span class="ans-h">{{s35.h1}}</span><div class="ans-b"><h4>{{s35.t1}}</h4><p>{{s35.e1}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
-      <div class="ans frag rise" data-f="2"><span class="ans-h">{{s35.h2}}</span><div class="ans-b"><h4>{{s35.t2}}</h4><p>{{s35.e2}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
-      <div class="ans frag rise" data-f="3"><span class="ans-h">{{s35.h3}}</span><div class="ans-b"><h4>{{s35.t3}}</h4><p>{{s35.e3}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+    <div class="rq3">
+      <!-- question 1: base model across datasets -->
+      <article class="rq frag rise" data-f="1">
+        <p class="rq-q"><span class="rq-n">{{s35.n1}}</span>{{s35.q1}}</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e1a}}</p>
+          <div class="rq-bars ltr">
+            <span>VKITTI · DrivingStereo</span><div><i style="width:8.7%"></i></div><b>0.039</b>
+            <span>NYUv2 · DrivingStereo</span><div><i style="width:22.4%"></i></div><b>0.101</b>
+            <span>NYUv2 · DIODE</span><div><i style="width:100%"></i></div><b>0.450</b>
+          </div>
+          <p class="rq-cap">{{s35.e1a_cap}}</p>
+        </div>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v no">{{s35.no}}</span>{{s35.e1b}}</p>
+          <p class="rq-big"><b class="ltr">0.207</b><span>{{s35.e1b_cap}}</span></p>
+        </div>
+      </article>
+      <!-- question 2: relative evaluation hides the camera's contribution -->
+      <article class="rq frag rise" data-f="2">
+        <p class="rq-q"><span class="rq-n">{{s35.n2}}</span>{{s35.q2}}</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e2}}</p>
+          <div class="ltr">
+          <svg class="dia rq-dots" viewBox="0 0 540 330" role="img">
+            <g class="axisg"><line x1="54.5" y1="34" x2="54.5" y2="250"/><line x1="123.6" y1="34" x2="123.6" y2="250"/><line x1="192.7" y1="34" x2="192.7" y2="250"/><line x1="261.8" y1="34" x2="261.8" y2="250"/><line x1="330.9" y1="34" x2="330.9" y2="250"/><line x1="400" y1="34" x2="400" y2="250"/></g>
+            <line x1="54.5" y1="30" x2="54.5" y2="252" stroke="#0b1f4b" stroke-width="2.5"/>
+            <text x="532" y="28" class="grp">ViT-L</text>
+            <text x="532" y="68" class="d-lab small" direction="rtl" text-anchor="start">{{s35.abs}}</text>
+            <text x="532" y="110" class="d-lab small" direction="rtl" text-anchor="start">{{s35.rel}}</text>
+            <text x="532" y="152" class="grp">ViT-S</text>
+            <text x="532" y="192" class="d-lab small" direction="rtl" text-anchor="start">{{s35.abs}}</text>
+            <text x="532" y="234" class="d-lab small" direction="rtl" text-anchor="start">{{s35.rel}}</text>
+            <g class="dots abs" transform="translate(0,61)"><circle cx="292.2" r="9"/><circle cx="191.3" r="9"/><circle cx="129.9" r="9"/><circle cx="373.7" r="9"/><circle cx="402.1" r="9"/><circle cx="235.6" r="9"/><circle cx="183.1" r="9"/><circle cx="155.4" r="9"/></g>
+            <g class="dots rel" transform="translate(0,103)"><circle cx="55.9" r="9"/><circle cx="58.6" r="9"/><circle cx="55.9" r="9"/><circle cx="61.4" r="9"/><circle cx="64.2" r="9"/><circle cx="62.8" r="9"/><circle cx="57.3" r="9"/><circle cx="55.9" r="9"/></g>
+            <g class="dots abs" transform="translate(0,185)"><circle cx="193.4" r="9"/><circle cx="185.8" r="9"/><circle cx="128.4" r="9"/><circle cx="323.3" r="9"/><circle cx="214.8" r="9"/><circle cx="61.4" r="9"/><circle cx="147.8" r="9"/><circle cx="201.7" r="9"/></g>
+            <g class="dots rel" transform="translate(0,227)"><circle cx="69.7" r="9"/><circle cx="57.3" r="9"/><circle cx="76.6" r="9"/><circle cx="59.3" r="9"/><circle cx="39.3" r="9"/><circle cx="35.9" r="9"/><circle cx="54.5" r="9"/><circle cx="58.0" r="9"/></g>
+            <g class="tick"><text x="54.5" y="280">0</text><text x="123.6" y="280">10</text><text x="192.7" y="280">20</text><text x="261.8" y="280">30</text><text x="330.9" y="280">40</text><text x="400" y="280">50%</text></g>
+            <text x="227" y="318" text-anchor="middle" class="d-lab small" direction="rtl">{{s35.e2_axis}}</text>
+          </svg>
+          </div>
+          <p class="rq-cap">{{s35.e2_cap}}</p>
+        </div>
+      </article>
+      <!-- question 3: explicit K lowers absolute error and makes scale follow focal length -->
+      <article class="rq frag rise" data-f="3">
+        <p class="rq-q"><span class="rq-n">{{s35.n3}}</span>{{s35.q3}}</p>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e3a}}</p>
+          <div class="rq-bars two ltr">
+            <span class="p">{{g.proposed}}</span><div><i style="width:78.3%"></i></div><b>0.083</b>
+            <span class="c">{{g.control}}</span><div><i class="c" style="width:100%"></i></div><b>0.107</b>
+          </div>
+        </div>
+        <div class="rq-ev">
+          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e3b}}</p>
+          <div class="ltr">
+          <svg class="dia rq-sweep" viewBox="0 -8 540 240" role="img">
+            <g class="axisg"><line x1="85.2" y1="14" x2="85.2" y2="172"/><line x1="207" y1="14" x2="207" y2="172"/><line x1="389.6" y1="14" x2="389.6" y2="172"/><line x1="76" y1="163.2" x2="398" y2="163.2"/><line x1="76" y1="109" x2="398" y2="109"/><line x1="76" y1="27.6" x2="398" y2="27.6"/></g>
+            <line x1="85.2" y1="163.2" x2="389.6" y2="27.6" stroke="#76819a" stroke-width="3" stroke-dasharray="8 7"/>
+            <line x1="85.2" y1="109" x2="389.6" y2="109" stroke="#c9621f" stroke-width="4"/>
+            <polyline points="85.2,160 146.1,136.8 207,109 283,73.6 389.6,27.6" fill="none" stroke="#184f95" stroke-width="4.5"/>
+            <g fill="#184f95"><circle cx="85.2" cy="160" r="7.5"/><circle cx="146.1" cy="136.8" r="7.5"/><circle cx="207" cy="109" r="7.5"/><circle cx="283" cy="73.6" r="7.5"/><circle cx="389.6" cy="27.6" r="7.5"/></g>
+            <text x="404" y="27" class="sl p">0.97</text><text x="536" y="27" class="sn p" direction="rtl">{{s35.lp}}</text>
+            <text x="404" y="62" class="sl i">1</text><text x="536" y="62" class="sn i" direction="rtl">{{s35.ideal}}</text>
+            <text x="404" y="116" class="sl c">0</text><text x="536" y="116" class="sn c" direction="rtl">{{s35.lc}}</text>
+            <g class="tick"><text x="85.2" y="196">0.6×</text><text x="207" y="196">1×</text><text x="389.6" y="196">1.6×</text></g>
+            <g class="tick y"><text x="66" y="166">0.6×</text><text x="66" y="116">1×</text><text x="66" y="35">1.6×</text></g>
+            <text x="237" y="228" text-anchor="middle" class="d-lab small" direction="rtl">{{s35.e3b_axis}}</text>
+            <text x="84" y="12" text-anchor="end" class="ytitle" direction="rtl">{{s35.e3b_yaxis}} ↑</text>
+          </svg>
+          </div>
+          <p class="rq-cap">{{s35.e3b_cap}}</p>
+        </div>
+      </article>
     </div>
   </div>
   <aside class="notes">{{s35.notes}}</aside>
 </section>
 
 <!-- ============ 36 · contributions ============ -->
-<section class="slide s-contrib" data-part="7" data-title="{{s36.title}}">
+<section class="slide s-contrib" data-autostep data-part="7" data-title="{{s36.title}}">
   <header class="slide-head"><h2>{{s36.title}}</h2></header>
   <div class="slide-body">
     <div class="contrib">
@@ -161,21 +237,52 @@
 </section>
 
 <!-- ============ 37 · future directions ============ -->
-<section class="slide s-future" data-part="7" data-title="{{s37.title}}">
+<section class="slide s-future" data-autostep data-part="7" data-title="{{s37.title}}">
   <header class="slide-head"><h2>{{s37.title}}</h2></header>
   <div class="slide-body">
     <ul class="pts future">
       <li class="frag rise" data-f="1">{{s37.f1}}</li>
       <li class="frag rise" data-f="2">{{s37.f2}}</li>
-      <li class="frag rise" data-f="3">{{s37.f3}}</li>
-      <li class="frag rise" data-f="4">{{s37.f4}}</li>
-      <li class="frag rise" data-f="5">{{s37.f5}}</li>
+      <li class="frag rise" data-f="3">{{s37.f6}}</li>
+      <li class="frag rise" data-f="4">{{s37.f3}}</li>
+      <li class="frag rise" data-f="5">{{s37.f4}}</li>
+      <li class="frag rise" data-f="6">{{s37.f5}}</li>
     </ul>
   </div>
   <aside class="notes">{{s37.notes}}</aside>
 </section>
 
-<!-- ============ 38 · thanks ============ -->
+<!-- ============ 38 · references (only the works named on the main slides) ============ -->
+<section class="slide s-refs" data-part="7" data-title="{{sref.title}}">
+  <header class="slide-head"><h2>{{sref.title}}</h2><div class="sub">{{sref.sub}}</div></header>
+  <div class="slide-body">
+    <div class="refs key">
+      <div class="rcol">
+        <h4>{{sref.k1}}</h4>
+        <ul>
+          <li><b>Eigen et al., 2014.</b> Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network. <i>NeurIPS</i></li>
+          <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
+          <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
+          <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
+          <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
+        </ul>
+      </div>
+      <div class="rcol">
+        <h4>{{sref.k2}}</h4>
+        <ul>
+          <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
+          <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
+          <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
+          <li><b>Silberman et al., 2012.</b> Indoor Segmentation and Support Inference from RGBD Images (NYUv2). <i>ECCV</i></li>
+          <li><b>Geiger et al., 2012.</b> Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>CVPR</i></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{sref.notes}}</aside>
+</section>
+
+<!-- ============ 39 · thanks ============ -->
 <section class="slide s-thanks" data-part="7" data-nochrome data-title="{{s38.title}}">
   <div class="th">
     <img src="assets/img/kntu-logo.png" alt="">
@@ -204,16 +311,15 @@
           <tr><td rowspan="3" class="name ltr-cell set">KITTI</td><td class="name">{{g.proposed}}</td><td class="n">0.156</td><td class="n">0.811</td><td class="n">4.063</td></tr>
           <tr><td class="name">{{g.control}}</td><td class="n">0.175</td><td class="n">0.787</td><td class="n">4.403</td></tr>
           <tr class="end"><td class="name">{{g.published}}</td><td class="n best">0.146</td><td class="n best">0.820</td><td class="n best">3.893</td></tr>
-          <tr class="grp"><td colspan="5">{{b1.g2}}</td></tr>
-          <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v1</td><td class="name">{{g.proposed}}</td><td class="n best">0.169</td><td class="n best">0.766</td><td class="n best">0.369</td></tr>
-          <tr><td class="name">{{g.control}}</td><td class="n">0.314</td><td class="n">0.478</td><td class="n">0.532</td></tr>
-          <tr class="end"><td class="name">{{g.published}}</td><td class="n">0.196</td><td class="n">0.749</td><td class="n">0.396</td></tr>
         </tbody>
       </table>
       <table class="tbl compact full">
         <thead><tr><th class="name">{{g.testset}}</th><th class="name">{{g.model}}</th><th class="ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="ltr-cell">RMSE ↓</th></tr></thead>
         <tbody>
           <tr class="grp"><td colspan="5">{{b1.g2}}</td></tr>
+          <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v1</td><td class="name">{{g.proposed}}</td><td class="n best">0.169</td><td class="n best">0.766</td><td class="n best">0.369</td></tr>
+          <tr><td class="name">{{g.control}}</td><td class="n">0.314</td><td class="n">0.478</td><td class="n">0.532</td></tr>
+          <tr class="end"><td class="name">{{g.published}}</td><td class="n">0.196</td><td class="n">0.749</td><td class="n">0.396</td></tr>
           <tr><td rowspan="3" class="name ltr-cell set">SUN RGB-D<br>Kinect v2</td><td class="name">{{g.proposed}}</td><td class="n best">0.104</td><td class="n best">0.906</td><td class="n best">0.351</td></tr>
           <tr><td class="name">{{g.control}}</td><td class="n">0.209</td><td class="n">0.677</td><td class="n">0.470</td></tr>
           <tr class="end"><td class="name">{{g.published}}</td><td class="n">0.246</td><td class="n">0.524</td><td class="n">0.616</td></tr>
@@ -326,45 +432,6 @@
 </section>
 
 <!-- ============ backup 5 · Depth Anything 3 ============ -->
-<section class="slide backup s-b5" data-title="{{b5.title}}">
-  <header class="slide-head"><h2>{{b5.title}}</h2><div class="sub">{{b5.sub}}</div></header>
-  <div class="slide-body">
-    <div class="cols c2 top">
-      <div>
-        <h4 class="h4">{{b5.res_h}}</h4>
-        <table class="tbl compact full">
-          <thead><tr><th class="name">{{b5.col_set}}</th><th class="name">{{b5.col_ref}}</th><th>{{b5.col_ours}}</th><th class="ltr-cell">{{b5.col_da3}}</th><th>{{b5.col_win}}</th></tr></thead>
-          <tbody>
-            <tr class="grp"><td colspan="5">{{b5.g_abs}}</td></tr>
-            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="name"><span class="ltr">DA3-Metric</span><br>{{b5.trueK}}</td><td class="n best">0.109</td><td class="n">0.175</td><td class="n">89%</td></tr>
-            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="3" class="name"><span class="ltr">DA3-Metric</span><br>{{b5.estK}}</td><td class="n best">0.088</td><td class="n">0.105</td><td class="n">66%</td></tr>
-            <tr><td class="name ltr-cell set">KITTI</td><td class="n best">0.156</td><td class="n">0.221</td><td class="n">75%</td></tr>
-            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="n best">0.109</td><td class="n">0.305</td><td class="n">96%</td></tr>
-            <tr class="grp"><td colspan="5">{{b5.g_rel}}</td></tr>
-            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="2" class="name ltr-cell">DA3-Mono</td><td class="n best">0.037</td><td class="n">0.056</td><td class="n">82%</td></tr>
-            <tr class="end"><td class="name ltr-cell set">KITTI</td><td class="n best">0.070</td><td class="n">0.100</td><td class="n">87%</td></tr>
-          </tbody>
-        </table>
-      </div>
-      <div>
-        <h4 class="h4">{{b5.diff_h}}</h4>
-        <table class="tbl compact full diff">
-          <thead><tr><th class="name">{{b5.col_aspect}}</th><th class="name">{{b5.col_this}}</th><th class="name ltr-cell">Depth Anything 3</th></tr></thead>
-          <tbody>
-            <tr><td class="name asp">{{b5.a1}}</td><td class="name us">{{b5.t1}}</td><td class="name">{{b5.d1}}</td></tr>
-            <tr><td class="name asp">{{b5.a2}}</td><td class="name us">{{b5.t2}}</td><td class="name">{{b5.d2}}</td></tr>
-            <tr><td class="name asp">{{b5.a3}}</td><td class="name us">{{b5.t3}}</td><td class="name">{{b5.d3}}</td></tr>
-            <tr><td class="name asp">{{b5.a4}}</td><td class="name us">{{b5.t4}}</td><td class="name">{{b5.d4}}</td></tr>
-            <tr><td class="name asp">{{b5.a5}}</td><td class="name us">{{b5.t5}}</td><td class="name">{{b5.d5}}</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">{{b5.notes}}</aside>
-</section>
-
-<!-- ============ backup 6 · all formulas (1): metrics, alignment, losses ============ -->
 <section class="slide backup s-fx s-b6" data-title="{{b6.title}}">
   <header class="slide-head"><h2>{{b6.title}}</h2><div class="sub">{{b6.sub}}</div></header>
   <div class="slide-body">
@@ -432,6 +499,45 @@
 </section>
 
 <!-- ============ backup 8 · Depth Anything 3 ============ -->
+<section class="slide backup s-b5" data-title="{{b5.title}}">
+  <header class="slide-head"><h2>{{b5.title}}</h2><div class="sub">{{b5.sub}}</div></header>
+  <div class="slide-body">
+    <div class="cols c2 top">
+      <div>
+        <h4 class="h4">{{b5.res_h}}</h4>
+        <table class="tbl compact full">
+          <thead><tr><th class="name">{{b5.col_set}}</th><th class="name">{{b5.col_ref}}</th><th>{{b5.col_ours}}</th><th class="ltr-cell">{{b5.col_da3}}</th><th>{{b5.col_win}}</th></tr></thead>
+          <tbody>
+            <tr class="grp"><td colspan="5">{{b5.g_abs}}</td></tr>
+            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="name"><span class="ltr">DA3-Metric</span><br>{{b5.trueK}}</td><td class="n best">0.109</td><td class="n">0.175</td><td class="n">89%</td></tr>
+            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="3" class="name"><span class="ltr">DA3-Metric</span><br>{{b5.estK}}</td><td class="n best">0.088</td><td class="n">0.105</td><td class="n">66%</td></tr>
+            <tr><td class="name ltr-cell set">KITTI</td><td class="n best">0.156</td><td class="n">0.221</td><td class="n">75%</td></tr>
+            <tr class="end"><td class="name ltr-cell set">Cityscapes</td><td class="n best">0.109</td><td class="n">0.305</td><td class="n">96%</td></tr>
+            <tr class="grp"><td colspan="5">{{b5.g_rel}}</td></tr>
+            <tr><td class="name ltr-cell set">NYUv2</td><td rowspan="2" class="name ltr-cell">DA3-Mono</td><td class="n best">0.037</td><td class="n">0.056</td><td class="n">82%</td></tr>
+            <tr class="end"><td class="name ltr-cell set">KITTI</td><td class="n best">0.070</td><td class="n">0.100</td><td class="n">87%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <div>
+        <h4 class="h4">{{b5.diff_h}}</h4>
+        <table class="tbl compact full diff">
+          <thead><tr><th class="name">{{b5.col_aspect}}</th><th class="name">{{b5.col_this}}</th><th class="name ltr-cell">Depth Anything 3</th></tr></thead>
+          <tbody>
+            <tr><td class="name asp">{{b5.a1}}</td><td class="name us">{{b5.t1}}</td><td class="name">{{b5.d1}}</td></tr>
+            <tr><td class="name asp">{{b5.a2}}</td><td class="name us">{{b5.t2}}</td><td class="name">{{b5.d2}}</td></tr>
+            <tr><td class="name asp">{{b5.a3}}</td><td class="name us">{{b5.t3}}</td><td class="name">{{b5.d3}}</td></tr>
+            <tr><td class="name asp">{{b5.a4}}</td><td class="name us">{{b5.t4}}</td><td class="name">{{b5.d4}}</td></tr>
+            <tr><td class="name asp">{{b5.a5}}</td><td class="name us">{{b5.t5}}</td><td class="name">{{b5.d5}}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{b5.notes}}</aside>
+</section>
+
+<!-- ============ backup 6 · all formulas (1): metrics, alignment, losses ============ -->
 <section class="slide backup s-b8" data-title="{{b8.title}}">
   <header class="slide-head"><h2>{{b8.title}}</h2><div class="sub">{{b8.sub}}</div></header>
   <div class="slide-body">
@@ -618,4 +724,77 @@
     <p class="lr-line">{{b9.lr}} <span class="ltr"><span class="tex" data-tex="5\times10^{-5}"></span></span> {{b9.lr2}}</p>
   </div>
   <aside class="notes">{{b9.notes}}</aside>
+</section>
+
+<!-- ============ backup 10 · references (1 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="{{b10.title}}">
+  <header class="slide-head"><h2>{{b10.title}}</h2><div class="sub">{{sref.g1}}</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Hoiem et al., 2005.</b> Automatic Photo Pop-up. <i>SIGGRAPH</i></li>
+          <li><b>Saxena et al., 2009.</b> Make3D: Learning 3D Scene Structure from a Single Still Image. <i>TPAMI</i></li>
+          <li><b>Eigen et al., 2014.</b> Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network. <i>NeurIPS</i></li>
+          <li><b>Godard et al., 2017.</b> Unsupervised Monocular Depth Estimation with Left-Right Consistency (Monodepth). <i>CVPR</i></li>
+          <li><b>Zhou et al., 2017.</b> Unsupervised Learning of Depth and Ego-Motion from Video (SfMLearner). <i>CVPR</i></li>
+          <li><b>Godard et al., 2019.</b> Digging Into Self-Supervised Monocular Depth Estimation (Monodepth2). <i>ICCV</i></li>
+          <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
+          <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes">{{b10.notes}}</aside>
+</section>
+
+<!-- ============ backup 11 · references (2 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="{{b11.title}}">
+  <header class="slide-head"><h2>{{b11.title}}</h2><div class="sub">{{sref.g2}}</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Yang et al., 2024.</b> Depth Anything: Unleashing the Power of Large-Scale Unlabeled Data. <i>CVPR</i></li>
+          <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
+          <li><b>Dosovitskiy et al., 2021.</b> An Image is Worth 16x16 Words: Transformers for Image Recognition at Scale (ViT). <i>ICLR</i></li>
+          <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes">{{b11.notes}}</aside>
+</section>
+
+<!-- ============ backup 12 · references (3 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="{{b12.title}}">
+  <header class="slide-head"><h2>{{b12.title}}</h2><div class="sub">{{sref.g3}}</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
+          <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
+          <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
+          <li><b>Bochkovskii et al., 2025.</b> Depth Pro: Sharp Monocular Metric Depth in Less Than a Second. <i>ICLR</i></li>
+          <li><b>Lin et al., 2025.</b> Depth Anything 3: Recovering the Visual Space from Any Views. <i>arXiv:2511.10647</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes">{{b12.notes}}</aside>
+</section>
+
+<!-- ============ backup 13 · references (4 of 4) ============ -->
+<section class="slide backup s-refs s-rb" data-title="{{b13.title}}">
+  <header class="slide-head"><h2>{{b13.title}}</h2><div class="sub">{{sref.g4}}</div></header>
+  <div class="slide-body">
+    <div class="refs one">
+      <ul>
+          <li><b>Silberman et al., 2012.</b> Indoor Segmentation and Support Inference from RGBD Images (NYUv2). <i>ECCV</i></li>
+          <li><b>Geiger et al., 2012.</b> Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>CVPR</i></li>
+          <li><b>Cabon et al., 2020.</b> Virtual KITTI 2. <i>arXiv:2001.10773</i></li>
+          <li><b>Cordts et al., 2016.</b> The Cityscapes Dataset for Semantic Urban Scene Understanding. <i>CVPR</i></li>
+          <li><b>Song et al., 2015.</b> SUN RGB-D: A RGB-D Scene Understanding Benchmark Suite. <i>CVPR</i></li>
+          <li><b>Vasiljevic et al., 2019.</b> DIODE: A Dense Indoor and Outdoor DEpth Dataset. <i>arXiv:1908.00463</i></li>
+          <li><b>Loshchilov &amp; Hutter, 2019.</b> Decoupled Weight Decay Regularization (AdamW). <i>ICLR</i></li>
+          <li><b>Wilcoxon, 1945.</b> Individual Comparisons by Ranking Methods. <i>Biometrics Bulletin</i></li>
+        </ul>
+    </div>
+  </div>
+  <aside class="notes">{{b13.notes}}</aside>
 </section>

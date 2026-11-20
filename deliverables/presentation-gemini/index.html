@@ -1,0 +1,2457 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>دفاع پایان‌نامه کارشناسی ارشد | محمدامین قاسم‌زاده</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="presentation-container">
+  <!-- Top Progress Bar -->
+  <div class="progress-container">
+    <div id="progress-bar" class="progress-bar"></div>
+  </div>
+
+  <!-- Slide Deck -->
+  <div class="slide-deck">
+
+        <div class="slide dark-theme active" data-slide="1">
+          <div class="title-slide-container">
+            <div class="title-top">
+              <div class="uni-info">
+                <img src="assets/images/logo.png" alt="لوگوی دانشگاه خواجه نصیر" class="uni-logo">
+                <div class="uni-text">
+                  <h3>دانشگاه صنعتی خواجه نصیرالدین طوسی</h3>
+                  <p>دانشکده مهندسی کامپیوتر • گروه هوش مصنوعی</p>
+                </div>
+              </div>
+              <div class="defense-badge">جلسه دفاع پایان‌نامه کارشناسی ارشد</div>
+            </div>
+
+            <div class="title-center">
+              <h1 class="thesis-title">تخمین عمق بدون نظارت با استفاده از پارامترهای کالیبراسیون داخلی به عنوان ورودی</h1>
+              <p class="thesis-subtitle">Unsupervised Monocular Depth Estimation Using Camera Intrinsics</p>
+            </div>
+
+            <div class="title-meta-grid">
+              <div class="meta-box">
+                <div class="label">نگارش و ارائه:</div>
+                <div class="val">محمدامین قاسم‌زاده</div>
+              </div>
+              <div class="meta-box">
+                <div class="label">استاد راهنما:</div>
+                <div class="val">دکتر بهروز نصیحت‌کن</div>
+              </div>
+              <div class="meta-box">
+                <div class="label">داوران محترم:</div>
+                <div class="val">دکتر حمید ابریشمی مقدم • دکتر محمدحسین رهبان</div>
+              </div>
+              <div class="meta-box">
+                <div class="label">نیم‌سال تحصیلی:</div>
+                <div class="val">پاییز ۱۴۰۵</div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱:</strong></p>
+            <p>«به نام خدا. با عرض سلام و خیرمقدم خدمت استاد راهنمای گرانقدرم جناب آقای دکتر نصیحت‌کن، داوران ارجمند جناب آقای دکتر ابریشمی مقدم و جناب آقای دکتر رهبان، و تمامی اساتید و همکاران گرامی حاضر در جلسه دفاع.</p>
+            <p>موضوع پایان‌نامه بنده "تخمین عمق بدون نظارت با استفاده از پارامترهای کالیبراسیون داخلی به عنوان ورودی" است. در این پژوهش تلاش کرده‌ایم با بهره‌گیری از مدل‌های بنیادین بینایی و تلفیق صریح اطلاعات هندسی دوربین، چالش دیرینه ابهام مقیاس در تخمین عمق تک‌دوربینه را به صورت اصولی برطرف کنیم.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="2">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">فهرست مطالب</span>
+              <h2>نقشه راه جلسه دفاع (Agenda)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">2 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card highlight">
+                <div class="card-title"><span class="card-icon">۱</span>کلیات و مسئله</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>اهمیت تخمین عمق</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>ابهام فیزیکی مقیاس</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>سؤالات و فرضیات</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۲</span>پیشینه و شکاف</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>سیر تکاملی MDE</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>مدل پایه DA-V2</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>نقص روش‌های گذشته</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۳</span>روش پیشنهادی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>بردار توصیف‌گر ۹‌بعدی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>توکن با گیت‌پذیر $\gamma$</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تزریق صریح به DINOv2</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۴</span>مطالعه کنترل‌شده</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>نابینایی پروتکل نسبی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>افزونه لرزش کانونی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>جهش سهم پارامترها</li>
+                </ul>
+              </div>
+            </div>
+            <div class="grid-4col" style="margin-top: 18px;">
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۵</span>آزمون‌های تشخیصی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>پیمایش فاصله کانونی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>شیب پاسخ ۰.۹۷</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>اثبات علیت ریاضی</li>
+                </ul>
+              </div>
+              <div class="card highlight" style="border-color: var(--emerald-500); background: #f0fdf4;">
+                <div class="card-title" style="color: var(--emerald-600);"><span class="card-icon" style="background:rgba(16,185,129,0.15); color:var(--emerald-600);">★</span>آموزش چندمجموعه‌ای</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>مدل واحد برای ۴ دیتاست</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>برتری در هر ۸ تست‌ست</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>تعمیم صفرنمونه کینکت</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۷</span>کاربردهای صنعتی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>رباتیک و لجستیک</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>خودروهای هوشمند (ADAS)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>دوقلوی دیجیتال و AR</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۸</span>نتیجه‌گیری</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تأیید فرضیات سه‌گانه</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>نوآوری‌های پژوهش</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>محدودیت‌ها و آینده</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲:</strong></p>
+            <p>«ارائه امروز ساختاری مرحله‌به‌مرحله دارد. ابتدا صورت‌بندی مسئله و محدودیت‌های روش‌های فعلی را شرح می‌دهم. سپس جزئیات معماری تزریق توکن را بررسی می‌کنیم. در بخش چهارم و پنجم، با مطالعات کنترل‌شده تک‌دوربینه و آزمون‌های علّی نشان می‌دهیم که مدل واقعاً فاصله کانونی را می‌خواند.</p>
+            <p>و در نهایت در بخش ششم، دستاورد اصلی پژوهش یعنی آموزش یکپارچه یک مدل منفرد بر روی ۴ دیتاست داخلی و بیرونی و تعمیم آن به حسگرهای دیده‌نشده را معرفی خواهم کرد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="3">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۱: کلیات و صورت‌بندی مسئله</span>
+              <h2>تخمین عمق تک‌دوربینه (Monocular Depth Estimation)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">3 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🎯</span>تعریف مسئله و مزایای راهبردی</div>
+                  <ul class="phrase-list" style="margin-top: 14px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span>ورودی سامانه: <strong>تنها یک فریم تصویر ۲بعدی RGB</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>خروجی مطلوب: <strong>ماتریس فاصله فیزیکی اشیا (عمق Z برحسب متر)</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>مزیت راهبردی: <strong>حذف سنسورهای فعال گران‌قیمت (LiDAR)</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>بهینه‌سازی سیستم: <strong>کاهش وزن سخت‌افزار، مصرف توان و کالیبراسیون پیچیده استریو</strong></li>
+                  </ul>
+                </div>
+                <div style="background: #f1f5f9; padding: 16px; border-radius: 12px; border-right: 4px solid var(--blue-primary);">
+                  <div style="font-weight: 800; color: var(--navy-900); margin-bottom: 4px;">نقش کلیدی در سیستم‌های خودمختار:</div>
+                  <div style="font-weight: 600; color: var(--gray-700); font-size: 1.05rem;">
+                    ناوبری ربات‌های سیار • سامانه‌های ADAS خودرو • بازسازی سه‌بعدی محیط
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 500 300" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="25" y="35" width="130" height="180" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                  <rect x="35" y="45" width="110" height="115" rx="8" fill="#1d4ed8" opacity="0.85"/>
+                  <text x="90" y="110" fill="#ffffff" font-size="14" font-weight="900" text-anchor="middle">تصویر RGB</text>
+                  <text x="90" y="185" fill="#1e3a8a" font-size="12" font-weight="800" text-anchor="middle">صفحه تصویر (u, v)</text>
+                  <path d="M 175 125 L 265 125" stroke="#0ea5e9" stroke-width="4" stroke-dasharray="6,4"/>
+                  <polygon points="265,120 277,125 265,130" fill="#0ea5e9"/>
+                  <circle cx="220" cy="125" r="26" fill="#e0f2fe" stroke="#38bdf8" stroke-width="2"/>
+                  <text x="220" y="130" fill="#0369a1" font-size="12" font-weight="900" text-anchor="middle">مدل MDE</text>
+                  <rect x="295" y="35" width="130" height="180" rx="12" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                  <rect x="305" y="45" width="110" height="115" rx="8" fill="#059669" opacity="0.85"/>
+                  <text x="360" y="110" fill="#ffffff" font-size="14" font-weight="900" text-anchor="middle">نقشه عمق Z</text>
+                  <text x="360" y="185" fill="#065f46" font-size="12" font-weight="800" text-anchor="middle">فاصله حقیقی (متر)</text>
+                  <rect x="40" y="240" width="370" height="42" rx="8" fill="#fef2f2" stroke="#fecaca" stroke-width="1.5"/>
+                  <text x="225" y="266" fill="#b91c1c" font-size="13" font-weight="800" text-anchor="middle">چالش ذاتی: نگاشت نامعین و از دست رفتن بُعد سوم</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳:</strong></p>
+            <p>«تخمین عمق تک‌دوربینه یا MDE یکی از پایه‌ای‌ترین نیازهای سیستم‌های هوشمند است. دوربین‌های RGB همه‌جا هستند: از گوشی‌های هوشمند و پهپادها تا خودروها و ربات‌های کارخانه‌ای. اگر بتوانیم صرفاً با یک دوربین معمولی، نقشه عمق فیزیکی صحنه را بر حسب متر استخراج کنیم، نیاز به لایدار و حسگرهای گران‌قیمت یا چیدمان استریو با کالیبراسیون سنگین به شدت کاهش می‌یابد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="4">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۱: کلیات و صورت‌بندی مسئله</span>
+              <h2>چالش بنیادین: ابهام مقیاس (Scale Ambiguity)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">4 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">⚡</span>معادله تشکیل تصویر و هم‌ارزی فیزیکی</div>
+                  <div style="background:#eff6ff; padding:12px; border-radius:10px; margin:10px 0; text-align:center;">
+                    <span style="font-size:1.6rem; font-weight:900; color:var(--blue-primary); direction:ltr; display:inline-block;">
+                      u = (f · X) / Z = (α·f · X) / (α·Z)
+                    </span>
+                  </div>
+                  <ul class="phrase-list">
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>هم‌ارزی اندازه و فاصله:</strong> جسم کوچکِ نزدیک تصویر پیکسلی یکسانی با جسم بزرگِ دور تولید می‌کند.</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>هم‌ارزی کانون و عمق:</strong> دو برابر شدن فاصله کانونی لنز با دو برابر شدن فاصله فیزیکی صحنه بی‌اثر می‌شود.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>نتیجه تحلیلی تز:</strong> پیکسل‌های تصویر به تنهایی فاقد اطلاعات لازم برای تعیین مقیاس فیزیکی مطلق هستند.</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">یافته مفهومی پایان‌نامه:</div>
+                  <div style="font-weight:800; color:var(--navy-900); font-size:1.05rem;">
+                    ابهام مقیاس ناشی از فیزیک پرسپکتیو است، نه کمبود لایه‌های شبکه!
+                  </div>
+                </div>
+              </div>
+              <div class="media-container" style="height: 480px;">
+                <video controls autoplay loop muted playsinline>
+                  <source src="assets/video/scale-ambiguity.mp4" type="video/mp4">
+                  مرورگر از ویدیو پشتیبانی نمی‌کند.
+                </video>
+                <div class="figure-caption">ویدیو: نمایش تجربی پدیده اتاق ایمز و هم‌ارزی اندازه ظاهری اجسام در فواصل مختلف</div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۴:</strong></p>
+            <p>«این ویدیو پدیده کلاسیک اتاق ایمز را نشان می‌دهد. در معادله تصویربرداری روزنه‌ای، نسبت f ضرب‌در X به Z مشخص‌کننده مکان پیکسل است. اگر عمق Z و فاصله کانونی f با هم در ضریب آلفا ضرب شوند، تصویر دقیقاً یکسان باقی می‌ماند.</p>
+            <p>بنابراین هر تلاشی برای یادگیری عمق مطلق فقط از روی پیکسل‌ها، شبکه را ناچار می‌کند تا مقیاس را بر اساس میانگین داده‌های آموزشی حدس بزند. به محض تعویض دوربین یا تغییر لنز، این حدس‌ها با خطای فاحش روبه‌رو می‌شوند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="5">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۱: کلیات و صورت‌بندی مسئله</span>
+              <h2>هندسه روزنه‌ای و ماتریس کالیبراسیون دوربین ($K$)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">5 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">📐</span>ماتریس کالیبراسیون داخلی (Camera Intrinsics)</div>
+                  <div style="background:#f8fafc; border:1px solid #cbd5e1; border-radius:10px; padding:12px; margin:12px 0; text-align:center; direction:ltr;">
+                    <span style="font-size:1.4rem; font-weight:900; color:var(--navy-900);">
+                      K = [[f<sub>x</sub>, 0, c<sub>x</sub>], [0, f<sub>y</sub>, c<sub>y</sub>], [0, 0, 1]]
+                    </span>
+                  </div>
+                  <ul class="phrase-list">
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>فاصله کانونی ($f_x, f_y$):</strong> تعیین‌کننده ضریب مقیاس پرسپکتیو و زاویه دید لنز</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>نقطه اصلی ($c_x, c_y$):</strong> مرکز اپتیکی سنسور و مبنای جابه‌جایی در برش‌ها</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>کلید حل ابهام مقیاس:</strong> تبدیل پرتو دید به مختصات فیزیکی سه‌بعدی واقعی</li>
+                  </ul>
+                </div>
+                <div class="card navy">
+                  <div style="font-weight:800; font-size:1.1rem; color:#93c5fd;">شناسنامه نوری هر فریم:</div>
+                  <div style="font-size:1rem; color:#e2e8f0; line-height:1.5;">
+                    ماتریس کالیبراسیون $K$ مشخصات دقیق تصویربرداری را از محتوای تصویری تفکیک می‌کند.
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+                  <polygon points="50,150 200,60 200,240" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                  <polygon points="200,60 400,20 400,280 200,240" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
+                  <circle cx="50" cy="150" r="5" fill="#1d4ed8"/>
+                  <text x="45" y="175" fill="#1e293b" font-size="12" font-weight="bold">مرکز اپتیک C</text>
+                  <line x1="200" y1="50" x2="200" y2="250" stroke="#ef4444" stroke-width="3"/>
+                  <circle cx="200" cy="150" r="4" fill="#ef4444"/>
+                  <text x="210" y="145" fill="#991b1b" font-size="11" font-weight="bold">(cx, cy)</text>
+                  <text x="200" y="40" fill="#ef4444" font-size="12" font-weight="bold" text-anchor="middle">صفحه سنسور</text>
+                  <line x1="50" y1="210" x2="200" y2="210" stroke="#1d4ed8" stroke-width="2"/>
+                  <text x="125" y="200" fill="#1d4ed8" font-size="13" font-weight="bold" text-anchor="middle">فاصله کانونی f</text>
+                  <circle cx="360" cy="90" r="7" fill="#10b981"/>
+                  <text x="375" y="95" fill="#065f46" font-size="12" font-weight="bold">نقطه واقعی P(X,Y,Z)</text>
+                  <line x1="50" y1="150" x2="360" y2="90" stroke="#10b981" stroke-width="1.5" stroke-dasharray="5,3"/>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۵:</strong></p>
+            <p>«در مدل دوربین سوراخ‌سوزنی، ماتریس K شامل ۴ مؤلفه بنیادین است: فاصله کانونی افقی و عمودی fx و fy، و مختصات نقطه اصلی cx و cy. این ماتریس تعیین می‌کند که هر نقطه سه‌بعدی با چه ضریبی روی سنسور تشکیل می‌شود.</p>
+            <p>اگر سیستم ماتریس کالیبراسیون را به صورت صریح دریافت کند، رابطه X=(u-cx)Z/fx به یک نگاشت قطعی تبدیل می‌شود و مدل دیگر نیازی ندارد تا بر اساس حدس‌های تصادفی یا نشانه‌های غیرمستقیم، مقیاس را بازسازی کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="6">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۱: کلیات و صورت‌بندی مسئله</span>
+              <h2>تناقض مدل‌های بنیادین: عمق نسبی در برابر مطلق</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">6 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">✓</span>تخمین عمق نسبی (Relative Depth)</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span><strong>ساختار عالی:</strong> تشخیص صحیح ترتیب تقدم و تاخر اجسام صحنه</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span><strong>انطباق بصری فوق‌العاده:</strong> لبه‌های بسیار تیز و پیوسته</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span><strong>فقدان بعد فیزیکی:</strong> خروجی بی‌مقیاس و وابسته به نرمال‌سازی ($s\hat{D} + t$)</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span><strong>غیرقابل استفاده در اندازه‌گیری:</strong> نمی‌توان برای ترمز خودرو یا حرکت ربات به آن تکیه کرد!</li>
+                </ul>
+              </div>
+
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">⚠️</span>تخمین عمق مطلق (Metric/Absolute Depth)</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span><strong>خروجی واقعی:</strong> بیان فاصله فیزیکی بر حسب متر</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span><strong>ناپایداری در مدل‌های کنونی:</strong> نسخه‌های مطلق موجود ماتریس دوربین را دریافت نمی‌کنند</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span><strong>افت شدید در انتقال:</strong> با تغییر دوربین، خطای AbsRel نسخه رسمی DA-V2 روی NYUv2 به بیش از ۲۰٪ می‌رسد!</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span><strong>نیاز مبرم:</strong> مدلی که عمق فیزیکی پایدار را با هندسه دوربین تضمین کند</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۶:</strong></p>
+            <p>«امروزه مدل‌های بنیادین مثل Depth Anything V2 تصاویر خیره‌کننده‌ای تولید می‌کنند. اجسام نزدیک را به خوبی از دور تفکیک می‌کنند. اما مشکل کجاست؟ این خروجی‌ها عمدتاً "عمق نسبی" هستند؛ یعنی فقط می‌دانیم شیء A از شیء B نزدیک‌تر است، اما نمی‌دانیم فاصله دقیق ۲ متر است یا ۶ متر!</p>
+            <p>نسخه‌های مطلق منتشرشده از این مدل‌ها نیز چون اطلاعات کالیبراسیون دوربین را مستقیماً دریافت نمی‌کنند، به شدت به دوربین آموزشی خود وابسته می‌شوند. در فصل چهارم نشان دادیم که خطای AbsRel مدل رسمی منتشرشده Depth Anything V2 روی داده‌های استاندارد داخلی به بیش از ۰.۲۰۷ می‌رسد؛ خطایی که برای ناوبری ربات غیرقابل قبول است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="7">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۱: کلیات و صورت‌بندی مسئله</span>
+              <h2>پرسش‌ها و فرضیات کلیدی پژوهش</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">7 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="table-container">
+              <table class="academic-table">
+                <thead>
+                  <tr>
+                    <th style="width: 12%;">ردیف</th>
+                    <th style="width: 44%;">سؤال اساسی تحقیق</th>
+                    <th style="width: 44%;">فرضیه تجربی پژوهش</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>پرسش ۱</strong></td>
+                    <td>آیا مدل پایه بدون اطلاعات دوربین، در انتقال بین دیتاست‌ها دچار افت معنی‌دار می‌شود؟</td>
+                    <td><span class="best-val">فرضیه ۱:</span> میانگین خطای SiLog مدل پایه بین دیتاست‌ها اختلاف معنی‌دار آماری دارد ($p < 0.05$).</td>
+                  </tr>
+                  <tr>
+                    <td><strong>پرسش ۲</strong></td>
+                    <td>آیا پروتکل ارزیابی نسبی متداول، سهم اصلی پارامترهای دوربین در مقیاس فیزیکی را پنهان می‌کند؟</td>
+                    <td><span class="best-val">فرضیه ۲:</span> تراز مقیاس به ازای هر تصویر، اطلاعات هندسی دوربین را حذف کرده و ارزیابی نسبی به مقیاس کور است.</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td><strong>پرسش ۳</strong></td>
+                    <td>آیا تزریق صریح $K$ موجب کاهش معنادار خطای مطلق بدون افت ساختار نسبی می‌شود؟</td>
+                    <td><span class="best-val green">فرضیه ۳:</span> مدل پیشنهادی خطای AbsRel و RMSE را به طور پایدار کاهش داده و ساختار نسبی را حفظ می‌کند.</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۷:</strong></p>
+            <p>«بر اساس چالش‌های مطرح‌شده، سه سؤال بنیادین و سه فرضیه پژوهشی تدوین کردیم:</p>
+            <p>اول، اثبات اینکه آیا مدل پایه به نوع دیتاست و دوربین وابسته است یا خیر که با آزمون t ارزیابی شد. دوم، فرضیه کشف نابینایی پروتکل‌های نسبی رایج در ادبیات. و سوم، فرضیه اثبات بهبود معنادار خطای عمق مطلق با تزریق ماتریس کالیبراسیون بدون افت دقت در ساختار نسبی صحنه. در فصل ۴ و ۵ پاسخ قاطع و عددی به این فرضیات داده شده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="8">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۲: پیشینه پژوهشی و شکاف علمی</span>
+              <h2>سیر تحول روش‌های تخمین عمق تک‌دوربینه</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">8 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۱</span>کلاسیک و اولیه</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>روش‌های Make3D و MRF</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>وابستگی به خطوط افق و فرضیات صلب</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>شبکه‌های CNN نظارتی اولیه (Eigen 2014)</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۲</span>انقلاب خودنظارتی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>خودنظارتی استریو (Godard 2017)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>خودنظارتی فریم‌های متوالی ویدیو</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>هزینه انطباق نوری و فتومتریک</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title"><span class="card-icon">۳</span>خانواده MiDaS & DPT</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>ترنسفورمرهای بینایی (ViT)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>توابع اتلاف ناوردا نسبت به مقیاس و جابه‌جایی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تمرکز کامل بر عمق نسبی</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">۴</span>مدل‌های بنیادین</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>پیش‌آموزش‌های عظیم خودنظارتی (DINOv2)</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>تقطیر دانش معلم-دانش‌آموز (Depth Anything)</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>نقص: نادیده گرفتن هندسه فیزیکی دوربین</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۸:</strong></p>
+            <p>«مسیر تکاملی MDE از مدل‌های اولیه Make3D ساکسنا و شبکه‌های نظارتی ایگن آغاز شد. سپس مدل‌های خودنظارتی استریو مانند منودپث روی کار آمدند که نیاز به برچسب‌های گران لایدار را حذف کردند. در ادامه با معرفی خانواده MiDaS و انکودرهای ترنسفورمری DPT، جهش بزرگی در تعمیم بین‌دامنه‌ای پدید آمد اما به قیمت قربانی کردن مقیاس فیزیکی و رفتن به سمت عمق نسبی.</p>
+            <p>سرانجام در سال‌های اخیر با مدل‌های بنیادین مثل Depth Anything و وزن‌های DINOv2 به اوج کیفیت بصری رسیدیم؛ اما چالش غیبت کالیبراسیون لنز همچنان پابرجا ماند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="9">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۲: پیشینه پژوهشی و شکاف علمی</span>
+              <h2>مدل پایه: معماری Depth Anything V2</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">9 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🧠</span>ستون فقرات و فرآیند آموزش مدل پایه</div>
+                  <ul class="phrase-list" style="margin-top: 12px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>انکودر بینایی DINOv2:</strong> استخراج ویژگی‌های غنی بصری بدون نیاز به برچسب</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>دیکودر DPT:</strong> پردازش و فیوژن ویژگی‌های چندمقیاسی (Multi-scale Fusion)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>تقطیر در مقیاس نجومی:</strong> آموزش اولیه بر ۵۹۵ هزار تصویر سنتتیک و تولید ۶۲ میلیون شبه‌برچسب واقعی!</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>تنوع معماری:</strong> نسخه‌های Small (ViT-S, 25M) و Large (ViT-L, 335M)</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">انگیزه انتخاب به عنوان مدل پایه:</div>
+                  <div style="font-weight: 800; color: var(--navy-900);">
+                    قوی‌ترین مدل بنیادین MDE در جهان با غنی‌ترین نمایش بصری صحنه
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height: 100%; justify-content: center;">
+                <div style="font-size: 1.3rem; font-weight: 900; color: #60a5fa; margin-bottom: 16px;">
+                  محدودیت ذاتی در انتشار رسمی:
+                </div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>نسخه پایه، عمق نسبی بی‌مقیاس تولید می‌کند.</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>نسخه مطلق منتشرشده آن که با Hypersim فاین‌تیون شده، هیچ ورودی هندسی از دوربین نمی‌گیرد.</li>
+                  <li class="phrase-item"><span class="phrase-bullet amber"></span>تغییر میدان دید لنز باعث خطای بزرگ در مقیاس متریک می‌شود.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۹:</strong></p>
+            <p>«مدل پایه پژوهش ما Depth Anything V2 است که در سال ۲۰۲۴ معرفی شد. ستون فقرات این مدل انکودر قدرتمند DINOv2 شرکت متا است و دیکودر آن از نوع DPT است. فرآیند آموزش آن با ۶۲ میلیون تصویر واقعی تقطیر شده است که غنی‌ترین فضای بازنمایی ویژگی را فراهم می‌کند.</p>
+            <p>اما نقطه ضعف آن چیست؟ این مدل به عنوان ورودی فقط تصویر را می‌گیرد. بنابراین نسخه مطلق آن در مواجهه با دوربینی با میدان دید متفاوت از Hypersim، نمی‌تواند بفهمد که بزرگ‌نمایی تصویر ناشی از فاصله است یا لنز، و مقیاس متریک دچار خطای فاحش می‌شود.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="10">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۲: پیشینه پژوهشی و شکاف علمی</span>
+              <h2>رویکردهای پیشین در مواجهه با اطلاعات دوربین</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">10 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card">
+                <div class="card-title" style="font-size: 1.15rem;"><span class="card-icon">1</span>CAM-Convs</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>افزودن کانال‌های مختصاتی زاویه دید به کانولوشن</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>محدود به شبکه‌های سنتی CNN</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>ناسازگار با مدل‌های ترنسفورمری ViT</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title" style="font-size: 1.15rem;"><span class="card-icon">2</span>Metric3D</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تبدیل تصویر به "فضای دوربین متعارف" (Canonical)</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>شبکه مستقیماً کالیبراسیون را در لایه‌ها نمی‌بیند</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>وابستگی به برش‌ها و اتلاف پیکسل‌های مرزی</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title" style="font-size: 1.15rem;"><span class="card-icon">3</span>UniDepth</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>آموزش هم‌زمان شاخه تخمین کالیبراسیون</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>دوربین معلوم به عنوان ورودی صریح داده نمی‌شود</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>تجمع خطا در صورت تخمین اشتباه کانون</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue" style="font-size: 1.15rem;"><span class="card-icon">★</span>روش پیشنهادی ما</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>تزریق ماتریس معلوم K با انکودر ترنسفورمری</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>استفاده از مکانیزم توجه (Attention) در ViT</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>حفظ کامل انکودر پایه بدون تخریب وزن‌ها</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۰:</strong></p>
+            <p>«در پیشینه پژوهشی روش‌های متعددی وجود داشته است: CAM-Convs پارامترها را به کانولوشن‌ها می‌داد که روی ترنسفورمرهای مدرن کارایی ندارد. Metric3D تصاویر را به یک فضای فرضی کانونی با برش و تغییر اندازه می‌برد که موجب تخریب حواشی تصویر می‌شود. روش‌هایی مثل UniDepth و Depth Pro هم سعی دارند کالیبراسیون را از تصویر حدس بزنند که خطای تخمین کانون به عمق سرایت می‌کند.</p>
+            <p>در دنیای واقعی رباتیک و خودرو، ماتریس کالیبراسیون دوربین‌ها به طور دقیق مشخص و معلوم است. چرا باید چیزی را که می‌دانیم حدس بزنیم؟ نوآوری ما تزریق مستقیم ماتریس معلوم به لایه‌های خودتوجهی انکودر بنیادین است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="11">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۲: پیشینه پژوهشی و شکاف علمی</span>
+              <h2>شکاف پژوهشی و صورت‌بندی دقیق خلاء علمی</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">11 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-3col">
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">۱</span>تداخل متغیرها در مقالات گذشته</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>در روش‌های پیشین هم‌زمان معماری، دیتاست و تابع هزینه عوض می‌شد.</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>مشخص نبود بهبود حاصل دقیقاً چقدر به خود کالیبراسیون مربوط است و چقدر به حجم داده بیشتر!</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">۲</span>تخریب بازنمایی‌های پیش‌آموخته</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>تغییر ناگهانی ورودی در مدل‌های ازپیش‌آموزش‌دیده موجب فراموشی فاجعه‌بار (Catastrophic Forgetting) می‌شود.</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>نیاز به سازوکاری هوشمند برای کنترل نفوذ اطلاعات هندسی در آغاز آموزش.</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">۳</span>فقدان پروتکل تجربی کنترل‌شده</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>طراحی آزمایش مقایسه زوجی دقیق (Proposed vs Control) با ثابت نگه داشتن همه متغیرها.</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>جداسازی قطعی اثر فیزیک دوربین از اثرات تصادفی آموزش و افزونه‌سازی.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۱:</strong></p>
+            <p>«شکاف علمی که هدف این پایان‌نامه قرار گرفت در سه محور خلاصه می‌شود: اول، در کارهای قبلی هم‌زمان داده، ستون فقرات و بهینه‌ساز تغییر می‌کرد و سهم خالص کالیبراسیون ایزوله نمی‌شد. دوم، وارد کردن ویژگی‌های جدید به ترنسفورمر بدون تدبیر مهندسی می‌تواند وزن‌های DINOv2 را تخریب کند.</p>
+            <p>پاسخ ما: ایجاد یک مطالعه کنترل‌شده زوجی دقیق (Pairwise Controlled Study) بود که در آن مدل پیشنهادی و مدل کنترل در داده، گام‌ها، ترتیب نمونه‌ها و انکودر فریز ۱۰۰٪ یکسان باشند و تنها تفاوت دسترسی به ماتریس K باشد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="12">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۳: روش و معماری پیشنهادی</span>
+              <h2>اصل طراحی: تفکیک بازنمایی بصری و هندسه تصویربرداری</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">12 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">💡</span>تفکیک وظایف در فضای ورودی</div>
+                  <ul class="phrase-list" style="margin-top: 14px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>مسیر بصری ($I$):</strong> استخراج بافت، مرزهای معنایی، روابط سایه-روشن و ساختار نسبی صحنه</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>مسیر هندسی ($K$):</strong> تأمین مقیاس فیزیکی، فاصله کانونی، میدان دید و نسبت قاب تصویر</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>صورت‌بندی ریاضی:</strong> یادگیری نگاشت $f_\theta : (I, K) \rightarrow D$</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">فلسفه کلیدی طراحی:</div>
+                  <div style="font-weight: 800; color: #065f46; font-size: 1.1rem;">
+                    شبکه به جای "حدس زدن ناپایدار" هندسه از داده، از "قیود فیزیکی صریح" تغذیه می‌کند!
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Two inputs entering model -->
+                  <rect x="30" y="40" width="130" height="70" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                  <text x="95" y="72" fill="#1e40af" font-size="13" font-weight="bold" text-anchor="middle">تصویر RGB ($I$)</text>
+                  <text x="95" y="92" fill="#64748b" font-size="11" text-anchor="middle">بافت و ادراک بصری</text>
+
+                  <rect x="30" y="160" width="130" height="70" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                  <text x="95" y="192" fill="#065f46" font-size="13" font-weight="bold" text-anchor="middle">ماتریس دوربین ($K$)</text>
+                  <text x="95" y="212" fill="#64748b" font-size="11" text-anchor="middle">مقیاس فیزیکی لنز</text>
+
+                  <!-- Central Network Fusion -->
+                  <rect x="220" y="70" width="120" height="130" rx="12" fill="#1e293b" stroke="#0ea5e9" stroke-width="2"/>
+                  <text x="280" y="125" fill="#ffffff" font-size="14" font-weight="bold" text-anchor="middle">مدل پیشنهادی</text>
+                  <text x="280" y="150" fill="#38bdf8" font-size="11" font-weight="bold" text-anchor="middle">(تلفیق خودتوجهی)</text>
+
+                  <!-- Arrows -->
+                  <line x1="160" y1="75" x2="220" y2="105" stroke="#3b82f6" stroke-width="3"/>
+                  <line x1="160" y1="195" x2="220" y2="165" stroke="#10b981" stroke-width="3"/>
+
+                  <!-- Output -->
+                  <line x1="340" y1="135" x2="400" y2="135" stroke="#0ea5e9" stroke-width="3"/>
+                  <polygon points="400,130 412,135 400,140" fill="#0ea5e9"/>
+                  <rect x="412" y="100" width="40" height="70" rx="6" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                  <text x="432" y="140" fill="#0f172a" font-size="13" font-weight="bold" text-anchor="middle">عمق $D$</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۲:</strong></p>
+            <p>«اصل طراحی ما بر تفکیک کامل اطلاعات متکی است: تصویر ورودی منبع اطلاعات ظاهری، بافت، لبه‌ها و کانتورهای معنایی است؛ در حالی که ماتریس کالیبراسیون توصیف‌گر هندسه تصویربرداری است. شبکه عصبی قرار نیست کانون لنز را حدس بزند، بلکه وظیفه دارد این دو جریان اطلاعاتی را در مکانیزم توجه ادغام کند تا خروجی نهایی دارای مقیاس فیزیکی واقعی باشد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="13">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۳: روش و معماری پیشنهادی</span>
+              <h2>بردار توصیف‌گر ۹‌بعدی پارامترهای دوربین ($\mathbf{d}_{	ext{cam}}$)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">13 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="card" style="margin-bottom: 12px; padding: 12px 20px;">
+              <div style="font-size: 1.1rem; font-weight: 800; color: var(--navy-900); text-align: center; direction: ltr;">
+                d<sub>cam</sub> = [ f<sub>x</sub>/W, &nbsp; f<sub>y</sub>/H, &nbsp; c<sub>x</sub>/W, &nbsp; c<sub>y</sub>/H, &nbsp; fov<sub>h</sub>/π, &nbsp; fov<sub>w</sub>/π, &nbsp; W/H, &nbsp; (f<sub>x</sub>+f<sub>y</sub>)/(2·max(H,W)), &nbsp; HW/(1920×1080) ]
+              </div>
+            </div>
+            <div class="table-container">
+              <table class="academic-table" style="font-size: 0.95rem;">
+                <thead>
+                  <tr>
+                    <th>ردیف</th>
+                    <th>مؤلفه ریاضی</th>
+                    <th>نقش و اهمیت هندسی در مدل</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><strong>۱ و ۲</strong></td>
+                    <td>$f_x/W \;,\; f_y/H$</td>
+                    <td>فاصله کانونی نرمال‌شده؛ مستقل‌سازی کامل از رزولوشن تصویر</td>
+                  </tr>
+                  <tr>
+                    <td><strong>۳ و ۴</strong></td>
+                    <td>$c_x/W \;,\; c_y/H$</td>
+                    <td>موقعیت نرمال نقطه اصلی؛ ردیابی دقیق جابه‌جایی مرکز اپتیک در برش‌ها</td>
+                  </tr>
+                  <tr>
+                    <td><strong>۵ و ۶</strong></td>
+                    <td>$\mathrm{fov}_h/\pi \;,\; \mathrm{fov}_w/\pi$</td>
+                    <td>میدان دید زاویه‌ای نرمال ($2rctan(\cdot)$)؛ حساسیت فیزیکی مستقیم به لنز واید یا تله</td>
+                  </tr>
+                  <tr>
+                    <td><strong>۷</strong></td>
+                    <td>$W/H$</td>
+                    <td>نسبت ابعاد کادر تصویر (Aspect Ratio) برای حفظ تناسبات هندسی</td>
+                  </tr>
+                  <tr>
+                    <td><strong>۸ و ۹</strong></td>
+                    <td>کانون میانگین و مساحت نسبی</td>
+                    <td>سنجه فشردگی تنگی میدان دید و مساحت فریم نسبت به مرجع Full-HD</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۳:</strong></p>
+            <p>«برای اینکه اطلاعات ماتریس K به شبکه تزریق شود، نمی‌توان اعداد خام پیکسلی را داد؛ چون در دیتاست‌های مختلف رزولوشن فرق می‌کند. ما یک بردار توصیف‌گر ۹ بعدی غنی طراحی کردیم: کانون و نقطه اصلی بر ابعاد تصویر نرمال می‌شوند. میدان دید افقی و عمودی با تابع آرک‌تانژانت بر پی تقسیم می‌شوند تا زوایای دید فیزیکی را نمایندگی کنند. نسبت ابعاد و مساحت نیز اضافه شده‌اند تا مدل به طور کامل از هندسه تصویربرداری آگاه باشد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="14">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۳: روش و معماری پیشنهادی</span>
+              <h2>انکودر دوربین و توکن با گیت یادگیری‌پذیر ($\mathbf{z}_{	ext{cam}}$)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">14 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">⚙️</span>معماری انکودر دوربین $\phi(\cdot)$</div>
+                  <ul class="phrase-list" style="margin-top: 10px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>MLP دو لایه با GELU:</strong> نگاشت اولیه بردار ۹‌بعدی به فضای نهان انکودر (۱۰۲۴ در ViT-L)</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>۴ بلوک ترنسفورمر:</strong> پالایش بازنمایی هندسی و خودتوجهی درونی</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>ضریب کنترلی $\gamma$ با مقدار اولیه صفر (Zero-init Gate):</strong></li>
+                  </ul>
+                  <div style="background:#eff6ff; padding:10px; border-radius:8px; text-align:center; margin-top:8px; direction:ltr;">
+                    <span style="font-size:1.3rem; font-weight:900; color:var(--blue-primary);">z<sub>cam</sub> = γ · φ(d<sub>cam</sub>) &nbsp;&nbsp;(در آغاز γ = 0)</span>
+                  </div>
+                </div>
+                <div class="card navy">
+                  <div style="font-weight:800; font-size:1.05rem; color:#93c5fd; margin-bottom:4px;">مزیت بزرگ Zero-Initialized Gate:</div>
+                  <div style="font-size:0.95rem; color:#e2e8f0; line-height:1.4;">
+                    در گام‌های اولیه، توکن دوربین صفر است و وزن‌های بنیادین DINOv2 کوچک‌ترین آسیبی نمی‌بینند. شبکه به آرامی و در صورت کاهش اتلاف، $\gamma$ را افزایش می‌دهد.
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 440 280" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Flow of camera token -->
+                  <rect x="30" y="115" width="90" height="50" rx="8" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+                  <text x="75" y="145" fill="#0f172a" font-size="12" font-weight="bold" text-anchor="middle">بردار d<sub>cam</sub></text>
+
+                  <line x1="120" y1="140" x2="160" y2="140" stroke="#0ea5e9" stroke-width="3"/>
+                  
+                  <rect x="160" y="80" width="110" height="120" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                  <text x="215" y="125" fill="#1e40af" font-size="12" font-weight="bold" text-anchor="middle">انکودر دوربین</text>
+                  <text x="215" y="145" fill="#64748b" font-size="10" text-anchor="middle">MLP + ۴ ترنسفورمر</text>
+
+                  <line x1="270" y1="140" x2="310" y2="140" stroke="#0ea5e9" stroke-width="3"/>
+
+                  <circle cx="335" cy="140" r="25" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                  <text x="335" y="145" fill="#991b1b" font-size="13" font-weight="bold" text-anchor="middle">× γ</text>
+
+                  <line x1="360" y1="140" x2="400" y2="140" stroke="#0ea5e9" stroke-width="3"/>
+                  <polygon points="400,135 412,140 400,145" fill="#0ea5e9"/>
+                  <text x="405" y="170" fill="#10b981" font-size="12" font-weight="bold" text-anchor="middle">توکن z<sub>cam</sub></text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۴:</strong></p>
+            <p>«یکی از نوآوری‌های مهم مهندسی ما استفاده از توکن با گیت یادگیری‌پذیر است. اگر از ابتدا یک توکن رندوم به ترنسفورمر DINOv2 تزریق می‌شد، لایه‌های توجه دچار شوک عددی می‌شدند و گرادیان‌های اولیه بازنمایی‌های تقطیرشده ۶۲ میلیون تصویر را تخریب می‌کردند.</p>
+            <p>ما خروجی انکودر دوربین را در ضریب گاما با مقدار اولیه صفر ضرب کردیم. در گام صفر، خروجی دقیقاً بردار صفر است؛ گویی مدل همان مدل پایه است. با پیشرفت آموزش، شبکه اگر ببیند اطلاعات کالیبراسیون به کاهش خطا کمک می‌کند، مقدار گاما را از صفر دور می‌کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="15">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۳: روش و معماری پیشنهادی</span>
+              <h2>معماری یکپارچه تزریق توکن دوربین به DINOv2</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">15 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="diagram-box" style="padding: 10px;">
+              <svg viewBox="0 0 1000 480" xmlns="http://www.w3.org/2000/svg">
+                <!-- Background grid -->
+                <rect x="10" y="10" width="980" height="460" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2"/>
+
+                <!-- Image input -->
+                <rect x="40" y="80" width="120" height="140" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                <text x="100" y="145" fill="#1e40af" font-size="15" font-weight="bold" text-anchor="middle">تصویر ورودی $I$</text>
+                <text x="100" y="170" fill="#64748b" font-size="12" text-anchor="middle">وصله‌های ۱۴×۱۴</text>
+
+                <!-- DINOv2 Encoder Box -->
+                <rect x="230" y="60" width="280" height="180" rx="14" fill="#1e293b" stroke="#0ea5e9" stroke-width="3"/>
+                <text x="370" y="105" fill="#ffffff" font-size="18" font-weight="900" text-anchor="middle">انکودر بینایی DINOv2</text>
+                <text x="370" y="135" fill="#38bdf8" font-size="13" font-weight="bold" text-anchor="middle">(وزن‌ها کاملاً فریزشده)</text>
+                <text x="370" y="165" fill="#94a3b8" font-size="12" text-anchor="middle">تلفیق خودتوجهی لایه‌ها (Self-Attention)</text>
+
+                <!-- Arrow Image to Encoder -->
+                <line x1="160" y1="150" x2="230" y2="150" stroke="#3b82f6" stroke-width="4" marker-end="url(#arrow)"/>
+                <polygon points="225,145 235,150 225,155" fill="#3b82f6"/>
+
+                <!-- Camera Matrix & Branch -->
+                <rect x="40" y="300" width="120" height="110" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                <text x="100" y="350" fill="#065f46" font-size="14" font-weight="bold" text-anchor="middle">ماتریس $K$</text>
+                <text x="100" y="375" fill="#047857" font-size="12" text-anchor="middle">هندسه لنز</text>
+
+                <!-- Camera Normalization & Encoder -->
+                <rect x="230" y="300" width="180" height="110" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                <text x="320" y="345" fill="#065f46" font-size="14" font-weight="bold" text-anchor="middle">نرمال‌سازی و انکودر</text>
+                <text x="320" y="370" fill="#047857" font-size="12" text-anchor="middle">MLP + ۴ ترنسفورمر</text>
+
+                <line x1="160" y1="355" x2="230" y2="355" stroke="#10b981" stroke-width="4"/>
+                <polygon points="225,350 235,355 225,360" fill="#10b981"/>
+
+                <!-- Gate gamma -->
+                <circle cx="470" cy="355" r="28" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                <text x="470" y="360" fill="#991b1b" font-size="14" font-weight="bold" text-anchor="middle">گیت × γ</text>
+
+                <line x1="410" y1="355" x2="442" y2="355" stroke="#10b981" stroke-width="4"/>
+
+                <!-- Upward injection to DINOv2 -->
+                <path d="M 470 327 L 470 245" stroke="#ef4444" stroke-width="4" stroke-dasharray="6,4"/>
+                <polygon points="465,245 470,235 475,245" fill="#ef4444"/>
+                <text x="510" y="280" fill="#ef4444" font-size="12" font-weight="bold">توکن دوربین</text>
+
+                <!-- Multi-scale features -->
+                <line x1="510" y1="150" x2="590" y2="150" stroke="#0ea5e9" stroke-width="4"/>
+                <polygon points="585,145 595,150 585,155" fill="#0ea5e9"/>
+
+                <!-- DPT Decoder -->
+                <rect x="595" y="70" width="180" height="160" rx="14" fill="#eff6ff" stroke="#1d4ed8" stroke-width="3"/>
+                <text x="685" y="130" fill="#1e40af" font-size="16" font-weight="bold" text-anchor="middle">دیکودر DPT</text>
+                <text x="685" y="160" fill="#2563eb" font-size="12" font-weight="bold" text-anchor="middle">(آموزش‌پذیر)</text>
+
+                <!-- Output Depth -->
+                <line x1="775" y1="150" x2="840" y2="150" stroke="#1d4ed8" stroke-width="4"/>
+                <polygon points="835,145 845,150 835,155" fill="#1d4ed8"/>
+
+                <rect x="845" y="80" width="115" height="140" rx="10" fill="#ecfdf5" stroke="#10b981" stroke-width="2"/>
+                <text x="902" y="145" fill="#065f46" font-size="15" font-weight="900" text-anchor="middle">عمق مطلق D</text>
+                <text x="902" y="170" fill="#047857" font-size="12" font-weight="bold" text-anchor="middle">(برحسب متر)</text>
+
+                <!-- SiLog Loss badge -->
+                <rect x="620" y="290" width="280" height="70" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+                <text x="760" y="325" fill="#92400e" font-size="14" font-weight="bold" text-anchor="middle">تابع اتلاف SiLog بر عمق مطلق</text>
+                <text x="760" y="348" fill="#b45309" font-size="11" text-anchor="middle">مستقیماً بدون هیچ تراز مقیاسی</text>
+              </svg>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۵:</strong></p>
+            <p>«این دیاگرام نمای یکپارچه معماری پیشنهادی ماست: تصویر ورودی به دنباله توکن‌های وصله تبدیل می‌شود. ماتریس K نرمال شده، از انکودر دوربین و گیت گاما عبور می‌کند و به عنوان توکن دوربین در لایه اول در کنار توکن کلاس و سایر توکن‌ها قرار می‌گیرد. در طول ۱۲ یا ۲۴ لایه ترنسفورمر، توجه متقابل باعث می‌شود ویژگی‌های بصری با کانون لنز تلفیق شوند و سرانجام دیکودر DPT عمق مطلق واقعی را پیش‌بینی کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="16">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۳: روش و معماری پیشنهادی</span>
+              <h2>استراتژی آموزش و تابع هزینه SiLog</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">16 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">⚡</span>ابرپارامترهای بهینه‌سازی و سخت‌افزار</div>
+                  <ul class="phrase-list" style="margin-top: 10px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>فریز کامل ستون فقرات:</strong> وزن‌های DINOv2 فریز، فقط دیکودر و انکودر دوربین آموزش می‌بینند</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>بهینه‌ساز:</strong> AdamW با نرخ پایه $5	imes10^{-6}$ و تقویت ۱۰ برابری سر شبکه ($5	imes10^{-5}$)</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>سخت‌افزار محاسباتی:</strong> اجرای تمام آزمایش‌ها بر یک کارت گرافیک منفرد RTX 4090 (24GB)</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>محاسبات ترکیبی:</strong> گذر پیش‌رو با bfloat16 در مدل‌های ViT-L چندمجموعه‌ای</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">تضمین reproducibility علمی:</div>
+                  <div style="font-weight: 800; color: var(--navy-900);">
+                    قفل بذر تصادفی (Seed 42) برای انطباق ۱۰۰٪ شرایط مدل کنترل و پیشنهادی
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height: 100%; justify-content: space-around;">
+                <div>
+                  <div class="card-title" style="color: #93c5fd;"><span class="card-icon">📊</span>تابع اتلاف SiLog (Scale-Invariant Logarithmic)</div>
+                  <div style="background: rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; margin: 12px 0; direction: ltr; text-align: center;">
+                    <span style="font-size: 1.15rem; font-weight: 800; color: #ffffff;">
+                      L<sub>SiLog</sub> = 1/N ∑ g<sub>i</sub><sup>2</sup> - λ/N<sup>2</sup> (∑ g<sub>i</sub>)<sup>2</sup> &nbsp;&nbsp;(g<sub>i</sub> = ln d<sub>i</sub> - ln d<sub>i</sub><sup>*</sup>)
+                    </span>
+                  </div>
+                  <ul class="phrase-list">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>در مدل‌های مطلق: تنظیم $\lambda = 0.5$ برای جریمه خطای مقیاس مطلق فیزیکی</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>بدون هیچ‌گونه تراز مقیاس یا تغییر متغیر در حین محاسبه اتلاف</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۶:</strong></p>
+            <p>«برای آموزش از تابع هزینه معروف SiLog بر عمق مطلق استفاده کردیم. مقدار لاندا برابر ۰.۵ قرار گرفت تا خطا هم در نسبت‌ها و هم در مقیاس کلی جریمه شود. انکودر بینایی فریز نگه داشته شد تا از بیش‌برازش روی دیتاست‌های محدود جلوگیری شود و پایداری تضمین گردد.</p>
+            <p>تمامی آموزش‌ها روی یک تک کارت گرافیک RTX 4090 اجرا شد و بذر تصادفی ۴۲ قفل شد تا کوچک‌ترین اختلاف در نمونه‌گیری تصادفی بین مدل پیشنهادی و کنترل رخ ندهد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="17">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>نقشه راه تجربی: سفر ۴ فازی پژوهش</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">17 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card">
+                <div class="card-title" style="font-size:1.15rem;"><span class="card-icon">فاز ۱</span>ممیزی و نقطه شروع</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>ممیزی کامل چک‌پوینت‌های پیشین</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>بازتولید نتایج مقاله مرجع</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span>اثبات ناپایداری مدل پایه در تغییر دیتاست</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title" style="font-size:1.15rem;"><span class="card-icon">فاز ۲</span>اصلاح ارزیابی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>مقایسه چهارگانه در پروتکل نسبی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>افزونه‌سازی زوم‌ـ‌برش آگاه از دوربین</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>کشف نابینایی پروتکل نسبی و گذار به ارزیابی مطلق</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title" style="font-size:1.15rem;"><span class="card-icon">فاز ۳</span>اثبات مصرف K</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>افزونه‌سازی لرزش کانونی (Focal Jitter)</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>پیمایش کانون لنز (شیب ۰.۹۷)</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>آزمون حذف و تحریف ماتریس دوربین</li>
+                </ul>
+              </div>
+              <div class="card highlight" style="border-color:var(--emerald-500); background:#f0fdf4;">
+                <div class="card-title" style="font-size:1.15rem; color:var(--emerald-600);"><span class="card-icon" style="background:rgba(16,185,129,0.15); color:var(--emerald-600);">فاز ۴</span>تعمیم چندمجموعه‌ای</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>آموزش یکپارچه ۴ دیتاست با هم</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>ارزیابی بر ۸ مجموعه آزمون متنوع</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>برتری قاطع بر نسخه رسمی DA-V2</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۷:</strong></p>
+            <p>«مسیر پژوهشی ما در ۴ فاز منسجم طی شد: فاز اول با ممیزی و بازتولید مقاله اصلی آغاز شد تا از سلامت بنچمارک اطمینان حاصل شود. در فاز دوم متوجه شدیم که ارزیابی نسبی مقیاس را خنثی می‌کند؛ لذا به ارزیابی مطلق بدون تراز روی آوردیم. در فاز سوم با لرزش کانونی اثبات کردیم مدل واقعاً فیزیک لنز را درک می‌کند و در فاز چهارم به هدف غایی یعنی تعمیم یک مدل واحد به دوربین‌ها و محیط‌های چندگانه رسیدیم.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="18">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>مجموعه‌داده‌های پژوهش و تنوع سنسورها</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">18 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="table-container">
+              <table class="academic-table" style="font-size:0.95rem;">
+                <thead>
+                  <tr>
+                    <th>دیتاست</th>
+                    <th>محیط و سنسور عمق مرجع</th>
+                    <th>زاویه دید افقی</th>
+                    <th>بازه عمق</th>
+                    <th>نقش در این پایان‌نامه</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row">
+                    <td><strong>NYUv2</strong></td>
+                    <td>فضای داخلی، واقعی (سنسور Kinect)</td>
+                    <td>۶۳ درجه</td>
+                    <td>تا ۱۰ متر</td>
+                    <td>مطالعه کنترل‌شده، بنچمارک استاندارد و آموزش چندمجموعه‌ای</td>
+                  </tr>
+                  <tr>
+                    <td><strong>Cityscapes</strong></td>
+                    <td>شهری، خودرویی واقعی (Stereo Disparity)</td>
+                    <td>۴۹ درجه</td>
+                    <td>تا ۸۰ متر</td>
+                    <td>آموزش چندمجموعه‌ای و ارزیابی شهری</td>
+                  </tr>
+                  <tr>
+                    <td><strong>KITTI / VKITTI 2</strong></td>
+                    <td>جاده‌ای واقعی (LiDAR) و رندر دقیق سنتتیک</td>
+                    <td>۸۲ درجه</td>
+                    <td>تا ۸۰ متر</td>
+                    <td>تنوع ابعاد بیرونی و آموزش چندمجموعه‌ای</td>
+                  </tr>
+                  <tr style="background:#fefce8;">
+                    <td><strong>SUN RGB-D (۴ سنسور)</strong></td>
+                    <td>داخلی واقعی (Kinect v1/v2, RealSense, Xtion)</td>
+                    <td>۵۲ تا ۶۹ درجه</td>
+                    <td>تا ۱۰ متر</td>
+                    <td><strong>آزمون صفرنمونه (Zero-shot) بدون هیچ آموزش قبلی</strong></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۸:</strong></p>
+            <p>«دیتاست‌های مورد استفاده تنوع فوق‌العاده‌ای از لحاظ محیط (از اتاق‌های کوچک تا اتوبان‌ها و خیابان‌های شهری) و زاویه دید (از ۴۹ درجه تله تا ۸۲ درجه واید) دارند. نکته کلیدی استفاده از ۴ حسگر کاملاً ناهمگن از مجموعه داده SUN RGB-D برای آزمون‌های Zero-shot است تا اثبات شود مدل به سخت‌افزار خاصی اورفیت نشده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="19">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>راستی‌آزمایی زنجیره ارزیابی (Pipeline Verification)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">19 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🔍</span>صحت‌سنجی تجربی پیش از مقایسه‌ها</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>بازتولید کامل نتایج جدول ۲ مقاله مرجع Depth Anything V2</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>ارزیابی با وزن‌های رسمی منتشرشده روی NYUv2 و KITTI</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>حداکثر اختلاف معیار AbsRel کمتر از <strong>۰.۰۰۵</strong> (تلورانس استاندارد بازتولید)</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-value">Δ &lt; 0.005</div>
+                  <div class="stat-label">انطباق دقیق با گزارش مقاله مرجع CVPR 2024</div>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="academic-table">
+                  <thead>
+                    <tr>
+                      <th>دیتاست</th>
+                      <th>انکودر</th>
+                      <th>گزارش مقاله</th>
+                      <th>ارزیابی ما</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td rowspan="2"><strong>NYUv2</strong></td>
+                      <td>ViT-S</td>
+                      <td>AbsRel: 0.053 | δ₁: 0.973</td>
+                      <td class="best-val green">AbsRel: 0.051 | δ₁: 0.973</td>
+                    </tr>
+                    <tr>
+                      <td>ViT-L</td>
+                      <td>AbsRel: 0.045 | δ₁: 0.979</td>
+                      <td class="best-val green">AbsRel: 0.043 | δ₁: 0.979</td>
+                    </tr>
+                    <tr>
+                      <td rowspan="2"><strong>KITTI</strong></td>
+                      <td>ViT-S</td>
+                      <td>AbsRel: 0.078 | δ₁: 0.936</td>
+                      <td>AbsRel: 0.083 | δ₁: 0.934</td>
+                    </tr>
+                    <tr>
+                      <td>ViT-L</td>
+                      <td>AbsRel: 0.074 | δ₁: 0.946</td>
+                      <td>AbsRel: 0.076 | δ₁: 0.948</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۱۹:</strong></p>
+            <p>«پیش از ورود به مقایسه مدل‌ها، ممیزی بسیار دقیقی روی خط لوله ارزیابی انجام دادیم. نتایج جدول ۲ مقاله مرجع را بازتولید کردیم و دیدیم که زنجیره ارزیابی ما نتایجی کاملاً منطبق با مقاله اصلی می‌دهد (اختلاف زیر ۵ هزارم). این امر تضمین می‌کند که هرگونه برتری در اسلایدهای بعدی ناشی از دقت مدل پیشنهادی است و خطای کد ارزیابی در میان نیست.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="20">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>مطالعه کنترل‌شده تک‌دوربینه: نتایج پروتکل نسبی</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">20 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🔬</span>مقایسه چهارگانه در پروتکل استاندارد نسبی</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>هر دو مدل (کنترل و پیشنهادی) از مدل پایه منتشرشده بهتر شدند.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>در ViT-S: مدل پیشنهادی اندکی بهتر بود (AbsRel: 0.0501 در برابر 0.0507).</li>
+                    <li class="phrase-item"><span class="phrase-bullet amber"></span>در ViT-L: عملکرد دو مدل عملاً برابر شد (AbsRel: 0.0377 در برابر 0.0378).</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">سؤال مهم علمی که پیش آمد:</div>
+                  <div style="font-weight:800; color:var(--navy-900);">
+                    چرا در مدل بزرگ ViT-L، ورودی دوربین برتری چشمگیری در پروتکل نسبی ایجاد نکرد؟!
+                  </div>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="academic-table">
+                  <thead>
+                    <tr>
+                      <th>مدل در پروتکل نسبی</th>
+                      <th>AbsRel ↓</th>
+                      <th>δ₁ ↑</th>
+                      <th>RMSE ↓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>مدل پایه منتشرشده (رسمی)</td>
+                      <td>0.0425</td>
+                      <td>0.9789</td>
+                      <td>0.2119</td>
+                    </tr>
+                    <tr>
+                      <td>مدل کنترل (Fine-tuned)</td>
+                      <td>0.0378</td>
+                      <td><strong>0.9862</strong></td>
+                      <td>0.1922</td>
+                    </tr>
+                    <tr class="highlight-row">
+                      <td><strong>مدل پیشنهادی (+ توکن دوربین)</strong></td>
+                      <td><strong>0.0377</strong></td>
+                      <td>0.9861</td>
+                      <td><strong>0.1913</strong></td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۰:</strong></p>
+            <p>«در فاز دوم، مطالعه کنترل‌شده را روی NYUv2 با پروتکل مرجع نسبی اجرا کردیم. نتیجه جالب بود: هر دو مدل از مدل منتشرشده بهتر شدند؛ اما مدل پیشنهادی نسبت به مدل کنترل برتری چشمگیری نداشت (۰.۰۳۷۷ در برابر ۰.۰۳۷۸). دلیل این پدیده چه بود؟ آیا اطلاعات دوربین بی‌فایده بود؟ تحلیل ریاضی اسلاید بعد نشان داد که ایراد از پروتکل ارزیابی است!»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="21">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>کشف مفهومی: «نابینایی ساختاری پروتکل نسبی»</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">21 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">💡</span>دستاورد تئوریک پایان‌نامه</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>سازوکار تراز تصویربه‌تصویر:</strong> در پروتکل نسبی، پیش از محاسبه خطا، ضریب مقیاس $s$ و شیفت $t$ با کمترین مربعات برای تک‌تک فریم‌ها حساب شده و عمق بازتراز می‌شود!</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>حذف داده‌های دوربین:</strong> اطلاعات اصلی ماتریس $K$ دقیقاً همان "مقیاس مطلق صحنه" است که ترازگر آن را کلاً پاک می‌کند!</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>نتیجه‌گیری قطعی:</strong> سنجش سهم ماتریس دوربین تنها در "ارزیابی مطلق و بدون تراز" امکان‌پذیر است.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Flowchart comparing protocols -->
+                  <rect x="150" y="20" width="160" height="40" rx="8" fill="#1e293b"/>
+                  <text x="230" y="45" fill="#ffffff" font-size="12" font-weight="bold" text-anchor="middle">عمق پیش‌بینی‌شده مدل</text>
+
+                  <!-- Left: Absolute -->
+                  <path d="M 180 60 L 100 110" stroke="#10b981" stroke-width="3"/>
+                  <rect x="20" y="110" width="160" height="90" rx="10" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                  <text x="100" y="140" fill="#065f46" font-size="12" font-weight="bold" text-anchor="middle">پروتکل ارزیابی مطلق</text>
+                  <text x="100" y="165" fill="#047857" font-size="11" text-anchor="middle">بدون هیچ‌گونه تراز</text>
+                  <text x="100" y="185" fill="#047857" font-size="10" text-anchor="middle">سنجش مستقیم مقیاس متریک</text>
+
+                  <!-- Right: Relative -->
+                  <path d="M 280 60 L 360 110" stroke="#ef4444" stroke-width="3"/>
+                  <rect x="280" y="110" width="160" height="90" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                  <text x="360" y="135" fill="#991b1b" font-size="12" font-weight="bold" text-anchor="middle">پروتکل ارزیابی نسبی</text>
+                  <text x="360" y="155" fill="#b91c1c" font-size="11" font-weight="bold" text-anchor="middle">تراز با کمترین مربعات</text>
+                  <text x="360" y="180" fill="#7f1d1d" font-size="10" text-anchor="middle">حذف فیزیک مقیاس!</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۱:</strong></p>
+            <p>«این یکی از یافته‌های مفهومی کلیدی ماست. در پروتکل نسبی مقالات قبلی، به ازای هر تصویر، عمق تخمینی در ضریب s ضرب شده و با t جمع می‌شود تا بهترین انطباق با عمق واقعی حاصل شود. این یعنی الگوریتم ارزیابی، خطای مقیاس را دستی صفر می‌کند! دقیقاً همان چیزی که ماتریس دوربین به مدل می‌دهد توسط ترازگر حذف می‌شد. این نشان داد که برای دیدن سهم کالیبراسیون، باید سراغ ارزیابی مطلق برویم.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="22">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>گذار به ارزیابی مطلق و افزونه‌سازی زوم‌ـ‌برش</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">22 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">📐</span>افزونه‌سازی زوم‌ـ‌برش آگاه از دوربین (Zoom-Crop)</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span>دیتاست NYUv2 فقط یک دوربین با میدان دید ۶۳ درجه داشت ($K$ ثابت بود).</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>راه‌حل:</strong> اعمال برش‌های تصادفی با ضرایب ۱ تا ۲.۲ و به‌روزرسانی دقیق ماتریس $K$ (تغییر میدان دید بین ۳۱ تا ۶۳ درجه).</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>نتیجه ارزیابی مطلق:</strong> آشکار شدن برتری مدل پیشنهادی (AbsRel: 0.0817 در برابر 0.0826).</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">مشاهده گام پنجم:</div>
+                  <div style="font-weight:800; color:var(--navy-900);">
+                    سهم پارامترهای دوربین در ارزیابی مطلق آشکار شد، اما همچنان کوچک بود.
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:center;">
+                <div style="font-size:1.3rem; font-weight:900; color:#60a5fa; margin-bottom:14px;">چرا اثر دوربین هنوز کوچک بود؟</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet amber"></span>مدل همچنان می‌توانست از اندازه اشیاء معمولی اتاق (مثل صندلی و تخت) فاصله را تخمین بزند.</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span><strong>اقدام بعدی:</strong> شکستن این میانبر بصری با افزونه‌سازی انقلابی "لرزش کانونی" (Focal Jitter)!</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۲:</strong></p>
+            <p>«با انتقال به ارزیابی مطلق و ایجاد تنوع میدان دید با زوم-برش، برای اولین بار سهم ماتریس دوربین ظاهر شد و خطا از ۰.۰۸۲۶ به ۰.۰۸۱۷ کاهش یافت. اما این اختلاف هنوز به اندازه کافی بزرگ نبود؛ چون در صحنه‌های اتاق، ابعاد یک تخت یا صندلی برای شبکه یک راهنمای اندازه پنهان است. ما نیاز به آزمایشی داشتیم که مقیاس بدون دانستن کانون اصلاً قابل بازیابی نباشد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="23">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>نوآوری روش‌شناختی: افزونه‌سازی لرزش کانونی (Focal Jitter)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">23 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🔮</span>سازوکار تبدیل فیزیکی $(f, Z) \mapsto (lpha f, lpha Z)$</div>
+                  <ul class="phrase-list" style="margin-top:10px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>تصویر ورودی کاملاً دست‌نخورده باقی می‌ماند!</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>فاصله کانونی در ضریب تصادفی $lpha$ ضرب می‌شود: $f' = lpha \cdot f$</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>عمق مرجع نیز در همان ضریب ضرب می‌شود: $Z' = lpha \cdot Z$</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>شکستن میانبر معنایی:</strong> شبکه دیگر نمی‌تواند از روی اندازه ظاهری مبلمان عمق را حدس بزند!</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">ضریب لرزش: m = 1.6</div>
+                  <div style="font-weight:800; color:#065f46;">
+                    تنها راه نجات شبکه، خواندن مقدار کانون از ماتریس K است!
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 280" xmlns="http://www.w3.org/2000/svg">
+                  <rect x="20" y="40" width="130" height="90" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                  <text x="85" y="75" fill="#1e40af" font-size="12" font-weight="bold" text-anchor="middle">تصویر RGB ثابت</text>
+                  <text x="85" y="95" fill="#64748b" font-size="10" text-anchor="middle">بدون تغییر پیکسل</text>
+
+                  <rect x="20" y="150" width="130" height="90" rx="8" fill="#f0fdf4" stroke="#10b981" stroke-width="2"/>
+                  <text x="85" y="185" fill="#065f46" font-size="12" font-weight="bold" text-anchor="middle">کانون $f' = lpha f$</text>
+                  <text x="85" y="210" fill="#047857" font-size="11" font-weight="bold" text-anchor="middle">عمق $Z' = lpha Z$</text>
+
+                  <path d="M 160 85 L 240 120" stroke="#3b82f6" stroke-width="3"/>
+                  <path d="M 160 195 L 240 160" stroke="#10b981" stroke-width="3"/>
+
+                  <circle cx="280" cy="140" r="40" fill="#1e293b"/>
+                  <text x="280" y="145" fill="#ffffff" font-size="13" font-weight="bold" text-anchor="middle">شبکه عصبی</text>
+
+                  <line x1="325" y1="140" x2="410" y2="140" stroke="#0ea5e9" stroke-width="3"/>
+                  <polygon points="410,135 422,140 410,145" fill="#0ea5e9"/>
+                  <text x="380" y="130" fill="#0369a1" font-size="11" font-weight="bold">خروجی</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۳:</strong></p>
+            <p>«این اسلاید یکی از درخشان‌ترین ایده‌های متدولوژی پژوهش را معرفی می‌کند: افزونه‌سازی لرزش کانونی (Focal Jitter). طبق معادله روزنه‌ای، اگر صحنه آلفا برابر دورتر شود و کانون هم آلفا برابر بزرگ‌تر شود، تصویر دقیقاً بدون تغییر می‌ماند.</p>
+            <p>ما تصویر را دست نزدیم، ولی کانون و برچسب عمق را تصادفاً مقیاس کردیم. مدل کنترل که کالیبراسیون را نمی‌دید، کاملاً درمانده شد و خطا کرد؛ در حالی که مدل پیشنهادی ما فوراً یاد گرفت که مقیاس را مستقیماً از توکن کالیبراسیون بخواند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="24">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۴: مسیر تجربی، داده‌ها و مطالعه کنترل‌شده</span>
+              <h2>نتایج لرزش کانونی: جهش سهم پارامترهای دوربین</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">24 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-emerald"><span class="card-icon">🚀</span>بهبود ۲۲ درصدی در ارزیابی مطلق</div>
+                  <ul class="phrase-list" style="margin-top:14px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>کاهش خطای AbsRel از <strong>۰.۱۰۶۵ به ۰.۰۸۳۴</strong> (بهبود ۲۲ درصدی)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>کاهش خطای ریشه میانگین مربعات (RMSE) از <strong>۰.۳۴۹۷ به ۰.۲۹۸۷</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>افزایش چشمگیر دقت آستانه‌ای $\delta_1$ از <strong>۰.۹۱۷۳ به ۰.۹۵۵۴</strong></li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-value">-22% AbsRel</div>
+                  <div class="stat-label">اختلاف معنی‌دار آماری قطعی در آزمون ویلکاکسون</div>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="academic-table">
+                  <thead>
+                    <tr>
+                      <th>معیار ارزیابی</th>
+                      <th>مدل پیشنهادی</th>
+                      <th>مدل کنترل</th>
+                      <th>میزان بهبود</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="highlight-row">
+                      <td><strong>AbsRel ↓</strong></td>
+                      <td><strong>0.0834</strong></td>
+                      <td>0.1065</td>
+                      <td class="best-val green">-0.0231 (۲۲٪)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>RMSE ↓</strong></td>
+                      <td><strong>0.2987</strong></td>
+                      <td>0.3497</td>
+                      <td class="best-val green">-0.0510 (۱۵٪)</td>
+                    </tr>
+                    <tr>
+                      <td><strong>δ₁ ↑</strong></td>
+                      <td><strong>0.9554</strong></td>
+                      <td>0.9173</td>
+                      <td class="best-val green">+0.0381</td>
+                    </tr>
+                    <tr>
+                      <td><strong>SiLog ↓</strong></td>
+                      <td><strong>0.0918</strong></td>
+                      <td>0.1056</td>
+                      <td class="best-val green">-0.0139</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <div style="margin-top:14px; background:#f8fafc; border:1px solid #e2e8f0; border-radius:12px; padding:8px 14px; display:flex; align-items:center; gap:16px;">
+                  <img src="assets/images/scale_ratio_distribution.png" style="height:90px; width:auto; border-radius:6px; border:1px solid #cbd5e1;" alt="توزیع نسبت مقیاس">
+                  <div style="font-size:0.85rem; font-weight:700; color:#334155; line-height:1.5;">
+                    <span style="color:var(--emerald-600); font-weight:900;">★ توزیع نسبت مقیاس (Scale Ratio):</span><br>
+                    مدل پیشنهادی: میانه ۱.۰۱۵ با انحراف معیار ۰.۰۷۷<br>
+                    مدل کنترل: میانه ۱.۰۴۳ با انحراف معیار ۰.۰۹۷ (اریب‌تر و پراکنده‌تر)
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۴:</strong></p>
+            <p>«این جدول جهش شگفت‌انگیز عملکرد را نشان می‌دهد. با اضافه شدن لرزش کانونی، تفاوت مدل پیشنهادی با مدل کنترل از ۰.۰۰۰۹ به ۰.۰۲۳۱ جهش پیدا کرد! خطای AbsRel بیست و دو درصد کاهش یافت و دقت آستانه‌ای دلتا-۱ به بالای ۹۵.۵ درصد رسید.</p>
+            <p>این ارقام نشان دادند که ورودی دوربین در شرایط واقعی که فاصله کانونی متغیر است، نقش تعیین‌کننده بازی می‌کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="25">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۵: آزمون‌های تشخیصی و اثبات علیت</span>
+              <h2>آزمون پیمایش فاصله کانونی (Focal Length Sweep)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">25 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">🧪</span>پرسش سازوکاری و متدولوژی آزمون</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span>معیار خطای کمتر، به تنهایی اثبات نمی‌کند که شبکه واقعاً مقدار $f$ را می‌خواند!</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>طراحی آزمون تشخیصی:</strong> تصویر ورودی را کاملاً ثابت نگه می‌داریم و فقط مؤلفه‌های $f_x, f_y$ در ماتریس ورودی را در ضرایب $\{0.6, 0.8, 1.0, 1.25, 1.6\}$ ضرب می‌کنیم.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>انتظار فیزیکی:</strong> طبق فرمول $u = fX/Z$، با ضرب کانون در $c$، عمق خروجی باید دقیقاً در $c$ ضرب شود.</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">سنجه کمی ارزیابی:</div>
+                  <div style="font-weight:800; color:var(--navy-900); font-size:1.15rem;">
+                    شیب رگرسیون لگاریتم عمق به لگاریتم کانون: مقدار ایده‌آل = ۱.۰
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:center;">
+                <div style="font-size:1.3rem; font-weight:900; color:#60a5fa; margin-bottom:14px;">تفسیر مقادیر شیب:</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span><strong>شیب ۱.۰:</strong> انطباق ۱۰۰٪ با قانون تشکیل تصویر روزنه‌ای (ایده‌آل فیزیکی).</li>
+                  <li class="phrase-item"><span class="phrase-bullet red"></span><strong>شیب ۰.۰:</strong> نادیده گرفتن کامل ماتریس کالیبراسیون توسط مدل.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۵:</strong></p>
+            <p>«برای اینکه مطمئن شویم برتری مدل تصادفی نیست و مدل واقعاً فاصله کانونی را از توکن ورودی استخراج می‌کند، یک آزمون تشخیصی دقیق به نام "پیمایش فاصله کانونی" طراحی کردیم. تصویر را ثابت نگه داشتیم و فقط فاصله کانونی ورودی را در ضرایب مختلف از ۰.۶ تا ۱.۶ ضرب کردیم. اگر مدل فیزیک را فهمیده باشد، عمق خروجی باید دقیقاً به همان نسبت بازمقیاس شود و شیب لگاریتمی آن برابر با ۱ باشد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="26">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۵: آزمون‌های تشخیصی و اثبات علیت</span>
+              <h2>شیب پاسخ تجربی: ۰.۹۷ در برابر ایده‌آل ۱.۰!</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">26 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-emerald"><span class="card-icon">🎯</span>انطباق کم‌نظیر با فیزیک اپتیک</div>
+                  <ul class="phrase-list" style="margin-top:14px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>مدل پیشنهادی با لرزش کانونی: شیب ۰.۰۳ ± ۰.۹۷!</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet amber"></span>مدل پیشنهادی فقط با زوم-برش: شیب ۰.۰۶ (بی‌اعتنا به کانون لنز)</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span>مدل کنترل (بدون توکن): شیب ۰.۰۰ (ساختاراً ناتوان از درک کانون)</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-value">Slope = 0.97</div>
+                  <div class="stat-label">رفتار مدل منطبق بر قانون فیزیکی روزنه‌ای است</div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Axes -->
+                  <line x1="60" y1="240" x2="420" y2="240" stroke="#334155" stroke-width="2"/>
+                  <line x1="60" y1="240" x2="60" y2="40" stroke="#334155" stroke-width="2"/>
+                  <text x="240" y="275" fill="#1e293b" font-size="12" font-weight="bold" text-anchor="middle">ضریب تغییر کانون ورودی (مقیاس لگاریتمی)</text>
+                  <text x="35" y="140" fill="#1e293b" font-size="12" font-weight="bold" transform="rotate(-90 35,140)" text-anchor="middle">نسبت عمق خروجی</text>
+
+                  <!-- Ideal Slope 1 line -->
+                  <line x1="90" y1="220" x2="390" y2="60" stroke="#10b981" stroke-width="3" stroke-dasharray="6,4"/>
+                  <text x="330" y="55" fill="#065f46" font-size="11" font-weight="bold">ایده‌آل فیزیکی (شیب ۱.۰)</text>
+
+                  <!-- Proposed Model Slope 0.97 -->
+                  <line x1="90" y1="216" x2="390" y2="65" stroke="#2563eb" stroke-width="3.5"/>
+                  <circle cx="140" cy="190" r="5" fill="#1d4ed8"/>
+                  <circle cx="240" cy="140" r="5" fill="#1d4ed8"/>
+                  <circle cx="340" cy="90" r="5" fill="#1d4ed8"/>
+                  <text x="330" y="85" fill="#1d4ed8" font-size="11" font-weight="bold">پیشنهادی (شیب ۰.۹۷)</text>
+
+                  <!-- Proposed without jitter Slope 0.06 -->
+                  <line x1="90" y1="145" x2="390" y2="135" stroke="#94a3b8" stroke-width="2"/>
+                  <text x="340" y="150" fill="#64748b" font-size="10">بدون لرزش کانونی (شیب ۰.۰۶)</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۶:</strong></p>
+            <p>«این نمودار صریح‌ترین مدرک در کل پایان‌نامه است! خط سبز ایده‌آل فیزیکی شیب ۱ را نشان می‌دهد و خط آبی مدل پیشنهادی ماست با شیب ۰.۹۷. انطباق تقریباً صددرصدی است! یعنی شبکه یاد گرفته که عمق فیزیکی صحنه را دقیقاً مطابق قانون کانون لنز بازمقیاس کند.</p>
+            <p>در مقابل، مدل بدون لرزش کانونی خط تقریباً افقی با شیب ۰.۰۶ دارد که نشان می‌دهد بدون نوآوری لرزش کانونی، مدل ورودی کالیبراسیون را به درستی مصرف نمی‌کرد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="27">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۵: آزمون‌های تشخیصی و اثبات علیت</span>
+              <h2>آزمون حذف و تحریف ماتریس کالیبراسیون (Knockout Test)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">27 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title"><span class="card-icon">⚡</span>آزمون علّی ابطال‌پذیری (Causal Knockout)</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>حذف کامل ورودی $K$:</strong> خطای AbsRel با جهش ۱۱۱ درصدی از ۰.۰۸۳۶ به <strong>۰.۱۷۶۴</strong> می‌رسد!</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>تحریف کانون ($f 	imes 0.7$):</strong> افزایش خطای AbsRel به <strong>۰.۲۸۹۸</strong> و سقوط $\delta_1$ به ۱۰٪</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span><strong>تحریف کانون ($f 	imes 1.4$):</strong> افزایش خطای AbsRel به <strong>۰.۴۳۳۲</strong> و سقوط $\delta_1$ به ۹٪</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">نتیجه قطعی آزمون علیت:</div>
+                  <div style="font-weight:800; color:#065f46;">
+                    مسیر ورودی دوربین تزئینی نیست؛ بار اصلی استنتاج مقیاس بر دوش آن است!
+                  </div>
+                </div>
+              </div>
+              <div class="table-container">
+                <table class="academic-table">
+                  <thead>
+                    <tr>
+                      <th>شرایط ماتریس کالیبراسیون</th>
+                      <th>AbsRel ↓</th>
+                      <th>δ₁ ↑</th>
+                      <th>RMSE ↓</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr class="highlight-row">
+                      <td><strong>ماتریس $K$ کاملاً صحیح</strong></td>
+                      <td><strong>0.0836</strong></td>
+                      <td><strong>0.9551</strong></td>
+                      <td><strong>0.2987</strong></td>
+                    </tr>
+                    <tr>
+                      <td>حذف کامل ماتریس $K$</td>
+                      <td>0.1764 (+۱۱۱٪)</td>
+                      <td>0.7707</td>
+                      <td>0.5515</td>
+                    </tr>
+                    <tr>
+                      <td>تحریف $f 	imes 0.7$</td>
+                      <td>0.2898</td>
+                      <td>0.1068</td>
+                      <td>0.8945</td>
+                    </tr>
+                    <tr>
+                      <td>تحریف $f 	imes 1.4$</td>
+                      <td>0.4332</td>
+                      <td>0.0940</td>
+                      <td>1.1933</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۷:</strong></p>
+            <p>«برای اثبات رابطه علی (نه صرفاً همبستگی آماری)، آزمون حذفی یا Knockout را روی کل ۶۵۴ تصویر تست NYUv2 اجرا کردیم. اگر ورودی دوربین صرفاً یک شاخه کمکی تزیینی بود، حذف آن نباید شوک بزرگی ایجاد می‌کرد. اما دیدیم که حذف K خطا را ۱۱۱٪ منفجر کرد!</p>
+            <p>وقتی هم کانون را عمداً دستکاری کردیم، ۹۰ درصد پیکسل‌ها از محدوده دقت خارج شدند. این اثبات می‌کند که مدل برای بازسازی مقیاس صددرصد به ماتریس دوربین اتکای فیزیکی دارد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="28">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۵: آزمون‌های تشخیصی و اثبات علیت</span>
+              <h2>انطباق دقیق خطای تجربی با فرمول تئوریک هندسه</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">28 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">📐</span>فرمول پیش‌بینی خطای هندسی مقیاس</div>
+                  <div style="background:#eff6ff; padding:12px; border-radius:10px; margin:12px 0; text-align:center; direction:ltr;">
+                    <span style="font-size:1.5rem; font-weight:900; color:var(--blue-primary);">
+                      Error<sub>Scale</sub> = | c<sup>s</sup> - 1 | &nbsp;&nbsp;(s = 0.97)
+                    </span>
+                  </div>
+                  <ul class="phrase-list">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>تحریف با ضریب ۰.۷ $ightarrow$ خطای تئوریک: ۰.۲۹۳۰ | <strong>خطای مشاهده‌شده: ۰.۲۸۹۸</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>تحریف با ضریب ۱.۴ $ightarrow$ خطای تئوریک: ۰.۳۸۶۹ | <strong>خطای مشاهده‌شده: ۰.۴۳۳۲</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>اختلاف مقادیر تئوریک و تجربی در محدوده خطای ذاتی پایه مدل است.</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">استنتاج آماری غیرقابل انکار:</div>
+                  <div style="font-weight:800; color:#065f46;">
+                    تصادف و نویز هرگز نمی‌تواند چنین انطباق فرمولی دقیقی ایجاد کند!
+                  </div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Bar chart comparing theory vs observed -->
+                  <rect x="70" y="50" width="60" height="190" fill="#3b82f6" rx="4"/>
+                  <text x="100" y="40" fill="#1e40af" font-size="12" font-weight="bold" text-anchor="middle">۰.۲۸۹۸</text>
+                  <circle cx="100" cy="48" r="6" fill="#ef4444"/>
+                  <text x="100" y="260" fill="#1e293b" font-size="12" font-weight="bold" text-anchor="middle">f × 0.7</text>
+
+                  <rect x="230" y="30" width="60" height="210" fill="#3b82f6" rx="4"/>
+                  <text x="260" y="20" fill="#1e40af" font-size="12" font-weight="bold" text-anchor="middle">۰.۴۳۳۲</text>
+                  <circle cx="260" cy="38" r="6" fill="#ef4444"/>
+                  <text x="260" y="260" fill="#1e293b" font-size="12" font-weight="bold" text-anchor="middle">f × 1.4</text>
+
+                  <line x1="40" y1="240" x2="420" y2="240" stroke="#334155" stroke-width="2"/>
+                  <text x="350" y="100" fill="#ef4444" font-size="11" font-weight="bold">● پیش‌بینی هندسی</text>
+                  <text x="350" y="120" fill="#3b82f6" font-size="11" font-weight="bold">■ خطای مشاهده‌شده</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۸:</strong></p>
+            <p>«این اسلاید مکمل ریاضی اسلاید قبل است. فرمول پرسپکتیو می‌گوید اگر لنز در ضریب c تحریف شود، خطای مقیاس قدرمطلق c به توان s منهای یک است. با شیب s=0.97، نقاط قرمز پیش‌بینی هندسی محض ما قبل از ران کردن تست بودند و میله‌های آبی نتایج واقعی مدل هستند.</p>
+            <p>انطباق این دو به قدری نزدیک است که هرگونه احتمال همبستگی ساختگی یا شانس تصادفی را باطل می‌کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="29">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>جهش نهایی: یک مدل واحد برای تمام دوربین‌ها و دامنه‌ها</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">29 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card highlight" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">🌐</span>آموزش مشترک و متوازن بر ۴ دیتاست ناهمگن</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>ترکیب هم‌زمان: <strong>NYUv2 (داخلی) + Cityscapes (شهری) + KITTI (جاده‌ای) + VKITTI 2 (سنتتیک)</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>تنوع واقعی زاویه دید دوربین‌ها: از <strong>۴۹ درجه تا ۸۲ درجه</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>تنوع گستره عمق صحنه: از <strong>۱۰ متر داخلی تا ۸۰ متر شهری و اتوبان</strong></li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>یک مدل واحد، یک مجموعه وزن:</strong> بدون هیچ بازآموزی یا تنظیم دستی برای هر دوربین!</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-value">Universal Model</div>
+                  <div class="stat-label">یک مدل برای همه لنزها و محیط‌ها، فقط با پاس دادن ماتریس K</div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:space-around;">
+                <div style="font-size:1.3rem; font-weight:900; color:#60a5fa;">پرسش بنیادین این بخش:</div>
+                <div style="font-size:1.1rem; color:#ffffff; line-height:1.6;">
+                  آیا برتری مدل پیشنهادی در مواجهه هم‌زمان با دوربین‌های مختلف در دنیای واقعی حفظ می‌شود و می‌تواند به سنسورهای دیده‌نشده تعمیم یابد؟
+                </div>
+                <div style="background:rgba(255,255,255,0.08); padding:14px; border-radius:10px; border-right:3px solid #38bdf8;">
+                  پاسخ در جدول اسلاید بعد: <strong>پیروزی قاطع در تک‌تک معیارها و دیتاست‌ها!</strong>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۲۹:</strong></p>
+            <p>«تا اینجا دیدیم که در یک دوربین منفرد، مدل به کانون پاسخ می‌دهد. اما هدف نهایی ما در این تز این بود: آیا می‌توان یک مدل واحد ساخت که بدون نیاز به تنظیم جداگانه، هم در خیابان‌های آلمان برای خودروی خودران کار کند، هم در اتاق‌های داخلی برای ربات جاروبرقی؟</p>
+            <p>یک شبکه واحد را به صورت متوازن روی ۴ دیتاست داخلی و بیرونی با زاویه دیدهای ۴۹ تا ۸۲ درجه آموزش دادیم و سپس روی ۸ مجموعه آزمون سنجیدیم.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="30">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>جدول نتایج طلایی: پیروزی قاطع در ارزیابی مطلق</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">30 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="table-container">
+              <table class="academic-table" style="font-size:0.95rem;">
+                <thead>
+                  <tr>
+                    <th rowspan="2" style="vertical-align:middle;">مدل مورد مقایسه (ViT-L)</th>
+                    <th colspan="3">NYUv2 (داخلی ۶۵۴ فریم)</th>
+                    <th colspan="3">Cityscapes (شهری ۵۰۰ فریم)</th>
+                    <th colspan="3">SUN RGB-D Kinect v1 (دیده‌نشده)</th>
+                    <th colspan="3">SUN RGB-D Kinect v2 (دیده‌نشده)</th>
+                  </tr>
+                  <tr>
+                    <th>AbsRel ↓</th><th>δ₁ ↑</th><th>RMSE ↓</th>
+                    <th>AbsRel ↓</th><th>δ₁ ↑</th><th>RMSE ↓</th>
+                    <th>AbsRel ↓</th><th>δ₁ ↑</th><th>RMSE ↓</th>
+                    <th>AbsRel ↓</th><th>δ₁ ↑</th><th>RMSE ↓</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row">
+                    <td><strong>مدل پیشنهادی ما</strong></td>
+                    <td class="best-val green">0.088</td><td class="best-val green">0.945</td><td class="best-val green">0.309</td>
+                    <td class="best-val green">0.109</td><td class="best-val green">0.894</td><td class="best-val green">5.417</td>
+                    <td class="best-val green">0.169</td><td class="best-val green">0.766</td><td class="best-val green">0.369</td>
+                    <td class="best-val green">0.104</td><td class="best-val green">0.906</td><td class="best-val green">0.351</td>
+                  </tr>
+                  <tr>
+                    <td>مدل کنترل (هم‌داده بدون K)</td>
+                    <td>0.133</td><td>0.856</td><td>0.395</td>
+                    <td>0.136</td><td>0.851</td><td>5.938</td>
+                    <td>0.314</td><td>0.478</td><td>0.532</td>
+                    <td>0.209</td><td>0.677</td><td>0.470</td>
+                  </tr>
+                  <tr>
+                    <td>نسخه رسمی منتشرشده DA-V2</td>
+                    <td>0.207</td><td>0.692</td><td>0.600</td>
+                    <td>0.243</td><td>0.577</td><td>7.569</td>
+                    <td>0.196</td><td>0.749</td><td>0.396</td>
+                    <td>0.246</td><td>0.524</td><td>0.616</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="stat-box success" style="margin-top:14px; padding:12px 20px;">
+              <div style="font-weight:800; font-size:1.1rem; color:#065f46;">
+                ★ برتری در تمامی ۱۲ ستون ارزیابی! کاهش AbsRel در NYUv2 از ۰.۲۰۷ مدل رسمی به ۰.۰۸۸ مدل پیشنهادی!
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۰:</strong></p>
+            <p>«این جدول مهم‌ترین جدول کل پایان‌نامه است. به اعداد دقت بفرمایید: در هر ۴ مجموعه آزمون و در هر ۳ معیار (AbsRel, delta-1, RMSE)، مدل پیشنهادی ما با اختلاف معنادار رتبه اول را کسب کرده است.</p>
+            <p>در NYUv2 خطای AbsRel مدل رسمی ۰.۲۰۷ است که مدل ما آن را به ۰.۰۸۸ رسانده است (بیش از ۵۷٪ کاهش خطا نسبت به نسخه رسمی و ۳۴٪ نسبت به کنترل). در سنسور جدید کینکت ۲ که شبکه در آموزش حتی یک تصویر هم از آن ندیده بود، خطای مدل ما ۰.۱۰۴ است که نصف خطای هر دو مدل رقیب است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="31">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>نمودار مقایسه‌ای خطای AbsRel در ۴ مجموعه اصلی</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">31 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">📊</span>تحلیل تفاوت‌های عملکردی</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>NYUv2:</strong> ۳۴٪ کاهش خطا نسبت به کنترل (۰.۰۸۸ در برابر ۰.۱۳۳)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Cityscapes:</strong> ۲۰٪ کاهش خطا نسبت به کنترل (۰.۱۰۹ در برابر ۰.۱۳۶)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Kinect v1:</strong> ۴۶٪ کاهش خطا نسبت به کنترل (۰.۱۶۹ در برابر ۰.۳۱۴)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Kinect v2:</strong> ۵۰٪ کاهش خطا نسبت به کنترل (۰.۱۰۴ در برابر ۰.۲۰۹)</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-value">p &lt; 0.001</div>
+                  <div class="stat-label">تأیید برتری قطعی در آزمون ناپارامتری زوجی ویلکاکسون</div>
+                </div>
+              </div>
+              <div class="diagram-box">
+                <svg viewBox="0 0 460 300" xmlns="http://www.w3.org/2000/svg">
+                  <!-- Bar chart 4 groups, 3 bars each -->
+                  <!-- NYU -->
+                  <rect x="30" y="80" width="22" height="150" fill="#94a3b8"/>
+                  <rect x="54" y="130" width="22" height="100" fill="#f87171"/>
+                  <rect x="78" y="170" width="22" height="60" fill="#10b981"/>
+                  <text x="65" y="255" fill="#1e293b" font-size="11" font-weight="bold" text-anchor="middle">NYUv2</text>
+
+                  <!-- Cityscapes -->
+                  <rect x="130" y="60" width="22" height="170" fill="#94a3b8"/>
+                  <rect x="154" y="130" width="22" height="100" fill="#f87171"/>
+                  <rect x="178" y="150" width="22" height="80" fill="#10b981"/>
+                  <text x="165" y="255" fill="#1e293b" font-size="11" font-weight="bold" text-anchor="middle">Cityscapes</text>
+
+                  <!-- Kinect v1 -->
+                  <rect x="230" y="90" width="22" height="140" fill="#94a3b8"/>
+                  <rect x="254" y="30" width="22" height="200" fill="#f87171"/>
+                  <rect x="278" y="120" width="22" height="110" fill="#10b981"/>
+                  <text x="265" y="255" fill="#1e293b" font-size="11" font-weight="bold" text-anchor="middle">Kinect v1</text>
+
+                  <!-- Kinect v2 -->
+                  <rect x="330" y="60" width="22" height="170" fill="#94a3b8"/>
+                  <rect x="354" y="90" width="22" height="140" fill="#f87171"/>
+                  <rect x="378" y="160" width="22" height="70" fill="#10b981"/>
+                  <text x="365" y="255" fill="#1e293b" font-size="11" font-weight="bold" text-anchor="middle">Kinect v2</text>
+
+                  <line x1="20" y1="230" x2="420" y2="230" stroke="#334155" stroke-width="2"/>
+                  <!-- Legend -->
+                  <rect x="50" y="15" width="12" height="12" fill="#94a3b8"/>
+                  <text x="68" y="25" fill="#475569" font-size="10">مدل رسمی</text>
+                  <rect x="140" y="15" width="12" height="12" fill="#f87171"/>
+                  <text x="158" y="25" fill="#475569" font-size="10">مدل کنترل</text>
+                  <rect x="230" y="15" width="12" height="12" fill="#10b981"/>
+                  <text x="248" y="25" fill="#065f46" font-size="10" font-weight="bold">مدل پیشنهادی</text>
+                </svg>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۱:</strong></p>
+            <p>«این نمودار ستونی برتری بصری مدل پیشنهادی (میله‌های سبز) را نشان می‌دهد. در هر ۴ مجموعه، میله سبز به طور محسوس کوتاه‌تر است. به خصوص در کینکت ۱ و ۲، مدل کنترل (میله قرمز) دچار افت شدید شده است؛ زیرا بدون دانستن ماتریس کالیبراسیون، تغییر ویژگی‌های دوربین را با تغییر هندسه صحنه اشتباه گرفته است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="32">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>تعمیم صفرنمونه (Zero-shot) به حسگرهای دیده‌نشده</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">32 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">🎯</span>۸۰۰ فریم تست از ۴ سخت‌افزار ناهمگن</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Kinect v1 (B3DO):</strong> کاهش ۴۶٪ خطا نسبت به کنترل (۰.۱۶۹ در برابر ۰.۳۱۴)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Kinect v2:</strong> کاهش ۵۰٪ خطا نسبت به کنترل (۰.۱۰۴ در برابر ۰.۲۰۹)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Intel RealSense:</strong> کاهش ۲۶٪ خطا نسبت به کنترل (۰.۰۹۳ در برابر ۰.۱۲۵)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>Asus Xtion:</strong> کاهش ۱۹٪ خطا نسبت به کنترل (۰.۱۷۶ در برابر ۰.۲۱۶)</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">نتیجه ارزیابی سخت‌افزاری:</div>
+                  <div style="font-weight:800; color:#065f46;">
+                    مدل پیشنهادی روی هر ۴ حسگر در RMSE از هر دو مدل رقیب برتر است!
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:space-around;">
+                <div style="font-size:1.25rem; font-weight:900; color:#60a5fa;">تحلیل افت مدل کنترل در سنسورهای جدید:</div>
+                <div style="font-size:1rem; color:#e2e8f0; line-height:1.6;">
+                  مدل کنترل که ماتریس K را دریافت نمی‌کند، در سنسور کینکت ۱ خطای نسبت مقیاس ۱.۲۵ دارد؛ یعنی صحنه را ۲۵ درصد دورتر از واقعیت برآورد می‌کند!
+                </div>
+                <div style="background:rgba(255,255,255,0.08); padding:12px; border-radius:8px;">
+                  در حالی که نسبت مقیاس مدل پیشنهادی ما ۱.۰۸ است و انحراف مقیاسی ندارد.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۲:</strong></p>
+            <p>«یکی از سخت‌ترین آزمون‌های بینایی ماشین، آزمون Zero-shot روی سخت‌افزارهای دیده‌نشده است. ما ۸۰۰ تصویر از ۴ حسگر متفاوت SUN RGB-D را تست کردیم. کینکت ۲، ریلسنس اینتل و اکستیون اسوس در آموزش اصلاً وجود نداشتند. در هر ۴ حسگر، مدل ما به طور قاطع خطای کمتری از مدل کنترل داشت. این نشان داد که تزریق کالیبراسیون نه تنها وابستگی ایجاد نکرده، بلکه توان تعمیم را به شدت تقویت کرده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="33">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>کارنامه جامع در هر ۸ مجموعه آزمون (ViT-S در برابر ViT-L)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">33 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="table-container">
+              <table class="academic-table" style="font-size:0.9rem;">
+                <thead>
+                  <tr>
+                    <th rowspan="2">مجموعه آزمون</th>
+                    <th colspan="3">انکودر سبک ViT-Small (25M)</th>
+                    <th colspan="3">انکودر بزرگ ViT-Large (335M)</th>
+                  </tr>
+                  <tr>
+                    <th>پیشنهادی</th><th>کنترل</th><th>کاهش خطا</th>
+                    <th>پیشنهادی</th><th>کنترل</th><th>کاهش خطا</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row">
+                    <td>NYUv2 (داخلی)</td>
+                    <td>0.116</td><td>0.145</td><td>-20.1%*</td>
+                    <td class="best-val green">0.088</td><td>0.133</td><td class="best-val green">-34.4%*</td>
+                  </tr>
+                  <tr>
+                    <td>Cityscapes (شهری)</td>
+                    <td>0.131</td><td>0.162</td><td>-19.0%*</td>
+                    <td class="best-val green">0.109</td><td>0.136</td><td class="best-val green">-19.8%*</td>
+                  </tr>
+                  <tr>
+                    <td>KITTI (جاده‌ای)</td>
+                    <td>0.117</td><td>0.131</td><td>-10.7%*</td>
+                    <td>0.156</td><td>0.175</td><td>-10.9%*</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td>SUN Kinect v1</td>
+                    <td>0.206</td><td>0.337</td><td>-38.9%*</td>
+                    <td class="best-val green">0.169</td><td>0.314</td><td class="best-val green">-46.2%*</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td>SUN Kinect v2</td>
+                    <td>0.116</td><td>0.152</td><td>-23.2%*</td>
+                    <td class="best-val green">0.104</td><td>0.209</td><td class="best-val green">-50.3%*</td>
+                  </tr>
+                  <tr>
+                    <td>SUN RealSense</td>
+                    <td>0.135</td><td>0.136</td><td>-1.0%</td>
+                    <td class="best-val green">0.093</td><td>0.125</td><td class="best-val green">-26.2%*</td>
+                  </tr>
+                  <tr>
+                    <td>SUN Xtion</td>
+                    <td>0.175</td><td>0.202</td><td>-13.5%*</td>
+                    <td class="best-val green">0.176</td><td>0.216</td><td class="best-val green">-18.6%*</td>
+                  </tr>
+                  <tr>
+                    <td>DIODE بیرونی</td>
+                    <td>0.492</td><td>0.625</td><td>-21.3%*</td>
+                    <td class="best-val green">0.517</td><td>0.606</td><td>-14.6%</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <div style="font-size:0.85rem; color:var(--gray-600); margin-top:8px; text-align:center;">
+              * علامت ستاره نشان‌دهنده معناداری آماری تفاوت‌ها در سطح p &lt; 0.01 در آزمون زوجی ویلکاکسون است.
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۳:</strong></p>
+            <p>«این جدول کارنامه کلی پژوهش بر روی هر ۸ مجموعه آزمون (شامل ۳۰۵۲ تصویر آزمون) را نشان می‌دهد. نکته بسیار مهم این است که برتری مدل پیشنهادی به یک اندازه خاص از شبکه محدود نیست: چه در انکودر سبک ViT-S و چه در انکودر سنگین ViT-L، در تمامی ۸ مجموعه آزمون، مدل پیشنهادی AbsRel کمتری از مدل کنترل ثبت کرده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="34">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۶: شاهکار پژوهش: آموزش چندمجموعه‌ای</span>
+              <h2>ارزیابی کیفی نقشه‌های عمق و تحلیل توزیع مقیاس</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">34 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="media-container" style="height:440px; display:flex; flex-direction:column; justify-content:space-between;">
+                <div style="padding:8px; display:flex; gap:8px; z-index:10; background:rgba(255,255,255,0.9); border-radius:8px; margin:6px;">
+                  <button onclick="document.getElementById('qual-img').src='assets/images/qual_md_nyu.png'; document.getElementById('qual-cap').textContent='مقایسه نقشه‌های عمق در NYUv2 (قرمز: نزدیک، آبی: دور)';" style="padding:4px 12px; border-radius:6px; border:1px solid #3b82f6; background:#eff6ff; font-weight:700; cursor:pointer; font-family:var(--font-family);">NYUv2 (داخلی)</button>
+                  <button onclick="document.getElementById('qual-img').src='assets/images/qual_md_cityscapes.png'; document.getElementById('qual-cap').textContent='مقایسه نقشه‌های عمق در Cityscapes (شهری)';" style="padding:4px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#ffffff; font-weight:700; cursor:pointer; font-family:var(--font-family);">Cityscapes (شهری)</button>
+                  <button onclick="document.getElementById('qual-img').src='assets/images/qual_md_error.png'; document.getElementById('qual-cap').textContent='نقشه خطای نسبی (قرمز: تخمین دورتر، آبی: نزدیک‌تر، سفید: انطباق)';" style="padding:4px 12px; border-radius:6px; border:1px solid #cbd5e1; background:#ffffff; font-weight:700; cursor:pointer; font-family:var(--font-family);">نقشه نسبت خطا</button>
+                </div>
+                <img id="qual-img" src="assets/images/qual_md_nyu.png" alt="مقایسه کیفی" style="max-height:330px; object-fit:contain;">
+                <div id="qual-cap" class="figure-caption">مقایسه نقشه‌های عمق در NYUv2 (قرمز: نزدیک، آبی: دور، نوار رنگ برحسب متر واقعی)</div>
+              </div>
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">🔬</span>شواهد بصری انطباق مقیاس</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span>تطابق رنگی فوق‌العاده مدل پیشنهادی با عمق مرجع زمینی (Ground Truth)</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span>مدل‌های رقیب صحنه را به طور سیستماتیک متمایل به آبی (دورتر از واقعیت) برآورد می‌کنند.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>آمار مقایسه تک‌تصویر:</strong> مدل پیشنهادی در ۱۲۰۵ فریم از ۱۵۵۴ فریم (۷۸٪) کمترین خطای AbsRel را ثبت کرده است.</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">میانه نسبت مقیاس بهینه (Scale Ratio):</div>
+                  <div style="font-weight:900; font-size:1.3rem; color:var(--blue-primary);">
+                    پیشنهادی: ۱.۰۱۵ &nbsp;|&nbsp; کنترل: ۱.۰۴۳ &nbsp;|&nbsp; منتشرشده: ۱.۲۴
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۴:</strong></p>
+            <p>«در ارزیابی کیفی، نوار رنگ برای هر ردیف برحسب متر یکسان است. اگر مدلی صحنه را دورتر تخمین بزند، نقشه عمق آبی‌تر می‌شود. همان‌طور که می‌بینید، ستون مدل پیشنهادی ما تطابق رنگی بسیار بالایی با ستون عمق مرجع دارد؛ در حالی که مدل کنترل و منتشرشده صحنه را دورتر برآورد کرده‌اند.</p>
+            <p>از میان ۱۵۵۴ تصویر تست در ۴ مجموعه اصلی، در ۱۲۰۵ تصویر (حدود ۷۸ درصد) مدل پیشنهادی کمترین خطا را میان تمام مدل‌ها به دست آورده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="35">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۷: ارزش عملی، مزایا و کاربردهای صنعتی</span>
+              <h2>چرا مدل پیشنهادی برترین گزینه استقرار عملیاتی است؟</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">35 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">1</span>مدل همه‌کاره (Universal)</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>یک مدل واحد برای دامنه‌های داخلی، شهری و جاده‌ای</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>حذف نیاز به نگهداری چندین چک‌پوینت تخصصی برای هر سنسور</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">2</span>بی‌نیاز از بازآموزی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>با تعویض لنز یا دوربین، نیازی به آموزش مجدد نیست!</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تنها تغییر ماتریس ورودی $K$ در فراداده فریم کافی است.</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">3</span>کاهش هزینه سخت‌افزار</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>امکان جایگزینی حسگرهای فعال گران‌قیمت (LiDAR) در ربات‌های سبک</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>کاهش چشمگیر وزن و مصرف باتری در پهپادها</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">4</span>سرعت استنتاج بالا</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>سربار محاسباتی تزریق توکن کمتر از ۰.۵ میلی‌ثانیه است!</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>مناسب برای پردازش بلادرنگ (Real-Time) روی بردهای تعبیه‌شده</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۵:</strong></p>
+            <p>«چرا این مدل از نظر مهندسی و صنعتی برتر است؟ در صنعت معمولاً هر بار لنز یا دوربین ربات عوض می‌شود، تیم مهندسی باید روزها داده جدید جمع کند و مدل را بازآموزی کند. با رویکرد ما، مدل کاملاً Universal است؛ شما فقط ماتریس کالیبراسیون دوربین جدید را به عنوان ورودی پاس می‌دهید و مدل بلافاصله خروجی متریک درست می‌دهد.</p>
+            <p>سربار اضافه شدن توکن دوربین نیز عملاً ناچیز است و کمتر از نیم میلی‌ثانیه است که برای سیستم‌های تعبیه‌شده رباتیک فوق‌العاده است.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="36">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۷: ارزش عملی، مزایا و کاربردهای صنعتی</span>
+              <h2>کاربرد ۱: رباتیک متحرک، لجستیک و ناوبری داخلی</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">36 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">🤖</span>سناریوهای عملیاتی در رباتیک انبار و کارخانه</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>تشخیص موانع و برنامه‌ریزی مسیر:</strong> دانستن فاصله قطعی به جای تخمین کیفی (مانع در ۱.۲ متری است یا ۴ متری؟)</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>هدایت بازوهای رباتیک:</strong> گرفتن کالا و اشیاء از قفسه‌ها نیازمند مقیاس دقیق بر حسب سانتی‌متر است.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span><strong>سامانه‌های vSLAM:</strong> بهبود چشمگیر تخمین مقیاس در الگوریتم‌های مکان‌یابی و نقشه‌برداری هم‌زمان.</li>
+                  </ul>
+                </div>
+                <div class="stat-box highlight">
+                  <div class="stat-label">دست‌آورد اقتصادی:</div>
+                  <div style="font-weight:800; color:var(--navy-900);">
+                    حذف حسگرهای لایدار ۲۰۰۰ دلاری با یک ماژول دوربین RGB ساده و کالیبره‌شده!
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:center;">
+                <div style="font-size:1.3rem; font-weight:900; color:#60a5fa; margin-bottom:14px;">مزیت برای ربات‌های متحرک (AMR):</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>دوربین‌های عمق فعال مانند RealSense در برابر تابش نور خورشید در سالن‌ها دچار نویز شدید می‌شوند.</li>
+                  <li class="phrase-item"><span class="phrase-bullet green"></span>مدل پیشنهادی ما با دوربین استاندارد نوری، در شرایط نوری گوناگون عمق پایدار تولید می‌کند.</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۶:</strong></p>
+            <p>«اولین حوزه کاربردی، ربات‌های انبارداری و ناوبری داخلی هستند. یک ربات متحرک صرفاً با دانستن اینکه مانعی وجود دارد نمی‌تواند تصمیم بگیرد؛ باید بداند آیا فضای عبور ۲ متری دارد یا خیر؟ یا برای بازوی ربات، فاصله گریپر تا کارتن باید دقیقاً معلوم باشد. مدل ما این فاصله فیزیکی را بدون نیاز به سنسورهای فعال گران‌قیمت تأمین می‌کند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="37">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۷: ارزش عملی، مزایا و کاربردهای صنعتی</span>
+              <h2>کاربرد ۲: خودروهای خودران و سامانه‌های پیشرفته کمک‌راننده (ADAS)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">37 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">🚗</span>چالش دوربین‌های چندگانه در خودرو</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span>خودروها دارای ۸ تا ۱۲ دوربین با لنزهای بسیار متفاوت هستند: واید پشت آینه (۱۲۰ درجه)، تله جلو (۳۰ درجه)، فیش‌آی اطراف (۱۹۰ درجه).</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>راهکار مدل پیشنهادی:</strong> پردازش تمام دوربین‌ها با یک شبکه مشترک و پاس دادن ماتریس $K$ اختصاصی هر پورت.</li>
+                    <li class="phrase-item"><span class="phrase-bullet green"></span><strong>کاربردهای حیاتی:</strong> ترمز اضطراری خودکار (AEB)، کروز کنترل تطبیقی و پارک خودکار.</li>
+                  </ul>
+                </div>
+                <div class="stat-box success">
+                  <div class="stat-label">کاهش هزینه‌های تولید خودروساز:</div>
+                  <div style="font-weight:800; color:#065f46;">
+                    کاهش حافظه سیستم و تسهیل کالیبراسیون در خط تولید انبوه
+                  </div>
+                </div>
+              </div>
+              <div class="card navy" style="height:100%; justify-content:center;">
+                <div style="font-size:1.3rem; font-weight:900; color:#60a5fa; margin-bottom:14px;">تاب‌آوری در خدمات پس از فروش:</div>
+                <div style="font-size:1rem; color:#e2e8f0; line-height:1.6;">
+                  اگر دوربینی به دلیل تصادف تعویض شود و فاصله کانونی نمونه جدید اندکی تفاوت داشته باشد، مدل بلافاصله با پارامتر جدید سازگار می‌شود و نیازی به ارتقای نرم‌افزاری سنگین نیست.
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۷:</strong></p>
+            <p>«در صنعت خودرو، سامانه‌های ADAS مانند تسلا یا ویمو از چند دوربین با فواصل کانونی بسیار متنوع استفاده می‌کنند: دوربین‌های دید باریک جلو برای سرعت‌های بالا و دوربین‌های واید برای تقاطع‌ها. مدل پیشنهادی ما به یک خودرو اجازه می‌دهد که برای تمام این دوربین‌ها از یک مدل واحد استفاده کند و با پاس دادن ماتریس کالیبراسیون هر لنز، مقیاس متریک فاصله تا عابر یا خودروی جلویی را با دقت بسنجد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="38">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۷: ارزش عملی، مزایا و کاربردهای صنعتی</span>
+              <h2>کاربرد ۳: بازرسی صنعتی، دوقلوی دیجیتال و واقعیت افزوده (AR)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">38 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-3col">
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">🏗️</span>دوقلوی دیجیتال (Digital Twins)</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تولید ابرنقاط متراکم سه‌بعدی با مقیاس واقعی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>اتصال بدون درز تصاویر برداشت‌شده با پهپاد و دوربین‌های دستی</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">👓</span>واقعیت افزوده (AR)</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>جانمایی اجسام مجازی روی میز یا زمین بدون لغزش</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>محاسبه دقیق پنهان‌سازی (Occlusion) اجسام مجازی پشت اشیاء واقعی</li>
+                </ul>
+              </div>
+              <div class="card">
+                <div class="card-title text-navy"><span class="card-icon">🔍</span>بازرسی سازه‌ها و خط تولید</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>اندازه‌گیری بدون تماس ابعاد قطعات صنعتی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>پایش ترک‌ها و تغییر شکل پل‌ها و مخازن نفتی با دوربین‌های موبایل</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۸:</strong></p>
+            <p>«در واقعیت افزوده و دوقلوهای دیجیتال، اگر مقیاس عمق پایدار نباشد، مدل مجازی در صحنه میلرزد یا در زمین فرو می‌رود. با داشتن عمق مطلق و مقیاس متریک پایدار، اجسام سه‌بعدی به درستی روی سطوح واقعی قرار می‌گیرند. در بازرسی صنعتی نیز با یک دوربین عکاسی معمولی و ثبت متادیتای فاصله کانونی، می‌توان بدون تجهیزات لیزری حجیم، ابعاد و فاصله قطعات خط تولید را اندازه‌گیری کرد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="39">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۸: نتیجه‌گیری، محدودیت‌ها و کارهای آتی</span>
+              <h2>پاسخ نهایی به سؤالات تحقیق و تأیید فرضیات</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">39 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="table-container">
+              <table class="academic-table">
+                <thead>
+                  <tr>
+                    <th>فرضیه تجربی پژوهش</th>
+                    <th>شاهد تجربی اصلی و مقادیر عددی</th>
+                    <th>رأی نهایی هیئت پژوهش</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr class="highlight-row">
+                    <td><strong>فرضیه اول:</strong> حساسیت مدل پایه به دیتاست و دوربین</td>
+                    <td>اختلاف معنی‌دار آماری SiLog در تمام مقایسه‌ها ($p < 0.05$) و خطای ۰.۲۰۷ مدل رسمی</td>
+                    <td class="best-val green">تأیید شد ✓</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td><strong>فرضیه دوم:</strong> کاهش خطای مطلق با ماتریس کالیبراسیون</td>
+                    <td>کاهش AbsRel در تمامی ۸ مجموعه آزمون (از جمله ۵۰٪ در کینکت ۲ و ۳۴٪ در NYU)</td>
+                    <td class="best-val green">تأیید شد ✓</td>
+                  </tr>
+                  <tr class="highlight-row">
+                    <td><strong>فرضیه سوم:</strong> حفظ کیفیت و ساختار نسبی صحنه</td>
+                    <td>نزدیک بودن کامل نتایج ارزیابی نسبی دو مدل و برابری ساختاری ($\Delta 	ext{AbsRel} < 0.0006$)</td>
+                    <td class="best-val green">تأیید شد ✓</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۳۹:</strong></p>
+            <p>«به عنوان پاسخ نهایی به پرسش‌های پژوهش: فرضیه اول با تفاوت معنادار مدل پایه و خطای بالای نسخه رسمی تأیید شد. فرضیه دوم یعنی کاهش خطای مطلق با تزریق ماتریس کالیبراسیون در تمام ۸ تست‌ست تأیید شد؛ و فرضیه سوم یعنی حفظ ساختار نسبی بدون افت دقت در ارزیابی‌های نسبی به طور کامل اثبات گردید.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="40">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۸: نتیجه‌گیری، محدودیت‌ها و کارهای آتی</span>
+              <h2>جمع‌بندی نوآوری‌های سه‌گانه تحقیق</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">40 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-3col">
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">1</span>نوآوری‌های تئوریک</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>بازتعریف ابهام مقیاس به عنوان محدودیت بنیادین هندسی، نه کمبود داده</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>اثبات ریاضی نابینایی پروتکل ارزیابی نسبی در برابر مقیاس فیزیکی</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">2</span>نوآوری‌های عملی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>طراحی توکن دوربین با گیت یادگیری‌پذیر صفر اولیه ($\gamma=0$)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تزریق به DINOv2 بدون تخریب وزن‌های ازپیش‌آموخته</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>آموزش یک مدل واحد چندمجموعه‌ای برای دوربین‌های ناهمگن</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">3</span>نوآوری‌های روش‌شناختی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>معرفی افزونه‌سازی لرزش کانونی (Focal Jitter)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>طراحی آزمون تشخیصی پیمایش فاصله کانونی (شیب ۰.۹۷)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>پروتکل مطالعه کنترل‌شده زوجی با قفل بذر ۴۲</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۴۰:</strong></p>
+            <p>«دستاوردهای این پایان‌نامه در ۳ سطح قابل دسته‌بندی است: در سطح تئوریک، چرایی ناکارآمدی پروتکل‌های نسبی را تبیین کردیم. در سطح عملی، معماری تزریق توکن گیت‌شده را معرفی کردیم که به وزن‌های DINOv2 آسیب نمی‌زند. و در سطح روش‌شناختی، لرزش کانونی و آزمون پیمایش فاصله کانونی را ابداع کردیم که می‌تواند به عنوان متدولوژی استاندارد در سایر مقالات مورد استفاده قرار گیرد.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="41">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۸: نتیجه‌گیری، محدودیت‌ها و کارهای آتی</span>
+              <h2>محدودیت‌های پژوهش (شفافیت علمی)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">41 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-2col">
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">⚠️</span>وابستگی به صحت ماتریس کالیبراسیون</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet red"></span>مدل فرض می‌کند ماتریس $K$ دقیق و بدون نویز در دسترس است.</li>
+                    <li class="phrase-item"><span class="phrase-bullet red"></span>اگر کالیبراسیون نادقیق باشد، به دلیل اتکای علّی مدل، خطای کالیبراسیون به عمق سرایت می‌کند.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>در کاربردهای عملی باید نویز کالیبراسیون لحاظ شود.</li>
+                  </ul>
+                </div>
+              </div>
+              <div class="card" style="height:100%; justify-content:space-around;">
+                <div>
+                  <div class="card-title text-navy"><span class="card-icon">💻</span>محدودیت منابع محاسباتی و داده</div>
+                  <ul class="phrase-list" style="margin-top:12px;">
+                    <li class="phrase-item"><span class="phrase-bullet"></span>آموزش بر یک کارت گرافیک منفرد RTX 4090 با ۱۲ دوره آموزش انجام شد.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>انکودر بینایی فریز نگه داشته شد؛ در صورت آموزش کامل انکودر بر داده‌های میلیونی، امکان بهبود بیشتر وجود دارد.</li>
+                    <li class="phrase-item"><span class="phrase-bullet"></span>تمرکز بر تصاویر ایستا و عدم استفاده از جریان نوری متوالی فریم‌ها.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۴۱:</strong></p>
+            <p>«برای شفافیت علمی، لازم است به محدودیت‌ها نیز اشاره کنیم: نخست اینکه مدل ما به صحت ماتریس کالیبراسیون ورودی تکیه دارد؛ اگر دوربین به شدت از کالیبره خارج شود، خطا افزایش می‌یابد. دوم اینکه با توجه به امکانات سخت‌افزاری دانشگاهی (یک کارت گرافیک ۴۰۹۰)، آموزش به ۷۲ هزار نمونه و انکودر فریز محدود شد؛ در حالی که غول‌های فناوری روی خوشه‌های سروری مدل‌ها را آموزش می‌دهند.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide" data-slide="42">
+          <div class="slide-header">
+            <div class="slide-header-right">
+              <span class="section-tag">بخش ۸: نتیجه‌گیری، محدودیت‌ها و کارهای آتی</span>
+              <h2>پیشنهادها برای تحقیقات آتی (Future Work)</h2>
+            </div>
+            <div class="slide-header-meta">
+              <div class="slide-number-badge">42 / 43</div>
+            </div>
+          </div>
+          <div class="slide-body">
+            <div class="grid-4col">
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">1</span>مقاوم‌سازی کالیبراسیون</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>طراحی انکودر دوربین مقاوم به نویز کالیبراسیون</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>تخمین هم‌زمان ماتریس $K$ تقریبی و تصحیح آن در شبکه</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">2</span>ادغام اطلاعات زمانی</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>گسترش مدل به توالی‌های ویدیویی</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>بهره‌گیری از جریان نوری (Optical Flow) و قید سازگاری زمانی</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">3</span>مقیاس‌پذیری داده</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>آموزش انکودر بر مجموعه‌داده‌های عظیم مثل Hypersim</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>بررسی تزریق چندلایه‌ای توکن دوربین به تمام بلوک‌ها</li>
+                </ul>
+              </div>
+              <div class="card highlight">
+                <div class="card-title text-blue"><span class="card-icon">4</span>اعوجاج غیرخطی لنز</div>
+                <ul class="phrase-list">
+                  <li class="phrase-item"><span class="phrase-bullet"></span>ورود ضرایب اعوجاج لنز (Radial/Tangential Distortion)</li>
+                  <li class="phrase-item"><span class="phrase-bullet"></span>پوشش لنزهای چشم‌ماهی فیش‌آی (Fish-Eye)</li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی اسلاید ۴۲:</strong></p>
+            <p>«برای پژوهشگران آینده، چهار مسیر کلیدی پیشنهاد می‌شود: اول، مقاوم‌سازی شبکه در برابر نویز کالیبراسیون. دوم، تعمیم مدل به ویدیو با بهره‌گیری از ثبات زمانی بین فریم‌ها. سوم، آموزش انکودر بر روی داده‌های عظیم‌تر و تزریق چندلایه‌ای. و چهارم، لحاظ کردن ضرایب اعوجاج لنز برای دوربین‌های با زاویه دید خیلی باز فیش‌آی.»</p>
+          </div>
+        </div>
+        
+
+        <div class="slide dark-theme" data-slide="43">
+          <div class="title-slide-container" style="justify-content:center; text-align:center; align-items:center;">
+            <img src="assets/images/logo.png" alt="لوگو دانشگاه" style="height:90px; margin-bottom:24px;">
+            <h1 style="font-size:3rem; font-weight:900; color:var(--white); margin-bottom:16px;">با سپاس از توجه و همراهی شما</h1>
+            <p style="font-size:1.5rem; color:#93c5fd; font-weight:600; margin-bottom:32px;">
+              جلسه دفاع پایان‌نامه کارشناسی ارشد مهندسی کامپیوتر - هوش مصنوعی
+            </p>
+            <div style="background:rgba(255,255,255,0.08); border:1px solid rgba(255,255,255,0.15); border-radius:16px; padding:20px 48px; max-width:650px;">
+              <div style="font-size:1.4rem; font-weight:800; color:var(--white); margin-bottom:8px;">
+                پرسش و پاسخ (Q&A)
+              </div>
+              <div style="font-size:1.1rem; color:#cbd5e1;">
+                با کمال افتخار، آماده پاسخ‌گویی به پرسش‌ها و نظرات اساتید و داوران گرامی هستم.
+              </div>
+            </div>
+          </div>
+          <div class="speaker-notes" style="display:none;">
+            <p><strong>متن سخنرانی پایانی اسلاید ۴۳:</strong></p>
+            <p>«در پایان، وظیفه خود می‌دانم صمیمانه‌ترین سپاسگزاری‌ها را از استاد راهنمای بزرگوارم، جناب آقای دکتر نصیحت‌کن داشته باشم که در تمام طول این مسیر علمی، با راهنمایی‌های دقیق و حمایت‌های بی‌دریغ خود چراغ راه بنده بودند.</p>
+            <p>همچنین از داوران گرامی جناب آقای دکتر ابریشمی مقدم و جناب آقای دکتر رهبان که با صرف وقت ارزشمندشان به ارتقای کیفی این کار کمک کردند، کمال تشکر را دارم. با افتخار در خدمت شما هستم تا به سؤالات و ابهامات پاسخ دهم.»</p>
+          </div>
+        </div>
+        
+
+  </div>
+
+  <!-- Floating Navigation Controls -->
+  <div class="presentation-controls">
+    <button id="btn-prev" class="nav-btn" title="اسلاید قبلی (PageUp / ArrowRight)">&#10095;</button>
+    <div id="nav-counter" class="nav-counter">1 / 43</div>
+    <button id="btn-next" class="nav-btn" title="اسلاید بعدی (Space / PageDown / ArrowLeft)">&#10094;</button>
+    <div class="control-divider"></div>
+    <button id="btn-notes" class="nav-tool-btn" title="یادداشت ارائه‌دهنده (کلید N)">
+      <span>📝</span> یادداشت
+    </button>
+    <button id="btn-overview" class="nav-tool-btn" title="فهرست اسلایدها (کلید O)">
+      <span>📑</span> فهرست
+    </button>
+    <button id="btn-fullscreen" class="nav-tool-btn" title="تمام‌صفحه (کلید F)">
+      <span>⛶</span> تمام‌صفحه
+    </button>
+  </div>
+
+  <!-- Presenter Notes Drawer (Key: 'N') -->
+  <div id="notes-drawer">
+    <div class="notes-header">
+      <h4><span>🎙️</span> یادداشت‌های ارائه‌دهنده (Presenter Notes & Speech Script)</h4>
+      <button id="btn-close-notes" class="close-btn" title="بستن">&times;</button>
+    </div>
+    <div id="notes-body" class="notes-body">
+      <!-- Dynamically filled -->
+    </div>
+  </div>
+
+  <!-- Overview Grid Modal (Key: 'O') -->
+  <div id="overview-modal">
+    <div class="overview-header">
+      <h3>فهرست تمام ۴۳ اسلاید ارائه پایان‌نامه</h3>
+      <button id="btn-close-overview" class="close-btn" style="background:transparent; border:none; color:white; font-size:2rem; cursor:pointer;">&times;</button>
+    </div>
+    <div id="overview-grid" class="overview-grid">
+      <!-- Dynamically generated -->
+    </div>
+  </div>
+</div>
+
+<script src="js/presentation.js"></script>
+</body>
+</html>

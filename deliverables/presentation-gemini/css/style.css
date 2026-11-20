@@ -1,0 +1,916 @@
+/* ==========================================================================
+   Thesis Defense Presentation - Dark Navy & White Academic Theme
+   Title: تخمین عمق بدون نظارت با استفاده از پارامترهای کالیبراسیون داخلی
+   Student: محمدامین قاسم‌زاده | دانشگاه صنعتی خواجه نصیرالدین طوسی
+   ========================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --navy-950: #040d1a;
+  --navy-900: #07172c;
+  --navy-850: #0a1f3b;
+  --navy-800: #0e284c;
+  --navy-700: #153664;
+  --navy-600: #1d4880;
+  
+  --blue-primary: #1d4ed8;
+  --blue-accent: #3b82f6;
+  --blue-sky: #0ea5e9;
+  --blue-cyan: #06b6d4;
+  --blue-glow: rgba(59, 130, 246, 0.15);
+  
+  --emerald-500: #10b981;
+  --emerald-600: #059669;
+  --red-500: #ef4444;
+  --amber-500: #f59e0b;
+  
+  --white: #ffffff;
+  --gray-50: #f8fafc;
+  --gray-100: #f1f5f9;
+  --gray-200: #e2e8f0;
+  --gray-300: #cbd5e1;
+  --gray-400: #94a3b8;
+  --gray-500: #64748b;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1e293b;
+
+  --card-bg: rgba(255, 255, 255, 0.95);
+  --card-border: #e2e8f0;
+  --card-shadow: 0 10px 25px -5px rgba(7, 23, 44, 0.08), 0 8px 10px -6px rgba(7, 23, 44, 0.04);
+  --card-shadow-hover: 0 20px 30px -10px rgba(7, 23, 44, 0.15);
+  
+  --font-family: 'Vazirmatn', system-ui, -apple-system, 'Segoe UI', Tahoma, sans-serif;
+  --transition-fast: 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-family);
+  direction: rtl;
+  text-align: right;
+  background-color: var(--navy-950);
+  color: var(--gray-800);
+  overflow: hidden;
+  user-select: none;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ==========================================================================
+   Presentation Screen & Scaling Container
+   ========================================================================== */
+#presentation-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  background: radial-gradient(circle at 50% 30%, #0d223f 0%, #050f1d 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.slide-deck {
+  position: relative;
+  width: 1720px;
+  height: 960px;
+  max-width: 96vw;
+  max-height: 94vh;
+  aspect-ratio: 16 / 9;
+  background-color: var(--white);
+  border-radius: 20px;
+  box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ==========================================================================
+   Slide Base & Transition
+   ========================================================================== */
+.slide {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  padding: 42px 64px 38px 64px;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(12px) scale(0.995);
+  transition: opacity var(--transition-normal), transform var(--transition-normal);
+  background: linear-gradient(135deg, #ffffff 0%, #f9fbfd 100%);
+  overflow: hidden;
+}
+
+.slide.active {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateY(0) scale(1);
+  z-index: 10;
+}
+
+/* Special Dark Hero Slides (Title, Golden Results, Conclusion) */
+.slide.dark-theme {
+  background: radial-gradient(circle at 75% 20%, #153664 0%, #07172c 60%, #040d1a 100%);
+  color: var(--white);
+}
+
+.slide.dark-theme .slide-header h2 {
+  color: var(--white);
+}
+
+.slide.dark-theme .slide-header .section-tag {
+  background-color: rgba(59, 130, 246, 0.2);
+  color: #93c5fd;
+  border-color: rgba(147, 197, 253, 0.3);
+}
+
+.slide.dark-theme .slide-number-badge {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #e2e8f0;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+/* ==========================================================================
+   Slide Header & Numbering
+   ========================================================================== */
+.slide-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid var(--gray-100);
+  position: relative;
+}
+
+.slide.dark-theme .slide-header {
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.slide-header-right {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.section-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 14px;
+  background-color: #eff6ff;
+  color: var(--blue-primary);
+  border: 1px solid #dbeafe;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: -0.2px;
+}
+
+.section-tag::before {
+  content: '';
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background-color: var(--blue-accent);
+}
+
+.slide-header h2 {
+  font-size: 2.1rem;
+  font-weight: 800;
+  color: var(--navy-900);
+  letter-spacing: -0.6px;
+  line-height: 1.25;
+}
+
+.slide-header-meta {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.slide-number-badge {
+  font-family: var(--font-family);
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 6px 16px;
+  background-color: var(--navy-900);
+  color: var(--white);
+  border-radius: 10px;
+  direction: ltr;
+  box-shadow: 0 4px 12px rgba(7, 23, 44, 0.15);
+  letter-spacing: 0.5px;
+}
+
+/* ==========================================================================
+   Slide Content Grid & Body Layouts
+   ========================================================================== */
+.slide-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 0;
+  position: relative;
+}
+
+/* 2-Column Grid Layout */
+.grid-2col {
+  display: grid;
+  grid-template-columns: 1.05fr 0.95fr;
+  gap: 32px;
+  align-items: center;
+  height: 100%;
+}
+
+.grid-2col.equal {
+  grid-template-columns: 1fr 1fr;
+}
+
+.grid-2col.wide-left {
+  grid-template-columns: 1.25fr 0.75fr;
+}
+
+.grid-2col.wide-right {
+  grid-template-columns: 0.75fr 1.25fr;
+}
+
+/* 3-Column Grid Layout */
+.grid-3col {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 24px;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* 4-Column Grid Layout */
+.grid-4col {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  align-items: stretch;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Content Cards, Metrics & Badges (Minimal Words, Maximum Visual Impact)
+   ========================================================================== */
+.card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 24px 28px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+  transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--card-shadow-hover);
+}
+
+.card.navy {
+  background: linear-gradient(145deg, var(--navy-800) 0%, var(--navy-900) 100%);
+  color: var(--white);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.card.highlight {
+  border: 2px solid var(--blue-accent);
+  background: linear-gradient(145deg, #f0f7ff 0%, #ffffff 100%);
+}
+
+.card-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--navy-800);
+}
+
+.card.navy .card-title {
+  color: var(--white);
+}
+
+.card-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: rgba(37, 99, 235, 0.1);
+  color: var(--blue-accent);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.card.navy .card-icon {
+  background: rgba(255, 255, 255, 0.15);
+  color: var(--white);
+}
+
+/* Bullet Phrases List (Not long paragraphs!) */
+.phrase-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.phrase-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  font-size: 1.15rem;
+  font-weight: 600;
+  line-height: 1.45;
+  color: var(--gray-700);
+}
+
+.card.navy .phrase-item {
+  color: var(--gray-200);
+}
+
+.phrase-bullet {
+  width: 9px;
+  height: 9px;
+  border-radius: 50%;
+  background-color: var(--blue-accent);
+  margin-top: 8px;
+  flex-shrink: 0;
+}
+
+.phrase-bullet.green { background-color: var(--emerald-500); }
+.phrase-bullet.red { background-color: var(--red-500); }
+.phrase-bullet.amber { background-color: var(--amber-500); }
+
+.phrase-item strong {
+  color: var(--navy-900);
+  font-weight: 800;
+}
+
+.card.navy .phrase-item strong {
+  color: var(--white);
+}
+
+/* Hero Numbers & Stat Callouts */
+.stat-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px 24px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  gap: 6px;
+}
+
+.stat-box.highlight {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.stat-box.success {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.stat-value {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: var(--navy-900);
+  line-height: 1;
+  font-feature-settings: "tnum";
+}
+
+.stat-box.highlight .stat-value { color: var(--blue-primary); }
+.stat-box.success .stat-value { color: var(--emerald-600); }
+
+.stat-label {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--gray-600);
+}
+
+.stat-sub {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--gray-500);
+}
+
+/* ==========================================================================
+   Tables - Academic & Crisp Styling
+   ========================================================================== */
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border-radius: 14px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+}
+
+.academic-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.academic-table th {
+  background-color: var(--navy-900);
+  color: var(--white);
+  padding: 14px 18px;
+  font-weight: 800;
+  font-size: 1.05rem;
+  letter-spacing: -0.2px;
+  border: none;
+}
+
+.academic-table td {
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--gray-200);
+  color: var(--gray-700);
+  font-weight: 600;
+}
+
+.academic-table tr:last-child td {
+  border-bottom: none;
+}
+
+.academic-table tr:nth-child(even) td {
+  background-color: #f8fafc;
+}
+
+.academic-table tr.highlight-row td {
+  background-color: #ecfdf5;
+  color: #065f46;
+  font-weight: 800;
+}
+
+.academic-table .best-val {
+  color: var(--blue-primary);
+  font-weight: 900;
+  background: #dbeafe;
+  padding: 2px 8px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.academic-table .best-val.green {
+  color: #065f46;
+  background: #a7f3d0;
+}
+
+/* ==========================================================================
+   Visual Media Containers (Video, SVG, Figure Images)
+   ========================================================================== */
+.media-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f8fafc;
+  border-radius: 16px;
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  box-shadow: var(--card-shadow);
+}
+
+.media-container img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+  border-radius: 12px;
+}
+
+.media-container video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 14px;
+}
+
+.figure-caption {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 8px 16px;
+  background: rgba(7, 23, 44, 0.85);
+  color: var(--white);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-align: center;
+  backdrop-filter: blur(4px);
+}
+
+/* ==========================================================================
+   SVG Architecture & Flow Diagrams
+   ========================================================================== */
+.diagram-box {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--card-shadow);
+}
+
+.diagram-box svg {
+  width: 100%;
+  height: 100%;
+}
+
+/* ==========================================================================
+   Interactive Controls & Floating Navigation Bar
+   ========================================================================== */
+.presentation-controls {
+  position: absolute;
+  bottom: 18px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 20px;
+  background: rgba(7, 23, 44, 0.85);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 9999px;
+  z-index: 100;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+}
+
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: var(--white);
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1.1rem;
+  transition: all var(--transition-fast);
+}
+
+.nav-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.08);
+}
+
+.nav-btn:active {
+  transform: scale(0.95);
+}
+
+.nav-counter {
+  font-family: var(--font-family);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-200);
+  direction: ltr;
+  padding: 0 8px;
+  letter-spacing: 0.5px;
+}
+
+.control-divider {
+  width: 1px;
+  height: 20px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.nav-tool-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: var(--white);
+  padding: 5px 14px;
+  border-radius: 9999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-fast);
+}
+
+.nav-tool-btn:hover {
+  background: var(--blue-accent);
+  border-color: var(--blue-accent);
+}
+
+/* Top Progress Bar */
+.progress-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  z-index: 100;
+}
+
+.progress-bar {
+  height: 100%;
+  background: linear-gradient(90deg, var(--blue-light), var(--blue-accent));
+  width: 0%;
+  transition: width var(--transition-normal);
+}
+
+/* ==========================================================================
+   Presenter Notes Drawer (Toggle via 'N' or button)
+   ========================================================================== */
+#notes-drawer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  max-height: 42vh;
+  background: rgba(7, 23, 44, 0.98);
+  backdrop-filter: blur(16px);
+  color: var(--white);
+  border-top: 3px solid var(--blue-accent);
+  box-shadow: 0 -15px 40px rgba(0, 0, 0, 0.5);
+  padding: 24px 48px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transform: translateY(105%);
+  transition: transform var(--transition-normal);
+  z-index: 200;
+  overflow-y: auto;
+}
+
+#notes-drawer.open {
+  transform: translateY(0);
+}
+
+.notes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+  padding-bottom: 12px;
+}
+
+.notes-header h4 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: var(--blue-light);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.notes-header .close-btn {
+  background: transparent;
+  border: none;
+  color: var(--gray-400);
+  font-size: 1.4rem;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.notes-header .close-btn:hover {
+  color: var(--white);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notes-body {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  color: var(--gray-200);
+}
+
+.notes-body p {
+  margin-bottom: 10px;
+}
+
+.notes-body ul {
+  padding-right: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.notes-body strong {
+  color: #60a5fa;
+}
+
+/* ==========================================================================
+   Overview Modal (Grid of all 43 slides, toggle via 'O' or 'G')
+   ========================================================================== */
+#overview-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(4, 13, 26, 0.94);
+  backdrop-filter: blur(14px);
+  z-index: 300;
+  display: none;
+  flex-direction: column;
+  padding: 40px 60px;
+  overflow-y: auto;
+}
+
+#overview-modal.open {
+  display: flex;
+}
+
+.overview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+  color: var(--white);
+}
+
+.overview-header h3 {
+  font-size: 1.8rem;
+  font-weight: 800;
+}
+
+.overview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 20px;
+}
+
+.overview-card {
+  background: var(--navy-800);
+  border: 2px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all var(--transition-fast);
+}
+
+.overview-card:hover {
+  border-color: var(--blue-accent);
+  transform: translateY(-4px);
+  background: var(--navy-700);
+}
+
+.overview-card.current {
+  border-color: var(--emerald-500);
+  box-shadow: 0 0 15px rgba(16, 185, 129, 0.3);
+}
+
+.overview-card .num {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: var(--blue-light);
+  direction: ltr;
+  text-align: right;
+}
+
+.overview-card .title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.4;
+}
+
+/* ==========================================================================
+   Title Slide Specific Elements
+   ========================================================================== */
+.title-slide-container {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 0;
+}
+
+.title-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.uni-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.uni-logo {
+  height: 80px;
+  width: auto;
+  filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.3));
+}
+
+.uni-text h3 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--white);
+}
+
+.uni-text p {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #93c5fd;
+}
+
+.defense-badge {
+  padding: 8px 20px;
+  background: rgba(37, 99, 235, 0.25);
+  border: 1px solid rgba(59, 130, 246, 0.4);
+  color: #bfdbfe;
+  font-size: 1.05rem;
+  font-weight: 700;
+  border-radius: 9999px;
+}
+
+.title-center {
+  margin: 20px 0;
+}
+
+.thesis-title {
+  font-size: 2.75rem;
+  font-weight: 900;
+  line-height: 1.35;
+  color: var(--white);
+  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  margin-bottom: 14px;
+}
+
+.thesis-subtitle {
+  font-size: 1.45rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  direction: ltr;
+  text-align: right;
+}
+
+.title-meta-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.meta-box {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.meta-box .label {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #94a3b8;
+  margin-bottom: 4px;
+}
+
+.meta-box .val {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--white);
+}
+
+/* ==========================================================================
+   Utility Classes
+   ========================================================================== */
+.text-center { text-align: center; }
+.text-navy { color: var(--navy-900); }
+.text-blue { color: var(--blue-primary); }
+.text-emerald { color: var(--emerald-600); }
+.text-red { color: var(--red-500); }
+.bold { font-weight: 800; }
+.ltr { direction: ltr; display: inline-block; }

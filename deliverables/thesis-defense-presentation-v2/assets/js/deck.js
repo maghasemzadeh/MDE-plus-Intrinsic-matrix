@@ -296,6 +296,7 @@
     var v = activeVideo();
     if (!v || !st) return;
     v.muted = true;
+    if (qs.has('still')) { v.pause(); try { if (Math.abs(v.currentTime - st.t) > 0.2) v.currentTime = st.t; } catch (e) {} return; }
     try { if (Math.abs(v.currentTime - st.t) > 0.4) v.currentTime = st.t; } catch (e) {}
     if (st.paused) v.pause(); else if (v.paused) playVideo(v);
   }
@@ -388,17 +389,56 @@
   }
   /* pointer from the phone: x and y are fractions of the slide; `n` orders the messages, so a late one cannot pull the dot back */
   var laser = null, laserN = 0, laserT = null;
+  /* the pointer leaves a line behind it that thins and fades over TRAIL_MS, long enough to see a circle drawn by hand */
+  var TRAIL_MS = 2000, trail = [], trailCan = null, trailCtx = null, trailRaf = null, trailBreak = false;
+  function trailAdd(x, y, fresh) {
+    if (!trailCan) {
+      trailCan = document.createElement('canvas'); trailCan.id = 'laser-trail'; trailCan.width = 1920; trailCan.height = 1080;
+      stage.insertBefore(trailCan, laser); trailCtx = trailCan.getContext('2d');
+    }
+    var last = trail[trail.length - 1], brk = fresh || trailBreak || !last;
+    trailBreak = false;
+    if (!brk && Math.abs(last.x - x) + Math.abs(last.y - y) < 2) { last.t = performance.now(); return; }
+    trail.push({ x: x, y: y, t: performance.now(), brk: brk });
+    if (!trailRaf) trailRaf = requestAnimationFrame(trailDraw);
+  }
+  function trailDraw() {
+    var now = performance.now(), g = trailCtx, i;
+    /* a point leaves only when the one after it has expired too, so the oldest segment fades out instead of vanishing */
+    while (trail.length > 1 && now - trail[1].t > TRAIL_MS) trail.shift();
+    if (trail.length === 1 && now - trail[0].t > TRAIL_MS) trail.shift();
+    g.clearRect(0, 0, 1920, 1080);
+    g.lineCap = 'butt'; g.lineJoin = 'round';
+    /* each piece runs between the midpoints of neighbouring points, curved through the point itself: pieces meet flush,
+       so the line is smooth and no joint is drawn twice */
+    for (i = 1; i < trail.length; i++) {
+      var a = trail[i - 1], b = trail[i];
+      if (b.brk) continue;
+      var k = 1 - (now - b.t) / TRAIL_MS; if (k <= 0) continue;
+      var first = i === 1 || a.brk, lastSeg = i === trail.length - 1 || trail[i + 1].brk;
+      var p = first ? a : { x: (trail[i - 2].x + a.x) / 2, y: (trail[i - 2].y + a.y) / 2 };
+      if (first) { g.beginPath(); g.moveTo(a.x, a.y); g.lineTo((a.x + b.x) / 2, (a.y + b.y) / 2); }
+      else { g.beginPath(); g.moveTo(p.x, p.y); g.quadraticCurveTo(a.x, a.y, (a.x + b.x) / 2, (a.y + b.y) / 2); }
+      if (lastSeg) g.lineTo(b.x, b.y);
+      var e = k * k * (3 - 2 * k);   /* eased: stays visible first, then lets go gently */
+      g.strokeStyle = 'rgba(255,45,45,' + (0.9 * e).toFixed(3) + ')';
+      g.lineWidth = 3 + 9 * e;
+      g.stroke();
+    }
+    trailRaf = trail.length ? requestAnimationFrame(trailDraw) : null;
+  }
   function showLaser(c) {
     if (MODE !== 'main') return;
     if (!laser) { laser = document.createElement('div'); laser.id = 'laser'; stage.appendChild(laser); }
     if (c.n && c.n < laserN && laserN - c.n < 400) return;   /* n is the sender's clock in ms, so it keeps growing across reloads */
     laserN = c.n || 0;
     clearTimeout(laserT);
-    if (c.off) { laser.classList.remove('on'); return; }
+    if (c.off) { laser.classList.remove('on'); trailBreak = true; return; }
     var fresh = !laser.classList.contains('on');   /* a new touch appears in place instead of gliding over from the last one */
     if (fresh) laser.style.transition = 'none';
     laser.style.transform = 'translate(' + (c.x * 1920).toFixed(1) + 'px,' + (c.y * 1080).toFixed(1) + 'px)';
     if (fresh) { void laser.offsetWidth; laser.style.transition = ''; }
+    trailAdd(c.x * 1920, c.y * 1080, fresh);
     laser.classList.add('on');
     laserT = setTimeout(function () { laser.classList.remove('on'); }, 4000);   /* a lost "finger up" must not leave the dot behind */
   }
@@ -613,7 +653,9 @@
   function initPresenter() {
     var base = location.pathname.split('/').pop() || 'index.html';
     frames = $$('#presenter iframe');
-    frames.forEach(function (f) { f.src = base + '?embed=1'; });
+    /* on the phone the preview pictures never play a video: a playing video would take the S Pen's media keys (play/pause)
+       for itself. The picture follows the audience video frame by frame instead. */
+    frames.forEach(function (f) { f.src = base + '?embed=1' + (REMOTE ? '&still=1' : ''); });
     setInterval(function () {
       var s = t0 === null ? 0 : Math.floor((Date.now() - t0) / 1000);
       var mm = String(Math.floor(s / 60)).padStart(2, '0'), ss = String(s % 60).padStart(2, '0');

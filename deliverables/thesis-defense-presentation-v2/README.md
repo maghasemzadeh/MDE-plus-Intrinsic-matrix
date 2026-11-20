@@ -21,13 +21,13 @@ Open `index.html` in Chrome or Edge (double-click; no internet or server needed)
 | H | show the key hints |
 | K / J / L / R / M | video: play or pause / back 5 s / forward 5 s / from the start / sound on or off |
 
-Pointer: in the presenter window, hold the left mouse button on the current-slide picture and move; a red dot follows at the same place on the audience screen and disappears on release. The phone view does the same with a finger.
+Pointer: in the presenter window, hold the left mouse button on the current-slide picture and move; a red dot follows at the same place on the audience screen and disappears on release. The phone view does the same with a finger. The dot leaves a red line behind it that thins and fades over about two seconds (`TRAIL_MS` in `assets/js/deck.js`), so a shape drawn by hand, such as a circle around a number, stays visible for a moment.
 
 Presenter window: press **P** in the audience window (allow pop-ups for the file if the browser asks), drag the new window to the laptop screen and keep the audience window full screen on the projector. Either window can drive the deck; they stay in sync. The top bar of the presenter window shows the slide counter together with the current part number and name. The timer starts on the first slide change.
 
 The **خلاصه** switch above the presenter notes shows a short cue-card version of each slide's notes (numbered steps, bullets, key numbers, and a highlighted caveat line). It changes only when clicked: slide changes never reset it, and the choice is remembered when the presenter window is reopened. With the switch off, the full notes are shown in short paragraphs. In both views numbers are highlighted.
 
-The video on slide 5 does not start by itself: the first press of the next key on that slide plays it, without sound, the second reveals the «small and near / large and far» pair, and the third moves on. The presenter window shows a video panel on that slide (seek bar, time, from the start, back and forward 5 s, play or pause, sound) that controls the video in the audience window; the same actions are on the K, J, L, R and M keys in either window. Letter keys are read by key position, so they also work while the Persian keyboard layout is active.
+The video on slide 5 is trimmed to its first 6 seconds and is an ambient video (`data-ambient`): it starts by itself, without sound, when the slide opens and loops; the first press of the next key reveals the «small and near / large and far» pair and the second moves on. Because it is ambient, the presenter's video panel and the K/J/L/R/M keys do not control it.
 
 The outline tiles on slide 2, and the four application tiles and four phrases on slide 3, enter by themselves, one after another, when the slide is reached (about two seconds on slide 2, about three on slide 3); stepping back to the slide shows them all at once.
 

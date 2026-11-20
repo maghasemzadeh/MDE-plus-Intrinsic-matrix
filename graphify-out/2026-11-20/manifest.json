@@ -230,8 +230,8 @@
     "semantic_hash": "6dcef0b2fe20f334fafe305170b63ff5"
   },
   "thesis/kntu-thesis.cls": {
-    "mtime": 1793276774.7649412,
-    "ast_hash": "c030245a78955dad596d8f0f14cd7e76",
+    "mtime": 1795209309.1602228,
+    "ast_hash": "b2e44f8d71b0fca51975b5b042685420",
     "semantic_hash": ""
   },
   "thesis/main.toc": {
@@ -265,8 +265,8 @@
     "semantic_hash": "5805ea0f125347c26638ee67b7f81533"
   },
   "CLAUDE.md": {
-    "mtime": 1783194791.2384598,
-    "ast_hash": "2a0d04923ea6b598c2f95353097597f4",
+    "mtime": 1795209308.85222,
+    "ast_hash": "2def63dd0e67410e600c5ebd8771685d",
     "semantic_hash": ""
   },
   "README_TRAINING.md": {
@@ -323,11 +323,6 @@
     "mtime": 1781881961.144512,
     "ast_hash": "26b27eed76f24056f895c8b0cdd5edb6",
     "semantic_hash": "26b27eed76f24056f895c8b0cdd5edb6"
-  },
-  "thesis/main.pdf": {
-    "mtime": 1795023243.0623345,
-    "ast_hash": "879105077b64057832651b9f3eff7270",
-    "semantic_hash": ""
   },
   "correctness_check/depth_base_basic_vits_nyu_vkitti_diode_lr5e-6_.png": {
     "mtime": 1781881961.0645113,
@@ -1509,21 +1504,6 @@
     "ast_hash": "26b27eed76f24056f895c8b0cdd5edb6",
     "semantic_hash": ""
   },
-  "thesis-gemini/main-last-reading.pdf": {
-    "mtime": 1793276774.6929407,
-    "ast_hash": "2c38513b21f76b7c6ac8b95e457467d5",
-    "semantic_hash": ""
-  },
-  "thesis-gemini/main-past.pdf": {
-    "mtime": 1793276774.6969407,
-    "ast_hash": "b643003654579b4452de96dd690c8086",
-    "semantic_hash": ""
-  },
-  "thesis-gemini/main-reading.pdf": {
-    "mtime": 1793276774.7009406,
-    "ast_hash": "e0d3b0e7e204e91c7e3436da57c62c33",
-    "semantic_hash": ""
-  },
   "thesis/figures/middlebury_camera_audit.pdf": {
     "mtime": 1786637115.3068202,
     "ast_hash": "013763210743e2d8dc1afa389d939324",
@@ -1537,16 +1517,6 @@
   "thesis/figures/scale_ratio_distribution.pdf": {
     "mtime": 1793379424.8068137,
     "ast_hash": "f4210e8cf7ef846b7a9e17b2b7158243",
-    "semantic_hash": ""
-  },
-  "thesis/main-last-reading.pdf": {
-    "mtime": 1793276774.7729414,
-    "ast_hash": "2c38513b21f76b7c6ac8b95e457467d5",
-    "semantic_hash": ""
-  },
-  "thesis/main-reading.pdf": {
-    "mtime": 1786637115.3108203,
-    "ast_hash": "e0d3b0e7e204e91c7e3436da57c62c33",
     "semantic_hash": ""
   },
   "deliverables/camera-intrinsics-progress-defense/assets/little-big-ambiguty-poster.jpg": {
@@ -1710,8 +1680,8 @@
     "semantic_hash": ""
   },
   "thesis/REVIEW_PENDING.md": {
-    "mtime": 1795023312.702849,
-    "ast_hash": "464500d4d4aed04f65b8016354df670c",
+    "mtime": 1795209309.1602228,
+    "ast_hash": "33163418692cf6ba88b0eb07fbdbe2e9",
     "semantic_hash": ""
   },
   "thesis/figures/qualitative_md/geometry.json": {
@@ -1784,11 +1754,6 @@
     "ast_hash": "75a552349b7637867bf229432e49e760",
     "semantic_hash": ""
   },
-  "thesis/main-bfore-new-train.pdf": {
-    "mtime": 1794577543.0101845,
-    "ast_hash": "9711a8c976fb3ec81382d0f8c079f3e1",
-    "semantic_hash": ""
-  },
   "tools/multidomain/run_relative_multidomain_vits.sh": {
     "mtime": 1794742040.690056,
     "ast_hash": "6d2eb1032e02c34867b640a082eb415e",
@@ -1817,16 +1782,6 @@
   "thesis/table-new.md": {
     "mtime": 1794864756.726208,
     "ast_hash": "ee8d276297401aa7911aa0d719f647a6",
-    "semantic_hash": ""
-  },
-  "thesis/final.pdf": {
-    "mtime": 1794864756.5662067,
-    "ast_hash": "47d40c238f5ceb685122c825ff03b861",
-    "semantic_hash": ""
-  },
-  "thesis/last-highlight.pdf": {
-    "mtime": 1794864756.6422074,
-    "ast_hash": "d33aa8518b223e864ac0a6c1f66972d8",
     "semantic_hash": ""
   },
   "thesis/figures/qualitative_md_v2/geometry.json": {
@@ -1870,8 +1825,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
-    "mtime": 1795194023.554173,
-    "ast_hash": "87689275f29d0be70dcb739ef6b18387",
+    "mtime": 1795209309.0522218,
+    "ast_hash": "1fcdcec560ae79fe4b140d4ae6bfc6de",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
@@ -1885,8 +1840,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/content/fa.json": {
-    "mtime": 1795189040.5193975,
-    "ast_hash": "b22ba58f6b94269514df8127ca7d6ecb",
+    "mtime": 1795209569.3064537,
+    "ast_hash": "ee703c7f6d26f172a2e4347f540bf820",
     "semantic_hash": ""
   },
   "tools/multidomain/run_descriptor_ablation.sh": {
@@ -1900,8 +1855,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/README.md": {
-    "mtime": 1795194023.554173,
-    "ast_hash": "47a51b6345ef1d60e9f2f61b34cb7342",
+    "mtime": 1795209309.0482218,
+    "ast_hash": "5697f34eaed850f6b8d182f0c812b5ba",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
@@ -1910,8 +1865,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/index.html": {
-    "mtime": 1795189040.5513978,
-    "ast_hash": "1a837a9df0892e9545e0fe195fd74d7f",
+    "mtime": 1795209569.3304539,
+    "ast_hash": "0eafe5a47abc059f9b9f1fcd5860ea66",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/shell.html": {
@@ -1925,18 +1880,18 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
-    "mtime": 1795183016.5411317,
+    "mtime": 1795209373.7007768,
     "ast_hash": "a31a2097e65c6d961e3d6df06f115001",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
-    "mtime": 1795188576.3554716,
-    "ast_hash": "c0796f79fa4e06a6691594644f3db98a",
+    "mtime": 1795209373.7007768,
+    "ast_hash": "d44a34d091583eae028b4c9a652ca07a",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
-    "mtime": 1795183718.4864724,
-    "ast_hash": "605eccfc901e4ff94017d64dc54fba23",
+    "mtime": 1795209569.3024535,
+    "ast_hash": "b45afed778e05d7132f96b20e147566b",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/img/cityscapes.jpg": {
@@ -2092,6 +2047,511 @@
   "deliverables/thesis-defense-presentation-v2/serve.py": {
     "mtime": 1795181746.974492,
     "ast_hash": "dbcc9b12fbd2d3e753505d210d991d17",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/presentation.js": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "7efe8e15aee7596de5fd42de632da59f",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/js/presentation.js": {
+    "mtime": 1795209309.0402217,
+    "ast_hash": "7305069feae1fe8c629b2847ea1e4fca",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/run_md1_long.sh": {
+    "mtime": 1795206477.5356348,
+    "ast_hash": "60953706b866b315b25674a39541affa",
+    "semantic_hash": ""
+  },
+  ".claude/skills/paper-eval-protocol/SKILL.md": {
+    "mtime": 1795209308.85222,
+    "ast_hash": "087bf08b1a6cd2db3ae117d792fbd256",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/README.md": {
+    "mtime": 1795209308.85222,
+    "ast_hash": "4bb58c78ffb6a8d79352b51be91ed897",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/index.html": {
+    "mtime": 1795209308.9082205,
+    "ast_hash": "bc08d4e169eafb19274864877d007406",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/README.md": {
+    "mtime": 1795209308.9082205,
+    "ast_hash": "55007d0f0276e49665f9763fe67a8be3",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/presentation.html": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "e1b0db518ccd8308623efbff53bfdbf7",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/index.html": {
+    "mtime": 1795209309.0402217,
+    "ast_hash": "b308bff30d381233a369ca76bebacf3e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/README.md": {
+    "mtime": 1795209309.0402217,
+    "ast_hash": "3746703d57253d7ba1c57e229765e099",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/index.html": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "5c8967eb7eb81b4aed9e372a973341b9",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/thesis-defense-slides-v2.pdf": {
+    "mtime": 1795209309.076222,
+    "ast_hash": "47de20223e4cfcba92127ad3b455ffc7",
+    "semantic_hash": ""
+  },
+  "thesis/MohammadAminGhasemzadeh-thesis.pdf": {
+    "mtime": 1795209309.1602228,
+    "ast_hash": "fbf98a89f4cde451e9805702557eb56f",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/cityscapes.jpg": {
+    "mtime": 1795209308.85222,
+    "ast_hash": "ea675cad4a046ba4dbc890cd49b0d49f",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/da2-teaser.jpg": {
+    "mtime": 1795209308.8562202,
+    "ast_hash": "25b053b3afd4b267dd47cdd2ea310bed",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/depth-demo-title.jpg": {
+    "mtime": 1795209308.8562202,
+    "ast_hash": "060a0dd0eaae8e0e149af98382d97f5e",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/error-a.jpg": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "8a13d6012e43691bee7879ee51aac241",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/error-b.jpg": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "4d417a2e596ec04cf0b2b1c0d293bbca",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/intro-depth.jpg": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "26517f323419c986f234ef348f07752e",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/intro-rgb.jpg": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "194251df98eafab695644350016bff09",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/kitti.jpg": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "7dfea1bb5195e3a78b10586b52053ec4",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/kntu-logo.png": {
+    "mtime": 1795209308.8602202,
+    "ast_hash": "ac3d43ce11a9989c31fcf7b706e743db",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/nyu.jpg": {
+    "mtime": 1795209308.8642201,
+    "ast_hash": "393bb2e23aa22054552ff80dd98555de",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/qual-cityscapes.jpg": {
+    "mtime": 1795209308.8642201,
+    "ast_hash": "b471238846f527d7da4f6bce45c0addf",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/qual-kv2.jpg": {
+    "mtime": 1795209308.8642201,
+    "ast_hash": "b08e8b86f5e7f180efa8b370c6e1410f",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/img/qual-nyu.jpg": {
+    "mtime": 1795209308.8682203,
+    "ast_hash": "e5978f1ab0674ebca2d34e9839060207",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/compare_zoedepth.png": {
+    "mtime": 1795209308.9282207,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/da2k_benchmark.png": {
+    "mtime": 1795209308.932221,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/depthanything_teaser.png": {
+    "mtime": 1795209308.9682212,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/focal-jitter-alpha-1.6-8bit.png": {
+    "mtime": 1795209308.9682212,
+    "ast_hash": "fc12560c11c0815b4bec12891ad1e804",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/focal-jitter-comparison-8bit.png": {
+    "mtime": 1795209308.9722211,
+    "ast_hash": "13e84d4f1f4ec15d0bf6d201debaea7b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/focal-jitter-original-8bit.png": {
+    "mtime": 1795209308.9722211,
+    "ast_hash": "e0f5923ac2867866e88c2d1ac4f55f52",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/little-big-ambiguty-poster.jpg": {
+    "mtime": 1795209308.9722211,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/nyu-depth.jpg": {
+    "mtime": 1795209308.976221,
+    "ast_hash": "26517f323419c986f234ef348f07752e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/nyu-rgb.jpg": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "194251df98eafab695644350016bff09",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/qual-cityscapes.jpg": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "b471238846f527d7da4f6bce45c0addf",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/qual-nyu.jpg": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "e5978f1ab0674ebca2d34e9839060207",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/scale_ambiguity_poster.jpg": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-01.png": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "27e69abc4bbcd494a6cb995a35642612",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-02.png": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "93ff8999adf9d1cff92ec5399ef6355e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-03.png": {
+    "mtime": 1795209308.9802213,
+    "ast_hash": "4cc24cde7c79f4d61eef6bc6aaf4e0a6",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-04.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "fe80e472defc8c80282137bfbf7e76ba",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-05.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "c27b73d8f96a66a739af34ee62fee79d",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-06.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "483d6f362cabc0b3ddd025babdc75fb0",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-07.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "c0ac6a20b330f35eff71cdc406f76811",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-08.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "baf91f8caf3034c0690d9e53e2a5567f",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-09.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "a3273bc23b2eda28782315793dcb8359",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-10.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "779aa60d7bd4e0bbbf06319e3d7fa74e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-11.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "78ea234a10c5d6c7e7fa8dc5e025d71d",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-12.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "6cbbeacf416ef5cded95b4786e8ca62e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-13.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "3431224f4ddd3752d0006df066d241f4",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-14.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "438a2e7d4d0ed67bb0d46cbe3426de90",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-15.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "f213546e686d6c4821191785f89ac56a",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-16.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "4d987be2418727d8d2774f22f2ece29d",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-17.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "c052e913f00108b7e1f42a3f6938581b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-18.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "8e45e1b3b89d42bd25788c74ceb180a0",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-19.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "e2654cf4b5bd773961a0ee9d05c7edc4",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-20.png": {
+    "mtime": 1795209308.9842212,
+    "ast_hash": "984dd7ae778151a6879c0f4c7f37407f",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-21.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "159a3f169c7761b22a85c9bde42da200",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-22.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "4c3abfe503f992cd0c08b47de0fcf634",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-23.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "eb27a6eb29d6d43bae763bf8dd124a0b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-24.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "3fcb5cad6a4ea45fc2a33401808d2849",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-25.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "7ea3256fb8f059a233b236ef16be336a",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-26.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "9d2d77b447b5ac1ec297bd76dca5ba90",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-27.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "b4382448c86ce3f00e869410811d4042",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-28.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "7d82793a0120be79c75a87ce00d3781a",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-29.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "dbd1bac847efe4b2bbcd90ef34afc590",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-30.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "50c790dede83fcfa7ac4c1d3f195ca8b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-31.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "b2e5c5c2523c86b531cf68535f63b896",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-32.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "a7a58ac83439a52cbf19eeb364c46a11",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-33.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "71d0a77dfad9b6a10da507155d5691af",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-34.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "a510ecc5c9ba383145c498f12c144478",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-35.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "e3d6652d4bf8be567929637277e283f2",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-36.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "a81f9bfdc7c9d1e1e90fda62f16828af",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-37.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "e4916e9217487cebd609fd5941fbf771",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-38.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "784bab165bb0d158556ec0d8d27a698b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-39.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "7980acc091ccadb9a568efc2e30d479e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-40.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "ad6755a0e10be700d8d847a1ed684180",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-41.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "7ee141c565406fb2b5bf8830def045d7",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-42.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "8ae8aa0c79ed01e9b0514cb2c58b6538",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/preview/slide-43.png": {
+    "mtime": 1795209308.9882214,
+    "ast_hash": "737ada47dedf550ae695af77e1b643e5",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/logo.png": {
+    "mtime": 1795209309.0322218,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qual_md_cityscapes.png": {
+    "mtime": 1795209309.0322218,
+    "ast_hash": "50b5e91723c47146404994d9529da45d",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qual_md_error.png": {
+    "mtime": 1795209309.0322218,
+    "ast_hash": "6c1b906ea4db3bfef99c683d889e8424",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qual_md_kv1.png": {
+    "mtime": 1795209309.0322218,
+    "ast_hash": "946ccadd384f2f3dd9fa95009e9a46d0",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qual_md_kv2.png": {
+    "mtime": 1795209309.0322218,
+    "ast_hash": "ceb655368ff8ca287966656d899d5b13",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qual_md_nyu.png": {
+    "mtime": 1795209309.0362217,
+    "ast_hash": "c1505db509a7e9ecab7e66bd91f840dd",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/qualitative_depth_maps.png": {
+    "mtime": 1795209309.0362217,
+    "ast_hash": "045915899db4974c0296fd4adff29b81",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/images/scale_ratio_distribution.png": {
+    "mtime": 1795209309.0362217,
+    "ast_hash": "605d4e49eee9c01f530ab7332c0c3e26",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/focal-jitter-alpha-1.6-8bit.png": {
+    "mtime": 1795209309.0442219,
+    "ast_hash": "fc12560c11c0815b4bec12891ad1e804",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/focal-jitter-comparison-8bit.png": {
+    "mtime": 1795209309.0442219,
+    "ast_hash": "13e84d4f1f4ec15d0bf6d201debaea7b",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/focal-jitter-original-8bit.png": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "e0f5923ac2867866e88c2d1ac4f55f52",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/little-big-ambiguty-poster.jpg": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/nyu-depth.jpg": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "26517f323419c986f234ef348f07752e",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/nyu-rgb.jpg": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "194251df98eafab695644350016bff09",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/qual-cityscapes.jpg": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "b471238846f527d7da4f6bce45c0addf",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-sol/assets/qual-nyu.jpg": {
+    "mtime": 1795209309.0482218,
+    "ast_hash": "e5978f1ab0674ebca2d34e9839060207",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/video/depth-demo-title.mp4": {
+    "mtime": 1795209308.9002206,
+    "ast_hash": "8017dcfce15eae8e5206ddeb0fb93d44",
+    "semantic_hash": ""
+  },
+  "deliverables/gpt-presentation/assets/video/scale-ambiguity.mp4": {
+    "mtime": 1795209308.9082205,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-astra/assets/little-big-ambiguty.mp4": {
+    "mtime": 1795209308.976221,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  "deliverables/presentation-gemini/assets/video/scale-ambiguity.mp4": {
+    "mtime": 1795209309.0402217,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
     "semantic_hash": ""
   }
 }

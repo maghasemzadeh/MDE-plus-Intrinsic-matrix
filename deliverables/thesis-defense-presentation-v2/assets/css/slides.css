@@ -57,7 +57,7 @@ ol.outline li.key b { color: var(--sky-200); }
 /* the second tile enters on its own looking like the first, then one key press turns it navy */
 .qa.recolor { transition: opacity 420ms var(--ease), transform 420ms var(--ease), background-color 600ms var(--ease), border-color 600ms var(--ease); }
 .qa.recolor .qa-l, .qa.recolor .qa-q { transition: color 600ms var(--ease); }
-.slide.active .qa.recolor.auto { transition-delay: calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 230ms)), calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 230ms)), 0s, 0s; }
+.slide.active .qa.recolor.auto { transition-delay: calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 450ms)), calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 450ms)), 0s, 0s; }
 .slide.active.back .qa.recolor.auto, .embed .slide.active .qa.recolor.auto { transition-delay: 0s; }
 .qa.recolor.on { background: var(--navy-900); border-color: var(--navy-900); }
 .qa.recolor.on .qa-l { color: var(--sky-200); } .qa.recolor.on .qa-q { color: #fff; }
@@ -104,7 +104,6 @@ ol.qlist li b { flex: 0 0 66px; height: 66px; display: grid; place-items: center
 .s-base .stats { gap: 30px; padding-inline-start: 20px; }
 .s-base .flow .box { font-size: 27px; padding: 18px 12px; }
 .s-base .fig figcaption { font-size: 20px; margin-top: 8px; }
-.s-base { --auto-gap: 170ms; }
 .s-base .flow .outs { flex: 1 1 0; display: flex; flex-direction: column; gap: 12px; }
 
 /* ---------- 10 · prior work ---------- */
@@ -501,7 +500,7 @@ table.heat { font-size: 30px; } table.heat td { padding: 13px 16px; } table.heat
 
 /* backup 9: training curves of the final model */
 .s-b9 .slide-head { margin-bottom: 10px; } .s-b9 .slide-head .sub { font-size: 24px; }
-.s-b9 .legend { justify-content: center; margin-bottom: 14px; }
+.s-b9 .legend { justify-content: center; margin: 10px 0 14px; }
 .s-b9 .cols.c2 { height: auto; gap: 48px; }
 .s-b9 .h4 { margin-bottom: 4px; font-size: 28px; }
 .s-b9 .chart .dot { stroke-width: 2.5; }

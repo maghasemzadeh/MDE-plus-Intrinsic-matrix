@@ -28,7 +28,7 @@
   <div class="bar">
     <span class="where"><b id="pv-count"></b><span id="pv-part"></span></span>
     <span id="pv-conn" class="conn"></span>
-    <span class="timer"><span class="tl">{{ui.timer}}: </span><span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">{{ui.reset}}</button><button id="pv-fs" type="button" aria-label="{{ui.fullscreen}}" title="{{ui.fullscreen}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></span>
+    <span class="timer"><span class="tl">{{ui.timer}}: </span><span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">{{ui.reset}}</button><button id="pv-pen" type="button" aria-pressed="false" aria-label="{{ui.pen}}" title="{{ui.pen}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.2-4.6L16.6 4a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8 4 20z"/><path d="M14.5 6.1l3.4 3.4"/></svg></button><button id="pv-fs" type="button" aria-label="{{ui.fullscreen}}" title="{{ui.fullscreen}}"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></span>
   </div>
   <div class="previews">
     <div class="pv cur"><label>{{ui.current}}</label><iframe title="current" tabindex="-1"></iframe></div>
@@ -53,6 +53,7 @@
     <div id="pv-notes"></div>
     <textarea id="pv-editor" dir="rtl" spellcheck="false" hidden></textarea>
   </div>
+  <div id="pv-pentoast"></div>
   <div class="hint">{{ui.help}}</div>
 </div>
 

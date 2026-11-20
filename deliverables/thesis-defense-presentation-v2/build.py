@@ -14,7 +14,7 @@ fa = json.loads((ROOT / "content" / "fa.json").read_text(encoding="utf8"))
 
 parts = [fa[f"part.{i}"] for i in range(1, 8)]
 config = {"parts": parts, "backupLabel": fa["b.label"], "partLabel": fa["ui.part"], "of": "از",
-          "endLabel": fa["ui.end"], "sameSlide": fa["ui.same_slide"], "editFail": fa["ui.edit_fail"], "editNeedsServer": fa["ui.edit_server"], "closeLabel": fa["ui.close"],
+          "endLabel": fa["ui.end"], "sameSlide": fa["ui.same_slide"], "penOn": fa["ui.pen_on"], "penOff": fa["ui.pen_off"], "penNext": fa["ui.pen_next"], "penPrev": fa["ui.pen_prev"], "editFail": fa["ui.edit_fail"], "editNeedsServer": fa["ui.edit_server"], "closeLabel": fa["ui.close"],
           "conn": {k: fa["ui.conn_" + k] for k in ("ok", "nomain", "bad", "denied", "stale")}}
 
 slides = "".join(p.read_text(encoding="utf8") for p in sorted((ROOT / "src" / "slides").glob("*.html")))

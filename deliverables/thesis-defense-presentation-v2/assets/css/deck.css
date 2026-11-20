@@ -138,7 +138,7 @@ svg .frag { transition: opacity 420ms var(--ease); }
 .auto { opacity: 0; transition: opacity 420ms var(--ease), transform 420ms var(--ease); }
 .auto.rise { transform: translateY(18px); }
 .slide.active .auto, .slide.leaving .auto { opacity: 1; transform: none; }
-.slide.active .auto { transition-delay: calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 230ms)); }
+.slide.active .auto { transition-delay: calc(var(--auto-start, 320ms) + var(--i, 0) * var(--auto-gap, 450ms)); }
 /* stepping back to the slide, and the presenter previews, show the finished state at once */
 .slide.active.back .auto, .embed .slide.active .auto { transition-delay: 0s; }
 
@@ -349,7 +349,7 @@ body.remote #presenter .pv.cur { overflow: hidden; border-radius: 8px; }
 #pv-dot.on { opacity: 1; transition: none; }
 
 /* ---------- phone presenter (?remote=1, served by serve.py) ---------- */
-#pv-conn, #pv-fs, #presenter .ncap, #presenter .fsz, #pv-remote { display: none; }
+#pv-conn, #pv-fs, #pv-pen, #pv-pentoast, #presenter .ncap, #presenter .fsz, #pv-remote { display: none; }
 .nosleep { position: fixed; width: 1px; height: 1px; opacity: 0.01; left: 0; bottom: 0; pointer-events: none; }
 html:has(body.remote) { height: 100%; }
 body.presenter.remote { -webkit-tap-highlight-color: transparent; overscroll-behavior: none; touch-action: manipulation; }
@@ -373,7 +373,12 @@ body.remote #presenter .timer { display: flex; align-items: center; gap: 6px; fl
 body.remote #presenter .timer .tl { display: none; }
 body.remote #presenter .clock { font-size: 22px; }
 body.remote #pv-reset { font-size: 13px !important; padding: 4px 8px !important; }
-body.remote #pv-fs { display: inline-flex; align-items: center; padding: 5px 7px !important; }
+body.remote #pv-fs, body.remote #pv-pen { display: inline-flex; align-items: center; padding: 5px 7px !important; }
+body.remote #pv-pen[aria-pressed="true"] { background: #184f95; border-color: #2a6cc0; color: #fff; }
+body.remote #pv-pentoast { display: block; position: fixed; left: 50%; top: calc(52px + env(safe-area-inset-top)); transform: translateX(-50%); z-index: 71;
+  background: #10301f; color: #c9f5dc; border: 1px solid #2f6b4a; padding: 6px 14px; border-radius: 999px; font-size: 14px; white-space: nowrap;
+  opacity: 0; pointer-events: none; transition: opacity .25s; }
+body.remote #pv-pentoast.show { opacity: 1; transition: none; }
 body.remote #pv-conn { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; color: #9fb0cf; white-space: nowrap; flex: 0 0 auto; }
 body.remote #pv-conn::before { content: ""; width: 9px; height: 9px; border-radius: 50%; background: #6b7a96; }
 body.remote #pv-conn.ok { font-size: 0; gap: 0; }

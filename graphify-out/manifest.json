@@ -1870,8 +1870,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
-    "mtime": 1795179089.288328,
-    "ast_hash": "374543378cfa1ff186c81930bd12eaac",
+    "mtime": 1795180406.1114638,
+    "ast_hash": "7d069ef6896c1b8567b2d5cd83313015",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
@@ -1880,13 +1880,13 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/build.py": {
-    "mtime": 1795178907.0828755,
-    "ast_hash": "6654fd9949ef1722457fa6cd8d846755",
+    "mtime": 1795180385.6792877,
+    "ast_hash": "9bdebf05aebfbdc43894b1df9c5b8944",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/content/fa.json": {
-    "mtime": 1795178907.0868754,
-    "ast_hash": "05b47477065dbd99101a6d79050f8871",
+    "mtime": 1795180385.6832876,
+    "ast_hash": "538509ebb5d16dcf460818d0c3ec2440",
     "semantic_hash": ""
   },
   "tools/multidomain/run_descriptor_ablation.sh": {
@@ -1900,8 +1900,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/README.md": {
-    "mtime": 1795179141.9687545,
-    "ast_hash": "7c656b73f1b2c9082d07e6f90961d3a6",
+    "mtime": 1795180451.4758554,
+    "ast_hash": "7672395a7808f256cc9d1e75fb6c109a",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
@@ -1910,8 +1910,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/index.html": {
-    "mtime": 1795179073.7802029,
-    "ast_hash": "a0ea52b95e5bdaced91a750c43fa6754",
+    "mtime": 1795180385.715288,
+    "ast_hash": "1a4fd79159914155159ae71ab7d10aab",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/shell.html": {

@@ -11,6 +11,7 @@
   if (REMOTE) document.body.classList.add('remote');
   /* served by serve.py: the audience window and the phone talk through the server (POST up, Server-Sent Events down) */
   var SERVED = /^https?:$/.test(location.protocol), TOKEN = qs.get('k') || '';
+  var DECK_V = 3;   /* raised when the phone and the audience window must run the same engine; a mismatch tells the phone to ask for a reload */
   function api(path) { return '/api/' + path + (TOKEN ? '?k=' + encodeURIComponent(TOKEN) : ''); }
   function post(path, body) {
     try { fetch(api(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function () {}); } catch (e) {}
@@ -366,7 +367,7 @@
   function broadcast() {
     var msg = { type: 'deck-state', i: state.i, step: state.step, video: videoState() };
     if (MODE === 'main' && presenterWin && !presenterWin.closed) presenterWin.postMessage(msg, '*');
-    if (MODE === 'main' && server.on) post('state', { i: state.i, step: state.step, video: msg.video });
+    if (MODE === 'main' && server.on) post('state', { i: state.i, step: state.step, video: msg.video, v: DECK_V });
     if (MODE === 'presenter') updatePresenter();
   }
   var vidTimer = null, vidLast = 0;
@@ -390,7 +391,7 @@
   function showLaser(c) {
     if (MODE !== 'main') return;
     if (!laser) { laser = document.createElement('div'); laser.id = 'laser'; stage.appendChild(laser); }
-    if (c.n && c.n < laserN && laserN - c.n < 1000) return;
+    if (c.n && c.n < laserN && laserN - c.n < 400) return;   /* n is the sender's clock in ms, so it keeps growing across reloads */
     laserN = c.n || 0;
     clearTimeout(laserT);
     if (c.off) { laser.classList.remove('on'); return; }
@@ -428,13 +429,17 @@
     es.onopen = function () { if (MODE === 'main') broadcast(); };
     es.onerror = function () { setConn('bad'); };
     es.addEventListener('cmd', function (e) { if (MODE === 'main') command(JSON.parse(e.data).c); });
-    es.addEventListener('state', function (e) { var d = JSON.parse(e.data); d.type = 'deck-state'; onMsg(d); });
+    es.addEventListener('state', function (e) {
+      var d = JSON.parse(e.data); d.type = 'deck-state'; onMsg(d);
+      if (REMOTE) { server.stale = d.v !== DECK_V; setConn(server.mains > 0 ? 'ok' : 'nomain'); }
+    });
     es.addEventListener('video', function (e) { var d = JSON.parse(e.data); d.type = 'deck-video'; onMsg(d); });
     es.addEventListener('status', function (e) { server.mains = JSON.parse(e.data).mains; setConn(server.mains > 0 ? 'ok' : 'nomain'); });
   }
   function setConn(st) {
     var c = $('#pv-conn');
     if (!REMOTE || !c) return;
+    if (st === 'ok' && server.stale) st = 'stale';   /* the audience window still runs an older engine: pointer and other new commands would be ignored */
     c.className = 'conn ' + st;
     c.textContent = CFG.conn[st] || '';
     document.body.classList.toggle('offline', st !== 'ok');
@@ -579,7 +584,46 @@
     seek.addEventListener('change', function () { seeking = false; seek.blur(); });
     if (window.opener) window.opener.postMessage({ type: 'deck-hello' }, '*');
     if (REMOTE) initRemote();
+    initPointerPad();
     updatePresenter();
+  }
+
+  /* pointer: press and drag on the current-slide picture (finger on the phone, mouse in the laptop presenter window) and a dot
+     follows on the audience screen. The picture is letterboxed inside its box, so positions are mapped to the 16:9 slide. */
+  function initPointerPad() {
+    var pad = $('#presenter .pv.cur'), dot = document.createElement('i'), busy = false, pending = null, down = false;
+    dot.id = 'pv-dot'; pad.appendChild(dot);
+    /* phone: only the newest position is sent and never two requests at once, so positions arrive in order */
+    var flush = function () {
+      if (busy || !pending) return;
+      var c = pending; pending = null; busy = true;
+      var over = false, fin = function () { if (over) return; over = true; clearTimeout(t); busy = false; flush(); };
+      var t = setTimeout(fin, 1500);   /* a request that hangs must not block the pointer for good */
+      try { fetch(api('cmd'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ c: c }) }).then(fin, fin); } catch (e) { fin(); }
+    };
+    var send = function (c) { if (REMOTE) { pending = c; flush(); } else command(c); };
+    var point = function (e, off) {
+      var r = pad.getBoundingClientRect(), k = Math.min(r.width / 1920, r.height / 1080);
+      var w = 1920 * k, h = 1080 * k, ox = (r.width - w) / 2, oy = (r.height - h) / 2;
+      var x = Math.max(0, Math.min(1, (e.clientX - r.left - ox) / w)), y = Math.max(0, Math.min(1, (e.clientY - r.top - oy) / h));
+      if (!off) dot.style.transform = 'translate(' + (ox + x * w) + 'px,' + (oy + y * h) + 'px)';
+      dot.classList.toggle('on', !off);
+      send(off ? { cmd: 'pointer', off: true, n: Date.now() } : { cmd: 'pointer', x: +x.toFixed(4), y: +y.toFixed(4), n: Date.now() });
+    };
+    var start = function (e) { down = true; if (REMOTE) keepAwake(); point(e); };
+    var end = function (e) { if (down) { down = false; point(e, true); } };
+    if (window.PointerEvent) {
+      pad.addEventListener('pointerdown', function (e) { if (e.button > 0) return; try { pad.setPointerCapture(e.pointerId); } catch (x) {} start(e); e.preventDefault(); });
+      pad.addEventListener('pointermove', function (e) { if (down) { point(e); e.preventDefault(); } });
+      ['pointerup', 'pointercancel', 'lostpointercapture'].forEach(function (t) { pad.addEventListener(t, end); });
+    } else {   /* older mobile browsers */
+      var first = function (e) { return e.touches[0] || e.changedTouches[0]; };
+      pad.addEventListener('touchstart', function (e) { start(first(e)); e.preventDefault(); }, { passive: false });
+      pad.addEventListener('touchmove', function (e) { if (down) { point(first(e)); e.preventDefault(); } }, { passive: false });
+      ['touchend', 'touchcancel'].forEach(function (t) { pad.addEventListener(t, function (e) { end(first(e)); }); });
+    }
+    pad.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+    pad.addEventListener('dragstart', function (e) { e.preventDefault(); });
   }
 
   /* ---------------- phone presenter (remote) ---------------- */
@@ -623,29 +667,6 @@
     $$('#presenter [data-fsz]').forEach(function (b) {
       b.addEventListener('click', function () { setSize(size + (+b.getAttribute('data-fsz'))); b.blur(); });
     });
-    /* pointer: touch and drag on the current-slide picture. Only the newest position is sent, and never two requests at once */
-    var pad = $('#presenter .pv.cur'), dot = document.createElement('i'), seq = 0, busy = false, pending = null;
-    dot.id = 'pv-dot'; pad.appendChild(dot);
-    var flush = function () {
-      if (busy || !pending) return;
-      var c = pending; pending = null; busy = true;
-      var done = function () { busy = false; flush(); };
-      fetch(api('cmd'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ c: c }) }).then(done, done);
-    };
-    var point = function (e, off) {
-      var r = pad.getBoundingClientRect();
-      var x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
-      if (!off) dot.style.transform = 'translate(' + (x * r.width) + 'px,' + (y * r.height) + 'px)';
-      dot.classList.toggle('on', !off);
-      pending = off ? { cmd: 'pointer', off: true, n: ++seq } : { cmd: 'pointer', x: +x.toFixed(4), y: +y.toFixed(4), n: ++seq };
-      flush();
-    };
-    var down = false;
-    pad.addEventListener('pointerdown', function (e) { down = true; try { pad.setPointerCapture(e.pointerId); } catch (x) {} keepAwake(); point(e); e.preventDefault(); });
-    pad.addEventListener('pointermove', function (e) { if (down) { point(e); e.preventDefault(); } });
-    ['pointerup', 'pointercancel'].forEach(function (t) { pad.addEventListener(t, function (e) { if (down) { down = false; point(e, true); } }); });
-    pad.addEventListener('contextmenu', function (e) { e.preventDefault(); });
-
     var cl = document.createElement('button');
     cl.type = 'button'; cl.className = 'ovclose'; cl.textContent = CFG.closeLabel;
     cl.addEventListener('click', function () { toggleOverview(false); });

@@ -325,7 +325,8 @@ body.presenter #presenter {
   background: radial-gradient(circle, #fff 0 14%, #ff2d2d 30% 52%, rgba(255, 45, 45, .35) 70%, rgba(255, 45, 45, 0) 100%);
   box-shadow: 0 0 22px 8px rgba(255, 45, 45, .45); opacity: 0; transition: opacity .35s, transform 70ms linear; will-change: transform; }
 #laser.on { opacity: 1; transition: opacity .08s, transform 70ms linear; }
-body.remote #presenter .pv.cur { touch-action: none; user-select: none; -webkit-user-select: none; overflow: hidden; border-radius: 8px; }
+#presenter .pv.cur { touch-action: none; user-select: none; -webkit-user-select: none; -webkit-touch-callout: none; cursor: crosshair; }
+body.remote #presenter .pv.cur { overflow: hidden; border-radius: 8px; }
 #pv-dot { position: absolute; left: 0; top: 0; width: 18px; height: 18px; margin: -9px 0 0 -9px; border-radius: 50%; z-index: 3; pointer-events: none;
   background: #ff2d2d; box-shadow: 0 0 0 3px rgba(255, 255, 255, .85), 0 0 12px 4px rgba(255, 45, 45, .6); opacity: 0; transition: opacity .3s; }
 #pv-dot.on { opacity: 1; transition: none; }
@@ -362,11 +363,12 @@ body.remote #pv-conn.ok { font-size: 0; gap: 0; }
 body.remote #pv-conn.ok::before { background: #3ecf8e; box-shadow: 0 0 0 3px rgba(62, 207, 142, .18); }
 body.remote #pv-conn.nomain::before { background: #ffd479; }
 body.remote #pv-conn.bad::before, body.remote #pv-conn.denied::before { background: #ff6b6b; }
-body.remote #pv-conn.nomain, body.remote #pv-conn.bad, body.remote #pv-conn.denied {
+body.remote #pv-conn.stale::before { background: #ffd479; }
+body.remote #pv-conn.nomain, body.remote #pv-conn.bad, body.remote #pv-conn.denied, body.remote #pv-conn.stale {
   position: fixed; top: calc(52px + env(safe-area-inset-top)); left: 50%; transform: translateX(-50%); z-index: 70;
   background: #3a1f24; color: #ffd9d9; border: 1px solid #6b2f37; padding: 6px 14px; border-radius: 999px; font-size: 14px;
 }
-body.remote #pv-conn.nomain { background: #3a3220; color: #ffe9b8; border-color: #6b5a2f; }
+body.remote #pv-conn.nomain, body.remote #pv-conn.stale { background: #3a3220; color: #ffe9b8; border-color: #6b5a2f; }
 
 body.remote #presenter .previews {
   display: grid; gap: 8px; direction: ltr; grid-template-columns: minmax(0, 1fr) minmax(0, 2.1fr);

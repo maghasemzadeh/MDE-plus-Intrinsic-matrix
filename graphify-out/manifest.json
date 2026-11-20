@@ -1725,8 +1725,8 @@
     "semantic_hash": ""
   },
   "tools/multidomain/eval_related.py": {
-    "mtime": 1794490774.4291143,
-    "ast_hash": "20151253342a373d8ab8823689b2d558",
+    "mtime": 1795172031.019849,
+    "ast_hash": "570a930bc8720b2d1ef03fbad3425550",
     "semantic_hash": ""
   },
   "tools/multidomain/make_qualitative_md.py": {
@@ -1870,8 +1870,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
-    "mtime": 1795012712.7540174,
-    "ast_hash": "fd85e2769021557198c459de0d063182",
+    "mtime": 1795176848.975208,
+    "ast_hash": "1cc7a0ca0260701b0965e81188126f50",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
@@ -1880,13 +1880,13 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/build.py": {
-    "mtime": 1795012712.7540174,
-    "ast_hash": "58e3269e5cd77aca031923157d1d86d3",
+    "mtime": 1795176875.0354645,
+    "ast_hash": "3c7bd7fc9914c4d84dadd8300da77054",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/content/fa.json": {
-    "mtime": 1795012008.244775,
-    "ast_hash": "cc3e2ed2ac75f279edc5973f4d1868fc",
+    "mtime": 1795176857.303277,
+    "ast_hash": "08340c414044b8b367180b826db994d8",
     "semantic_hash": ""
   },
   "tools/multidomain/run_descriptor_ablation.sh": {
@@ -1900,8 +1900,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/README.md": {
-    "mtime": 1795012926.1836648,
-    "ast_hash": "bb7239a23739ec06644b0da6ee222180",
+    "mtime": 1795177098.109987,
+    "ast_hash": "813e99d4a2cfc8b4eee3cdc3a5d9e58e",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
@@ -1910,33 +1910,33 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/index.html": {
-    "mtime": 1795012926.2996657,
-    "ast_hash": "ca93d499544e6d49719eb060fed5a409",
+    "mtime": 1795177003.8369505,
+    "ast_hash": "592fb8e95470e4aecbebd5094513a74f",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/shell.html": {
-    "mtime": 1795011887.7519364,
-    "ast_hash": "b33d85796fc6fbf9e583a0cfa333213e",
+    "mtime": 1795176875.0354645,
+    "ast_hash": "17cbd8b06d4e3680561457e211edf3c3",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/01-opening-problem.html": {
-    "mtime": 1795012712.7500172,
-    "ast_hash": "c0452c18c9d73dd9de9986fbdf8c1afc",
+    "mtime": 1795173675.1730385,
+    "ast_hash": "95aa3e441b88b314007afe03cdd508a5",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
-    "mtime": 1795012712.7540174,
-    "ast_hash": "1890757f50dc9f02ba2e84bbf0672779",
+    "mtime": 1795102875.3815677,
+    "ast_hash": "d88649d867c88d03f5a9a9c2a85f570c",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
-    "mtime": 1795012712.7540174,
-    "ast_hash": "84491e5569d9a81b20ef133a693948bc",
+    "mtime": 1795102851.8133647,
+    "ast_hash": "5ebb23c4cc2dcd1c7ddb527bfa96fd0b",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
-    "mtime": 1795012712.7540174,
-    "ast_hash": "6a9bf29353ab7467ad351948676d808e",
+    "mtime": 1795176657.185619,
+    "ast_hash": "153a3487f860dfd989d51f1504c5255c",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/img/cityscapes.jpg": {
@@ -2027,6 +2027,71 @@
   ".claude/skills/tikz-figure-review/references/snippets.md": {
     "mtime": 1795023291.746694,
     "ast_hash": "f45307033af55ef87d4f7c102bc60c8b",
+    "semantic_hash": ""
+  },
+  "tools/video/make_depth_video.py": {
+    "mtime": 1795104513.315924,
+    "ast_hash": "7f2ea8404c2a238fd0b7ddce3d2f7062",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/depth-demo-title.jpg": {
+    "mtime": 1795104933.495085,
+    "ast_hash": "060a0dd0eaae8e0e149af98382d97f5e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/video/depth-demo-title.mp4": {
+    "mtime": 1795104931.767072,
+    "ast_hash": "8017dcfce15eae8e5206ddeb0fb93d44",
+    "semantic_hash": ""
+  },
+  "thesis/post-defend-corrections.md": {
+    "mtime": 1795158414.011812,
+    "ast_hash": "68a8309b7eadbe472393ee180284727b",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-1.jpg": {
+    "mtime": 1795167359.023352,
+    "ast_hash": "670ec63aa29d1b2f9fb96e9dae3a25a5",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-2.jpg": {
+    "mtime": 1795167180.0379114,
+    "ast_hash": "c50f027e5f1c375e220987c455c676ac",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-3.jpg": {
+    "mtime": 1795167189.6819885,
+    "ast_hash": "358ff9a233ff8205d93db64f180adb1a",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-4.jpg": {
+    "mtime": 1795167181.249921,
+    "ast_hash": "0b5f036ffcdcf9ee1417769f26d8da86",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-5.jpg": {
+    "mtime": 1795167182.1899285,
+    "ast_hash": "eccb6bdcca8ad213450197ea533cc243",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-6.jpg": {
+    "mtime": 1795167359.7913582,
+    "ast_hash": "b805b64b754b2d1d841cdebf93f540c8",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-7.jpg": {
+    "mtime": 1795167373.1874669,
+    "ast_hash": "242c991100f7724c187342588ebc88dd",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/tl-8.jpg": {
+    "mtime": 1795167162.8697743,
+    "ast_hash": "f67b5529a06f5fa84aa5094bbbed71c2",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/serve.py": {
+    "mtime": 1795177003.8129501,
+    "ast_hash": "6f5b63514332ef70daabdb6908bcd6df",
     "semantic_hash": ""
   }
 }

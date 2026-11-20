@@ -1,0 +1,2052 @@
+{
+  ".claude/settings.local.json": {
+    "mtime": 1787309904.9782517,
+    "ast_hash": "a3fb1863ee1776d95c2d03927fe3d58b",
+    "semantic_hash": ""
+  },
+  "compare_dataset_results.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "c1ecc7d333399fd9575cc5d6b9d2a369",
+    "semantic_hash": "c1ecc7d333399fd9575cc5d6b9d2a369"
+  },
+  "compare_models.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "2487cf3c5efdf5075e2aa424713c1943",
+    "semantic_hash": "2487cf3c5efdf5075e2aa424713c1943"
+  },
+  "compare_two_checkpoints.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "5de5c90cf55680f6388b28abefff3d0f",
+    "semantic_hash": "5de5c90cf55680f6388b28abefff3d0f"
+  },
+  "datasets/__init__.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "eb455c5520e24eccfa699fc62010c5c8",
+    "semantic_hash": "eb455c5520e24eccfa699fc62010c5c8"
+  },
+  "datasets/base.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "7bc9b4f515f24e6d6d73cc2230d29934",
+    "semantic_hash": "7bc9b4f515f24e6d6d73cc2230d29934"
+  },
+  "datasets/cityscapes.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "900779ff239066841eeb70e368e235cd",
+    "semantic_hash": "900779ff239066841eeb70e368e235cd"
+  },
+  "datasets/diode.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "f8aa73bf613d81f7d56e34d702871084",
+    "semantic_hash": "f8aa73bf613d81f7d56e34d702871084"
+  },
+  "datasets/drivingstereo.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "89cf2203b521ea69968fdbf2149898bd",
+    "semantic_hash": "89cf2203b521ea69968fdbf2149898bd"
+  },
+  "datasets/kitti.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "34f2fb8e582293d087104b1ee1253c8a",
+    "semantic_hash": "34f2fb8e582293d087104b1ee1253c8a"
+  },
+  "datasets/middlebury.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "8a5cdf497da35ddd72323c18650a05bd",
+    "semantic_hash": "8a5cdf497da35ddd72323c18650a05bd"
+  },
+  "datasets/nyu.py": {
+    "mtime": 1783192727.471456,
+    "ast_hash": "e3a9c5bb0dda5e2f7519be3cc6b49106",
+    "semantic_hash": ""
+  },
+  "datasets/training_datasets.py": {
+    "mtime": 1793467107.0695405,
+    "ast_hash": "c0e9832a0c4ec64ac2d7c543accb6c19",
+    "semantic_hash": ""
+  },
+  "datasets/vkitti.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "e32649c61f73a2db73033c1e849511ec",
+    "semantic_hash": "e32649c61f73a2db73033c1e849511ec"
+  },
+  "inspect_checkpoint_keys.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "7451f356dae4821e993cbdd1a28ddb5e",
+    "semantic_hash": "7451f356dae4821e993cbdd1a28ddb5e"
+  },
+  "load_checkpoint.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "a487dbd62f125a168699c1d7b33f0438",
+    "semantic_hash": "a487dbd62f125a168699c1d7b33f0438"
+  },
+  "models/__init__.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "ba6947d6d18df80df8a1b4bb34136e70",
+    "semantic_hash": "ba6947d6d18df80df8a1b4bb34136e70"
+  },
+  "models/base.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "950a48b58812ad55f1c6480b7264c8e3",
+    "semantic_hash": "950a48b58812ad55f1c6480b7264c8e3"
+  },
+  "models/depth_anything_3.py": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "97af7a28f488adefde95c570dce9a7f0",
+    "semantic_hash": "97af7a28f488adefde95c570dce9a7f0"
+  },
+  "models/depth_anything_v2.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "d674f94b93790b2a0978beab32c41513",
+    "semantic_hash": "d674f94b93790b2a0978beab32c41513"
+  },
+  "models/depth_anything_v2_revised.py": {
+    "mtime": 1783363878.9514148,
+    "ast_hash": "86eb86f932bce23237575efc19e2e38d",
+    "semantic_hash": ""
+  },
+  "models/utils.py": {
+    "mtime": 1783363871.2833438,
+    "ast_hash": "66d4a22ab6913a4bda251d31f73e8073",
+    "semantic_hash": ""
+  },
+  "prepare_vkitti.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4d2272ea9817ef0fea09cfb74c1a73cc",
+    "semantic_hash": "4d2272ea9817ef0fea09cfb74c1a73cc"
+  },
+  "print_intrinsics.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f40f58e1ba319b610ed44dedc5d0de0f",
+    "semantic_hash": "f40f58e1ba319b610ed44dedc5d0de0f"
+  },
+  "show_absrel_calculation.py": {
+    "mtime": 1783620356.9137876,
+    "ast_hash": "17825e67e4fae26b83149dec514abda4",
+    "semantic_hash": ""
+  },
+  "src/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a2cf2f07e4c4ddf88e80bf7f161ffbe0",
+    "semantic_hash": "a2cf2f07e4c4ddf88e80bf7f161ffbe0"
+  },
+  "src/metrics.py": {
+    "mtime": 1783191908.6525424,
+    "ast_hash": "7139ac521e218d1e49590ebd4114996c",
+    "semantic_hash": ""
+  },
+  "src/paths.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "db79e28e8e2555284b71262376ccf478",
+    "semantic_hash": "db79e28e8e2555284b71262376ccf478"
+  },
+  "src/pipeline.py": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "b91f1c3fa676a70dcf61a289ac44ff0f",
+    "semantic_hash": ""
+  },
+  "src/tools/depth_visualizer.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "0c06c8712bd50c24e77ffc407d92400e",
+    "semantic_hash": "0c06c8712bd50c24e77ffc407d92400e"
+  },
+  "src/tools/generate_visualizations.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "cfea09bb94231826f830c90ff9024863",
+    "semantic_hash": "cfea09bb94231826f830c90ff9024863"
+  },
+  "src/tools/inspect_ttest_scene.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "21a64e749d7d21297f24f15a70410afa",
+    "semantic_hash": "21a64e749d7d21297f24f15a70410afa"
+  },
+  "src/visualization.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "c89144bc763fcb28cbab35de05a88676",
+    "semantic_hash": "c89144bc763fcb28cbab35de05a88676"
+  },
+  "test_checkpoint_loading.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4dddc79ab0e03bc2a709fc690c63b38d",
+    "semantic_hash": "4dddc79ab0e03bc2a709fc690c63b38d"
+  },
+  "test_train_setup.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "471b92789528cb0fcb260c01d23467ba",
+    "semantic_hash": "471b92789528cb0fcb260c01d23467ba"
+  },
+  "tests/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "fb20eef6e0ed964862cd99c17cb494a0",
+    "semantic_hash": "fb20eef6e0ed964862cd99c17cb494a0"
+  },
+  "tests/conftest.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "cf9c1faf4b9b1d300e37ce915ec32242",
+    "semantic_hash": "cf9c1faf4b9b1d300e37ce915ec32242"
+  },
+  "tests/run_tests.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "523c03f783004ac172b5a7e03ce1ee3f",
+    "semantic_hash": "523c03f783004ac172b5a7e03ce1ee3f"
+  },
+  "tests/test_data_loading.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "1e934cc89689db4a45fb204216fedca6",
+    "semantic_hash": "1e934cc89689db4a45fb204216fedca6"
+  },
+  "tests/test_error_calculation.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f5030ebc7bff995536fb029bfc6027d1",
+    "semantic_hash": "f5030ebc7bff995536fb029bfc6027d1"
+  },
+  "tests/test_integration.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "20223d9a592539f28eefb7322e002e7a",
+    "semantic_hash": "20223d9a592539f28eefb7322e002e7a"
+  },
+  "tests/test_metrics.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "9e417a35a2e3c0e912f07937fb317e16",
+    "semantic_hash": "9e417a35a2e3c0e912f07937fb317e16"
+  },
+  "tests/test_scale_factor.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a48617987967afb7b9fe268b3a663308",
+    "semantic_hash": "a48617987967afb7b9fe268b3a663308"
+  },
+  "tests/test_statistical_tests.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "bc91aa5be54769f60aa8940f7125da91",
+    "semantic_hash": "bc91aa5be54769f60aa8940f7125da91"
+  },
+  "thesis/build.sh": {
+    "mtime": 1786637115.3068202,
+    "ast_hash": "d3879d2656204b5f3f62b344d26438bf",
+    "semantic_hash": ""
+  },
+  "thesis/code/MatlabExample.m": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "6dcef0b2fe20f334fafe305170b63ff5",
+    "semantic_hash": "6dcef0b2fe20f334fafe305170b63ff5"
+  },
+  "thesis/kntu-thesis.cls": {
+    "mtime": 1793276774.7649412,
+    "ast_hash": "c030245a78955dad596d8f0f14cd7e76",
+    "semantic_hash": ""
+  },
+  "thesis/main.toc": {
+    "mtime": 1781881961.1525118,
+    "ast_hash": "75cd726fe2a92f1d51d10922b346ee93",
+    "semantic_hash": "75cd726fe2a92f1d51d10922b346ee93"
+  },
+  "train.py": {
+    "mtime": 1794998498.866463,
+    "ast_hash": "04a9530429db21a4336419cb5ac37be4",
+    "semantic_hash": ""
+  },
+  "train_vkitti.sh": {
+    "mtime": 1780584374.084477,
+    "ast_hash": "edd0434dc7f9123040a1893b52c54db2",
+    "semantic_hash": "edd0434dc7f9123040a1893b52c54db2"
+  },
+  ".claude/agents/mde-results-evaluator.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "f504ca02741ce20a9835b7968c746dda",
+    "semantic_hash": "f504ca02741ce20a9835b7968c746dda"
+  },
+  "ARCHITECTURE_SIZES.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "71801552889de7dec89565c7b8ae00c0",
+    "semantic_hash": "71801552889de7dec89565c7b8ae00c0"
+  },
+  "CHECKPOINT_USAGE.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "5805ea0f125347c26638ee67b7f81533",
+    "semantic_hash": "5805ea0f125347c26638ee67b7f81533"
+  },
+  "CLAUDE.md": {
+    "mtime": 1783194791.2384598,
+    "ast_hash": "2a0d04923ea6b598c2f95353097597f4",
+    "semantic_hash": ""
+  },
+  "README_TRAINING.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "74e8a0136ecb687ff05f4ffebea4cf21",
+    "semantic_hash": "74e8a0136ecb687ff05f4ffebea4cf21"
+  },
+  "TRAINING_COMMANDS.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "0ab5eef8a34ee6c48ec1cb438d9c74c7",
+    "semantic_hash": "0ab5eef8a34ee6c48ec1cb438d9c74c7"
+  },
+  "gpu/SKILL.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "a19361b2f271a69fd0d2d1bba0f770c9",
+    "semantic_hash": ""
+  },
+  "important_commands.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "60af44c07f4106aaa13911829898a1ae",
+    "semantic_hash": "60af44c07f4106aaa13911829898a1ae"
+  },
+  "requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "5054f1429a83d3f0d1a2287719b4a76e",
+    "semantic_hash": "5054f1429a83d3f0d1a2287719b4a76e"
+  },
+  "tests/README.md": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "8c4eb522f964ed82bb8204f60bb0a498",
+    "semantic_hash": "8c4eb522f964ed82bb8204f60bb0a498"
+  },
+  "tests/test_report.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "004690bf0608852d7aa7a28df5598015",
+    "semantic_hash": "004690bf0608852d7aa7a28df5598015"
+  },
+  "thesis/README.md": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "155ee77fc3195b02ebef8520c533c469",
+    "semantic_hash": "155ee77fc3195b02ebef8520c533c469"
+  },
+  "tools/gpu-skill/SKILL.md": {
+    "mtime": 1783190171.190343,
+    "ast_hash": "a19361b2f271a69fd0d2d1bba0f770c9",
+    "semantic_hash": ""
+  },
+  "thesis/Guide.pdf": {
+    "mtime": 1781881961.0765114,
+    "ast_hash": "58b08df91fb144cd0f6e8b8bca8a2107",
+    "semantic_hash": "58b08df91fb144cd0f6e8b8bca8a2107"
+  },
+  "thesis/img/IDMJ.pdf": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "26b27eed76f24056f895c8b0cdd5edb6",
+    "semantic_hash": "26b27eed76f24056f895c8b0cdd5edb6"
+  },
+  "thesis/main.pdf": {
+    "mtime": 1795023243.0623345,
+    "ast_hash": "879105077b64057832651b9f3eff7270",
+    "semantic_hash": ""
+  },
+  "correctness_check/depth_base_basic_vits_nyu_vkitti_diode_lr5e-6_.png": {
+    "mtime": 1781881961.0645113,
+    "ast_hash": "3bc09c75876878cfbb994264cc32eca3",
+    "semantic_hash": "3bc09c75876878cfbb994264cc32eca3"
+  },
+  "correctness_check/depth_ground_truth.png": {
+    "mtime": 1781881961.0645113,
+    "ast_hash": "e09081476130105a08f8a4694798af3b",
+    "semantic_hash": "e09081476130105a08f8a4694798af3b"
+  },
+  "correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png": {
+    "mtime": 1781881961.0685112,
+    "ast_hash": "42e1bf0d4139d234bc7a8ae2e1f4da11",
+    "semantic_hash": "42e1bf0d4139d234bc7a8ae2e1f4da11"
+  },
+  "correctness_check/input_image_with_sample_pixels.png": {
+    "mtime": 1781881961.0725112,
+    "ast_hash": "1803bf363fe282bbaca8c724a2c059b2",
+    "semantic_hash": "1803bf363fe282bbaca8c724a2c059b2"
+  },
+  "thesis/img/Logo.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": "007cadb817f217b7a34d5046cbea7873"
+  },
+  "thesis/img/addcommand.PNG": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "8529a657eb06923180efe7cca7171c55",
+    "semantic_hash": "8529a657eb06923180efe7cca7171c55"
+  },
+  "thesis/img/besm.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "41927f2e92422f5b4803f784a990d529",
+    "semantic_hash": "41927f2e92422f5b4803f784a990d529"
+  },
+  "thesis/img/gonzalez.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "bd38f52488e3d3a7db526e8433c74e8f",
+    "semantic_hash": "bd38f52488e3d3a7db526e8433c74e8f"
+  },
+  "thesis/img/journal-of-cancer_sample-result.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "2de507250a5ef55a3889c2ec86c0b8a0",
+    "semantic_hash": "2de507250a5ef55a3889c2ec86c0b8a0"
+  },
+  "thesis/img/lion.jpg": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "d2c0169c8ed2106b1a35d141a36c278c",
+    "semantic_hash": "d2c0169c8ed2106b1a35d141a36c278c"
+  },
+  "thesis/img/logo-en.png": {
+    "mtime": 1781881961.144512,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": "007cadb817f217b7a34d5046cbea7873"
+  },
+  "thesis/img/runcommand.PNG": {
+    "mtime": 1781881961.148512,
+    "ast_hash": "73dc4dd611d72b479a31b773d4b85891",
+    "semantic_hash": "73dc4dd611d72b479a31b773d4b85891"
+  },
+  ".claude/settings.json": {
+    "mtime": 1783620356.9217875,
+    "ast_hash": "e51077b6a7f1f67afc748f1a32a1557d",
+    "semantic_hash": ""
+  },
+  "evaluate_paper.py": {
+    "mtime": 1783196403.100111,
+    "ast_hash": "5eddddbb08cc7e1025df6eeebb317ea8",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/app.py": {
+    "mtime": 1780584373.7524745,
+    "ast_hash": "f6a73e5a144b4e692bc426a2f578b897",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1182c9821c544999ce21b7d4ea0d4f5a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/cam_enc.py": {
+    "mtime": 1794998498.862463,
+    "ast_hash": "9e476fdc64db72bacbfbea70f3389e59",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/config.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "622a0f3327a317da696fa3d3a792bf03",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "cb5ede8d66f80597cd69d5fb65c5b4a3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1793278890.5000527,
+    "ast_hash": "38998340f22d79dab80bcf1d5f47f411",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/dpt.py": {
+    "mtime": 1794998498.866463,
+    "ast_hash": "36913dbd552238d4683d9ce3e09dd8b2",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/model_loader.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "62c8cc4687c15f0bddf55f3853c319ce",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "58b26ca577bec775069290ffb9f05b4d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/base.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "6c1ac737063d15db96403051a4f97b57",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/depth_anything_v2_basic.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "94c06d08f43569037f6a29c5740be056",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/depth_anything_v2_metric.py": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "07a506aef06d753d3cad14de41a27b89",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/registry.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "5c327843f059d5f30a2279806a525d89",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/__init__.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "9896bd91c24d197bce556eb1ff182af7",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/__init__.py": {
+    "mtime": 1780584373.8524752,
+    "ast_hash": "4c51fba262af9129791028d5c2ee8df5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/generic_with_intrinsics.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "54235278e3d49b87209e73bac22ee281",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/hypersim.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "9e88488d5509c51a650a27fe8913efa3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/kitti.py": {
+    "mtime": 1780584373.856475,
+    "ast_hash": "743feb362143ce9899c535f775186d8e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/transform.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "e0074c2ea6c2636e84f7d1cbad913d33",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/vkitti2.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "7cb97ba5724bb47e207298f2b7e2e1eb",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/cam_enc.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "0e60dbf7c7b42dc0a301ed1df7c9383e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "dcfbf11110b5e9507a3b819960909480",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/dpt.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "8c34f46548b5fd2ed738561a7dc1f1f6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/depth_to_pointcloud.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4a46341113b806d46b8000e43b966d32",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dist_train.sh": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "7f1695a84485e9d051128a749c6bf55f",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/prepare_data_example.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4dd16fea38482da623a436171ab27852",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/prepare_vkitti.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "8e9a5706183617bdc085edf4c963b833",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/run.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "9c760f060e75b40884fb1eb01bbd8840",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/train.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "af8dba16e54eeef8d1e0357c65be88f4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/dist_helper.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "3498bea2b10bdc921da7fa291dbe90b5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/loss.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "138c30772c335355475a443a48935245",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/metric.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "4ac05bc37d7a4463e5c54f9a44805477",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/util/utils.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "818d3d299143b7f5b0f285575d2b7b8c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/run.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "b1a1814c3acc5560e2446fe17be5dadd",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/run_video.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "2e62574a5ad6ad6a3870274db0918c8e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/app.py": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "f6a73e5a144b4e692bc426a2f578b897",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/config.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "622a0f3327a317da696fa3d3a792bf03",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "55ff64d1037ee335f04f244f3de20602",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/dpt.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5dd85ace7d11320241a3ee55d8ab2c71",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/model_loader.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "2da7792d1864ec150d76745c925cc710",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/__init__.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "58b26ca577bec775069290ffb9f05b4d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/base.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "6c1ac737063d15db96403051a4f97b57",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/depth_anything_v2_basic.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "b59014c7ffe8873625c3a5e2145aab0d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/depth_anything_v2_metric.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "fafd77f5d94874e3b8e9dc6e9b759b7a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/registry.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5c327843f059d5f30a2279806a525d89",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/hypersim.py": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "9e88488d5509c51a650a27fe8913efa3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/kitti.py": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "4a263eb3e5df7a66784cb2cac3e57247",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/transform.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "52b67e939f7758005bb7918fe85cf8d4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/vkitti2.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "97dedecd35e64cd5694f892b0c9f8c1a",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2f21761d7622a4315922ed3b79c13537",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/__init__.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "06826d85298f9261437bb24cb7585d81",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/attention.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f56a156d5369b8a76c02861b7cbf8173",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/block.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "039bc4848dd9da25e02a5720cdc42025",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/drop_path.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "d69f2fb4f8a7fc606b684879c18b7a35",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/layer_scale.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "a13ec090ecdc030ffcd14505cf27f8a4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/mlp.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "246626c50398117dd6c7e2a52edc408d",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/patch_embed.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "fc172d27eabbdd23a944fc8dffb87358",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dinov2_layers/swiglu_ffn.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "34f0261b05190779638e3b0e89bc7892",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/dpt.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "f417bcdd74b3d83b6b2cb7b2e7e2d0f4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/util/blocks.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "abe00a8500dcd495ab4abeae359f24d3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_anything_v2/util/transform.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "5fc8966ef0d486041c3d0f258b856fb1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/depth_to_pointcloud.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "4a46341113b806d46b8000e43b966d32",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dist_train.sh": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "7f1695a84485e9d051128a749c6bf55f",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/run.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "e62e9b764ab90aeb2b1812a9edf6006b",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/train.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "6093f12f04a1b6c3e28962abbebbc0f6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/dist_helper.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2d223cb92de7b71fa3b9aae0946262d5",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/loss.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "54a9b6b5587d12a260e513156f2c0661",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/metric.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "8a31db34148c91e144698a8a7163a2d4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/util/utils.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "818d3d299143b7f5b0f285575d2b7b8c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/run.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "b1a1814c3acc5560e2446fe17be5dadd",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/run_video.py": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "2e62574a5ad6ad6a3870274db0918c8e",
+    "semantic_hash": ""
+  },
+  "graphify-out/memory/query_20260704_173608_why_does_datasetitem_connect_dataset_item_loading.md": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "2847cb8d775ddcea28b4f9bde19d4cf1",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/README.md": {
+    "mtime": 1780584373.7524745,
+    "ast_hash": "048eef9d05e3a59e8c8d187317271e48",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/depth_anything_v2/models/README.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1f089acd895af8eb0f7c1274f582cda3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/QUICKSTART.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "412ab19a9d94b4804fe59d11fb161fb9",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/README.md": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "1f29ab0aad312887651a67e8e7dbe0c6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/TRAINING_GUIDE.md": {
+    "mtime": 1780584373.832475,
+    "ast_hash": "2eec198355ad68c6c47fdd4208c10ae4",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/VKITTI_TRAINING_GUIDE.md": {
+    "mtime": 1780584373.832475,
+    "ast_hash": "32ee80d8f1dbcae07b7fff402da968a3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/hypersim/train.txt": {
+    "mtime": 1780584373.8884754,
+    "ast_hash": "3129043bdcc5cab057ecc9af5202de26",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/hypersim/val.txt": {
+    "mtime": 1780584373.9084756,
+    "ast_hash": "b8ce4bda0e3e3416c07cb7cab31cd4e3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/kitti/val.txt": {
+    "mtime": 1780584373.9084756,
+    "ast_hash": "d5666579f42fc549cdb6b471a0aece86",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/dataset/splits/vkitti2/train.txt": {
+    "mtime": 1780584373.9244757,
+    "ast_hash": "0f34ec59e324bf4c5b0d033ae2f15d05",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/requirements.txt": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "f13a21f5b14552cb6585e0c23d803331",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/requirements.txt": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "aed1eef782c0d90afa7b7055950eacca",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/README.md": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "048eef9d05e3a59e8c8d187317271e48",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/depth_anything_v2/models/README.md": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "1f089acd895af8eb0f7c1274f582cda3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/README.md": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "1f29ab0aad312887651a67e8e7dbe0c6",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/hypersim/train.txt": {
+    "mtime": 1780584374.0684767,
+    "ast_hash": "3129043bdcc5cab057ecc9af5202de26",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/hypersim/val.txt": {
+    "mtime": 1780584374.0724769,
+    "ast_hash": "b8ce4bda0e3e3416c07cb7cab31cd4e3",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/kitti/val.txt": {
+    "mtime": 1780584374.0724769,
+    "ast_hash": "d5666579f42fc549cdb6b471a0aece86",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/dataset/splits/vkitti2/train.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "0f34ec59e324bf4c5b0d033ae2f15d05",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "d6723eaa7fec613992f482bbb680f686",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/requirements.txt": {
+    "mtime": 1780584374.0804768,
+    "ast_hash": "aed1eef782c0d90afa7b7055950eacca",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/DA-2K.md": {
+    "mtime": 1780584373.7484744,
+    "ast_hash": "82b625826f2deb391116e4944aee9b7e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/DA-2K.md": {
+    "mtime": 1780584373.9284756,
+    "ast_hash": "82b625826f2deb391116e4944aee9b7e",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/DA-2K.png": {
+    "mtime": 1780584373.7564745,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/teaser.png": {
+    "mtime": 1780584373.828475,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/metric_depth/assets/compare_zoedepth.png": {
+    "mtime": 1780584373.8524752,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/DA-2K.png": {
+    "mtime": 1780584373.9324758,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/teaser.png": {
+    "mtime": 1780584374.0164764,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/metric_depth/assets/compare_zoedepth.png": {
+    "mtime": 1780584374.0444765,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/examples_video/basketball.mp4": {
+    "mtime": 1780584373.7764747,
+    "ast_hash": "f21e04f5fff02b9a9cc7fc1a31c05353",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2-revised/assets/examples_video/ferris_wheel.mp4": {
+    "mtime": 1780584373.7884748,
+    "ast_hash": "637bcd7b8bc4bec3cbdf1cfa66443494",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/examples_video/basketball.mp4": {
+    "mtime": 1780584373.952476,
+    "ast_hash": "f21e04f5fff02b9a9cc7fc1a31c05353",
+    "semantic_hash": ""
+  },
+  "models/raw_models/DepthAnythingV2/assets/examples_video/ferris_wheel.mp4": {
+    "mtime": 1780584373.968476,
+    "ast_hash": "637bcd7b8bc4bec3cbdf1cfa66443494",
+    "semantic_hash": ""
+  },
+  "disable_bad_tensorboard_runs.py": {
+    "mtime": 1783190171.1783428,
+    "ast_hash": "9804df30f7375d94d11f865e1bcbb952",
+    "semantic_hash": ""
+  },
+  "evaludate_da2k.py": {
+    "mtime": 1783190171.1783428,
+    "ast_hash": "0b9f57a5cf6e8b3aef73697091e51078",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/comparison.json": {
+    "mtime": 1783620356.9217875,
+    "ast_hash": "0261d37cc525748b6435908ed5290136",
+    "semantic_hash": ""
+  },
+  "tests/test_focal_jitter.py": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "248956157e7b7979c4fa070f04b63b90",
+    "semantic_hash": ""
+  },
+  "tools/compare_pair_losses.py": {
+    "mtime": 1783620356.977788,
+    "ast_hash": "f2a93265f4197591f8283e3ff0ff5a2c",
+    "semantic_hash": ""
+  },
+  "tools/eval_fov_varied.py": {
+    "mtime": 1787643567.728184,
+    "ast_hash": "b7036a533c829dd5920fce11d08b0915",
+    "semantic_hash": ""
+  },
+  "tools/k_sweep.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "cb9443b54cd167f900143a5c8e974523",
+    "semantic_hash": ""
+  },
+  "tools/output_difference_viz.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "e9987393edfb847f97f22eaa0e2a8d2d",
+    "semantic_hash": ""
+  },
+  "tools/paired_stats.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "9077860b70aa385911099527cbe5d773",
+    "semantic_hash": ""
+  },
+  "tools/sanity_check_focal_jitter.py": {
+    "mtime": 1783620356.9817882,
+    "ast_hash": "5693008eb0746fdf2bad84fc2f5f319c",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_base_metric_vitl_nyu_lr5e-6_bs2_20260707.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "0a69a6799556dcc2d574b026196c365c",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_ground_truth.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "9cf949f66e6e3038ae26cf98d9928ae8",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/depth_revised_metric_vitl_nyu_intrinsics_lr5e-.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "8d7c02b7ef47034379ffead282d4dd93",
+    "semantic_hash": ""
+  },
+  "correctness_check_metric_round2/input_image_with_sample_pixels.png": {
+    "mtime": 1783620356.9257877,
+    "ast_hash": "f1dd8b44f676e06db929c11087e4d3fd",
+    "semantic_hash": ""
+  },
+  "tools/k_knockout.py": {
+    "mtime": 1787643564.4161606,
+    "ast_hash": "029688289264d4bbf81b586f53753fa0",
+    "semantic_hash": ""
+  },
+  "thesis-changes.md": {
+    "mtime": 1783696097.6470256,
+    "ast_hash": "b05aeabd1b4be2fb8832d1c9e2cef814",
+    "semantic_hash": ""
+  },
+  "datasets/multidomain.py": {
+    "mtime": 1793467133.1257358,
+    "ast_hash": "786a14e6cc9f73735216aca9e89e77f5",
+    "semantic_hash": ""
+  },
+  "outputs/019ffa94-52cc-7e33-bcba-b9ababda1195/documents/persian-guide-fluency/build_fluent_guide.py": {
+    "mtime": 1786637115.2588198,
+    "ast_hash": "fa4949b2342b33807c741ddb7f5e070e",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/basic-validation.json": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "834e1cc2a6e08c41e70516e7b5168b3a",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/build_pdf.py": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "fae33dc8e6dd07c6bbede2fdcec6584b",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/finish_content.py": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "0d26d896af1f337bf254c50ec6a2d7ca",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/focal-validation.json": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "38962884fe172c70cbe4bfefaa9bd193",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/metric-validation.json": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "c93ca9ad0501e658560ec4fc32734703",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/build.sh": {
+    "mtime": 1793276774.472939,
+    "ast_hash": "05d3cc7c2ee32fe989ff1dbcaebb41df",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/code/MatlabExample.m": {
+    "mtime": 1793276774.472939,
+    "ast_hash": "6dcef0b2fe20f334fafe305170b63ff5",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/samples/provenance.json": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "2a9f0cabb472ab5254f8f43df6d07233",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/kntu-thesis.cls": {
+    "mtime": 1793276774.6489403,
+    "ast_hash": "fe152904738ac0aec5c40a8eec0a92de",
+    "semantic_hash": ""
+  },
+  "thesis/.vscode/settings.json": {
+    "mtime": 1793276774.7649412,
+    "ast_hash": "dc781d2d6f4813cf1656a07cfa5225c5",
+    "semantic_hash": ""
+  },
+  "thesis/figures/samples/provenance.json": {
+    "mtime": 1787322204.408336,
+    "ast_hash": "2a9f0cabb472ab5254f8f43df6d07233",
+    "semantic_hash": ""
+  },
+  "tools/audit_middlebury_camera_effect.py": {
+    "mtime": 1786637115.3188202,
+    "ast_hash": "d55a080a9017dae97544d1949693ce81",
+    "semantic_hash": ""
+  },
+  "tools/audit_section_4_4_units.py": {
+    "mtime": 1787311516.3510811,
+    "ast_hash": "076901c8a978f721e1ab0563f19482b4",
+    "semantic_hash": ""
+  },
+  "tools/build_direct_metric_comparison.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "922fbda60bb4bb212266631b16c93e68",
+    "semantic_hash": ""
+  },
+  "tools/build_focal_jitter_example.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "80e938ed374534c761979ddf8cfc3957",
+    "semantic_hash": ""
+  },
+  "tools/build_kitti_pilot_report.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "78c36f04abb56d38c381dc08cddf9713",
+    "semantic_hash": ""
+  },
+  "tools/build_metric_paper_comparison.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "09933795c01e219f9b4d14522ceea143",
+    "semantic_hash": ""
+  },
+  "tools/check_thesis_numbers.py": {
+    "mtime": 1787311516.3510811,
+    "ast_hash": "aab8b3d0d7d88379b379863139dd4486",
+    "semantic_hash": ""
+  },
+  "tools/check_thesis_structure.py": {
+    "mtime": 1787322204.4243362,
+    "ast_hash": "351cc0a6e49f903d3816484544b18c70",
+    "semantic_hash": ""
+  },
+  "tools/make_qualitative_figure.py": {
+    "mtime": 1787322204.4243362,
+    "ast_hash": "5731a3a8c98c3b6bcc31178104b26438",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/compare_runs.py": {
+    "mtime": 1793278299.5788598,
+    "ast_hash": "2f1c95d06d684668237ca089208d3587",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/eval_multidomain.py": {
+    "mtime": 1794998498.866463,
+    "ast_hash": "ea6e0f59f7984d7d61f4f53e08e9ff48",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/fetch_kitti_rgb.py": {
+    "mtime": 1793466951.9803817,
+    "ast_hash": "ba630dbfdb5af3eebf670fa7d1a4ece1",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/fetch_sunrgbd.py": {
+    "mtime": 1793278555.069133,
+    "ast_hash": "c8a9cd0747a0e07197ea55d6dd162a42",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/make_report.py": {
+    "mtime": 1793280278.3555155,
+    "ast_hash": "855aad0dc785610774afb625bd394a4a",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/plot_summary.py": {
+    "mtime": 1793295929.9901106,
+    "ast_hash": "5bbb03f2dd685270e481d1e483f6d22e",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/select_kitti_frames.py": {
+    "mtime": 1793277667.7008116,
+    "ast_hash": "d01e66f1d2368e2fa9ae2dd8f52658b5",
+    "semantic_hash": ""
+  },
+  "tools/prepare_kitti_experiment.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "a5d5ea39985252b623fbcdd168cfb491",
+    "semantic_hash": ""
+  },
+  "tools/prepare_vkitti_experiment.py": {
+    "mtime": 1793276774.8209417,
+    "ast_hash": "0cd4d4a6b503cec83d3b9539a1379828",
+    "semantic_hash": ""
+  },
+  "tools/recompute_section_4_4_2_historical_from_fresh.py": {
+    "mtime": 1786637115.3188202,
+    "ast_hash": "98004f8d83386ba798eda0b3cba4ccfa",
+    "semantic_hash": ""
+  },
+  "tools/tensorboard_to_thesis.py": {
+    "mtime": 1787311516.355081,
+    "ast_hash": "87ccb6a0d0413838f4a8cfb59c5af5f4",
+    "semantic_hash": ""
+  },
+  "tools/validate_section_4_4_1.py": {
+    "mtime": 1787321853.7096732,
+    "ast_hash": "2d86e4bb3dc028f8227073f19d2690ca",
+    "semantic_hash": ""
+  },
+  "tools/validate_section_4_4_2.py": {
+    "mtime": 1787598471.0574603,
+    "ast_hash": "3360b63e99b876693da3d3a629ccdf88",
+    "semantic_hash": ""
+  },
+  "tools/validate_section_4_5_6.py": {
+    "mtime": 1786637115.3228204,
+    "ast_hash": "f7109f46df0bb2d4893b54bf88e0ea5a",
+    "semantic_hash": ""
+  },
+  "tools/validate_section_4_5_7.py": {
+    "mtime": 1786637115.3228204,
+    "ast_hash": "eaf7b31ed94c77f2b1e671926319832c",
+    "semantic_hash": ""
+  },
+  "tools/validate_table_4_9.py": {
+    "mtime": 1786637115.3228204,
+    "ast_hash": "2e17c0e06438d31efcb60bcf34608453",
+    "semantic_hash": ""
+  },
+  ".claude/skills/academic-humanizer/SKILL.md": {
+    "mtime": 1794576180.4221342,
+    "ast_hash": "4d5356d67ec64a7fc27475e51078a430",
+    "semantic_hash": ""
+  },
+  ".claude/skills/academic-paper-review/SKILL.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "f19068f09b05017efc4019c8aa89bd16",
+    "semantic_hash": ""
+  },
+  ".claude/skills/data-visualization/SKILL.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "d0f8167e7f65e925ba82efa1fbbc864f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/excalidraw-diagram/SKILL.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "b8d04bae39250b29a14ad75609511827",
+    "semantic_hash": ""
+  },
+  ".claude/skills/gpu/SKILL.md": {
+    "mtime": 1794864756.498206,
+    "ast_hash": "a1277835595019a392ecdf28e40c3834",
+    "semantic_hash": ""
+  },
+  ".claude/skills/latex-clean-build/SKILL.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "1102c1772f87b0c7772baf372b0b51b9",
+    "semantic_hash": ""
+  },
+  ".claude/skills/persian-writing/SKILL.md": {
+    "mtime": 1794864756.498206,
+    "ast_hash": "5ca037b123798a2d2aabbbbf2369a0ab",
+    "semantic_hash": ""
+  },
+  ".claude/skills/scientific-writing/SKILL.md": {
+    "mtime": 1794576180.4221342,
+    "ast_hash": "a70094a8de9032bb8c036c945483ce35",
+    "semantic_hash": ""
+  },
+  ".claude/skills/thesis-editor/SKILL.md": {
+    "mtime": 1794864756.498206,
+    "ast_hash": "7f7943fd9372ac22dacebb9ea5f3b02f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-diagrams/SKILL.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "bf1ab296d65f3aea15becdb9753950c7",
+    "semantic_hash": ""
+  },
+  "HANDOFF_thesis_gpu_figures.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "4708a6cd725b4dabb4798dc3b2218631",
+    "semantic_hash": ""
+  },
+  "METRIC_PAPER_COMPARISON_ACTION_PLAN.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "33bb43a12b1590e0f2f2ddf38afede66",
+    "semantic_hash": ""
+  },
+  "REPORT_MULTIDOMAIN.md": {
+    "mtime": 1793299945.294529,
+    "ast_hash": "f4691986a7709998276e674e2495dd58",
+    "semantic_hash": ""
+  },
+  "THESIS_VALIDATION_TASK.md": {
+    "mtime": 1787311516.3510811,
+    "ast_hash": "47f071e7bd1d02df31ccc7a6b9827157",
+    "semantic_hash": ""
+  },
+  "deliverables/camera-aware-models-review-fa.md": {
+    "mtime": 1793276774.4369385,
+    "ast_hash": "98142a21c0e3442a44d66eea994008c5",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/camera-intrinsics-thesis-defense.html": {
+    "mtime": 1793276774.4609387,
+    "ast_hash": "4e788a9257042843fb40d41480e1d3f2",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/data-validation.md": {
+    "mtime": 1793276774.4649389,
+    "ast_hash": "2f7b1e5e7ec0e1168a6d1391adae24c2",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/speaker-notes.md": {
+    "mtime": 1793276774.4649389,
+    "ast_hash": "2a9d02ae7ce2a9550ad68960c7436370",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/\u0631\u0627\u0647\u0646\u0645\u0627\u06cc_\u0641\u0627\u0631\u0633\u06cc_\u0627\u0631\u0627\u0626\u0647_\u062f\u0641\u0627\u0639_\u067e\u0627\u0631\u0627\u0645\u062a\u0631\u0647\u0627\u06cc_\u062f\u0631\u0648\u0646\u06cc_\u062f\u0648\u0631\u0628\u06cc\u0646.md": {
+    "mtime": 1793276774.4649389,
+    "ast_hash": "e57473de24f027f439645a1db8d01c67",
+    "semantic_hash": ""
+  },
+  "explainations/\u0634\u0631\u062d_\u06a9\u0627\u0645\u0644_\u0628\u062e\u0634_4.5.7_\u062f\u0648\u0631_\u0633\u0648\u0645_\u0644\u0631\u0632\u0634_\u06a9\u0627\u0646\u0648\u0646\u06cc.md": {
+    "mtime": 1786637115.25082,
+    "ast_hash": "6788aaea0bc5cbd327882bbf981f4700",
+    "semantic_hash": ""
+  },
+  "outputs/019ffa94-52cc-7e33-bcba-b9ababda1195/documents/persian-guide-fluency/source.md": {
+    "mtime": 1786637115.2588198,
+    "ast_hash": "7c052f5c51889e24981099cc82f8b88b",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/basic-validation.md": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "72fd8209d3baa0b68aa7ba1d078c298c",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/focal-validation.md": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "4db99a744dba54be133962491bf5c411",
+    "semantic_hash": ""
+  },
+  "outputs/manual-defense-update/presentations/thesis-defense/metric-validation.md": {
+    "mtime": 1793276774.4689388,
+    "ast_hash": "caac39714c359b0b6f4c2fe1edadeecb",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/README.md": {
+    "mtime": 1793276774.472939,
+    "ast_hash": "155ee77fc3195b02ebef8520c533c469",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/pending/README.md": {
+    "mtime": 1793276774.5609396,
+    "ast_hash": "de1463c35641947bc84ea4d145d81576",
+    "semantic_hash": ""
+  },
+  "thesis/figures/pending/README.md": {
+    "mtime": 1787322204.400336,
+    "ast_hash": "de1463c35641947bc84ea4d145d81576",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/kitti_frames_stride3.txt": {
+    "mtime": 1793277708.785236,
+    "ast_hash": "622bc3f52e9bc97c7e194accd3f7f9ac",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/camera-intrinsics-thesis-defense.pdf": {
+    "mtime": 1793276774.4649389,
+    "ast_hash": "1792cae18dda79a4e77a5a75bf47b400",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/Guide.pdf": {
+    "mtime": 1793276774.472939,
+    "ast_hash": "58b08df91fb144cd0f6e8b8bca8a2107",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/middlebury_camera_audit.pdf": {
+    "mtime": 1793276774.5609396,
+    "ast_hash": "013763210743e2d8dc1afa389d939324",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/qualitative_depth_maps.pdf": {
+    "mtime": 1793276774.5649397,
+    "ast_hash": "88772f8d7d8f60df745aaa74c0b336a6",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/scale_ratio_distribution.pdf": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "570925261ad01d77f497f8d1ecef2e44",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/IDMJ.pdf": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "26b27eed76f24056f895c8b0cdd5edb6",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/main-last-reading.pdf": {
+    "mtime": 1793276774.6929407,
+    "ast_hash": "2c38513b21f76b7c6ac8b95e457467d5",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/main-past.pdf": {
+    "mtime": 1793276774.6969407,
+    "ast_hash": "b643003654579b4452de96dd690c8086",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/main-reading.pdf": {
+    "mtime": 1793276774.7009406,
+    "ast_hash": "e0d3b0e7e204e91c7e3436da57c62c33",
+    "semantic_hash": ""
+  },
+  "thesis/figures/middlebury_camera_audit.pdf": {
+    "mtime": 1786637115.3068202,
+    "ast_hash": "013763210743e2d8dc1afa389d939324",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_depth_maps.pdf": {
+    "mtime": 1793379424.8028135,
+    "ast_hash": "e3c00c69f9e9fe57022531c853044b71",
+    "semantic_hash": ""
+  },
+  "thesis/figures/scale_ratio_distribution.pdf": {
+    "mtime": 1793379424.8068137,
+    "ast_hash": "f4210e8cf7ef846b7a9e17b2b7158243",
+    "semantic_hash": ""
+  },
+  "thesis/main-last-reading.pdf": {
+    "mtime": 1793276774.7729414,
+    "ast_hash": "2c38513b21f76b7c6ac8b95e457467d5",
+    "semantic_hash": ""
+  },
+  "thesis/main-reading.pdf": {
+    "mtime": 1786637115.3108203,
+    "ast_hash": "e0d3b0e7e204e91c7e3436da57c62c33",
+    "semantic_hash": ""
+  },
+  "deliverables/camera-intrinsics-progress-defense/assets/little-big-ambiguty-poster.jpg": {
+    "mtime": 1793276774.4409387,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-alpha-1.6-8bit.png": {
+    "mtime": 1793276774.4449387,
+    "ast_hash": "fc12560c11c0815b4bec12891ad1e804",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-alpha-1.6.svg": {
+    "mtime": 1793276774.4489386,
+    "ast_hash": "886b73c9d649b30ae4ea88d1e8176c18",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-comparison-8bit.png": {
+    "mtime": 1793276774.4489386,
+    "ast_hash": "13e84d4f1f4ec15d0bf6d201debaea7b",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-comparison.svg": {
+    "mtime": 1793276774.4489386,
+    "ast_hash": "b821d4a357346ea9a0fcf7854b8859b6",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-original-8bit.png": {
+    "mtime": 1793276774.4529388,
+    "ast_hash": "e0f5923ac2867866e88c2d1ac4f55f52",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/focal-jitter-original.svg": {
+    "mtime": 1793276774.4529388,
+    "ast_hash": "24cb5fda88c1d367fdbb6acf420d9b60",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/little-big-ambiguty-poster.jpg": {
+    "mtime": 1793276774.4529388,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/compare_zoedepth.png": {
+    "mtime": 1793276774.504939,
+    "ast_hash": "94776ceb6b7c4979a5600bca50827657",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/da2k_benchmark.png": {
+    "mtime": 1793276774.5129392,
+    "ast_hash": "cf07983a0bc9fa623cfbf0a8126c2809",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/depthanything_teaser.png": {
+    "mtime": 1793276774.5609396,
+    "ast_hash": "c578b928753d8eadcb0e12a357a5648c",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/samples/cityscapes.jpg": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "ea675cad4a046ba4dbc890cd49b0d49f",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/samples/kitti.jpg": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "7dfea1bb5195e3a78b10586b52053ec4",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/samples/middlebury.jpg": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "1bbf49de4552dd4fbf5ce5039a17329f",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/samples/nyu.jpg": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "393bb2e23aa22054552ff80dd98555de",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/figures/scale_ambiguity_poster.jpg": {
+    "mtime": 1793276774.5689397,
+    "ast_hash": "bb8c08811f5cd73fbea79cc33a8fc492",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/Logo.png": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/addcommand.PNG": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "8529a657eb06923180efe7cca7171c55",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/besm.jpg": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "41927f2e92422f5b4803f784a990d529",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/gonzalez.png": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "bd38f52488e3d3a7db526e8433c74e8f",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/journal-of-cancer_sample-result.jpg": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "2de507250a5ef55a3889c2ec86c0b8a0",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/lion.jpg": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "d2c0169c8ed2106b1a35d141a36c278c",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/logo-en.png": {
+    "mtime": 1793276774.6449404,
+    "ast_hash": "007cadb817f217b7a34d5046cbea7873",
+    "semantic_hash": ""
+  },
+  "thesis-gemini/img/runcommand.PNG": {
+    "mtime": 1793276774.6489403,
+    "ast_hash": "73dc4dd611d72b479a31b773d4b85891",
+    "semantic_hash": ""
+  },
+  "thesis/figures/samples/cityscapes.jpg": {
+    "mtime": 1787322204.408336,
+    "ast_hash": "ea675cad4a046ba4dbc890cd49b0d49f",
+    "semantic_hash": ""
+  },
+  "thesis/figures/samples/kitti.jpg": {
+    "mtime": 1787322204.408336,
+    "ast_hash": "7dfea1bb5195e3a78b10586b52053ec4",
+    "semantic_hash": ""
+  },
+  "thesis/figures/samples/middlebury.jpg": {
+    "mtime": 1787322204.408336,
+    "ast_hash": "1bbf49de4552dd4fbf5ce5039a17329f",
+    "semantic_hash": ""
+  },
+  "thesis/figures/samples/nyu.jpg": {
+    "mtime": 1787322204.408336,
+    "ast_hash": "393bb2e23aa22054552ff80dd98555de",
+    "semantic_hash": ""
+  },
+  "deliverables/camera-intrinsics-progress-defense/assets/little-big-ambiguty.mp4": {
+    "mtime": 1793276774.4449387,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-slides/assets/little-big-ambiguty.mp4": {
+    "mtime": 1793276774.4569387,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/fetch_hypersim.py": {
+    "mtime": 1793467182.246104,
+    "ast_hash": "3d377fa99f3e6d9e6085cf9492746a63",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/stability.py": {
+    "mtime": 1793639940.226191,
+    "ast_hash": "323238aef1935b2044d22bfee9225d63",
+    "semantic_hash": ""
+  },
+  "thesis/REVIEW_PENDING.md": {
+    "mtime": 1795023312.702849,
+    "ast_hash": "464500d4d4aed04f65b8016354df670c",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/geometry.json": {
+    "mtime": 1794490774.3931139,
+    "ast_hash": "f4b9f15924c32abdbdb6541b40609957",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/manifest.json": {
+    "mtime": 1794490774.3931139,
+    "ast_hash": "39974fc2ca883c84273b8e82e39ce828",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/eval_related.py": {
+    "mtime": 1794490774.4291143,
+    "ast_hash": "20151253342a373d8ab8823689b2d558",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/make_qualitative_md.py": {
+    "mtime": 1794490774.4291143,
+    "ast_hash": "eae44f73e9dbaf05d5a39f2bb09a8c74",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/make_qualitative_md_render.py": {
+    "mtime": 1794490774.4291143,
+    "ast_hash": "6be5b9e83adf39f37dbd160dfa53cb65",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_cityscapes.pdf": {
+    "mtime": 1794490774.397114,
+    "ast_hash": "2b7123585fd869e7b832ab422fd26a2e",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_error.pdf": {
+    "mtime": 1794490774.4051142,
+    "ast_hash": "108462f4fbc1aff6364d7a73b3850917",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_kv1.pdf": {
+    "mtime": 1794490774.4091141,
+    "ast_hash": "62fed65852304cde6ae45ca22bdd79ef",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_kv2.pdf": {
+    "mtime": 1794490774.4171143,
+    "ast_hash": "d509f91c430e896c04b1d74c69d2329f",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_nyu.pdf": {
+    "mtime": 1794490774.4211142,
+    "ast_hash": "e8a8a799ca473540ecd21f77008a997b",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md/qual_md_shift.pdf": {
+    "mtime": 1794490774.4251142,
+    "ast_hash": "e75eae9a55e525f35475bd6443efee58",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/run_relative_multidomain.sh": {
+    "mtime": 1794571039.0393398,
+    "ast_hash": "43a1f4c903f5d5f39d7b2db55543cc50",
+    "semantic_hash": ""
+  },
+  ".claude/agents/paragraph-editor.md": {
+    "mtime": 1794864756.498206,
+    "ast_hash": "d79c464e386e57350dae58f226e20beb",
+    "semantic_hash": ""
+  },
+  ".claude/skills/paragraph-editor/SKILL.md": {
+    "mtime": 1794864756.498206,
+    "ast_hash": "75a552349b7637867bf229432e49e760",
+    "semantic_hash": ""
+  },
+  "thesis/main-bfore-new-train.pdf": {
+    "mtime": 1794577543.0101845,
+    "ast_hash": "9711a8c976fb3ec81382d0f8c079f3e1",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/run_relative_multidomain_vits.sh": {
+    "mtime": 1794742040.690056,
+    "ast_hash": "6d2eb1032e02c34867b640a082eb415e",
+    "semantic_hash": ""
+  },
+  "thesis/table-edit.md": {
+    "mtime": 1794913342.7339716,
+    "ast_hash": "32286bf488dd0ea7a2c1e95e7d3388ee",
+    "semantic_hash": ""
+  },
+  "thesis/table.html": {
+    "mtime": 1794762626.3149087,
+    "ast_hash": "ebb7d5f2dab128877329d3e453cd1671",
+    "semantic_hash": ""
+  },
+  "thesis/table.md": {
+    "mtime": 1794762626.3149087,
+    "ast_hash": "c69955a07467b3f5105ec2edf2df8304",
+    "semantic_hash": ""
+  },
+  "thesis/table_of_contents_annotated.txt": {
+    "mtime": 1794762626.3149087,
+    "ast_hash": "1c23d1c9bddc02c1040b480a02a2b519",
+    "semantic_hash": ""
+  },
+  "thesis/table-new.md": {
+    "mtime": 1794864756.726208,
+    "ast_hash": "ee8d276297401aa7911aa0d719f647a6",
+    "semantic_hash": ""
+  },
+  "thesis/final.pdf": {
+    "mtime": 1794864756.5662067,
+    "ast_hash": "47d40c238f5ceb685122c825ff03b861",
+    "semantic_hash": ""
+  },
+  "thesis/last-highlight.pdf": {
+    "mtime": 1794864756.6422074,
+    "ast_hash": "d33aa8518b223e864ac0a6c1f66972d8",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/geometry.json": {
+    "mtime": 1794912804.8156836,
+    "ast_hash": "673c119855c1b47ec8ef052d70a75b0f",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/manifest.json": {
+    "mtime": 1794912804.816726,
+    "ast_hash": "86bf9683eb70d41fb77a597da17d034c",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/select_qualitative_md.py": {
+    "mtime": 1794912296.4688056,
+    "ast_hash": "9ddfd725b5abc4bf603143940ea2b213",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/qual_md_cityscapes.pdf": {
+    "mtime": 1794912804.0086672,
+    "ast_hash": "554ccfcf77ac3c36cdd724d594d6c560",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/qual_md_error.pdf": {
+    "mtime": 1794912804.8146837,
+    "ast_hash": "dcad2c44647d5db4ac34c0bb60f3d928",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/qual_md_kv1.pdf": {
+    "mtime": 1794912802.4706364,
+    "ast_hash": "6be1e346ceaa921ffd7b2412923207d3",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/qual_md_kv2.pdf": {
+    "mtime": 1794912803.0746484,
+    "ast_hash": "5a89075c94008058b2ed7612ad6f2d54",
+    "semantic_hash": ""
+  },
+  "thesis/figures/qualitative_md_v2/qual_md_nyu.pdf": {
+    "mtime": 1794912801.9176252,
+    "ast_hash": "978986d1b64b3029254b15239f2248ef",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
+    "mtime": 1795121864.3813386,
+    "ast_hash": "5df7d9d50be28c5ae6bafd65255e8202",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
+    "mtime": 1795011164.483894,
+    "ast_hash": "f4e1ebdc2d32cfb3d40663302c96c4ff",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/build.py": {
+    "mtime": 1795121711.7480206,
+    "ast_hash": "cbc69778ee55c160efce0f3c6da2f9c7",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/content/fa.json": {
+    "mtime": 1795122037.0308285,
+    "ast_hash": "d1edea991c737c440531209992e7ae52",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/run_descriptor_ablation.sh": {
+    "mtime": 1794998630.1275806,
+    "ast_hash": "c39a7d7b56e54a526a6168f9e10e7246",
+    "semantic_hash": ""
+  },
+  "tools/multidomain/summarize_descabl.py": {
+    "mtime": 1794998781.0010526,
+    "ast_hash": "0fbb894c44ce411899d514d0f41d2a61",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/README.md": {
+    "mtime": 1795121887.593539,
+    "ast_hash": "d76adf2551ef042f9d9c7eda4db17b32",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
+    "mtime": 1795011164.487894,
+    "ast_hash": "88985b4355a8a44627dde041f10aba75",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/index.html": {
+    "mtime": 1795122042.9828799,
+    "ast_hash": "6b245d1b86cd182ee4b564cee4e7b713",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/shell.html": {
+    "mtime": 1795121711.7440207,
+    "ast_hash": "2ade50a6630f25db5af1a087bd9a6165",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/01-opening-problem.html": {
+    "mtime": 1795108376.3417308,
+    "ast_hash": "92c53be38b72d04d85161a4d3ca82ce5",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
+    "mtime": 1795102875.3815677,
+    "ast_hash": "d88649d867c88d03f5a9a9c2a85f570c",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
+    "mtime": 1795102851.8133647,
+    "ast_hash": "5ebb23c4cc2dcd1c7ddb527bfa96fd0b",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
+    "mtime": 1795104211.233725,
+    "ast_hash": "28fa64f0264ab3404855dd81d5018b18",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/cityscapes.jpg": {
+    "mtime": 1795011472.8173316,
+    "ast_hash": "ea675cad4a046ba4dbc890cd49b0d49f",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/da2-teaser.jpg": {
+    "mtime": 1795011524.6576245,
+    "ast_hash": "25b053b3afd4b267dd47cdd2ea310bed",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/error-a.jpg": {
+    "mtime": 1795011523.9936206,
+    "ast_hash": "8a13d6012e43691bee7879ee51aac241",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/error-b.jpg": {
+    "mtime": 1795011524.0056207,
+    "ast_hash": "4d417a2e596ec04cf0b2b1c0d293bbca",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/intro-depth.jpg": {
+    "mtime": 1795011538.9337072,
+    "ast_hash": "26517f323419c986f234ef348f07752e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/intro-rgb.jpg": {
+    "mtime": 1795011538.9297073,
+    "ast_hash": "194251df98eafab695644350016bff09",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/kitti.jpg": {
+    "mtime": 1795011472.8173316,
+    "ast_hash": "7dfea1bb5195e3a78b10586b52053ec4",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/kntu-logo.png": {
+    "mtime": 1795011473.1893334,
+    "ast_hash": "ac3d43ce11a9989c31fcf7b706e743db",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/nyu.jpg": {
+    "mtime": 1795011472.8133314,
+    "ast_hash": "393bb2e23aa22054552ff80dd98555de",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-cityscapes.jpg": {
+    "mtime": 1795012008.3447757,
+    "ast_hash": "b471238846f527d7da4f6bce45c0addf",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-kv2.jpg": {
+    "mtime": 1795012008.3087754,
+    "ast_hash": "b08e8b86f5e7f180efa8b370c6e1410f",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/qual-nyu.jpg": {
+    "mtime": 1795011523.8176198,
+    "ast_hash": "e5978f1ab0674ebca2d34e9839060207",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/video/scale-ambiguity.mp4": {
+    "mtime": 1795011472.8133314,
+    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/scripts/figcheck.sh": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "1e9c3f7f05c22e1cfee09adc3ea7b1d2",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/scripts/mkfigs.py": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "78a679e6c84a7114124c36b48a236b48",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/CHANGELOG.md": {
+    "mtime": 1795023291.7506943,
+    "ast_hash": "d261b885b81cb5101efa5bed189de9f1",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/SKILL.md": {
+    "mtime": 1795023291.7546942,
+    "ast_hash": "5c88633c42a7a68d9fbc384e90260c12",
+    "semantic_hash": ""
+  },
+  ".claude/skills/tikz-figure-review/references/snippets.md": {
+    "mtime": 1795023291.746694,
+    "ast_hash": "f45307033af55ef87d4f7c102bc60c8b",
+    "semantic_hash": ""
+  },
+  "tools/video/make_depth_video.py": {
+    "mtime": 1795104513.315924,
+    "ast_hash": "7f2ea8404c2a238fd0b7ddce3d2f7062",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/img/depth-demo-title.jpg": {
+    "mtime": 1795104933.495085,
+    "ast_hash": "060a0dd0eaae8e0e149af98382d97f5e",
+    "semantic_hash": ""
+  },
+  "deliverables/thesis-defense-presentation-v2/assets/video/depth-demo-title.mp4": {
+    "mtime": 1795104931.767072,
+    "ast_hash": "8017dcfce15eae8e5206ddeb0fb93d44",
+    "semantic_hash": ""
+  },
+  "thesis/post-defend-corrections.md": {
+    "mtime": 1795108263.8527553,
+    "ast_hash": "2c58bd69bb64aec8b9e68ed20da63e00",
+    "semantic_hash": ""
+  }
+}

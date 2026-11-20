@@ -1870,8 +1870,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/js/deck.js": {
-    "mtime": 1795188411.2580724,
-    "ast_hash": "3a03be58e4c17073ba6f98b354e92e26",
+    "mtime": 1795194023.554173,
+    "ast_hash": "87689275f29d0be70dcb739ef6b18387",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/vendor/katex/katex.min.js": {
@@ -1885,8 +1885,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/content/fa.json": {
-    "mtime": 1795188411.2620723,
-    "ast_hash": "34d798c9ff78de508ee33344374d1abc",
+    "mtime": 1795189040.5193975,
+    "ast_hash": "b22ba58f6b94269514df8127ca7d6ecb",
     "semantic_hash": ""
   },
   "tools/multidomain/run_descriptor_ablation.sh": {
@@ -1900,8 +1900,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/README.md": {
-    "mtime": 1795188465.7945347,
-    "ast_hash": "30dcb688b1c3a2ff0c5d617a56632de3",
+    "mtime": 1795194023.554173,
+    "ast_hash": "47a51b6345ef1d60e9f2f61b34cb7342",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
@@ -1910,8 +1910,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/index.html": {
-    "mtime": 1795188411.2980726,
-    "ast_hash": "184c1a0d1d7ad8f30f558836d78d23c2",
+    "mtime": 1795189040.5513978,
+    "ast_hash": "1a837a9df0892e9545e0fe195fd74d7f",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/shell.html": {
@@ -1920,8 +1920,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/01-opening-problem.html": {
-    "mtime": 1795177915.169985,
-    "ast_hash": "95aa3e441b88b314007afe03cdd508a5",
+    "mtime": 1795189033.1673355,
+    "ast_hash": "fbc8bd97a5381e70c7f38a80df6352ba",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
@@ -1930,8 +1930,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
-    "mtime": 1795102851.8133647,
-    "ast_hash": "5ebb23c4cc2dcd1c7ddb527bfa96fd0b",
+    "mtime": 1795188576.3554716,
+    "ast_hash": "c0796f79fa4e06a6691594644f3db98a",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
@@ -2000,8 +2000,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/video/scale-ambiguity.mp4": {
-    "mtime": 1795011472.8133314,
-    "ast_hash": "c01ff62dcf18060ebc4f32c34fae595f",
+    "mtime": 1795189023.4432533,
+    "ast_hash": "b48c1c6e4935311af41e40bacd6d2639",
     "semantic_hash": ""
   },
   ".claude/skills/tikz-figure-review/scripts/figcheck.sh": {

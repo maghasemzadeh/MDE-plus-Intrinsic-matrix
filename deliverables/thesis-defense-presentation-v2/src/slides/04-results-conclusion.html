@@ -1,114 +1,55 @@
 
-<!-- ============ 30 · qualitative: NYUv2 ============ -->
+<!-- ============ 30 · qualitative depth maps: one row per test set ============ -->
+<!-- qual-rows.jpg and error-rows.jpg (next slide) come from make_qual_images.py: same three scenes, same size, same panel boxes,
+     so both slides share this grid; the left:% / top:% values are the column and row centres that script prints -->
 <section class="slide s-qual" data-autostep data-part="6" data-title="{{s30.title}}">
-  <header class="slide-head"><h2>{{s30.title}}</h2><div class="sub ltr">NYUv2</div></header>
+  <header class="slide-head"><h2>{{s30.title}}</h2></header>
   <div class="slide-body">
-    <div class="qwrap">
+    <div class="qrows">
       <div class="qual ltr">
-        <div class="qhead"><span style="left:9.5%">{{g.input}}</span><span style="left:28.2%">{{g.gt}}</span><span style="left:47%" class="k-published">{{g.published}}</span><span style="left:65.7%" class="k-control">{{g.control}}</span><span style="left:84.5%" class="k-proposed">{{g.proposed}}</span></div>
-        <img src="assets/img/qual-nyu.jpg" alt="">
+        <div class="qhead"><span style="left:9.24%">{{g.input}}</span><span style="left:28.16%">{{g.gt}}</span><span style="left:47.07%" class="k-published">{{g.published}}</span><span style="left:65.99%" class="k-control">{{g.control}}</span><span style="left:84.9%" class="k-proposed">{{g.proposed}}</span></div>
+        <img src="assets/img/qual-rows.jpg" alt="">
       </div>
-      <div class="qside">
-        <div class="cbar depth"><span>{{s30.near}}</span><i></i><span>{{s30.far}}</span></div>
-        <p>{{s30.note}}</p>
-        <p>{{s30.num}}</p>
+      <div class="qnames">
+        <div class="qset" style="top:17.86%"><b class="ltr">NYUv2</b></div>
+        <div class="qset" style="top:55.95%"><b class="ltr">Kinect v2</b><em class="ltr">SUN RGB-D</em><span>{{s27.unseen}}</span></div>
+        <div class="qset" style="top:88.09%"><b class="ltr">Cityscapes</b></div>
       </div>
+    </div>
+    <div class="qfoot">
+      <div class="cbar depth"><span>{{s30.near}}</span><i></i><span>{{s30.far}}</span></div>
+      <span>{{s30.note}}</span>
+      <span>{{s30.unit}}</span>
+      <span>{{s30.num}}</span>
     </div>
   </div>
   <aside class="notes">{{s30.notes}}</aside>
 </section>
 
-<!-- ============ 31 · qualitative: Kinect v2 and Cityscapes ============ -->
-<section class="slide s-qual two" data-autostep data-part="6" data-title="{{s31.title}}">
-  <header class="slide-head"><h2>{{s31.title}}</h2></header>
-  <div class="slide-body">
-    <div class="qwrap">
-      <div class="qual ltr">
-        <div class="qhead"><span style="left:9.5%">{{g.input}}</span><span style="left:28.2%">{{g.gt}}</span><span style="left:47%" class="k-published">{{g.published}}</span><span style="left:65.7%" class="k-control">{{g.control}}</span><span style="left:84.5%" class="k-proposed">{{g.proposed}}</span></div>
-        <img src="assets/img/qual-kv2.jpg" alt="">
-        <img class="frag" data-f="1" src="assets/img/qual-cityscapes.jpg" alt="">
-      </div>
-      <div class="qside">
-        <div class="qset"><b class="ltr">SUN RGB-D · Kinect v2</b><span>{{s27.unseen}}</span></div>
-        <div class="qset frag" data-f="1"><b class="ltr">Cityscapes</b></div>
-        <div class="cbar depth"><span>{{s30.near}}</span><i></i><span>{{s30.far}}</span></div>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">{{s31.notes}}</aside>
-</section>
-
-<!-- ============ 32 · signed error map ============ -->
+<!-- ============ 32 · signed error map: the same three scenes at the same places as the slide before ============ -->
 <section class="slide s-error" data-autostep data-part="6" data-title="{{s32.title}}">
   <header class="slide-head"><h2>{{s32.title}}</h2></header>
   <div class="slide-body">
-    <div class="ewrap">
-      <div class="ehalf ltr">
-        <div class="qhead"><span style="left:12.6%">{{g.input}}</span><span style="left:37.5%" class="k-published">{{g.published}}</span><span style="left:62.5%" class="k-control">{{g.control}}</span><span style="left:87.4%" class="k-proposed">{{g.proposed}}</span></div>
-        <img src="assets/img/error-a.jpg" alt=""><span class="ecap">NYUv2 &nbsp;/&nbsp; Kinect v1</span>
+    <div class="qrows">
+      <div class="qual ltr">
+        <div class="qhead"><span style="left:9.24%">{{g.input}}</span><span style="left:28.16%">{{g.gt}}</span><span style="left:47.07%" class="k-published">{{g.published}}</span><span style="left:65.99%" class="k-control">{{g.control}}</span><span style="left:84.9%" class="k-proposed">{{g.proposed}}</span></div>
+        <img src="assets/img/error-rows.jpg" alt="">
       </div>
-      <div class="ehalf ltr">
-        <div class="qhead"><span style="left:12.6%">{{g.input}}</span><span style="left:37.5%" class="k-published">{{g.published}}</span><span style="left:62.5%" class="k-control">{{g.control}}</span><span style="left:87.4%" class="k-proposed">{{g.proposed}}</span></div>
-        <img src="assets/img/error-b.jpg" alt=""><span class="ecap">Kinect v2 &nbsp;/&nbsp; Cityscapes</span>
+      <div class="qnames">
+        <div class="qset" style="top:17.86%"><b class="ltr">NYUv2</b></div>
+        <div class="qset" style="top:55.95%"><b class="ltr">Kinect v2</b><em class="ltr">SUN RGB-D</em><span>{{s27.unseen}}</span></div>
+        <div class="qset" style="top:88.09%"><b class="ltr">Cityscapes</b></div>
       </div>
-      <div class="eside">
-        <div class="cbar err ltr"><i></i><div class="ticks"><span style="top:0">1.50</span><span style="top:22.5%">1.25</span><span style="top:50%">1.00</span><span style="top:77.5%">0.80</span><span style="top:100%">0.67</span></div></div>
-        <ul class="ekey"><li class="r">{{s32.red}}</li><li class="w">{{s32.white}}</li><li class="b">{{s32.blue}}</li></ul>
-        <p class="phrase s emsg frag rise" data-f="1">{{s32.msg}}</p>
-      </div>
+    </div>
+    <div class="qfoot">
+      <div class="ekey"><span class="r">{{s32.red}}</span>
+        <div class="cbar err ltr"><i></i><div class="ticks"><span style="left:0">0.67</span><span style="left:22.5%">0.80</span><span style="left:50%">1.00</span><span style="left:77.5%">1.25</span><span style="left:100%">1.50</span></div></div>
+        <span class="b">{{s32.blue}}</span></div>
+      <div class="ekey"><span class="w">{{s32.white}}</span></div>
+      <p class="phrase s emsg frag rise" data-f="1">{{s32.msg}}</p>
     </div>
   </div>
   <aside class="notes">{{s32.notes}}</aside>
-</section>
-
-<!-- ============ 34 · K helps absolute models, not relative ones (evidence for research question 2) ============ -->
-<!-- one panel per model type, same x scale in both; bars = AbsRel reduction of the proposed model vs its control (%), light = ViT-S, dark = ViT-L;
-     data = backup 2 / thesis tab:md_encoder_protocol; the big numbers are the means of the eight bars of each encoder -->
-<section class="slide s-encoder" data-autostep data-part="6" data-title="{{s34.title}}">
-  <header class="slide-head"><h2>{{s34.title}}</h2><div class="sub">{{s34.sub}}</div></header>
-  <div class="slide-body">
-    <div class="kx-grid">
-      <div class="kx-panel abs">
-        <div class="kx-h">
-          <div class="kx-t"><b>{{s34.abs_t}}</b><span>{{s34.abs_e}}</span></div>
-          <div class="kx-stats">
-            <span class="kx-sl">{{s34.mean}}</span>
-            <div class="kx-stat s"><span class="v">۱۸٪</span><span class="l ltr">ViT-S</span></div>
-            <div class="kx-stat l"><span class="v">۲۸٪</span><span class="l ltr">ViT-L</span></div>
-          </div>
-        </div>
-        <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
-         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-vits)","values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
-                   {"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]}]}
-        </script></div>
-      </div>
-      <div class="kx-panel rel frag rise" data-f="1">
-        <div class="kx-h">
-          <div class="kx-t"><b>{{s34.rel_t}}</b><span>{{s34.rel_e}}</span></div>
-          <div class="kx-stats">
-            <span class="kx-sl">{{s34.mean}}</span>
-            <div class="kx-stat s"><span class="v">۰٫۳٪</span><span class="l ltr">ViT-S</span></div>
-            <div class="kx-stat l"><span class="v">۰٫۷٪</span><span class="l ltr">ViT-L</span></div>
-          </div>
-        </div>
-        <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
-         "bands":[{"from":-3.2,"to":3.2,"label":"±3%","f":1}],
-         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-vits)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]},
-                   {"color":"var(--c-proposed)","hero":true,"f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
-        </script></div>
-      </div>
-    </div>
-    <div class="kx-foot">
-      <div class="legend sm"><span class="k"><i class="sw vits"></i><span class="ltr">ViT-S</span></span><span class="k"><i class="sw proposed"></i><span class="ltr">ViT-L</span></span></div>
-      <span class="chip solid frag" data-f="2">{{s34.answer}}</span>
-      <div class="enc-sig">{{s34.sig}} <span class="ltr">p &lt; 0.01</span></div>
-    </div>
-  </div>
-  <aside class="notes">{{s34.notes}}</aside>
 </section>
 
 <!-- ============ 35 · answers to the research questions ============ -->
@@ -116,9 +57,9 @@
   <header class="slide-head"><h2>{{s35.title}}</h2></header>
   <div class="slide-body">
     <div class="answers">
-      <div class="ans frag rise" data-f="1"><span class="ans-h">{{s35.h1}}</span><div class="ans-b"><h4>{{s35.t1}}</h4><p>{{s35.e1}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
-      <div class="ans frag rise" data-f="2"><span class="ans-h">{{s35.h2}}</span><div class="ans-b"><h4>{{s35.t2}}</h4><p>{{s35.e2}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
-      <div class="ans frag rise" data-f="3"><span class="ans-h">{{s35.h3}}</span><div class="ans-b"><h4>{{s35.t3}}</h4><p>{{s35.e3}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+      <div class="ans frag rise" data-f="1"><span class="ans-h">{{s35.h1}}</span><div class="ans-b"><h4>{{s7.q1}}</h4><div class="ans-a"><b>{{s35.a1}}</b><span>{{s35.d1a}}</span><span>{{s35.d1b}}</span><span class="ltr">p &lt; 0.001</span></div></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+      <div class="ans frag rise" data-f="2"><span class="ans-h">{{s35.h2}}</span><div class="ans-b"><h4>{{s7.q2}}</h4><div class="ans-a"><b>{{s35.a2}}</b><span>{{s35.d2a}}</span><span>{{s35.d2b}}</span></div></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+      <div class="ans frag rise" data-f="3"><span class="ans-h">{{s35.h3}}</span><div class="ans-b"><h4>{{s7.q3}}</h4><div class="ans-a"><b>{{s35.a3}}</b><span>{{s35.d3a}}</span><span>{{s35.d3b}}</span><span>{{s35.d3c}}</span></div></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
     </div>
   </div>
   <aside class="notes">{{s35.notes}}</aside>
@@ -157,27 +98,17 @@
 <section class="slide s-refs" data-part="7" data-title="{{sref.title}}">
   <header class="slide-head"><h2>{{sref.title}}</h2><div class="sub">{{sref.sub}}</div></header>
   <div class="slide-body">
-    <div class="refs key">
-      <div class="rcol">
-        <h4>{{sref.k1}}</h4>
-        <ul>
-          <li><b>Eigen et al., 2014.</b> Depth Map Prediction from a Single Image Using a Multi-Scale Deep Network. <i>NeurIPS</i></li>
-          <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
-          <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
-          <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
-          <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
-        </ul>
-      </div>
-      <div class="rcol">
-        <h4>{{sref.k2}}</h4>
-        <ul>
-          <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
-          <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
-          <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
-          <li><b>Silberman et al., 2012.</b> Indoor Segmentation and Support Inference from RGBD Images (NYUv2). <i>ECCV</i></li>
-          <li><b>Geiger et al., 2012.</b> Are We Ready for Autonomous Driving? The KITTI Vision Benchmark Suite. <i>CVPR</i></li>
-        </ul>
-      </div>
+    <div class="refs key one">
+      <ul>
+        <li><b>Yang et al., 2024.</b> Depth Anything V2. <i>NeurIPS</i></li>
+        <li><b>Oquab et al., 2024.</b> DINOv2: Learning Robust Visual Features without Supervision. <i>TMLR</i></li>
+        <li><b>Ranftl et al., 2021.</b> Vision Transformers for Dense Prediction (DPT). <i>ICCV</i></li>
+        <li><b>Ranftl et al., 2022.</b> Towards Robust Monocular Depth Estimation: Mixing Datasets for Zero-Shot Cross-Dataset Transfer (MiDaS). <i>TPAMI</i></li>
+        <li><b>Fácil et al., 2019.</b> CAM-Convs: Camera-Aware Multi-Scale Convolutions for Single-View Depth. <i>CVPR</i></li>
+        <li><b>Yin et al., 2023.</b> Metric3D: Towards Zero-Shot Metric 3D Prediction from a Single Image. <i>ICCV</i></li>
+        <li><b>Piccinelli et al., 2024.</b> UniDepth: Universal Monocular Metric Depth Estimation. <i>CVPR</i></li>
+      </ul>
+      <p class="more">{{sref.more}}</p>
     </div>
   </div>
   <aside class="notes">{{sref.notes}}</aside>

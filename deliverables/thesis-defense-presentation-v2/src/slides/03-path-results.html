@@ -80,12 +80,18 @@
       <div class="proto-lanes">
         <div class="lane rel">
           <h4>{{s21.rel}}</h4>
-          <div class="lane-step">{{s21.rel_step}}<span class="tex" data-tex="s\cdot D^{\mathrm{pred}} + t"></span></div>
+          <div class="lane-step">{{s21.rel_step}}</div>
           <div class="lane-res">{{s21.rel_res}}</div>
           <div class="lane-num ltr">
             <div class="mb"><b class="p" style="width:99.7%"></b><span>0.0377</span></div>
             <div class="mb"><b class="c" style="width:100%"></b><span>0.0378</span></div>
             <em>{{s21.equal}}</em>
+          </div>
+          <div class="lane-fx">
+            <span class="fxl">{{s21.fx_align}}<small>{{s21.fx_space}}</small></span>
+            <div class="fxe"><span class="tex hero" data-tex="D^{*}=s^{*}\cdot D^{\mathrm{pred}}+t^{*}"></span><span class="tex" data-tex="\displaystyle (s^{*},t^{*})=\arg\min_{s,\,t}\sum_i\big(s\cdot D^{\mathrm{pred}}_i+t-D^{\mathrm{gt}}_i\big)^2"></span></div>
+            <span class="fxl">{{s21.fx_ssi}}<small class="ltr">scale- and shift-invariant</small></span>
+            <div class="fxe"><span class="tex" data-tex="\mathcal{L}_{\mathrm{SSI}}=(1-\alpha)\,\mathcal{L}_{\mathrm{pixel}}+\alpha\,\mathcal{L}_{\mathrm{grad}}"></span><span class="tex" data-tex="\displaystyle \mathcal{L}_{\mathrm{pixel}}=\frac{1}{N}\sum_i\big|D^{*}_i-D^{\mathrm{gt}}_i\big|"></span></div>
           </div>
         </div>
         <div class="lane abs frag rise" data-f="1">
@@ -103,6 +109,56 @@
     <div class="legend proto-leg"><span class="k"><i class="sw proposed"></i>{{g.proposed_l}}</span><span class="k"><i class="sw control"></i>{{g.control_l}}</span><span class="k muted ltr">AbsRel · NYUv2</span></div>
   </div>
   <aside class="notes">{{s21.notes}}</aside>
+</section>
+
+<!-- ============ 34 · K helps absolute models, not relative ones (answer to research question 2; placed right after the relative-vs-absolute evaluation slide) ============ -->
+<!-- one panel per model type, same x scale in both; bars = AbsRel reduction of the proposed model vs its control (%), light = ViT-S, dark = ViT-L;
+     data = backup 2 / thesis tab:md_encoder_protocol; the big numbers are the means of the eight bars of each encoder -->
+<section class="slide s-encoder" data-autostep data-part="6" data-title="{{s34.title}}">
+  <header class="slide-head"><h2>{{s34.title}}</h2><div class="sub">{{s34.sub}}</div></header>
+  <div class="slide-body">
+    <div class="kx-grid">
+      <div class="kx-panel abs">
+        <div class="kx-h">
+          <div class="kx-t"><b>{{s34.abs_t}}</b><span>{{s34.abs_e}}</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">{{s34.mean}}</span>
+            <div class="kx-stat s"><span class="v">۱۸٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۲۸٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
+        </div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-vits)","values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
+                   {"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]}]}
+        </script></div>
+      </div>
+      <div class="kx-panel rel frag rise" data-f="1">
+        <div class="kx-h">
+          <div class="kx-t"><b>{{s34.rel_t}}</b><span>{{s34.rel_e}}</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">{{s34.mean}}</span>
+            <div class="kx-stat s"><span class="v">۰٫۳٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۰٫۷٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
+        </div>
+        <div class="chart" data-chart="hbars"><script type="application/json">
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
+         "bands":[{"from":-3.2,"to":3.2,"label":"±3%","f":1}],
+         "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
+         "series":[{"color":"var(--c-vits)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]},
+                   {"color":"var(--c-proposed)","hero":true,"f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
+        </script></div>
+      </div>
+    </div>
+    <div class="kx-foot">
+      <div class="legend sm"><span class="k"><i class="sw vits"></i><span class="ltr">ViT-S</span></span><span class="k"><i class="sw proposed"></i><span class="ltr">ViT-L</span></span></div>
+      <span class="chip solid frag" data-f="2">{{s34.answer}}</span>
+      <div class="enc-sig">{{s34.sig}} <span class="ltr">p &lt; 0.01</span></div>
+    </div>
+  </div>
+  <aside class="notes">{{s34.notes}}</aside>
 </section>
 
 <!-- ============ 22 · focal-jitter leap ============ -->
@@ -213,6 +269,7 @@
     </table>
     <div class="table-foot">
       <span class="chip solid frag" data-f="1">{{s27.best}}</span>
+      <span class="chip solid frag" data-f="2">{{s27.answer}}</span>
       <span class="tf-note"><b class="ltr">Kinect v1, Kinect v2</b>{{s27.unseen}}</span>
     </div>
   </div>

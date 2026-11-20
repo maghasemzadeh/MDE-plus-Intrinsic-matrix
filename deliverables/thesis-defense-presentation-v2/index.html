@@ -45,16 +45,16 @@
       <li class="auto rise"><b>۱</b><span>مساله و انگیزه</span></li>
       <li class="auto rise"><b>۲</b><span>پیشینه و شکاف پژوهشی</span></li>
       <li class="auto rise"><b>۳</b><span>روش پیشنهادی</span></li>
-      <li class="auto rise"><b>۴</b><span>داده و آموزش</span></li>
-      <li class="auto rise"><b>۵</b><span>مسیر مدل نهایی</span></li>
-      <li class="auto rise key"><b>۶</b><span>مدل نهایی و نتایج</span></li>
+      <li class="auto rise"><b>۴</b><span>مجموعه‌داده</span></li>
+      <li class="auto rise"><b>۵</b><span>آموزش</span></li>
+      <li class="auto rise key"><b>۶</b><span>نتایج</span></li>
       <li class="auto rise"><b>۷</b><span>جمع‌بندی</span></li>
     </ol>
   </div>
-  <aside class="notes" data-key="s2">ابتدا حوزه‌های کاربرد، مساله و انگیزه را مطرح می‌کنیم، سپس به پیشینه و شکاف پژوهشی می‌پردازیم. بعد، مدل پیشنهادی، داده‌ها و آموزش، و مسیر آزمایش‌هایی را که به مدل نهایی انجامیدند توضیح می‌دهیم. در ادامه، مدل نهایی و نتایج آن و در پایان جمع‌بندی را ارائه می‌کنیم. محور اصلی ارائه، مدل نهایی و نتایج آن است.</aside><aside class="notes-sum">1. کاربردها، مساله و انگیزه
+  <aside class="notes" data-key="s2">ابتدا حوزه‌های کاربرد، مساله و انگیزه را مطرح می‌کنیم، سپس به پیشینه و شکاف پژوهشی می‌پردازیم. بعد، مدل پیشنهادی، مجموعه‌داده‌ها و افزونه‌سازی دوربین، و شیوه آموزش را توضیح می‌دهیم. در ادامه، نتایج و در پایان جمع‌بندی را ارائه می‌کنیم. محور اصلی ارائه، مدل نهایی و نتایج آن است.</aside><aside class="notes-sum">1. کاربردها، مساله و انگیزه
 2. پیشینه و شکاف پژوهشی
-3. مدل، داده، آموزش و مسیر آزمایش‌ها
-4. مدل نهایی، نتایج و جمع‌بندی
+3. مدل پیشنهادی، مجموعه‌داده و آموزش
+4. نتایج و جمع‌بندی
 - محور اصلی: مدل نهایی و نتایج</aside>
 </section>
 
@@ -603,27 +603,6 @@
 - $\mathbf t_{\mathrm{cam}}=g\cdot E(\mathbf d_{\mathrm{cam}})$، $g_0=0$</aside>
 </section>
 
-<!-- ============ 15 · paired design ============ -->
-<section class="slide s-pair" data-part="3" data-title="مقایسه زوجی: مدل پیشنهادی و کنترل">
-  <header class="slide-head"><h2>مقایسه زوجی: مدل پیشنهادی و کنترل</h2></header>
-  <div class="slide-body">
-    <div class="arms">
-      <div class="arm p auto rise"><h3>مدل پیشنهادی</h3><span class="chip solid">تصویر و K</span></div>
-      <div class="shared">
-        <span class="shared-l auto rise">یکسان در هر دو بازو</span>
-        <ul><li class="auto rise">داده و تقسیم</li><li class="auto rise">ترتیب نمونه‌ها</li><li class="auto rise">نمونه‌های افزونه‌سازی</li><li class="auto rise">بذر تصادفی</li><li class="auto rise">برنامه آموزش</li><li class="auto rise">وزن‌های آغازین</li></ul>
-      </div>
-      <div class="arm c auto rise"><h3>مدل کنترل</h3><span class="chip">فقط تصویر</span></div>
-    </div>
-    <div class="goal only auto rise"><span class="goal-t">تنها تفاوت: دسترسی به K</span></div>
-  </div>
-  <aside class="notes" data-key="s15">برای اندازه‌گیری اثر تنها ماتریس کالیبراسیون (calibration matrix)، در هر آزمایش یک زوج مدل آموزش می‌دهیم. مدل پیشنهادی (proposed model) و مدل کنترل (control model) داده‌های یکسان، ترتیب نمونه‌های یکسان، نمونه‌های افزونه‌سازی (augmentation) یکسان، بذر تصادفی (random seed) یکسان و برنامه آموزش یکسان دریافت می‌کنند و هر دو از وزن‌های منتشرشده یکسان آغاز می‌شوند. تنها تفاوت طراحی‌شده، دسترسی به K است. سپس تفاوت‌ها برای هر تصویر با آزمون t زوجی (paired t-test)، آزمون رتبه‌ای علامت‌دار ویلکاکسون (Wilcoxon signed-rank test) و بوت‌استرپ با ۱۰ هزار بازنمونه برای فاصله‌های اطمینان (confidence intervals) ۹۵ درصد آزموده می‌شوند.</aside><aside class="notes-sum">- زوج پیشنهادی و کنترل: داده، ترتیب، افزونه‌سازی و بذر یکسان
-- هر دو از وزن‌های منتشرشده یکسان شروع می‌کنند
-- تنها تفاوت: دسترسی به K
-- آزمون‌ها: t زوجی، Wilcoxon، بوت‌استرپ ۱۰ هزار بازنمونه
-- فاصله اطمینان: ۹۵٪</aside>
-</section>
-
 <!-- ============ 16 · datasets ============ -->
 <section class="slide s-data" data-part="4" data-title="مجموعه‌داده‌ها و دوربین‌های آن‌ها">
   <header class="slide-head"><h2>مجموعه‌داده‌ها و دوربین‌های آن‌ها</h2></header>
@@ -656,54 +635,123 @@
       </div>
     </div>
   </div>
-  <aside class="notes" data-key="s16">مدل پیشنهادی با چهار مجموعه‌داده و دوربین‌های متفاوت آموزش می‌بیند: NYUv2 (NYU Depth Dataset V2) برای صحنه‌های داخلی با حسگر Kinect، میدان دید (field of view) افقی ۶۳ درجه، ۶۳۶ تصویر آموزش و ۶۵۴ تصویر آزمون؛ KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) برای صحنه‌های جاده‌ای با عمق لیدار، میدان دید ۸۲ درجه، ۹۱۴۸ تصویر آموزش و ۶۵۲ تصویر آزمون؛ Virtual KITTI 2 برای صحنه‌های جاده‌ای مصنوعی با میدان دید ۸۱ درجه و ۳۷۸۶۰ تصویر آموزش؛ و Cityscapes برای صحنه‌های شهری با عمق استریو، میدان دید ۴۹ درجه، ۲۸۵۲ تصویر آموزش و ۵۰۰ تصویر آزمون. پنج مجموعه آزمون دیگر در آموزش دیده نشده‌اند: چهار حسگر SUN RGB-D (Scene Understanding RGB-D) شامل Kinect v1، Kinect v2، RealSense و Xtion، هرکدام با ۲۰۰ تصویر، و بخش بیرونی DIODE (Dense Indoor and Outdoor DEpth) با ۴۴۶ تصویر. Kinect v1 همان مدل حسگر NYUv2 است، اما با صحنه‌های جدید؛ Kinect v2، RealSense و Xtion در هیچ مجموعه آموزش حضور ندارند. عمق تا ۱۰ متر در داخل و ۸۰ متر در بیرون ارزیابی می‌شود.</aside><aside class="notes-sum">- آموزش: NYUv2، KITTI، Virtual KITTI 2، Cityscapes
+  <aside class="notes" data-key="s16">مدل پیشنهادی با چهار مجموعه‌داده و دوربین‌های متفاوت آموزش می‌بیند: NYUv2 (NYU Depth Dataset V2) برای صحنه‌های داخلی با حسگر Kinect، میدان دید (field of view) افقی ۶۳ درجه، ۶۳۶ تصویر آموزش و ۶۵۴ تصویر آزمون؛ KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) برای صحنه‌های جاده‌ای با عمق لیدار، میدان دید ۸۲ درجه، ۹۱۴۸ تصویر آموزش و ۶۵۲ تصویر آزمون؛ Virtual KITTI 2 برای صحنه‌های جاده‌ای مصنوعی با میدان دید ۸۱ درجه و ۳۷۸۶۰ تصویر آموزش؛ و Cityscapes برای صحنه‌های شهری با عمق استریو، میدان دید ۴۹ درجه، ۲۸۵۲ تصویر آموزش و ۵۰۰ تصویر آزمون. پنج مجموعه آزمون دیگر در آموزش دیده نشده‌اند: چهار حسگر SUN RGB-D (Scene Understanding RGB-D) شامل Kinect v1، Kinect v2، RealSense و Xtion، هرکدام با ۲۰۰ تصویر، و بخش بیرونی DIODE (Dense Indoor and Outdoor DEpth) با ۴۴۶ تصویر. Kinect v1 همان مدل حسگر NYUv2 است، اما با صحنه‌های جدید؛ Kinect v2، RealSense و Xtion در هیچ مجموعه آموزش حضور ندارند. عمق تا ۱۰ متر در داخل و ۸۰ متر در بیرون ارزیابی می‌شود. در مجموع، مدل پیشنهادی با ۵۰۴۹۶ تصویر آموزشی از چهار مجموعه‌داده تنظیم دقیق (fine-tuning) شده و در ۱۲ دوره (epoch) ۷۲۰۰۰ نمونه دیده است. برای مقایسه با مدل‌های مطلق آگاه از دوربین (camera-aware metric models): Metric3D v2 با حدود ۱۶٫۲ میلیون تصویر از ۱۸ مجموعه‌داده و UniDepth V2 با حدود ۱۶ میلیون تصویر از ۲۳ مجموعه‌داده آموزش دیده‌اند؛ یعنی دادهٔ آموزشی آن‌ها حدود ۳۰۰ برابر دادهٔ ماست. Depth Pro تعداد تصاویر را گزارش نکرده، اما از ۲۱ مجموعه‌داده استفاده کرده و در دو مرحلهٔ آموزش حدود ۲۵ میلیون نمونه دیده است. تنها ZoeDepth در مرحلهٔ تنظیم دقیق مطلق دادهٔ هم‌اندازهٔ ما دارد: حدود ۲۴ هزار تصویر NYUv2 و ۲۶ هزار تصویر KITTI. Metric3D v2 حدود ۱۷۰ هزار تصویر Cityscapes در آموزش داشته است، یعنی حدود ۶۰ برابر ۲۸۵۲ تصویر ما، و با این حال در Cityscapes خطای مدل پیشنهادی کمتر است.</aside><aside class="notes-sum">- آموزش: NYUv2، KITTI، Virtual KITTI 2، Cityscapes
 - NYUv2: ۶۳°؛ ۶۳۶ آموزش، ۶۵۴ آزمون
 - KITTI: ۸۲°؛ ۹۱۴۸ آموزش، ۶۵۲ آزمون
 - Virtual KITTI 2: ۸۱°؛ ۳۷۸۶۰ آموزش
 - Cityscapes: ۴۹°؛ ۲۸۵۲ آموزش، ۵۰۰ آزمون
 - آزمون دیده‌نشده: چهار حسگر، هرکدام ۲۰۰؛ DIODE: ۴۴۶
-- عمق ارزیابی: تا ۱۰ متر داخل و ۸۰ متر بیرون</aside>
+- عمق ارزیابی: تا ۱۰ متر داخل و ۸۰ متر بیرون
+- مجموع آموزش ما: ۵۰۴۹۶ تصویر؛ ۷۲۰۰۰ نمونه در ۱۲ دوره
+- Metric3D v2: حدود ۱۶٫۲ میلیون تصویر، ۱۸ مجموعه‌داده
+- UniDepth V2: حدود ۱۶ میلیون تصویر، ۲۳ مجموعه‌داده
+- Depth Pro: ۲۱ مجموعه‌داده، حدود ۲۵ میلیون نمونه دیده‌شده
+- ZoeDepth: تنظیم دقیق با حدود ۵۰ هزار تصویر، هم‌اندازه ما
+! داده آموزشی آن‌ها حدود ۳۰۰ برابر داده ماست</aside>
 </section>
 
-<!-- ============ 17 · camera-aware augmentation ============ -->
-<section class="slide s-aug" data-part="4" data-title="افزونه‌سازی دوربین: زوم‌ـ‌برش و لرزش کانونی">
-  <header class="slide-head"><h2>افزونه‌سازی دوربین: زوم‌ـ‌برش و لرزش کانونی</h2></header>
+<!-- ============ 17 · camera-aware augmentation (1): zoom-crop ============ -->
+<!-- the drawn window is half the frame (zoom 2, the upper end of the final model's range): 63° becomes about 34° -->
+<section class="slide s-zoom" data-part="4" data-title="افزونه‌سازی دوربین (۱): زوم‌ـ‌برش">
+  <header class="slide-head"><h2>افزونه‌سازی دوربین (۱): زوم‌ـ‌برش</h2><div class="sub">برش تصادفی تصویر، همراه با به‌روزرسانی دقیق ماتریس کالیبراسیون</div></header>
   <div class="slide-body">
-    <div class="cols c2 top">
-      <div class="panel line aug">
-        <h3>زوم‌ـ‌برش</h3>
-        <div class="zc">
-          <div class="zc-src"><span class="zc-win"></span><em>پنجره برش</em></div>
-          <div class="pair-arrow" aria-hidden="true"></div>
-          <div class="zc-out"><em>قاب ورودی شبکه</em></div>
+    <div class="zflow">
+      <figure class="zcard">
+        <figcaption>تصویر اصلی</figcaption>
+        <div class="zimg src"><span class="zwin"><em>پنجره برش</em></span></div>
+        <div class="zcam">
+          <svg class="wedge" viewBox="0 -12 92 104" aria-hidden="true"><path d="M10 40 L69.7 3.4 A70 70 0 0 1 69.7 76.6 Z"/></svg>
+          <div class="zfov"><span>میدان دید</span><b class="ltr">63°</b></div>
+          <span class="tex zk" data-tex="K=(f,\,c)"></span>
         </div>
-        <div class="eq xs"><span class="tex block" data-tex="f' = f\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\qquad c_x' = (c_x - x_0)\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span></div>
-        <ul class="pts s"><li>پنجره تصادفی ۴:۳، ضریب زوم ۱ تا ۲٫۲</li><li>به‌روزرسانی دقیق K</li><li>میدان دید از ۶۳ تا ۳۱ درجه</li></ul>
+      </figure>
+      <div class="zmid frag" data-f="1">
+        <span class="zstep">برش و تغییر اندازه</span>
+        <div class="zarrow" aria-hidden="true"></div>
+        <span class="tex zs" data-tex="s=\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span>
       </div>
-      <div class="panel line aug frag rise" data-f="1">
-        <h3>لرزش کانونی</h3>
-        <div class="fj">
-          <div class="fj-c"><span class="tex" data-tex="(f,\;Z)"></span><div class="fj-img"></div></div>
-          <div class="fj-eq" aria-hidden="true">=</div>
-          <div class="fj-c"><span class="tex" data-tex="(\alpha f,\;\alpha Z)"></span><div class="fj-img"></div></div>
+      <figure class="zcard out frag rise" data-f="1">
+        <figcaption>ورودی شبکه</figcaption>
+        <div class="zimg crop"></div>
+        <div class="zcam">
+          <svg class="wedge" viewBox="0 -12 92 104" aria-hidden="true"><path d="M10 40 L76.9 19.5 A70 70 0 0 1 76.9 60.5 Z"/></svg>
+          <div class="zfov"><span>میدان دید</span><b class="ltr">34°</b></div>
+          <span class="tex zk" data-tex="K'=(f',\,c')"></span>
         </div>
-        <div class="eq xs"><span class="tex block" data-tex="\alpha \sim \exp\!\big(\mathcal{U}(-\ln m,\; +\ln m)\big),\qquad m = 1.6"></span></div>
-        <ul class="pts s"><li>تصویر بدون تغییر می‌ماند</li><li>ضرب فاصله کانونی و عمق‌ها در α</li><li>مقیاس بدون K حل‌ناپذیر است</li></ul>
+      </figure>
+    </div>
+    <div class="zfoot frag rise" data-f="2">
+      <div class="eq box zeq"><span class="tex" data-tex="f' = s\,f,\qquad c_x' = s\,(c_x - x_0),\qquad c_y' = s\,(c_y - y_0)"></span></div>
+      <div class="chips zfacts"><span class="chip">پنجره تصادفی، ضریب زوم ۱ تا ۲</span><span class="chip solid">عمق‌ها بدون تغییر، میدان دید باریک‌تر</span></div>
+    </div>
+  </div>
+  <aside class="notes" data-key="s17">افزونه‌سازی آگاه از دوربین (camera-aware augmentation) دو بخش دارد و این اسلاید بخش نخست آن، زوم‌ـ‌برش (zoom-crop augmentation)، را نشان می‌دهد. دریافتیم که برش تصادفی (random crop) معمولی مرکز تصویر را جابه‌جا می‌کند، بدون آن‌که ماتریس به‌روزرسانی شود؛ بنابراین انکودر دوربین (camera encoder) اطلاعات هندسی نادرستی دریافت می‌کرد. در زوم‌ـ‌برش، پنجره‌ای تصادفی از تصویر بریده و به اندازه ورودی شبکه رسانده می‌شود و فاصله کانونی (focal length) و نقطه اصلی (principal point) دقیقاً به‌روزرسانی می‌شوند. فرمول به‌روزرسانی چنین است: $f_x'=f_x\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\quad c_x'=(c_x-x_0)\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}$ و برای محور عمودی نیز به همین شکل با $f_y$، $c_y$، $y_0$، $H_{\mathrm{net}}$ و $h_{\mathrm{win}}$. در اینجا $(x_0,y_0)$ گوشه پنجره برش و $w_{\mathrm{win}}\times h_{\mathrm{win}}$ اندازه آن است؛ روی اسلاید این نسبت با $s$ نشان داده شده است. مقادیر عمق تغییر نمی‌کنند؛ فقط میدان دید (field of view) باریک‌تر می‌شود، گویی همان صحنه با دوربین دیگری ثبت شده است. به این ترتیب هر دوربین آموزش، چند دوربین با میدان دید متفاوت را شبیه‌سازی می‌کند. در آموزش مدل نهایی، ضریب زوم بین ۱ و ۲ است، در ۲۰ درصد نمونه‌ها قاب کامل حفظ می‌شود و پس از آن برش تصادفی ۵۱۸ در ۵۱۸ اعمال می‌شود. نمونه روی اسلاید تصویری از NYUv2 (NYU Depth Dataset V2) با زوم ۲ است که میدان دید افقی را از ۶۳ به حدود ۳۴ درجه می‌رساند. در مطالعه کنترل‌شده NYUv2، پنجره ۴ به ۳ و ضریب زوم بین ۱ و ۲٫۲ بود، یعنی میدان دید حدود ۶۳ تا ۳۱ درجه، و ابعاد ورودی شبکه ۵۱۸ در ۶۸۶ بود.</aside><aside class="notes-sum">- بخش نخست افزونه‌سازی دوربین: زوم‌ـ‌برش
+- برش معمولی K را به‌روز نمی‌کند ⇒ هندسه نادرست برای انکودر دوربین
+- پنجره تصادفی؛ ضریب زوم ۱ تا ۲ (مدل نهایی)؛ ۲۰٪ قاب کامل
+- به‌روزرسانی دقیق فاصله کانونی و نقطه اصلی
+- $f'=f\,W_{\mathrm{net}}/w_{\mathrm{win}}$، $c'=(c-x_0)\,W_{\mathrm{net}}/w_{\mathrm{win}}$
+- نمونه اسلاید: NYUv2، زوم ۲، میدان دید ۶۳ به حدود ۳۴ درجه
+- مطالعه کنترل‌شده NYUv2: پنجره ۴ به ۳، زوم تا ۲٫۲ (۶۳ تا ۳۱ درجه)
+! عمق‌ها تغییر نمی‌کنند؛ فقط میدان دید باریک‌تر می‌شود</aside>
+</section>
+
+<!-- ============ 17b · camera-aware augmentation (2): focal jitter ============ -->
+<section class="slide s-jit" data-part="4" data-title="افزونه‌سازی دوربین (۲): لرزش کانونی">
+  <header class="slide-head"><h2>افزونه‌سازی دوربین (۲): لرزش کانونی</h2><div class="sub">تصویر ثابت می‌ماند؛ فاصله کانونی و عمق‌ها در ضریب تصادفی α ضرب می‌شوند</div></header>
+  <div class="slide-body">
+    <div class="cols jcols">
+      <div class="jpair">
+        <figure class="jcard">
+          <figcaption>نمونه اصلی</figcaption>
+          <div class="jimg"><i class="pin a"><span class="tex" data-tex="Z_1"></span></i><i class="pin b"><span class="tex" data-tex="Z_2"></span></i></div>
+          <div class="jtags"><span class="jtag"><em>فاصله کانونی</em><span class="tex" data-tex="f"></span></span><span class="jtag"><em>عمق</em><span class="tex" data-tex="Z"></span></span></div>
+        </figure>
+        <div class="jeq frag" data-f="1"><b aria-hidden="true">=</b><span>تصویر یکسان</span></div>
+        <figure class="jcard jit frag rise" data-f="1">
+          <figcaption>پس از لرزش کانونی</figcaption>
+          <div class="jimg"><i class="pin a"><span class="tex" data-tex="\alpha Z_1"></span></i><i class="pin b"><span class="tex" data-tex="\alpha Z_2"></span></i></div>
+          <div class="jtags"><span class="jtag"><em>فاصله کانونی</em><span class="tex" data-tex="\alpha f"></span></span><span class="jtag"><em>عمق</em><span class="tex" data-tex="\alpha Z"></span></span></div>
+        </figure>
+      </div>
+      <div class="stack jside">
+        <div class="eq box jalpha frag rise" data-f="1"><span class="tex block" data-tex="\alpha \sim \exp\!\big(\mathcal{U}(-\ln m,\; +\ln m)\big),\quad m = 1.6"></span><span class="jrange">ضریب α از ۰٫۶۲۵ تا ۱٫۶</span></div>
+        <div class="jout c frag rise" data-f="2"><i class="sw control"></i><div><h5>مدل کنترل</h5><p>تصویر یکسان، عمق متفاوت: حل‌ناپذیر</p></div></div>
+        <div class="jout p frag rise" data-f="3"><i class="sw proposed"></i><div><h5>مدل پیشنهادی</h5><p>مقیاس از K بازیابی می‌شود</p></div></div>
       </div>
     </div>
   </div>
-  <aside class="notes" data-key="s17">دو افزونه‌سازی آگاه از دوربین (camera-aware augmentation) باعث می‌شوند مدل به دوربین نیاز داشته باشد. دریافتیم که برش تصادفی (random crop) معمولی مرکز تصویر را جابه‌جا می‌کند، بدون آن‌که ماتریس به‌روزرسانی شود؛ بنابراین انکودر دوربین (camera encoder) اطلاعات هندسی نادرستی دریافت می‌کرد. در افزونه‌سازی زوم‌ـ‌برش (zoom-crop augmentation)، پنجره تصادفی ۴ به ۳ با ضریب زوم بین ۱ و ۲٫۲ برش می‌خورد و فاصله کانونی (focal length) و نقطه اصلی (principal point) دقیقاً به‌روزرسانی می‌شوند؛ این فرایند دوربین‌هایی با میدان دید (field of view) حدود ۶۳ تا ۳۱ درجه را شبیه‌سازی می‌کند، در حالی که مقادیر عمق تغییر نمی‌کنند. فرمول به‌روزرسانی چنین است: $f_x'=f_x\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\quad c_x'=(c_x-x_0)\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}$ و برای محور عمودی نیز به همین شکل با $f_y$، $c_y$، $y_0$، $H_{\mathrm{net}}$ و $h_{\mathrm{win}}$. در اینجا $(x_0,y_0)$ گوشه پنجره برش و $w_{\mathrm{win}}\times h_{\mathrm{win}}$ اندازه آن است و ابعاد ورودی شبکه ۵۱۸ در ۶۸۶ است. در افزونه‌سازی لرزش کانونی (focal-jitter augmentation)، فاصله کانونی و همه عمق‌های صحنه در ضریب یکسان α ضرب می‌شوند که به‌صورت لگاریتمی یکنواخت از ۱/۱٫۶ تا ۱٫۶ انتخاب می‌شود: $\alpha\sim\exp\!\big(\mathcal U(-\ln 1.6,\ \ln 1.6)\big),\quad f\mapsto\alpha f,\ \ Z\mapsto\alpha Z$. مختصات نقطه اصلی و پیکسل‌های تصویر تغییر نمی‌کنند. طبق معادله دوربین سوراخ‌سوزنی (pinhole camera)، تصویر تغییر نمی‌کند؛ بنابراین مقیاس فقط از K قابل بازیابی است و مدل کنترل نمی‌تواند آن را حل کند. این همان ابهام مقیاس ناشی از دوربین (metric ambiguity from various camera models) است که عمداً در داده آموزش ایجاد شده و بخشی از ابهام است که K آن را حذف می‌کند.</aside><aside class="notes-sum">- زوم‌ـ‌برش: پنجره ۴ به ۳؛ ضریب زوم ۱ تا ۲٫۲
-- به‌روزرسانی دقیق فاصله کانونی و نقطه اصلی
-- شبیه‌سازی میدان دید حدود ۶۳ تا ۳۱ درجه
-- لرزش کانونی: فاصله کانونی و عمق‌ها × α
-- α لگاریتمی یکنواخت از ۱/۱٫۶ تا ۱٫۶
-- زوم‌ـ‌برش: $f'=f\,W_{\mathrm{net}}/w_{\mathrm{win}}$، $c'=(c-x_0)\,W_{\mathrm{net}}/w_{\mathrm{win}}$
-- لرزش: $f\mapsto\alpha f$، $Z\mapsto\alpha Z$، $\alpha\in[1/1.6,\,1.6]$ لگاریتمی
-! تصویر ثابت می‌ماند؛ مدل کنترل نمی‌تواند مقیاس را حل کند</aside>
+  <aside class="notes" data-key="s17b">بخش دوم افزونه‌سازی آگاه از دوربین (camera-aware augmentation)، لرزش کانونی (focal-jitter augmentation) است. در این افزونه‌سازی، فاصله کانونی (focal length) در ماتریس کالیبراسیون (calibration matrix) و همه عمق‌های صحنه در ضریب یکسان α ضرب می‌شوند که به‌صورت لگاریتمی یکنواخت از ۱/۱٫۶ تا ۱٫۶ انتخاب می‌شود: $\alpha\sim\exp\!\big(\mathcal U(-\ln 1.6,\ \ln 1.6)\big),\quad f\mapsto\alpha f,\ \ Z\mapsto\alpha Z$. مختصات نقطه اصلی (principal point) و پیکسل‌های تصویر تغییر نمی‌کنند. طبق معادله دوربین سوراخ‌سوزنی (pinhole camera)، $u=fX/Z$ با ضرب هم‌زمان $f$ و $Z$ در α ثابت می‌ماند؛ پس تصویر تغییر نمی‌کند و مقیاس فقط از K قابل بازیابی است. روی اسلاید، دو نمونه تصویر یکسانی دارند و فقط فاصله کانونی و عمق نقطه‌های نشان‌داده‌شده در α ضرب شده‌اند. مدل کنترل، که K را نمی‌بیند، برای یک تصویر یکسان عمق‌های مرجع متفاوتی دریافت می‌کند و نمی‌تواند مقیاس را حل کند؛ مدل پیشنهادی می‌تواند، چون فاصله کانونی را در ورودی دارد. این همان ابهام مقیاس ناشی از دوربین (metric ambiguity from various camera models) است که عمداً در داده آموزش ایجاد شده و بخشی از ابهام است که K آن را حذف می‌کند. در آموزش مدل نهایی، m برابر ۱٫۶ است. اثر این افزونه‌سازی را در بخش نتایج، در اسلایدهای «جهش لرزش کانونی» و «خوانش فاصله کانونی توسط مدل» می‌بینیم.</aside><aside class="notes-sum">- بخش دوم افزونه‌سازی دوربین: لرزش کانونی
+- فاصله کانونی و همه عمق‌ها × α؛ تصویر و نقطه اصلی ثابت
+- لرزش: $f\mapsto\alpha f$، $Z\mapsto\alpha Z$، $\alpha\in[1/1.6,\,1.6]$ لگاریتمی یکنواخت
+- $u=fX/Z$ ثابت می‌ماند ⇒ مقیاس فقط از K قابل بازیابی است
+- مدل کنترل: تصویر یکسان، عمق مرجع متفاوت ⇒ حل‌ناپذیر
+- مدل پیشنهادی: فاصله کانونی را در ورودی دارد
+! ابهام مقیاس ناشی از دوربین عمداً در داده آموزش ساخته می‌شود</aside>
+</section>
+
+<!-- ============ 15 · paired design ============ -->
+<section class="slide s-pair" data-part="5" data-title="مقایسه زوجی: مدل پیشنهادی و کنترل">
+  <header class="slide-head"><h2>مقایسه زوجی: مدل پیشنهادی و کنترل</h2></header>
+  <div class="slide-body">
+    <div class="arms">
+      <div class="arm p auto rise"><h3>مدل پیشنهادی</h3><span class="chip solid">تصویر و K</span></div>
+      <div class="shared">
+        <span class="shared-l auto rise">یکسان در هر دو بازو</span>
+        <ul><li class="auto rise">داده و تقسیم</li><li class="auto rise">ترتیب نمونه‌ها</li><li class="auto rise">نمونه‌های افزونه‌سازی</li><li class="auto rise">بذر تصادفی</li><li class="auto rise">برنامه آموزش</li><li class="auto rise">وزن‌های آغازین</li></ul>
+      </div>
+      <div class="arm c auto rise"><h3>مدل کنترل</h3><span class="chip">فقط تصویر</span></div>
+    </div>
+    <div class="goal only auto rise"><span class="goal-t">تنها تفاوت: دسترسی به K</span></div>
+  </div>
+  <aside class="notes" data-key="s15">برای اندازه‌گیری اثر تنها ماتریس کالیبراسیون (calibration matrix)، در هر آزمایش یک زوج مدل آموزش می‌دهیم. مدل پیشنهادی (proposed model) و مدل کنترل (control model) داده‌های یکسان، ترتیب نمونه‌های یکسان، نمونه‌های افزونه‌سازی (augmentation) یکسان، بذر تصادفی (random seed) یکسان و برنامه آموزش یکسان دریافت می‌کنند و هر دو از وزن‌های منتشرشده یکسان آغاز می‌شوند. تنها تفاوت طراحی‌شده، دسترسی به K است. سپس تفاوت‌ها برای هر تصویر با آزمون t زوجی (paired t-test)، آزمون رتبه‌ای علامت‌دار ویلکاکسون (Wilcoxon signed-rank test) و بوت‌استرپ با ۱۰ هزار بازنمونه برای فاصله‌های اطمینان (confidence intervals) ۹۵ درصد آزموده می‌شوند.</aside><aside class="notes-sum">- زوج پیشنهادی و کنترل: داده، ترتیب، افزونه‌سازی و بذر یکسان
+- هر دو از وزن‌های منتشرشده یکسان شروع می‌کنند
+- تنها تفاوت: دسترسی به K
+- آزمون‌ها: t زوجی، Wilcoxon، بوت‌استرپ ۱۰ هزار بازنمونه
+- فاصله اطمینان: ۹۵٪</aside>
 </section>
 
 <!-- ============ 18 · training recipe ============ -->
-<section class="slide s-recipe" data-part="4" data-title="برنامه آموزش در یک نگاه">
+<section class="slide s-recipe" data-part="5" data-title="برنامه آموزش در یک نگاه">
   <header class="slide-head"><h2>برنامه آموزش در یک نگاه</h2><div class="sub">اجرای اصلی آموزش مدل نهایی (آموزش چندمجموعه‌ای)</div></header>
   <div class="slide-body">
     <dl class="kv">
@@ -718,7 +766,7 @@
       <div class="auto rise"><dt>مجموعه‌های آموزش</dt><dd class="ltr">NYUv2, KITTI, Virtual KITTI 2, Cityscapes</dd></div>
     </dl>
   </div>
-  <aside class="notes" data-key="s18">دستورالعمل آموزش در یک نگاه ارائه شده است. از نقطه وارسی (checkpoint) نسخه نسبی منتشرشده Depth Anything V2 با ViT-L (Vision Transformer Large) شروع می‌کنیم، انکودر DINOv2 (self-DIstillation with NO labels version 2) را فریز نگه می‌داریم و دیکودر DPT (Dense Prediction Transformer) و انکودر دوربین (camera encoder) را با هزینه SiLog (Scale-Invariant Logarithmic loss) و λ برابر ۰٫۵ آموزش می‌دهیم: $\mathcal L_{\mathrm{SiLog}}=\sqrt{\dfrac1N\sum_i d_i^2-\dfrac{\lambda}{N^2}\Big(\sum_i d_i\Big)^2},\quad d_i=\ln D_i-\ln\hat D_i$. با λ برابر ۱، هزینه کاملاً نسبت به مقیاس تغییرناپذیر است؛ با λ برابر ۰٫۵، بخشی از خطای مقیاس سراسری همچنان جریمه می‌شود و مدل به مقیاس مطلق حساس می‌ماند. بهینه‌ساز (optimizer) AdamW (Adam with decoupled Weight decay) است؛ نرخ یادگیری (learning rate) پایه ۵×۱۰⁻⁶ است و برای دیکودر و انکودر دوربین ۱۰ برابر می‌شود، با کاهش چندجمله‌ای توان ۰٫۹، بدون گرم‌سازی (warm-up)، برش گرادیان (gradient clipping) ۱٫۰ و اندازه دسته (batch size) ۴. نرخ یادگیری در گام t از T گام برابر است با $\mathrm{lr}_t=\mathrm{lr}_0\Big(1-\dfrac{t}{T}\Big)^{0.9}$. در هر دوره دقیقاً ۱۵۰۰ نمونه از هر چهار مجموعه‌داده انتخاب می‌شود تا هیچ مجموعه‌ای غالب نشود؛ ۱۲ دوره برابر با ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است. زمان آموزش برای هر اندازه انکودر به این صورت است. در هر دو اندازه، تعداد دوره‌ها (epochs) برابر ۱۲ و تعداد گام‌های هر دوره ۱۵۰۰ است. وقتی فقط یک آموزش روی یک RTX 4090 اجرا شود، سرعت اندازه‌گیری‌شده برای ViT-S حدود ۱۳٫۵ گام بر ثانیه است؛ یعنی هر دوره حدود ۲ دقیقه و کل ۱۲ دوره (۱۸۰۰۰ گام) حدود ۲۲ دقیقه طول می‌کشد. برای ViT-L، سرعت حدود ۷ گام بر ثانیه است؛ یعنی هر دوره حدود ۳٫۶ دقیقه و کل ۱۲ دوره حدود ۴۳ دقیقه طول می‌کشد. این زمان‌ها فقط گام‌های آموزش را شامل می‌شوند و اعتبارسنجی و ذخیره نقطه وارسی (checkpoint) در آن‌ها لحاظ نشده است. اجراهای واقعی کندتر بودند، زیرا چند آموزش هم‌زمان روی همان GPU اجرا می‌شد: اجرای نهایی ViT-L حدود ۲ ساعت و ۵۰ دقیقه و اجرای ViT-S حدود ۲۸ دقیقه طول کشید. ViT-B و ViT-G در این پایان‌نامه آموزش داده نشده‌اند. نقطه وارسی با کمترین میانگین AbsRel (Absolute Relative Error) روی ۵۰ تصویر اعتبارسنجی از هر دامنه انتخاب می‌شود و هیچ تصویر آزمونی در این انتخاب استفاده نمی‌شود. همه آموزش‌ها با یک RTX 4090 انجام شده‌اند. در این اسلاید، آنچه می‌بینیم اجرای اصلی و نهایی آموزش چندمجموعه‌ای برای ساخت مدل نهایی است؛ ما از نقطه شروع Depth Anything V2 ViT-L استفاده کردیم و در هر دوره (epoch) از هر یک از چهار مجموعه‌داده NYUv2، KITTI، Virtual KITTI 2 و Cityscapes، تعداد ۱۵۰۰ نمونه برداشتیم؛ بنابراین در هر دوره ۶۰۰۰ نمونه، در ۱۲ دوره ۷۲۰۰۰ نمونه و با اندازه دسته (batch size) ۴، تعداد ۱۸۰۰۰ گام بهینه‌سازی داشتیم. آموزش با برش تصادفی ۵۱۸×۵۱۸، افزونه‌سازی زوم‌ـ‌برش در بازه ۱ تا ۲، لرزش کانونی با m برابر ۱٫۶ و دقت ترکیبی bfloat16 انجام شد. همچنین یک زوج مدل با ViT-S و یک زوج مدل نسبی با همین دستور چندمجموعه‌ای آموزش دیدند، با این تفاوت که مدل‌های نسبی لرزش کانونی نداشتند. نکته مهم این است که ۱۲ دوره در اینجا به معنای آموزش کمتر از اجراهای ۴۰ دوره‌ای قبلی نیست، چون یک دوره در مطالعه نهایی ۶۰۰۰ نمونه دارد، در حالی که یک دوره از مطالعه NYUv2 فقط ۶۳۶ نمونه دارد؛ در نتیجه ۱۲ دوره نهایی برابر ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است، در برابر حدود ۲۵۴۴۰ نمونه و حدود ۶۳۶۰ گام در ۴۰ دوره قبلی، یعنی حدود ۲٫۸ برابر آموزش بیشتر. در داده اعتبارسنجی، شامل ۵۰ تصویر از هر مجموعه‌داده آموزشی و بدون تصویر آزمون، میانگین AbsRel مدل پیشنهادی ViT-L از ۰٫۲۰۲ در دوره اول به ۰٫۱۶۰، ۰٫۱۲۲، ۰٫۱۱۱ و سپس ۰٫۱۱۹، ۰٫۱۲۰، ۰٫۱۱۶، ۰٫۱۰۸، ۰٫۱۰۶، ۰٫۱۰۳، ۰٫۱۰۱ و ۰٫۱۰۰ رسید؛ بیشترین بهبود در چهار دوره نخست بود و بین دوره‌های ۱۱ و ۱۲ فقط ۰٫۰۰۰۴ کاهش داشت، در حالی که نرخ یادگیری تا پایان دوره ۱۲ به‌صورت چندجمله‌ای تقریباً به صفر رسید. بهترین مقدار مدل کنترل حدود ۰٫۱۲۴ بود. برای مقایسه، مطالعات کنترل‌شده قبلی فقط با NYUv2 و ۶۳۶ تصویر آموزشی انجام شدند: پروتکل نسبی با ViT-S و ViT-L، سپس نسبی با افزونه‌سازی زوم‌ـ‌برش، مطلق با زوم‌ـ‌برش و مطلق با لرزش کانونی، که سه اجرای آخر با ViT-L بودند؛ همه ۴۰ دوره و با دقت ۳۲بیتی اجرا شدند. فصل ۵ نیز آموزش ۱۲ دوره‌ای با انکودر فریزشده را محدودیت و آموزش طولانی‌تر را کار آینده معرفی می‌کند. برای منحنی‌های کامل خطای اعتبارسنجی و هزینه آموزش هر دو مدل، به اسلاید پشتیبان «منحنی آموزش مدل نهایی» مراجعه کنید.</aside><aside class="notes-sum">1. شروع از checkpoint نسبی Depth Anything V2، ViT-L
+  <aside class="notes" data-key="s18">دستورالعمل آموزش در یک نگاه ارائه شده است. از نقطه وارسی (checkpoint) نسخه نسبی منتشرشده Depth Anything V2 با ViT-L (Vision Transformer Large) شروع می‌کنیم، انکودر DINOv2 (self-DIstillation with NO labels version 2) را فریز نگه می‌داریم و دیکودر DPT (Dense Prediction Transformer) و انکودر دوربین (camera encoder) را با هزینه SiLog (Scale-Invariant Logarithmic loss) و λ برابر ۰٫۵ آموزش می‌دهیم: $\mathcal L_{\mathrm{SiLog}}=\sqrt{\dfrac1N\sum_i d_i^2-\dfrac{\lambda}{N^2}\Big(\sum_i d_i\Big)^2},\quad d_i=\ln D_i-\ln\hat D_i$. با λ برابر ۱، هزینه کاملاً نسبت به مقیاس تغییرناپذیر است؛ با λ برابر ۰٫۵، بخشی از خطای مقیاس سراسری همچنان جریمه می‌شود و مدل به مقیاس مطلق حساس می‌ماند. بهینه‌ساز (optimizer) AdamW (Adam with decoupled Weight decay) است؛ نرخ یادگیری (learning rate) پایه ۵×۱۰⁻⁶ است و برای دیکودر و انکودر دوربین ۱۰ برابر می‌شود، با کاهش چندجمله‌ای توان ۰٫۹، بدون گرم‌سازی (warm-up)، برش گرادیان (gradient clipping) ۱٫۰ و اندازه دسته (batch size) ۴. نرخ یادگیری در گام t از T گام برابر است با $\mathrm{lr}_t=\mathrm{lr}_0\Big(1-\dfrac{t}{T}\Big)^{0.9}$. در هر دوره دقیقاً ۱۵۰۰ نمونه از هر چهار مجموعه‌داده انتخاب می‌شود تا هیچ مجموعه‌ای غالب نشود؛ ۱۲ دوره برابر با ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است. زمان آموزش برای هر اندازه انکودر به این صورت است. در هر دو اندازه، تعداد دوره‌ها (epochs) برابر ۱۲ و تعداد گام‌های هر دوره ۱۵۰۰ است. وقتی فقط یک آموزش روی یک RTX 4090 اجرا شود، سرعت اندازه‌گیری‌شده برای ViT-S حدود ۱۳٫۵ گام بر ثانیه است؛ یعنی هر دوره حدود ۲ دقیقه و کل ۱۲ دوره (۱۸۰۰۰ گام) حدود ۲۲ دقیقه طول می‌کشد. برای ViT-L، سرعت حدود ۷ گام بر ثانیه است؛ یعنی هر دوره حدود ۳٫۶ دقیقه و کل ۱۲ دوره حدود ۴۳ دقیقه طول می‌کشد. این زمان‌ها فقط گام‌های آموزش را شامل می‌شوند و اعتبارسنجی و ذخیره نقطه وارسی (checkpoint) در آن‌ها لحاظ نشده است. اجراهای واقعی کندتر بودند، زیرا چند آموزش هم‌زمان روی همان GPU اجرا می‌شد: اجرای نهایی ViT-L حدود ۲ ساعت و ۵۰ دقیقه و اجرای ViT-S حدود ۲۸ دقیقه طول کشید. ViT-B و ViT-G در این پایان‌نامه آموزش داده نشده‌اند. نقطه وارسی با کمترین میانگین AbsRel (Absolute Relative Error) روی ۵۰ تصویر اعتبارسنجی از هر دامنه انتخاب می‌شود و هیچ تصویر آزمونی در این انتخاب استفاده نمی‌شود. همه آموزش‌ها با یک RTX 4090 انجام شده‌اند. در این اسلاید، آنچه می‌بینیم اجرای اصلی و نهایی آموزش چندمجموعه‌ای برای ساخت مدل نهایی است؛ ما از نقطه شروع Depth Anything V2 ViT-L استفاده کردیم و در هر دوره (epoch) از هر یک از چهار مجموعه‌داده NYUv2، KITTI، Virtual KITTI 2 و Cityscapes، تعداد ۱۵۰۰ نمونه برداشتیم؛ بنابراین در هر دوره ۶۰۰۰ نمونه، در ۱۲ دوره ۷۲۰۰۰ نمونه و با اندازه دسته (batch size) ۴، تعداد ۱۸۰۰۰ گام بهینه‌سازی داشتیم. آموزش با برش تصادفی ۵۱۸×۵۱۸، افزونه‌سازی زوم‌ـ‌برش در بازه ۱ تا ۲، لرزش کانونی با m برابر ۱٫۶ و دقت ترکیبی bfloat16 انجام شد. همچنین یک زوج مدل با ViT-S و یک زوج مدل نسبی با همین دستور چندمجموعه‌ای آموزش دیدند، با این تفاوت که مدل‌های نسبی لرزش کانونی نداشتند. نکته مهم این است که ۱۲ دوره در اینجا به معنای آموزش کمتر از اجراهای ۴۰ دوره‌ای مطالعه کنترل‌شده NYUv2 نیست، چون یک دوره در مطالعه نهایی ۶۰۰۰ نمونه دارد، در حالی که یک دوره از آن مطالعه فقط ۶۳۶ نمونه دارد؛ در نتیجه ۱۲ دوره نهایی برابر ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است، در برابر حدود ۲۵۴۴۰ نمونه و حدود ۶۳۶۰ گام در آن ۴۰ دوره، یعنی حدود ۲٫۸ برابر آموزش بیشتر. در داده اعتبارسنجی، شامل ۵۰ تصویر از هر مجموعه‌داده آموزشی و بدون تصویر آزمون، میانگین AbsRel مدل پیشنهادی ViT-L از ۰٫۲۰۲ در دوره اول به ۰٫۱۶۰، ۰٫۱۲۲، ۰٫۱۱۱ و سپس ۰٫۱۱۹، ۰٫۱۲۰، ۰٫۱۱۶، ۰٫۱۰۸، ۰٫۱۰۶، ۰٫۱۰۳، ۰٫۱۰۱ و ۰٫۱۰۰ رسید؛ بیشترین بهبود در چهار دوره نخست بود و بین دوره‌های ۱۱ و ۱۲ فقط ۰٫۰۰۰۴ کاهش داشت، در حالی که نرخ یادگیری تا پایان دوره ۱۲ به‌صورت چندجمله‌ای تقریباً به صفر رسید. بهترین مقدار مدل کنترل حدود ۰٫۱۲۴ بود. برای مقایسه، مطالعه‌های کنترل‌شده تک‌دوربینه فقط با NYUv2 و ۶۳۶ تصویر آموزشی انجام شدند: پروتکل نسبی با ViT-S و ViT-L، سپس نسبی با افزونه‌سازی زوم‌ـ‌برش، مطلق با زوم‌ـ‌برش و مطلق با لرزش کانونی، که سه اجرای آخر با ViT-L بودند؛ همه ۴۰ دوره و با دقت ۳۲بیتی اجرا شدند. فصل ۵ نیز آموزش ۱۲ دوره‌ای با انکودر فریزشده را محدودیت و آموزش طولانی‌تر را کار آینده معرفی می‌کند. برای منحنی‌های کامل خطای اعتبارسنجی و هزینه آموزش هر دو مدل، به اسلاید پشتیبان «منحنی آموزش مدل نهایی» مراجعه کنید.</aside><aside class="notes-sum">1. شروع از checkpoint نسبی Depth Anything V2، ViT-L
 2. فریز DINOv2؛ آموزش DPT و انکودر دوربین
 3. SiLog با λ برابر ۰٫۵؛ AdamW و نرخ پایه ۵×۱۰⁻⁶
 4. ضریب دیکودر و انکودر دوربین: ۱۰؛ batch size: ۴
@@ -731,57 +779,91 @@
 - اجرای اصلی مدل نهایی: آموزش چندمجموعه‌ای با ۴ مجموعه‌داده، ۱۲ دوره و ۱۸۰۰۰ گام
 - دوره‌ها قابل مقایسه نیستند: ۶۰۰۰ در برابر ۶۳۶ نمونه در هر دوره، ۱۸۰۰۰ در برابر حدود ۶۳۶۰ گام
 - AbsRel اعتبارسنجی از ۰٫۲۰۲ به ۰٫۱۰۰ رسید؛ بیشتر بهبود تا دوره چهارم بود
-- مطالعات قبلی NYUv2: اجراهای ۴۰ دوره‌ای با پروتکل‌های نسبی و مطلق</aside>
+- مطالعه کنترل‌شده NYUv2: اجراهای ۴۰ دوره‌ای با پروتکل‌های نسبی و مطلق</aside>
 </section>
 
-<!-- ============ 19 · four phases ============ -->
-<section class="slide s-phases" data-autostep data-part="5" data-title="چهار فاز مسیر آزمایش‌ها">
-  <header class="slide-head"><h2>چهار فاز مسیر آزمایش‌ها</h2></header>
+<!-- ============ results 1 · research question 1: the base model's absolute scale across cameras ============ -->
+<!-- one released checkpoint (Depth Anything V2 metric, Hypersim, ViT-L), no alignment, five indoor test sets ordered by horizontal field of view;
+     bars = AbsRel, pill = quartiles of the per-image scale ratio median(pred)/median(gt), dot = its median.
+     data: results/multidomain/released_hypersim_vitl{,_sunrgbd}; static SVG generated by a scratch script (same numbers as backup 1) -->
+<section class="slide s-q1" data-autostep data-part="6" data-title="مدل پایه: مقیاس مطلق با تغییر دوربین پایدار نیست">
+  <header class="slide-head"><h2>مدل پایه: مقیاس مطلق با تغییر دوربین پایدار نیست</h2><div class="sub">نسخه مطلق منتشرشده Depth Anything V2 با ViT-L: یک مدل، پنج دوربین، صحنه‌های داخلی، بدون تراز</div></header>
   <div class="slide-body">
-    <div class="phases">
-      <div class="ph auto rise"><span class="ph-n">فاز ۱</span><h4>ممیزی و نقطه شروع</h4><i></i><p>زنجیره ارزیابی تأییدشده و نقاط وارسی سالم</p></div>
-      <div class="ph frag rise" data-f="1"><span class="ph-n">فاز ۲</span><h4>اصلاح آموزش و ارزیابی</h4><i></i><p>ارزیابی مطلق بدون تراز</p></div>
-      <div class="ph frag rise" data-f="2"><span class="ph-n">فاز ۳</span><h4>آزمون استفاده واقعی از K</h4><i></i><p>شواهد علّی، نه صرفاً همبستگی</p></div>
-      <div class="ph last frag rise" data-f="3"><span class="ph-n">فاز ۴</span><h4>تعمیم</h4><i></i><p>چند دوربین و هشت مجموعه آزمون</p></div>
+    <div class="q1-wrap">
+      <div class="q1-chart ltr">
+          <svg class="dia q1" viewBox="0 0 1200 580" role="img">
+          <text x="100" y="40" text-anchor="middle" class="d-lab small" direction="rtl">دوربین</text>
+          <text x="222" y="40" text-anchor="middle" class="d-lab small" direction="rtl">میدان دید</text>
+          <text x="470" y="40" text-anchor="middle" class="d-lab hd" direction="rtl">خطای AbsRel (کمتر بهتر است)</text>
+          <g class="frag" data-f="1"><text x="960" y="40" text-anchor="middle" class="d-lab hd" direction="rtl">نسبت مقیاس هر تصویر: میانه و چارک‌ها</text></g>
+          <g class="q1-sep"><line x1="0" y1="76" x2="1200" y2="76"/><line x1="0" y1="160" x2="1200" y2="160"/><line x1="0" y1="244" x2="1200" y2="244"/><line x1="0" y1="328" x2="1200" y2="328"/><line x1="0" y1="412" x2="1200" y2="412"/><line x1="0" y1="496" x2="1200" y2="496"/></g>
+          <g class="q1-grid"><line x1="413.3" y1="76" x2="413.3" y2="496"/><line x1="526.7" y1="76" x2="526.7" y2="496"/><line x1="640.0" y1="76" x2="640.0" y2="496"/></g>
+          <line class="q1-base" x1="300" y1="76" x2="300" y2="496"/>
+          <g class="q1-tick"><text x="300.0" y="530">0</text><text x="413.3" y="530">0.1</text><text x="526.7" y="530">0.2</text><text x="640.0" y="530">0.3</text></g>
+          <text class="q1-name em" x="150" y="128" text-anchor="end">RealSense</text>
+          <text class="q1-fov em" x="252" y="128" text-anchor="end">52°</text>
+          <rect class="q1-bar em" style="--d:0ms" x="300" y="99" width="103.8" height="38" rx="5"/>
+          <text class="q1-val em" x="417.8" y="127">0.092</text>
+          <text class="q1-name" x="150" y="212" text-anchor="end">Xtion</text>
+          <text class="q1-fov" x="252" y="212" text-anchor="end">55°</text>
+          <rect class="q1-bar" style="--d:90ms" x="300" y="183" width="201.6" height="38" rx="5"/>
+          <text class="q1-val" x="515.6" y="211">0.178</text>
+          <text class="q1-name" x="150" y="296" text-anchor="end">Kinect v1</text>
+          <text class="q1-fov" x="252" y="296" text-anchor="end">57°</text>
+          <rect class="q1-bar" style="--d:180ms" x="300" y="267" width="221.7" height="38" rx="5"/>
+          <text class="q1-val" x="535.7" y="295">0.196</text>
+          <text class="q1-name" x="150" y="380" text-anchor="end">NYUv2</text>
+          <text class="q1-fov" x="252" y="380" text-anchor="end">63°</text>
+          <rect class="q1-bar" style="--d:270ms" x="300" y="351" width="235.1" height="38" rx="5"/>
+          <text class="q1-val" x="549.1" y="379">0.207</text>
+          <text class="q1-name em" x="150" y="464" text-anchor="end">Kinect v2</text>
+          <text class="q1-fov em" x="252" y="464" text-anchor="end">69°</text>
+          <rect class="q1-bar em" style="--d:360ms" x="300" y="435" width="278.9" height="38" rx="5"/>
+          <text class="q1-val em" x="592.9" y="463">0.246</text>
+          <g class="frag" data-f="1">
+          <g class="q1-grid"><line x1="790.0" y1="76" x2="790.0" y2="496"/><line x1="926.0" y1="76" x2="926.0" y2="496"/><line x1="994.0" y1="76" x2="994.0" y2="496"/><line x1="1062.0" y1="76" x2="1062.0" y2="496"/><line x1="1130.0" y1="76" x2="1130.0" y2="496"/></g>
+          <line class="q1-ideal" x1="858.0" y1="66" x2="858.0" y2="502"/>
+          <g class="q1-tick"><text x="790.0" y="530">0.9</text><text x="858.0" y="530" class="b">1.0</text><text x="926.0" y="530">1.1</text><text x="994.0" y="530">1.2</text><text x="1062.0" y="530">1.3</text><text x="1130.0" y="530">1.4</text></g>
+          <text x="858.0" y="566" text-anchor="middle" class="d-lab small navy" direction="rtl">ایده‌آل: ۱</text>
+          <text x="1028" y="566" text-anchor="middle" class="d-lab small" direction="rtl">دورتر از واقعیت</text><text x="1132" y="566" text-anchor="middle" class="d-lab small">→</text>
+          <rect class="q1-iqr em" x="826.0" y="105" width="76.8" height="26" rx="13"/>
+          <circle class="q1-med em" cx="862.1" cy="118" r="10"/>
+          <text class="q1-val em" x="918.9" y="127">1.01</text>
+          <rect class="q1-iqr" x="892.7" y="189" width="106.8" height="26" rx="13"/>
+          <circle class="q1-med" cx="943.2" cy="202" r="10"/>
+          <text class="q1-val" x="1015.4" y="211">1.13</text>
+          <rect class="q1-iqr" x="898.1" y="273" width="117.6" height="26" rx="13"/>
+          <circle class="q1-med" cx="957.3" cy="286" r="10"/>
+          <text class="q1-val" x="1031.8" y="295">1.15</text>
+          <rect class="q1-iqr" x="939.6" y="357" width="91.8" height="26" rx="13"/>
+          <circle class="q1-med" cx="983.1" cy="370" r="10"/>
+          <text class="q1-val" x="1047.4" y="379">1.18</text>
+          <rect class="q1-iqr em" x="964.1" y="441" width="104.7" height="26" rx="13"/>
+          <circle class="q1-med em" cx="1023.2" cy="454" r="10"/>
+          <text class="q1-val em" x="1084.8" y="463">1.24</text>
+          </g>
+          </svg>
+      </div>
+      <div class="stack q1-side">
+        <div class="stat frag rise" data-f="2"><span class="v m">۲٫۷ برابر</span><span class="l">خطای Kinect v2 در برابر RealSense، با همان مدل</span></div>
+        <div class="sig frag rise" data-f="2"><span>آزمون t دو نمونه‌ای</span><span class="tex" data-tex="p &lt; 0.001"></span></div>
+        <span class="chip solid q1-ans frag rise" data-f="3">پاسخ سوال اول: مقیاس مطلق مدل پایه پایدار نیست</span>
+      </div>
     </div>
   </div>
-  <aside class="notes" data-key="s19">مسیر رسیدن به مدل نهایی هشت گام داشت که در چهار فاز خلاصه می‌شود. در فاز نخست، نقاط وارسی (checkpoints) را ممیزی کردیم، زنجیره ارزیابی را با بازتولید مقاله مرجع تأیید کردیم و نشان دادیم که مقیاس مطلق مدل پایه در مجموعه‌داده‌های مختلف پایدار نیست. در فاز دوم دریافتیم که تراز هر تصویر در ارزیابی نسبی (relative evaluation) اطلاعات مقیاس را حذف می‌کند؛ بنابراین سهم دوربین باید با ارزیابی مطلق (absolute evaluation) و بدون تراز سنجیده شود. در فاز سوم، افزونه‌سازی لرزش کانونی (focal-jitter augmentation) باعث شد مدل واقعاً از ماتریس کالیبراسیون (calibration matrix) استفاده کند و آزمون پیمایش فاصله کانونی (focal-length sweep) و آزمون حذف و تحریف ماتریس کالیبراسیون (calibration-matrix knockout and perturbation) این موضوع را تأیید کردند. در فاز چهارم، همین دستورالعمل برای آموزش چندمجموعه‌ای (multi-domain training) با دوربین‌های متفاوت به کار رفت.</aside><aside class="notes-sum">1. ممیزی checkpoint و بازتولید زنجیره ارزیابی
-2. حذف اطلاعات مقیاس در تراز تصویر‌به‌تصویر
-3. فعال‌سازی استفاده از K با لرزش کانونی
-4. آموزش چندمجموعه‌ای با دوربین‌های متفاوت
-- آزمون‌ها: focal-length sweep و knockout/perturbation</aside>
-</section>
-
-<!-- ============ 20 · pipeline verification ============ -->
-<section class="slide s-verify" data-autostep data-part="5" data-title="راستی‌آزمایی زنجیره ارزیابی">
-  <header class="slide-head"><h2>راستی‌آزمایی زنجیره ارزیابی</h2></header>
-  <div class="slide-body">
-    <div class="cols c73">
-      <table class="tbl verify">
-        <thead>
-          <tr><th rowspan="2" class="name">مجموعه‌داده</th><th rowspan="2">انکودر</th><th colspan="2" class="sep">مقاله مرجع (جدول ۲)</th><th colspan="2" class="sep tint">ارزیابی در این پژوهش</th></tr>
-          <tr><th class="sep ltr-cell">AbsRel ↓</th><th class="ltr-cell">δ₁ ↑</th><th class="sep tint ltr-cell">AbsRel ↓</th><th class="tint ltr-cell">δ₁ ↑</th></tr>
-        </thead>
-        <tbody>
-          <tr><td rowspan="2" class="name ltr-cell set">NYUv2</td><td class="n">ViT-S</td><td class="n sep">0.053</td><td class="n">0.973</td><td class="n sep tint">0.051</td><td class="n tint">0.973</td></tr>
-          <tr class="end"><td class="n">ViT-L</td><td class="n sep">0.045</td><td class="n">0.979</td><td class="n sep tint">0.043</td><td class="n tint">0.979</td></tr>
-          <tr><td rowspan="2" class="name ltr-cell set">KITTI</td><td class="n">ViT-S</td><td class="n sep">0.078</td><td class="n">0.936</td><td class="n sep tint">0.083</td><td class="n tint">0.934</td></tr>
-          <tr><td class="n">ViT-L</td><td class="n sep">0.074</td><td class="n">0.946</td><td class="n sep tint">0.076</td><td class="n tint">0.948</td></tr>
-        </tbody>
-      </table>
-      <div class="stat frag rise" data-f="1"><span class="v m">۰٫۰۰۵</span><span class="l">اختلاف AbsRel حداکثر ۰٫۰۰۵</span></div>
-    </div>
-  </div>
-  <aside class="notes" data-key="s20">پیش از هر مقایسه، زنجیره ارزیابی را تأیید کردیم. نقاط وارسی (checkpoints) نسبی منتشرشده Depth Anything V2 با ViT-S (Vision Transformer Small) و ViT-L (Vision Transformer Large) را روی بخش آزمون استاندارد ۶۵۴ تصویری NYUv2 (NYU Depth Dataset V2) و ۶۵۲ تصویر KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) ارزیابی کردیم و با جدول ۲ مقاله مرجع مقایسه کردیم. در هر چهار حالت، اختلاف AbsRel (Absolute Relative Error) حداکثر ۰٫۰۰۵ بود؛ برای نمونه، در NYUv2 با ViT-L مقدار ما ۰٫۰۴۳ و مقدار مقاله ۰٫۰۴۵ است. بنابراین اعداد ادامه ارائه از زنجیره‌ای به دست آمده‌اند که نتایج منتشرشده را بازتولید می‌کند. با همین زنجیره، خطای مدل پایه در هر سه مقایسه بین مجموعه‌داده‌ها تفاوت معناداری دارد و مقدار p کمتر از ۰٫۰۵ است؛ این مشاهده نقطه شروع پایان‌نامه بود.</aside><aside class="notes-sum">- ارزیابی ViT-S و ViT-L روی NYUv2: ۶۵۴ تصویر
-- KITTI: ۶۵۲ تصویر؛ مقایسه با جدول ۲ مقاله
-- اختلاف AbsRel در هر ۴ حالت: حداکثر ۰٫۰۰۵
-- NYUv2 ViT-L: مقدار ما ۰٫۰۴۳، مقاله ۰٫۰۴۵
-- تفاوت مدل پایه بین مجموعه‌ها: معنادار، p کمتر از ۰٫۰۵</aside>
+  <aside class="notes" data-key="sq1">بخش نتایج را با سوال اول آغاز می‌کنیم: آیا مقیاس مطلق مدل پایه با تغییر مجموعه‌داده و دوربین پایدار می‌ماند؟ نسخه مطلق منتشرشده Depth Anything V2 با ViT-L (Vision Transformer Large) و نقطه وارسی (checkpoint) Hypersim را، بدون هیچ تغییر و بدون تراز، روی پنج مجموعه آزمون داخلی ارزیابی کرده‌ایم: چهار حسگر SUN RGB-D (Scene Understanding RGB-D) و NYUv2 (NYU Depth Dataset V2). مدل در همه ردیف‌ها یکی است و همه صحنه‌ها داخلی‌اند؛ دوربین است که عوض می‌شود. ردیف‌ها به ترتیب میدان دید (field of view) افقی، از ۵۲ تا ۶۹ درجه، مرتب شده‌اند. ستون نخست AbsRel (Absolute Relative Error) را نشان می‌دهد: ۰٫۰۹۲ در RealSense، ۰٫۱۷۸ در Xtion، ۰٫۱۹۶ در Kinect v1، ۰٫۲۰۷ در NYUv2 و ۰٫۲۴۶ در Kinect v2. خطای Kinect v2 حدود ۲٫۷ برابر خطای RealSense است و آزمون t دو نمونه‌ای (two-sample t-test) روی AbsRel تصاویر این دو مجموعه، هر کدام ۲۰۰ تصویر، این تفاوت را معنادار نشان می‌دهد؛ مقدار p کمتر از ۰٫۰۰۱ است. از ده مقایسه دوبه‌دو میان این پنج مجموعه، هشت مقایسه در سطح ۰٫۰۵ معنادار است. دو مقایسه دیگر NYUv2 با Kinect v1، که حسگرشان از یک مدل است، و Kinect v1 با Xtion هستند. ستون دوم نشان می‌دهد که این تفاوت از مقیاس می‌آید. نسبت مقیاس (scale ratio) هر تصویر برابر است با $\rho=\dfrac{\mathrm{median}(\hat D)}{\mathrm{median}(D)}$ و مقدار ایده‌آل آن ۱ است. میانه این نسبت در RealSense برابر ۱٫۰۱، در Xtion برابر ۱٫۱۳، در Kinect v1 برابر ۱٫۱۵، در NYUv2 برابر ۱٫۱۸ و در Kinect v2 برابر ۱٫۲۴ است؛ یعنی همان مدل در Kinect v2 صحنه را حدود ۲۴ درصد دورتر از مقدار واقعی برآورد می‌کند. نوار هر ردیف چارک اول تا سوم را نشان می‌دهد. در این پنج مجموعه، هرچه میدان دید بازتر است، نسبت مقیاس هم بزرگ‌تر است. دقت نسبی مدل پایه در این مجموعه‌ها تفاوتی ندارد: نسخه نسبی منتشرشده، پس از تراز مقیاس و جابجایی (scale and shift)، در RealSense به AbsRel برابر ۰٫۰۴۰ و در Kinect v2 به ۰٫۰۳۹ می‌رسد. پس ساختار عمق در هر دو درست است و مقیاس مطلق است که ناپایدار است. همین رفتار در صحنه‌های بیرونی نیز دیده می‌شود: نسخه مطلق منتشرشده با نقطه وارسی Virtual KITTI 2 در KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute) به AbsRel برابر ۰٫۱۴۶ و در Cityscapes به ۰٫۲۴۳ می‌رسد. باید دقت کرد که این مجموعه‌ها افزون بر دوربین، در صحنه‌ها و حسگر عمق مرجع نیز با هم تفاوت دارند؛ پس این اسلاید ناپایداری مقیاس را نشان می‌دهد، نه علت آن را. نقش خود دوربین را آزمون پیمایش فاصله کانونی (focal-length sweep) و آزمون حذف ماتریس کالیبراسیون (calibration matrix) در اسلایدهای بعد می‌سنجند. در پایان‌نامه، فرضیه اول با مقایسه معیار SiLog (Scale-Invariant Logarithmic loss) میان مجموعه‌داده‌ها آزموده شده است که در اسلاید «پاسخ به سوالات تحقیق» می‌آید. مقادیر AbsRel این اسلاید همان مقادیر جدول نتایج کامل هستند و نسبت مقیاس و آزمون t از خروجی همان ارزیابی، تصویر به تصویر، محاسبه شده‌اند.</aside><aside class="notes-sum">- سوال اول: آیا مقیاس مطلق مدل پایه با تغییر دوربین پایدار است؟
+- یک مدل (نسخه مطلق منتشرشده، Hypersim، ViT-L)، پنج دوربین داخلی، بدون تراز
+- AbsRel: از ۰٫۰۹۲ در RealSense تا ۰٫۲۴۶ در Kinect v2؛ ۲٫۷ برابر
+- آزمون t دو نمونه‌ای: p &lt; 0.001؛ ۸ از ۱۰ مقایسه دوبه‌دو معنادار
+- میانه نسبت مقیاس: ۱٫۰۱، ۱٫۱۳، ۱٫۱۵، ۱٫۱۸، ۱٫۲۴؛ با میدان دید بزرگ‌تر می‌شود
+- دقت نسبی یکسان: ۰٫۰۴۰ و ۰٫۰۳۹ پس از تراز
+- بیرونی: KITTI ۰٫۱۴۶ در برابر Cityscapes ۰٫۲۴۳
+! این اسلاید ناپایداری را نشان می‌دهد، نه علت را؛ علت را sweep و حذف K می‌سنجند</aside>
 </section>
 
 <!-- ============ 21 · relative vs absolute evaluation ============ -->
-<section class="slide s-proto" data-autostep data-part="5" data-title="ارزیابی نسبی و مطلق؛ سهم دوربین">
-  <header class="slide-head"><h2>ارزیابی نسبی و مطلق؛ سهم دوربین</h2></header>
+<section class="slide s-proto" data-autostep data-part="6" data-title="ارزیابی نسبی و مطلق؛ سهم دوربین">
+  <header class="slide-head"><h2>ارزیابی نسبی و مطلق؛ سهم دوربین</h2><div class="sub">مطالعه کنترل‌شده تک‌دوربینه: NYUv2، انکودر ViT-L</div></header>
   <div class="slide-body">
     <div class="proto">
       <div class="proto-src"><span>پیش‌بینی مدل</span><span class="tex" data-tex="D^{\mathrm{pred}}"></span></div>
@@ -820,8 +902,8 @@
 </section>
 
 <!-- ============ 22 · focal-jitter leap ============ -->
-<section class="slide s-leap" data-autostep data-part="5" data-title="جهش لرزش کانونی">
-  <header class="slide-head"><h2>جهش لرزش کانونی</h2></header>
+<section class="slide s-leap" data-autostep data-part="6" data-title="جهش لرزش کانونی">
+  <header class="slide-head"><h2>جهش لرزش کانونی</h2><div class="sub">مطالعه کنترل‌شده تک‌دوربینه: NYUv2، انکودر ViT-L</div></header>
   <div class="slide-body">
     <div class="cols c64">
       <div>
@@ -847,8 +929,8 @@
 </section>
 
 <!-- ============ 23 · focal-length sweep ============ -->
-<section class="slide s-sweep" data-autostep data-part="5" data-title="خوانش فاصله کانونی توسط مدل">
-  <header class="slide-head"><h2>خوانش فاصله کانونی توسط مدل</h2></header>
+<section class="slide s-sweep" data-autostep data-part="6" data-title="خوانش فاصله کانونی توسط مدل">
+  <header class="slide-head"><h2>خوانش فاصله کانونی توسط مدل</h2><div class="sub">مطالعه کنترل‌شده تک‌دوربینه: NYUv2، انکودر ViT-L</div></header>
   <div class="slide-body">
     <div class="cols c2">
       <div class="chart" data-chart="line"><script type="application/json">
@@ -877,8 +959,8 @@
 </section>
 
 <!-- ============ 24 · knockout ============ -->
-<section class="slide s-knock" data-autostep data-part="5" data-title="حذف و تحریف ماتریس کالیبراسیون">
-  <header class="slide-head"><h2>حذف و تحریف ماتریس کالیبراسیون</h2></header>
+<section class="slide s-knock" data-autostep data-part="6" data-title="حذف و تحریف ماتریس کالیبراسیون">
+  <header class="slide-head"><h2>حذف و تحریف ماتریس کالیبراسیون</h2><div class="sub">مطالعه کنترل‌شده تک‌دوربینه: NYUv2، انکودر ViT-L</div></header>
   <div class="slide-body">
     <div class="cols c64">
       <div>
@@ -906,43 +988,9 @@
 ! K باید درست همراه تصویر ثبت شود</aside>
 </section>
 
-<!-- ============ 25 · the final model ============ -->
-<section class="slide s-final" data-autostep data-part="6" data-title="یک مدل، چهار مجموعه‌داده، دوربین‌های متفاوت">
-  <header class="slide-head"><h2>یک مدل، چهار مجموعه‌داده، دوربین‌های متفاوت</h2></header>
-  <div class="slide-body">
-    <div class="final">
-      <div class="fcol">
-        <span class="fcol-l">آموزش هم‌زمان روی چهار مجموعه‌داده</span>
-        <div class="tiles">
-          <div class="tile"><svg viewBox="0 -12 92 104"><path d="M10 40 L69.7 3.4 A70 70 0 0 1 69.7 76.6 Z"/></svg><b class="ltr">NYUv2</b><span class="ltr">63°</span></div>
-          <div class="tile"><svg viewBox="0 -12 92 104"><path d="M10 40 L62.8 -5.9 A70 70 0 0 1 62.8 85.9 Z"/></svg><b class="ltr">KITTI</b><span class="ltr">82°</span></div>
-          <div class="tile"><svg viewBox="0 -12 92 104"><path d="M10 40 L63.2 -5.5 A70 70 0 0 1 63.2 85.5 Z"/></svg><b class="ltr">Virtual KITTI 2</b><span class="ltr">81°</span></div>
-          <div class="tile"><svg viewBox="0 -12 92 104"><path d="M10 40 L73.7 11 A70 70 0 0 1 73.7 69 Z"/></svg><b class="ltr">Cityscapes</b><span class="ltr">49°</span></div>
-        </div>
-      </div>
-      <div class="idea-arrow" aria-hidden="true"></div>
-      <div class="fmodel frag rise" data-f="1"><span>یک مدل ViT-L با K به‌عنوان ورودی</span><span class="tex" data-tex="f_\theta(I,\,K)"></span></div>
-      <div class="idea-arrow frag" data-f="2" aria-hidden="true"></div>
-      <div class="fcol frag rise" data-f="2">
-        <span class="fcol-l">ارزیابی روی هشت مجموعه آزمون</span>
-        <div class="sets ltr"><span>NYUv2</span><span>Cityscapes</span><span>KITTI</span><span class="u">Kinect v1</span><span class="u">Kinect v2</span><span class="u">RealSense</span><span class="u">Xtion</span><span class="u">DIODE</span></div>
-        <span class="sets-leg"><i></i>دیده‌نشده در آموزش</span>
-      </div>
-    </div>
-    <div class="chips final-facts frag" data-f="3"><span class="chip">صحنه‌های داخلی و بیرونی</span><span class="chip">میدان دید از ۴۹ تا ۸۲ درجه</span><span class="chip">پنج مجموعه آزمون دیده‌نشده در آموزش</span><span class="chip">۳۰۵۲ تصویر آزمون</span></div>
-  </div>
-  <aside class="notes" data-key="s25">این گام نهایی و مدل نهایی پایان‌نامه است. یک مدل ViT-L (Vision Transformer Large)، با ۲۴ بلوک ترنسفورمر (transformer block) در انکودر، به‌طور هم‌زمان روی NYUv2 (NYU Depth Dataset V2)، KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute)، Virtual KITTI 2 و Cityscapes با همان دستورالعمل افزونه‌سازی زوم‌ـ‌برش (zoom-crop augmentation) و لرزش کانونی (focal jitter) آموزش می‌بیند تا تفاوت واقعی دوربین‌ها به تفاوت شبیه‌سازی‌شده افزوده شود. هر نمونه ماتریس کالیبراسیون (calibration matrix) مخصوص خود را دارد. مدل روی هشت مجموعه آزمون شامل ۳۰۵۲ تصویر ارزیابی می‌شود که پنج مجموعه در آموزش دیده نشده‌اند. مقایسه با دو مرجع روی دقیقاً همان تصاویر و بدون هیچ تراز انجام می‌شود: مدل کنترل زوجی و نسخه مطلق منتشرشده Depth Anything V2 با ViT-L، با نقطه وارسی (checkpoint) Hypersim برای صحنه‌های داخلی و نقطه وارسی Virtual KITTI 2 برای Cityscapes. مدل نهایی روی ویدیو نیز فریم‌به‌فریم اجرا می‌شود و بی‌درنگ است: روی فریم‌های KITTI حدود ۱۷ فریم بر ثانیه روی یک RTX 4090؛ اعداد هر اندازه انکودر در یادداشت اسلاید «اثر اندازه انکودر و نوع مدل» آمده است.</aside><aside class="notes-sum">- مدل نهایی: ViT-L روی ۴ مجموعه آموزش
-- افزونه‌سازی: زوم‌ـ‌برش و لرزش کانونی
-- هر نمونه، K مخصوص خود را دارد
-- ارزیابی: ۸ مجموعه، ۳۰۵۲ تصویر؛ ۵ مجموعه دیده‌نشده
-- مقایسه بدون تراز: کنترل زوجی و Depth Anything V2 مطلق
-- checkpointها: Hypersim داخلی و Virtual KITTI 2 برای Cityscapes
-- ویدیو: فریم‌به‌فریم، حدود ۱۷ فریم بر ثانیه (ViT-L، فریم KITTI، RTX 4090)</aside>
-</section>
-
 <!-- ============ 26 · headline result ============ -->
 <section class="slide s-headline" data-autostep data-part="6" data-title="کاهش خطا نسبت به مدل‌های مرجع">
-  <header class="slide-head"><h2>کاهش خطا نسبت به مدل‌های مرجع</h2></header>
+  <header class="slide-head"><h2>کاهش خطا نسبت به مدل‌های مرجع</h2><div class="sub">مدل نهایی، آموزش‌دیده روی چهار مجموعه‌داده؛ ارزیابی مطلق، بدون تراز</div></header>
   <div class="slide-body">
     <div class="chart" data-chart="bars"><script type="application/json">
       {"w":1680,"h":600,"ymax":0.36,"yticks":[0,0.1,0.2,0.3],"tickDec":1,"dec":3,"barW":92,"gap":10,"mt":64,"mb":104,"ylabel":"خطای AbsRel (کمتر بهتر است)",
@@ -955,7 +1003,9 @@
       <div class="hl-msg frag" data-f="2"><b>۲۰ تا ۵۰ درصد خطای کمتر از مدل کنترل</b><span>در هر دوازده ستون معنادار، آزمون ویلکاکسون</span></div>
     </div>
   </div>
-  <aside class="notes" data-key="s26">این نتیجه اصلی است. در هر چهار مجموعه آزمون، میله مدل پیشنهادی کوتاه‌ترین است. در NYUv2 (NYU Depth Dataset V2)، AbsRel (Absolute Relative Error) مدل پیشنهادی ۰٫۰۸۸، مدل کنترل ۰٫۱۳۳ و نسخه منتشرشده مدل پایه ۰٫۲۰۷ است. در Cityscapes این مقادیر به‌ترتیب ۰٫۱۰۹، ۰٫۱۳۶ و ۰٫۲۴۳؛ در Kinect v1 برابر ۰٫۱۶۹، ۰٫۳۱۴ و ۰٫۱۹۶؛ و در Kinect v2 برابر ۰٫۱۰۴، ۰٫۲۰۹ و ۰٫۲۴۶ هستند. در مقایسه با مدل کنترل، خطا ۲۰ تا ۵۰ درصد کمتر است و اختلاف در هر دوازده ستون جدول معنادار است؛ در مقایسه با نسخه منتشرشده مدل پایه، اختلاف در یازده ستون از دوازده ستون معنادار است. آزمون‌های سازوکار تأیید می‌کنند که این دقت از ورودی دوربین حاصل می‌شود: شیب پیمایش برای این مدل ۰٫۹۹ است و حذف ماتریس، AbsRel در NYUv2 را از ۰٫۰۸۸ به ۱٫۳۱ افزایش می‌دهد. اگر درباره Depth Anything 3 پرسیده شد، مقایسه و تفاوت‌ها در اسلاید پشتیبان Depth Anything 3 آمده است؛ کلید B و سپس جلو.</aside><aside class="notes-sum">- ترتیب اعداد: پیشنهادی، کنترل، پایه منتشرشده
+  <aside class="notes" data-key="s26">از این اسلاید، نتایج مدل نهایی را می‌بینیم: یک مدل ViT-L (Vision Transformer Large) که هم‌زمان روی NYUv2 (NYU Depth Dataset V2)، KITTI (Karlsruhe Institute of Technology and Toyota Technological Institute)، Virtual KITTI 2 و Cityscapes، با افزونه‌سازی زوم‌ـ‌برش (zoom-crop augmentation) و لرزش کانونی (focal jitter) آموزش دیده است و هر نمونه ماتریس کالیبراسیون (calibration matrix) مخصوص خود را دارد. مقایسه با دو مرجع، روی دقیقاً همان تصاویر و بدون هیچ تراز انجام می‌شود: مدل کنترل زوجی و نسخه مطلق منتشرشده Depth Anything V2 با ViT-L، با نقطه وارسی (checkpoint) Hypersim برای صحنه‌های داخلی و نقطه وارسی Virtual KITTI 2 برای Cityscapes. این نتیجه اصلی است. در هر چهار مجموعه آزمون، میله مدل پیشنهادی کوتاه‌ترین است. در NYUv2، AbsRel (Absolute Relative Error) مدل پیشنهادی ۰٫۰۸۸، مدل کنترل ۰٫۱۳۳ و نسخه منتشرشده مدل پایه ۰٫۲۰۷ است. در Cityscapes این مقادیر به‌ترتیب ۰٫۱۰۹، ۰٫۱۳۶ و ۰٫۲۴۳؛ در Kinect v1 برابر ۰٫۱۶۹، ۰٫۳۱۴ و ۰٫۱۹۶؛ و در Kinect v2 برابر ۰٫۱۰۴، ۰٫۲۰۹ و ۰٫۲۴۶ هستند. در مقایسه با مدل کنترل، خطا ۲۰ تا ۵۰ درصد کمتر است و اختلاف در هر دوازده ستون جدول معنادار است؛ در مقایسه با نسخه منتشرشده مدل پایه، اختلاف در یازده ستون از دوازده ستون معنادار است. آزمون‌های سازوکار تأیید می‌کنند که این دقت از ورودی دوربین حاصل می‌شود: شیب پیمایش برای این مدل ۰٫۹۹ است و حذف ماتریس، AbsRel در NYUv2 را از ۰٫۰۸۸ به ۱٫۳۱ افزایش می‌دهد. اگر درباره Depth Anything 3 پرسیده شد، مقایسه و تفاوت‌ها در اسلاید پشتیبان Depth Anything 3 آمده است؛ کلید B و سپس جلو.</aside><aside class="notes-sum">- مدل نهایی: ViT-L، آموزش هم‌زمان روی ۴ مجموعه‌داده
+- مراجع، بدون تراز: کنترل زوجی و نسخه مطلق منتشرشده (Hypersim داخلی، Virtual KITTI 2 برای Cityscapes)
+- ترتیب اعداد: پیشنهادی، کنترل، پایه منتشرشده
 - NYUv2: ۰٫۰۸۸، ۰٫۱۳۳، ۰٫۲۰۷
 - Cityscapes: ۰٫۱۰۹، ۰٫۱۳۶، ۰٫۲۴۳
 - Kinect v1: ۰٫۱۶۹، ۰٫۳۱۴، ۰٫۱۹۶
@@ -1024,35 +1074,6 @@
 - مدل کنترل در ۳ حسگر از ۴ حسگر ضعیف‌تر از پایه منتشرشده
 - نسبت مقیاس Kinect v1: کنترل ۱٫۲۵، پیشنهادی ۱٫۰۸
 ! سود آموزش چندمجموعه‌ای به دیدن K وابسته است</aside>
-</section>
-
-<!-- ============ 29 · relative vs metres on the same images ============ -->
-<section class="slide s-gap" data-autostep data-part="6" data-title="از ارزیابی نسبی تا متر: همان مدل، همان تصاویر">
-  <header class="slide-head"><h2>از ارزیابی نسبی تا متر: همان مدل، همان تصاویر</h2><div class="sub">خطای AbsRel روی دقیقاً همان تصاویر مجموعه آزمون</div></header>
-  <div class="slide-body">
-    <table class="tbl main gap">
-      <thead>
-        <tr><th class="name">مدل</th><th class="sep ltr-cell">NYUv2</th><th class="sep ltr-cell">Cityscapes</th><th class="sep ltr-cell">SUN RGB-D · Kinect v1</th><th class="sep ltr-cell">SUN RGB-D · Kinect v2</th></tr>
-      </thead>
-      <tbody>
-        <tr class="grp"><td colspan="5">ارزیابی نسبی · با تراز مقیاس و جابجایی برای هر تصویر</td></tr>
-        <tr><td class="name"><i class="sw published"></i>پایه منتشرشده</td><td class="n sep">0.043</td><td class="n sep">0.111</td><td class="n sep">0.047</td><td class="n sep">0.039</td></tr>
-        <tr class="grp frag" data-f="1"><td colspan="5">ارزیابی مطلق · بدون تراز، برحسب متر</td></tr>
-        <tr class="frag" data-f="1"><td class="name"><i class="sw published"></i>پایه منتشرشده</td><td class="n sep">0.207</td><td class="n sep">0.243</td><td class="n sep">0.196</td><td class="n sep">0.246</td></tr>
-        <tr class="hl frag" data-f="2"><td class="name"><i class="sw proposed"></i>پیشنهادی</td><td class="n sep">0.088</td><td class="n sep">0.109</td><td class="n sep">0.169</td><td class="n sep">0.104</td></tr>
-      </tbody>
-    </table>
-    <div class="table-foot">
-      <span class="chip solid frag" data-f="1">نسخه منتشرشده: خطا برحسب متر، ۲ تا ۶ برابر</span>
-      <span class="tf-note"><b class="ltr">Kinect v1, Kinect v2</b>دیده‌نشده در آموزش</span>
-    </div>
-  </div>
-  <aside class="notes" data-key="s29">این جدول دو پروتکل ارزیابی را روی دقیقاً همان تصاویر مجموعه آزمون در کنار هم قرار می‌دهد. ردیف اول، مدل نسبی ViT-L (Vision Transformer Large) منتشرشده از Depth Anything V2 است که با تراز مقیاس و جابجایی برای هر تصویر (scale and shift alignment؛ تعریف آن در یادداشت اسلاید «ارزیابی نسبی و مطلق؛ سهم دوربین» آمده است)، در ارزیابی نسبی (relative evaluation) سنجیده شده است: مقدار AbsRel (Absolute Relative Error) آن در NYUv2 (NYU Depth Dataset V2) برابر ۰٫۰۴۳، در Cityscapes برابر ۰٫۱۱۱، در Kinect v1 برابر ۰٫۰۴۷ و در Kinect v2 برابر ۰٫۰۳۹ است. ردیف دوم، نسخه منتشرشده مدل پایه برای عمق مطلق (absolute depth) است که در ارزیابی مطلق (absolute evaluation)، بدون تراز و برحسب متر، سنجیده شده است: به‌ترتیب ۰٫۲۰۷، ۰٫۲۴۳، ۰٫۱۹۶ و ۰٫۲۴۶. بنابراین، برای مدل منتشرشده، وقتی پاسخ باید برحسب متر باشد، خطا ۲ تا ۶ برابر بیشتر می‌شود؛ آنچه کم است مقیاس برحسب متر است، نه ساختار صحنه. ردیف سوم، مدل پیشنهادی است که آن هم بدون تراز و برحسب متر ارزیابی شده است: ۰٫۰۸۸، ۰٫۱۰۹، ۰٫۱۶۹ و ۰٫۱۰۴. در Kinect v2، که حسگری خارج از هر مجموعه آموزش است، به‌صورت صفرنمونه (zero-shot)، خطا از ۰٫۲۴۶ به ۰٫۱۰۴ کاهش می‌یابد و حدود دو سوم فاصله تا مقدار ترازشده ۰٫۰۳۹ حذف می‌شود. در Cityscapes، خطای مدل پیشنهادی برحسب متر، یعنی ۰٫۱۰۹، در سطح مقدار نسبی ترازشده ۰٫۱۱۱ است؛ بخش آموزش Cityscapes یکی از مجموعه‌های آموزش مدل پیشنهادی است. ردیف نسبی با همان پروتکل نسبی پایان‌نامه محاسبه شده است؛ مقدار NYUv2، یعنی ۰٫۰۴۳، بازتولید گزارش‌شده در پایان‌نامه است و سه مقدار دیگر از همان اجرای ارزیابی به‌دست آمده‌اند.</aside><aside class="notes-sum">- نسبی منتشرشده: NYUv2 ۰٫۰۴۳؛ Cityscapes ۰٫۱۱۱
-- Kinect v1: ۰٫۰۴۷؛ Kinect v2: ۰٫۰۳۹
-- مطلق منتشرشده: ۰٫۲۰۷، ۰٫۲۴۳، ۰٫۱۹۶، ۰٫۲۴۶
-- پیشنهادی: ۰٫۰۸۸، ۰٫۱۰۹، ۰٫۱۶۹، ۰٫۱۰۴
-- Kinect v2 صفرنمونه: ۰٫۲۴۶ تا ۰٫۱۰۴
-- Cityscapes: ۰٫۱۰۹ مطلق در برابر ۰٫۱۱۱ نسبی</aside>
 </section>
 
 <!-- ============ 30 · qualitative: NYUv2 ============ -->
@@ -1130,93 +1151,60 @@
 - $r_i=\hat D_i/D_i$؛ $\rho=\mathrm{median}(\hat D)/\mathrm{median}(D)$</aside>
 </section>
 
-<!-- ============ 33 · scale accuracy, image by image ============ -->
-<section class="slide s-wins" data-autostep data-part="6" data-title="دقت مقیاس در هر تصویر">
-  <header class="slide-head"><h2>دقت مقیاس در هر تصویر</h2></header>
+<!-- ============ 34 · K helps absolute models, not relative ones (evidence for research question 2) ============ -->
+<!-- one panel per model type, same x scale in both; bars = AbsRel reduction of the proposed model vs its control (%), light = ViT-S, dark = ViT-L;
+     data = backup 2 / thesis tab:md_encoder_protocol; the big numbers are the means of the eight bars of each encoder -->
+<section class="slide s-encoder" data-autostep data-part="6" data-title="ماتریس کالیبراسیون به مدل مطلق کمک می‌کند، نه به مدل نسبی">
+  <header class="slide-head"><h2>ماتریس کالیبراسیون به مدل مطلق کمک می‌کند، نه به مدل نسبی</h2><div class="sub">کاهش خطای مدل پیشنهادی نسبت به مدل کنترل، با دو اندازه انکودر و در هشت مجموعه آزمون</div></header>
   <div class="slide-body">
-    <div class="wins">
-      <div class="wins-h"><span>تعداد تصاویر با کمترین AbsRel هر مدل</span><span class="muted">از میان ۱۵۵۴ تصویر</span></div>
-      <div class="wbar ltr">
-        <div class="seg p" style="--w:77.5%"><b>1205</b><span>پیشنهادی</span></div>
-        <div class="seg c" style="--w:12.2%"><b>189</b><span>کنترل</span></div>
-        <div class="seg b" style="--w:10.3%"><b>160</b><span>پایه منتشرشده</span></div>
-      </div>
-    </div>
-    <div class="cols c2 top wins-low">
-      <div class="frag rise" data-f="1">
-        <h4 class="h4">سهم مدل پیشنهادی در هر مجموعه آزمون</h4>
-        <div class="pset ltr">
-          <span>NYUv2</span><div><i style="width:76.6%"></i></div><b>501 / 654</b>
-          <span>Kinect v1</span><div><i style="width:61%"></i></div><b>122 / 200</b>
-          <span>Kinect v2</span><div><i style="width:72.5%"></i></div><b>145 / 200</b>
-          <span>Cityscapes</span><div><i style="width:87.4%"></i></div><b>437 / 500</b>
+    <div class="kx-grid">
+      <div class="kx-panel abs">
+        <div class="kx-h">
+          <div class="kx-t"><b>مدل مطلق</b><span>ارزیابی بدون تراز، برحسب متر</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">میانگین کاهش خطا در هشت مجموعه</span>
+            <div class="kx-stat s"><span class="v">۱۸٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۲۸٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
         </div>
-      </div>
-      <div class="frag rise" data-f="2">
-        <h4 class="h4">میانه نسبت مقیاس در هر مجموعه آزمون</h4>
-        <div class="ltr">
-        <svg class="dia ratio" viewBox="0 0 900 300" role="img">
-          <g class="rgrid"><line x1="60" y1="20" x2="60" y2="222"/><line x1="380" y1="20" x2="380" y2="222"/><line x1="540" y1="20" x2="540" y2="222"/><line x1="700" y1="20" x2="700" y2="222"/></g>
-          <line x1="220" y1="6" x2="220" y2="226" stroke="#0b1f4b" stroke-width="3" stroke-dasharray="7 6"/>
-          <g class="rtick"><text x="60" y="256">0.9</text><text x="220" y="256" class="b">1.0</text><text x="380" y="256">1.1</text><text x="540" y="256">1.2</text><text x="700" y="256">1.3</text></g>
-          <text x="220" y="292" text-anchor="middle" class="d-lab small" direction="rtl">ایده‌آل: ۱</text>
-          <rect x="116" y="38" width="232" height="34" rx="17" fill="#184f95"/><text x="362" y="63" class="rv">0.935 – 1.080</text>
-          <rect x="364" y="104" width="256" height="34" rx="17" fill="#c9621f"/><text x="634" y="129" class="rv">1.090 – 1.250</text>
-          <rect x="453.6" y="170" width="155.2" height="34" rx="17" fill="#2a9d8f"/><text x="623" y="195" class="rv">1.146 – 1.243</text>
-        </svg>
-        </div>
-        <div class="legend sm"><span class="k"><i class="sw proposed"></i>پیشنهادی</span><span class="k"><i class="sw control"></i>کنترل</span><span class="k"><i class="sw published"></i>پایه منتشرشده</span></div>
-      </div>
-    </div>
-  </div>
-  <aside class="notes" data-key="s33">با بررسی تصویر‌به‌تصویر چهار مجموعه آزمون جدول اصلی، که در مجموع ۱۵۵۴ تصویر دارند، مدل پیشنهادی در ۱۲۰۵ تصویر کمترین AbsRel (Absolute Relative Error) را میان سه مدل دارد؛ این تعداد برای مدل کنترل ۱۸۹ و برای نسخه منتشرشده مدل پایه ۱۶۰ تصویر است. به تفکیک مجموعه آزمون، این مقدار در NYUv2 (NYU Depth Dataset V2) برابر با ۵۰۱ از ۶۵۴، در Kinect v1 برابر با ۱۲۲ از ۲۰۰، در Kinect v2 برابر با ۱۴۵ از ۲۰۰ و در Cityscapes برابر با ۴۳۷ از ۵۰۰ تصویر است. تفاوت مدل‌ها عمدتاً در مقیاس است. نسبت مقیاس (scale ratio) برای هر تصویر برابر است با $\rho=\dfrac{\mathrm{median}(\hat D)}{\mathrm{median}(D)}$، یعنی میانه عمق پیش‌بینی‌شده تقسیم بر میانه عمق مرجع (ground-truth depth) همان تصویر؛ مقدار ایده‌آل آن یک است. مدل پیشنهادی بین ۰٫۹۳۵ و ۱٫۰۸۰ باقی می‌ماند، در حالی که دو مدل مرجع حدوداً بین ۱٫۰۹ و ۱٫۲۵ هستند و صحنه را دورتر از مقدار واقعی برآورد می‌کنند.</aside><aside class="notes-sum">- مجموع ۱۵۵۴ تصویر؛ پیشنهادی در ۱۲۰۵ تصویر بهترین
-- کنترل: ۱۸۹ تصویر؛ پایه منتشرشده: ۱۶۰ تصویر
-- NYUv2: ۵۰۱ از ۶۵۴؛ Kinect v1: ۱۲۲ از ۲۰۰
-- Kinect v2: ۱۴۵ از ۲۰۰؛ Cityscapes: ۴۳۷ از ۵۰۰
-- نسبت مقیاس پیشنهادی: ۰٫۹۳۵ تا ۱٫۰۸۰
-- مدل‌های مرجع: حدود ۱٫۰۹ تا ۱٫۲۵
-- $\rho=\mathrm{median}(\hat D)/\mathrm{median}(D)$؛ مقدار ایده‌آل ۱</aside>
-</section>
-
-<!-- ============ 34 · encoder size and model type: K helps absolute models, not relative ones ============ -->
-<!-- bars: AbsRel reduction of the proposed model vs its control (%), same scale in both panels; data = backup 2 / thesis tab:md_encoder_protocol -->
-<section class="slide s-encoder" data-autostep data-part="6" data-title="اثر اندازه انکودر و نوع مدل">
-  <header class="slide-head"><h2>اثر اندازه انکودر و نوع مدل</h2><div class="sub">اثر افزودن ماتریس کالیبراسیون دوربین، در دو اندازه انکودر و دو نوع مدل</div></header>
-  <div class="slide-body">
-    <div class="enc-grid">
-      <div class="enc-panel">
-        <div class="enc-h"><b class="ltr">ViT-S</b><span>انکودر کوچک</span></div>
         <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
-         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
          "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-proposed)","hero":true,"values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
-                   {"color":"var(--c-ideal)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]}]}
+         "series":[{"color":"var(--c-vits)","values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
+                   {"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]}]}
         </script></div>
       </div>
-      <div class="enc-panel">
-        <div class="enc-h"><b class="ltr">ViT-L</b><span>انکودر بزرگ</span></div>
+      <div class="kx-panel rel frag rise" data-f="1">
+        <div class="kx-h">
+          <div class="kx-t"><b>مدل نسبی</b><span>ارزیابی پس از تراز هر تصویر</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">میانگین کاهش خطا در هشت مجموعه</span>
+            <div class="kx-stat s"><span class="v">۰٫۳٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۰٫۷٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
+        </div>
         <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
-         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"کاهش AbsRel نسبت به مدل کنترل (٪)",
+         "bands":[{"from":-3.2,"to":3.2,"label":"±3%","f":1}],
          "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]},
-                   {"color":"var(--c-ideal)","f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
+         "series":[{"color":"var(--c-vits)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]},
+                   {"color":"var(--c-proposed)","hero":true,"f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
         </script></div>
       </div>
     </div>
-    <div class="enc-foot">
-      <div class="enc-msg abs"><i class="sw proposed"></i><div><h5>مدل‌های مطلق، ارزیابی بدون تراز</h5><p>خطای کمتر در هر ۸ مجموعه، تا ۵۰٪</p></div></div>
-      <div class="enc-msg rel frag rise" data-f="1"><i class="sw ideal"></i><div><h5>مدل‌های نسبی، ارزیابی پس از تراز</h5><p>تغییر حداکثر ۳٪، بدون برتری پایدار</p></div></div>
+    <div class="kx-foot">
+      <div class="legend sm"><span class="k"><i class="sw vits"></i><span class="ltr">ViT-S</span></span><span class="k"><i class="sw proposed"></i><span class="ltr">ViT-L</span></span></div>
+      <span class="chip solid frag" data-f="2">پاسخ سوال دوم: ارزیابی نسبی سهم ماتریس کالیبراسیون را پنهان می‌کند</span>
       <div class="enc-sig">* معنادار در آزمون ویلکاکسون زوجی، <span class="ltr">p &lt; 0.01</span></div>
     </div>
   </div>
-  <aside class="notes" data-key="s34">این اسلاید اثر افزودن ماتریس کالیبراسیون دوربین (camera calibration matrix) را در چهار پیکربندی آموزش چندمجموعه‌ای (multi-domain training) نشان می‌دهد: دو اندازه انکودر و دو نوع مدل، مطلق و نسبی. دو اندازه انکودر از نظر عمق متفاوت‌اند: ViT-S (Vision Transformer Small) دارای ۱۲ بلوک ترنسفورمر (transformer block) با بعد ۳۸۴ و ۶ سر توجه (attention head) است و ViT-L (Vision Transformer Large) دارای ۲۴ بلوک با بعد ۱۰۲۴ و ۱۶ سر است. در هر پیکربندی یک زوج مدل پیشنهادی و مدل کنترل با داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی یکسان آموزش دید و تنها تفاوت آن‌ها دسترسی به ماتریس کالیبراسیون بود. هر میله نشان می‌دهد AbsRel (Absolute Relative Error) مدل پیشنهادی چند درصد کمتر از مدل کنترل است؛ میله رو به راست یعنی خطای کمتر و میله رو به چپ یعنی خطای بیشتر. هر دو نمودار مقیاس یکسانی دارند و ستاره، تفاوت معنادار در آزمون زوجی ویلکاکسون (Wilcoxon signed-rank test) در سطح ۰٫۰۱ را نشان می‌دهد. ابتدا میله‌های سرمه‌ای، یعنی مدل‌های مطلق، دیده می‌شوند که بدون تراز و برحسب متر ارزیابی شدند. با هر دو انکودر، مدل پیشنهادی در هر هشت مجموعه آزمون خطای کمتری دارد و تفاوت در هفت مجموعه از هشت مجموعه معنادار است. کاهش خطا برای ViT-L بین ۱۱ و ۵۰ درصد است؛ برای ViT-S در هفت مجموعه معنادار بین ۱۱ و ۳۹ درصد است و فقط در RealSense حدود ۱ درصد و غیرمعنادار است. بزرگ‌ترین کاهش در هر دو انکودر روی حسگرهای Kinect از SUN RGB-D است که هیچ تصویری از آن‌ها در آموزش به‌کار نرفته است. بنابراین سودمندی ماتریس کالیبراسیون به یک اندازه انکودر محدود نیست. سپس میله‌های خاکستری، یعنی مدل‌های نسبی، ظاهر می‌شوند که پس از تراز مقیاس و جابجایی (scale and shift alignment) به‌ازای هر تصویر ارزیابی شدند. روی همان مقیاس این میله‌ها تقریباً دیده نمی‌شوند و همگی درون نوار ±۳ درصد قرار دارند. با ViT-L مدل پیشنهادی در هر هشت مجموعه اندکی بهتر است، اما اختلاف حداکثر ۰٫۰۰۰۶ AbsRel، یعنی ۱٫۴ درصد، است. با ViT-S تفاوت‌ها تا حدود ۳ درصد می‌رسند، اما جهت ثابتی ندارند: مدل پیشنهادی در سه مجموعه به‌طور معنادار بهتر و در دو مجموعه، Kinect v2 و RealSense، به‌طور معنادار بدتر است. همچنین اگر ماتریس کالیبراسیون در زمان آزمون از مدل نسبی حذف شود، AbsRel آن حداکثر ۰٫۰۰۰۵ برای ViT-S و ۰٫۰۰۰۸ برای ViT-L تغییر می‌کند؛ پس مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند. این الگو با نقش K سازگار است: ماتریس کالیبراسیون مقیاس مطلق صحنه را در اختیار مدل می‌گذارد و تراز تصویر‌به‌تصویر در ارزیابی نسبی دقیقاً همین مقیاس را حذف می‌کند. در زوج اصلی ViT-L این نتیجه فرضیه سوم را نیز تأیید می‌کند: بهبود عمق مطلق (absolute depth) بدون ازدست‌رفتن دقت نسبی به‌دست می‌آید. جدول کامل، با مقدار AbsRel هر دو مدل، در اسلاید پشتیبان ۲ آمده است. زمان اجرای مدل (inference) نیز به اندازه انکودر بستگی دارد و مدل روی ویدیو هم کار می‌کند: هر فریم مستقل پردازش می‌شود و چون ماتریس کالیبراسیون دوربین برای کل ویدیو ثابت است، فقط یک‌بار به توکن دوربین تبدیل می‌شود. اعداد زیر روی یک RTX 4090، با اندازه دسته ۱ و دقت ترکیبی FP16 (mixed precision) اندازه‌گیری شده‌اند؛ برای هر اندازه دو ورودی آزموده شد: فریم KITTI به اندازه ۱۲۴۲ در ۳۷۵ که ورودی شبکه آن ۵۱۸ در ۱۷۲۲ می‌شود، و فریم NYUv2 به اندازه ۶۴۰ در ۴۸۰ که ورودی شبکه آن ۵۱۸ در ۶۸۶ می‌شود. فقط شبکه: ViT-S حدود ۱۰٫۳ میلی‌ثانیه، یعنی ۹۷ فریم بر ثانیه (frames per second، FPS)، روی KITTI و ۶٫۳ میلی‌ثانیه، یعنی ۱۵۸ فریم بر ثانیه، روی NYUv2؛ ViT-L حدود ۵۷٫۵ میلی‌ثانیه، یعنی ۱۷ فریم بر ثانیه، روی KITTI و ۲۶٫۸ میلی‌ثانیه، یعنی ۳۷ فریم بر ثانیه، روی NYUv2. با احتساب پیش‌پردازش و پس‌پردازش تصویر، ViT-S به ۸۲ و ۱۳۵ فریم بر ثانیه و ViT-L به ۱۷ و ۳۶ فریم بر ثانیه می‌رسد. برای ViT-B، که در این پایان‌نامه آموزش ندیده است، فقط زمان معماری اندازه‌گیری شد: ۴۴ و ۸۰ فریم بر ثانیه؛ برای ViT-G نیز ۶ و ۱۳٫۶ فریم بر ثانیه. در FP32 سرعت‌ها پایین‌تر است: روی KITTI، ViT-S حدود ۳۰ و ViT-L حدود ۵ فریم بر ثانیه. سرعت به مقدار وزن‌ها وابسته نیست و تصویر ورودی ساختگی بود؛ خواندن فریم از دیسک و نمایش در این اعداد لحاظ نشده است. برای مقایسه، دوربین KITTI با ۱۰ هرتز و ویدیوهای معمول با ۳۰ فریم بر ثانیه کار می‌کنند: ViT-S روی هر دو ورودی و ViT-L روی ورودی ۶۴۰ در ۴۸۰ از ۳۰ فریم بر ثانیه بالاترند، و ViT-L روی فریم KITTI حدود ۱٫۷ برابر نرخ دوربین است؛ پس اجرای بی‌درنگ (real-time) در هر دو اندازه ممکن است. تعداد پارامترهای مدل ما با انکودر دوربین برای ViT-S برابر ۳۲٫۰ میلیون، برای ViT-B برابر ۱۲۶٫۱ میلیون، برای ViT-L برابر ۳۸۶٫۲ میلیون و برای ViT-G برابر ۱٫۳۷ میلیارد است؛ این مقدار از پارامترهای مدل پایه، یعنی ۲۴٫۸، ۹۷٫۵، ۳۳۵٫۳ میلیون و ۱٫۳ میلیارد، بیشتر است، زیرا انکودر دوربین به آن اضافه شده است.</aside><aside class="notes-sum">- ۴ پیکربندی: ViT-S/L × مطلق/نسبی، همیشه زوج پیشنهادی/کنترل
-- میله = کاهش AbsRel نسبت به کنترل (٪)؛ هر دو نمودار هم‌مقیاس؛ ستاره = ویلکاکسون ۰٫۰۱
-1. مطلق (سرمه‌ای): بهتر در هر ۸ مجموعه با هر دو انکودر؛ معنادار در ۷ از ۸
+  <aside class="notes" data-key="s34">این اسلاید اثر افزودن ماتریس کالیبراسیون دوربین (camera calibration matrix) را در چهار پیکربندی آموزش چندمجموعه‌ای (multi-domain training) نشان می‌دهد: دو اندازه انکودر و دو نوع مدل، مطلق و نسبی. دو اندازه انکودر از نظر عمق متفاوت‌اند: ViT-S (Vision Transformer Small) دارای ۱۲ بلوک ترنسفورمر (transformer block) با بعد ۳۸۴ و ۶ سر توجه (attention head) است و ViT-L (Vision Transformer Large) دارای ۲۴ بلوک با بعد ۱۰۲۴ و ۱۶ سر است. در هر پیکربندی یک زوج مدل پیشنهادی و مدل کنترل با داده، ترتیب نمونه‌ها، افزونه‌سازی و بذر تصادفی یکسان آموزش دید و تنها تفاوت آن‌ها دسترسی به ماتریس کالیبراسیون بود. هر میله نشان می‌دهد AbsRel (Absolute Relative Error) مدل پیشنهادی چند درصد کمتر از مدل کنترل است؛ میله رو به راست یعنی خطای کمتر و میله رو به چپ یعنی خطای بیشتر. نمودارها در دو قاب جدا آمده‌اند: قاب سمت راست برای مدل‌های مطلق و قاب سمت چپ برای مدل‌های نسبی؛ در هر قاب میله روشن ViT-S و میله تیره ViT-L است. هر دو نمودار مقیاس یکسانی دارند و ستاره، تفاوت معنادار در آزمون زوجی ویلکاکسون (Wilcoxon signed-rank test) در سطح ۰٫۰۱ را نشان می‌دهد. ابتدا قاب مدل‌های مطلق دیده می‌شود که بدون تراز و برحسب متر ارزیابی شدند. میانگین کاهش خطا در هشت مجموعه آزمون حدود ۱۸ درصد با ViT-S و حدود ۲۸ درصد با ViT-L است. با هر دو انکودر، مدل پیشنهادی در هر هشت مجموعه آزمون خطای کمتری دارد و تفاوت در هفت مجموعه از هشت مجموعه معنادار است. کاهش خطا برای ViT-L بین ۱۱ و ۵۰ درصد است؛ برای ViT-S در هفت مجموعه معنادار بین ۱۱ و ۳۹ درصد است و فقط در RealSense حدود ۱ درصد و غیرمعنادار است. بزرگ‌ترین کاهش در هر دو انکودر روی حسگرهای Kinect از SUN RGB-D است که هیچ تصویری از آن‌ها در آموزش به‌کار نرفته است. بنابراین سودمندی ماتریس کالیبراسیون به یک اندازه انکودر محدود نیست. سپس قاب مدل‌های نسبی ظاهر می‌شود که پس از تراز مقیاس و جابجایی (scale and shift alignment) به‌ازای هر تصویر ارزیابی شدند. میانگین کاهش خطا در این قاب حدود ۰٫۳ درصد با ViT-S و حدود ۰٫۷ درصد با ViT-L است. روی همان مقیاس این میله‌ها تقریباً دیده نمی‌شوند و همگی درون نوار ±۳ درصد قرار دارند. با ViT-L مدل پیشنهادی در هر هشت مجموعه اندکی بهتر است، اما اختلاف حداکثر ۰٫۰۰۰۶ AbsRel، یعنی ۱٫۴ درصد، است. با ViT-S تفاوت‌ها تا حدود ۳ درصد می‌رسند، اما جهت ثابتی ندارند: مدل پیشنهادی در سه مجموعه به‌طور معنادار بهتر و در دو مجموعه، Kinect v2 و RealSense، به‌طور معنادار بدتر است. همچنین اگر ماتریس کالیبراسیون در زمان آزمون از مدل نسبی حذف شود، AbsRel آن حداکثر ۰٫۰۰۰۵ برای ViT-S و ۰٫۰۰۰۸ برای ViT-L تغییر می‌کند؛ پس مدل‌های نسبی تقریباً از این ورودی استفاده نمی‌کنند. این الگو با نقش K سازگار است: ماتریس کالیبراسیون مقیاس مطلق صحنه را در اختیار مدل می‌گذارد و تراز تصویر‌به‌تصویر در ارزیابی نسبی دقیقاً همین مقیاس را حذف می‌کند. این شواهد پاسخ سوال دوم تحقیق است: ارزیابی نسبی سهم اطلاعات هندسی دوربین را پنهان می‌کند و این سهم فقط در ارزیابی مطلق دیده می‌شود. در زوج اصلی ViT-L این نتیجه فرضیه سوم را نیز تأیید می‌کند: بهبود عمق مطلق (absolute depth) بدون ازدست‌رفتن دقت نسبی به‌دست می‌آید. جدول کامل، با مقدار AbsRel هر دو مدل، در اسلاید پشتیبان ۲ آمده است. زمان اجرای مدل (inference) نیز به اندازه انکودر بستگی دارد و مدل روی ویدیو هم کار می‌کند: هر فریم مستقل پردازش می‌شود و چون ماتریس کالیبراسیون دوربین برای کل ویدیو ثابت است، فقط یک‌بار به توکن دوربین تبدیل می‌شود. اعداد زیر روی یک RTX 4090، با اندازه دسته ۱ و دقت ترکیبی FP16 (mixed precision) اندازه‌گیری شده‌اند؛ برای هر اندازه دو ورودی آزموده شد: فریم KITTI به اندازه ۱۲۴۲ در ۳۷۵ که ورودی شبکه آن ۵۱۸ در ۱۷۲۲ می‌شود، و فریم NYUv2 به اندازه ۶۴۰ در ۴۸۰ که ورودی شبکه آن ۵۱۸ در ۶۸۶ می‌شود. فقط شبکه: ViT-S حدود ۱۰٫۳ میلی‌ثانیه، یعنی ۹۷ فریم بر ثانیه (frames per second، FPS)، روی KITTI و ۶٫۳ میلی‌ثانیه، یعنی ۱۵۸ فریم بر ثانیه، روی NYUv2؛ ViT-L حدود ۵۷٫۵ میلی‌ثانیه، یعنی ۱۷ فریم بر ثانیه، روی KITTI و ۲۶٫۸ میلی‌ثانیه، یعنی ۳۷ فریم بر ثانیه، روی NYUv2. با احتساب پیش‌پردازش و پس‌پردازش تصویر، ViT-S به ۸۲ و ۱۳۵ فریم بر ثانیه و ViT-L به ۱۷ و ۳۶ فریم بر ثانیه می‌رسد. برای ViT-B، که در این پایان‌نامه آموزش ندیده است، فقط زمان معماری اندازه‌گیری شد: ۴۴ و ۸۰ فریم بر ثانیه؛ برای ViT-G نیز ۶ و ۱۳٫۶ فریم بر ثانیه. در FP32 سرعت‌ها پایین‌تر است: روی KITTI، ViT-S حدود ۳۰ و ViT-L حدود ۵ فریم بر ثانیه. سرعت به مقدار وزن‌ها وابسته نیست و تصویر ورودی ساختگی بود؛ خواندن فریم از دیسک و نمایش در این اعداد لحاظ نشده است. برای مقایسه، دوربین KITTI با ۱۰ هرتز و ویدیوهای معمول با ۳۰ فریم بر ثانیه کار می‌کنند: ViT-S روی هر دو ورودی و ViT-L روی ورودی ۶۴۰ در ۴۸۰ از ۳۰ فریم بر ثانیه بالاترند، و ViT-L روی فریم KITTI حدود ۱٫۷ برابر نرخ دوربین است؛ پس اجرای بی‌درنگ (real-time) در هر دو اندازه ممکن است. تعداد پارامترهای مدل ما با انکودر دوربین برای ViT-S برابر ۳۲٫۰ میلیون، برای ViT-B برابر ۱۲۶٫۱ میلیون، برای ViT-L برابر ۳۸۶٫۲ میلیون و برای ViT-G برابر ۱٫۳۷ میلیارد است؛ این مقدار از پارامترهای مدل پایه، یعنی ۲۴٫۸، ۹۷٫۵، ۳۳۵٫۳ میلیون و ۱٫۳ میلیارد، بیشتر است، زیرا انکودر دوربین به آن اضافه شده است.</aside><aside class="notes-sum">- ۴ پیکربندی: ViT-S/L × مطلق/نسبی، همیشه زوج پیشنهادی/کنترل
+- میله = کاهش AbsRel نسبت به کنترل (٪)؛ قاب راست مطلق، قاب چپ نسبی، هم‌مقیاس؛ میله روشن ViT-S، تیره ViT-L؛ ستاره = ویلکاکسون ۰٫۰۱
+1. مطلق: بهتر در هر ۸ مجموعه با هر دو انکودر؛ معنادار در ۷ از ۸
+- میانگین کاهش: حدود ۱۸٪ با ViT-S و ۲۸٪ با ViT-L
 - کاهش ViT-L: ۱۱ تا ۵۰٪؛ ViT-S: ۱۱ تا ۳۹٪ (RealSense فقط ۱٪)
 - بیشترین کاهش: Kinect، دیده‌نشده در آموزش
-2. نسبی (خاکستری): همه درون ±۳٪
+2. نسبی: همه درون ±۳٪؛ میانگین حدود ۰٫۳٪ و ۰٫۷٪
 - ViT-L: همه اندکی بهتر، حداکثر ۱٫۴٪ (۰٫۰۰۰۶ AbsRel)
 - ViT-S: تا ۳٪ در دو جهت؛ ۳ بهتر و ۲ بدتر (معنادار)
 - حذف K از مدل نسبی: تغییر حداکثر ۰٫۰۰۰۸
@@ -1224,100 +1212,27 @@
 - اجرا (RTX 4090، FP16، فقط شبکه): ViT-S ≈ ۹۷ و ViT-L ≈ ۱۷ فریم بر ثانیه روی فریم KITTI؛ ۱۵۸ و ۳۷ روی ۶۴۰ در ۴۸۰
 - با پیش‌ و پس‌پردازش: ViT-S ۸۲ و ۱۳۵؛ ViT-L ۱۷ و ۳۶ فریم بر ثانیه؛ روی ویدیو، فریم‌به‌فریم
 - پارامترها با انکودر دوربین: ViT-S ۳۲٫۰ و ViT-L ۳۸۶٫۲ میلیون
-! K مقیاس مطلق را می‌دهد؛ تراز هر تصویر همان را حذف می‌کند</aside>
+! K مقیاس مطلق را می‌دهد؛ تراز هر تصویر همان را حذف می‌کند
+! پاسخ سوال دوم: ارزیابی نسبی سهم K را پنهان می‌کند</aside>
 </section>
 
 <!-- ============ 35 · answers to the research questions ============ -->
-<section class="slide s-answers" data-autostep data-part="7" data-title="پاسخ به سوالات تحقیق">
+<section class="slide s-answers" data-part="7" data-title="پاسخ به سوالات تحقیق">
   <header class="slide-head"><h2>پاسخ به سوالات تحقیق</h2></header>
   <div class="slide-body">
-    <div class="rq3">
-      <!-- question 1: base model across datasets -->
-      <article class="rq frag rise" data-f="1">
-        <p class="rq-q"><span class="rq-n">سوال اول:</span>آیا خطای مدل پایه Depth Anything V2 با تغییر دیتاست و شرایط تصویربرداری به‌طور معنادار تغییر می‌کند و آیا مقیاس مطلق آن به دامنه‌ای غیر از دامنه آموزش منتقل می‌شود؟</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">بله</span>خطای مدل پایه در هر سه مقایسه میان دیتاست‌ها تفاوت معنادار دارد (p &lt; 0.05).</p>
-          <div class="rq-bars ltr">
-            <span>VKITTI · DrivingStereo</span><div><i style="width:8.7%"></i></div><b>0.039</b>
-            <span>NYUv2 · DrivingStereo</span><div><i style="width:22.4%"></i></div><b>0.101</b>
-            <span>NYUv2 · DIODE</span><div><i style="width:100%"></i></div><b>0.450</b>
-          </div>
-          <p class="rq-cap">اختلاف میانگین SiLog میان دو دیتاست</p>
-        </div>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v no">خیر</span>مقیاس مطلق منتقل نمی‌شود: نسخه مطلق منتشرشده، که با Hypersim آموزش دیده است، در NYUv2 خطای زیادی دارد.</p>
-          <p class="rq-big"><b class="ltr">0.207</b><span>AbsRel در NYUv2؛ یعنی عمق هر پیکسل به‌طور میانگین حدود ۲۱ درصد خطا دارد</span></p>
-        </div>
-      </article>
-      <!-- question 2: relative evaluation hides the camera's contribution -->
-      <article class="rq frag rise" data-f="2">
-        <p class="rq-q"><span class="rq-n">سوال دوم:</span>آیا ارزیابی نسبی، که مقیاس و جابه‌جایی را برای هر تصویر جداگانه تراز می‌کند، تفاوت مدل‌ها در مقیاس فیزیکی عمق و سهم اطلاعات هندسی دوربین را پنهان می‌کند؟</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">بله</span>با ViT-L، خطای مطلق مدل پیشنهادی در هر هشت مجموعه آزمون ۱۱ تا ۵۰ درصد کمتر از مدل کنترل است؛ در ارزیابی نسبی این فاصله حداکثر ۱٫۴ درصد است.</p>
-          <div class="ltr">
-          <svg class="dia rq-dots" viewBox="0 0 540 330" role="img">
-            <g class="axisg"><line x1="54.5" y1="34" x2="54.5" y2="250"/><line x1="123.6" y1="34" x2="123.6" y2="250"/><line x1="192.7" y1="34" x2="192.7" y2="250"/><line x1="261.8" y1="34" x2="261.8" y2="250"/><line x1="330.9" y1="34" x2="330.9" y2="250"/><line x1="400" y1="34" x2="400" y2="250"/></g>
-            <line x1="54.5" y1="30" x2="54.5" y2="252" stroke="#0b1f4b" stroke-width="2.5"/>
-            <text x="532" y="28" class="grp">ViT-L</text>
-            <text x="532" y="68" class="d-lab small" direction="rtl" text-anchor="start">مطلق</text>
-            <text x="532" y="110" class="d-lab small" direction="rtl" text-anchor="start">نسبی</text>
-            <text x="532" y="152" class="grp">ViT-S</text>
-            <text x="532" y="192" class="d-lab small" direction="rtl" text-anchor="start">مطلق</text>
-            <text x="532" y="234" class="d-lab small" direction="rtl" text-anchor="start">نسبی</text>
-            <g class="dots abs" transform="translate(0,61)"><circle cx="292.2" r="9"/><circle cx="191.3" r="9"/><circle cx="129.9" r="9"/><circle cx="373.7" r="9"/><circle cx="402.1" r="9"/><circle cx="235.6" r="9"/><circle cx="183.1" r="9"/><circle cx="155.4" r="9"/></g>
-            <g class="dots rel" transform="translate(0,103)"><circle cx="55.9" r="9"/><circle cx="58.6" r="9"/><circle cx="55.9" r="9"/><circle cx="61.4" r="9"/><circle cx="64.2" r="9"/><circle cx="62.8" r="9"/><circle cx="57.3" r="9"/><circle cx="55.9" r="9"/></g>
-            <g class="dots abs" transform="translate(0,185)"><circle cx="193.4" r="9"/><circle cx="185.8" r="9"/><circle cx="128.4" r="9"/><circle cx="323.3" r="9"/><circle cx="214.8" r="9"/><circle cx="61.4" r="9"/><circle cx="147.8" r="9"/><circle cx="201.7" r="9"/></g>
-            <g class="dots rel" transform="translate(0,227)"><circle cx="69.7" r="9"/><circle cx="57.3" r="9"/><circle cx="76.6" r="9"/><circle cx="59.3" r="9"/><circle cx="39.3" r="9"/><circle cx="35.9" r="9"/><circle cx="54.5" r="9"/><circle cx="58.0" r="9"/></g>
-            <g class="tick"><text x="54.5" y="280">0</text><text x="123.6" y="280">10</text><text x="192.7" y="280">20</text><text x="261.8" y="280">30</text><text x="330.9" y="280">40</text><text x="400" y="280">50%</text></g>
-            <text x="227" y="318" text-anchor="middle" class="d-lab small" direction="rtl">کاهش AbsRel نسبت به مدل کنترل</text>
-          </svg>
-          </div>
-          <p class="rq-cap">هر نقطه یک مجموعه آزمون است؛ در ViT-S نسبی، تفاوت‌ها در هر دو جهت‌اند.</p>
-        </div>
-      </article>
-      <!-- question 3: explicit K lowers absolute error and makes scale follow focal length -->
-      <article class="rq frag rise" data-f="3">
-        <p class="rq-q"><span class="rq-n">سوال سوم:</span>آیا ورودی صریح ماتریس کالیبراسیون دوربین، در ارزیابی مطلق، خطای مدل را نسبت به مدل کنترل هم‌داده کاهش می‌دهد و مقیاس خروجی را در برابر تغییر فاصله کانونی پایدارتر می‌کند؟</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">بله</span>در مطالعه کنترل‌شده NYUv2، خطای مطلق ۲۲ درصد کمتر از مدل کنترل هم‌داده است.</p>
-          <div class="rq-bars two ltr">
-            <span class="p">پیشنهادی</span><div><i style="width:78.3%"></i></div><b>0.083</b>
-            <span class="c">کنترل</span><div><i class="c" style="width:100%"></i></div><b>0.107</b>
-          </div>
-        </div>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">بله</span>با ۱٫۶ برابر شدن فاصله کانونی ورودی، عمق خروجی هم تقریباً ۱٫۶ برابر می‌شود.</p>
-          <div class="ltr">
-          <svg class="dia rq-sweep" viewBox="0 -8 540 240" role="img">
-            <g class="axisg"><line x1="85.2" y1="14" x2="85.2" y2="172"/><line x1="207" y1="14" x2="207" y2="172"/><line x1="389.6" y1="14" x2="389.6" y2="172"/><line x1="76" y1="163.2" x2="398" y2="163.2"/><line x1="76" y1="109" x2="398" y2="109"/><line x1="76" y1="27.6" x2="398" y2="27.6"/></g>
-            <line x1="85.2" y1="163.2" x2="389.6" y2="27.6" stroke="#76819a" stroke-width="3" stroke-dasharray="8 7"/>
-            <line x1="85.2" y1="109" x2="389.6" y2="109" stroke="#c9621f" stroke-width="4"/>
-            <polyline points="85.2,160 146.1,136.8 207,109 283,73.6 389.6,27.6" fill="none" stroke="#184f95" stroke-width="4.5"/>
-            <g fill="#184f95"><circle cx="85.2" cy="160" r="7.5"/><circle cx="146.1" cy="136.8" r="7.5"/><circle cx="207" cy="109" r="7.5"/><circle cx="283" cy="73.6" r="7.5"/><circle cx="389.6" cy="27.6" r="7.5"/></g>
-            <text x="404" y="27" class="sl p">0.97</text><text x="536" y="27" class="sn p" direction="rtl">پیشنهادی</text>
-            <text x="404" y="62" class="sl i">1</text><text x="536" y="62" class="sn i" direction="rtl">ایده‌آل</text>
-            <text x="404" y="116" class="sl c">0</text><text x="536" y="116" class="sn c" direction="rtl">کنترل</text>
-            <g class="tick"><text x="85.2" y="196">0.6×</text><text x="207" y="196">1×</text><text x="389.6" y="196">1.6×</text></g>
-            <g class="tick y"><text x="66" y="166">0.6×</text><text x="66" y="116">1×</text><text x="66" y="35">1.6×</text></g>
-            <text x="237" y="228" text-anchor="middle" class="d-lab small" direction="rtl">ضریب فاصله کانونی ورودی</text>
-            <text x="84" y="12" text-anchor="end" class="ytitle" direction="rtl">ضریب عمق خروجی ↑</text>
-          </svg>
-          </div>
-          <p class="rq-cap">نسبت مقیاس هر تصویر به ۱ نزدیک‌تر است: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳ برای مدل کنترل.</p>
-        </div>
-      </article>
+    <div class="answers">
+      <div class="ans frag rise" data-f="1"><span class="ans-h">فرضیه اول</span><div class="ans-b"><h4>حساسیت مدل پایه به مجموعه‌داده و دوربین</h4><p>تفاوت خطای مدل پایه بین مجموعه‌داده‌ها در هر سه مقایسه معنادار است (p &lt; 0.05)؛ نسخه مطلق منتشرشده در NYUv2 حدود ۲۱٪ خطا دارد (AbsRel برابر ۰٫۲۰۷)</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
+      <div class="ans frag rise" data-f="2"><span class="ans-h">فرضیه دوم</span><div class="ans-b"><h4>خطای مطلق کمتر با ماتریس کالیبراسیون</h4><p>در هر هشت مجموعه آزمون، خطای مطلق با ViT-L بین ۱۱ تا ۵۰٪ کمتر از مدل کنترل است؛ عمق خروجی تابع فاصله کانونی است: شیب ۰٫۹۷ (ایده‌آل ۱)</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
+      <div class="ans frag rise" data-f="3"><span class="ans-h">فرضیه سوم</span><div class="ans-b"><h4>دقت نسبی حفظ می‌شود</h4><p>در ارزیابی نسبی با ViT-L، خطا در هیچ‌یک از هشت مجموعه آزمون بیشتر از مدل کنترل نیست؛ اختلاف دو مدل حداکثر ۱٫۴٪ است</p></div><span class="ans-v"><i>✓</i>تأیید می‌شود</span></div>
     </div>
   </div>
-  <aside class="notes" data-key="s35">در این اسلاید به سه سوال تحقیق پاسخ می‌دهیم. سوال اول دو بخش دارد. بخش نخست می‌پرسد آیا خطای مدل پایه با تغییر دیتاست و شرایط تصویربرداری به‌طور معنادار تغییر می‌کند؛ پاسخ مثبت است. معیار SiLog (Scale-Invariant Logarithmic loss) نسخه منتشرشده مدل پایه در هر سه مقایسه میان دیتاست‌ها تفاوت معنادار دارد و p در همه کمتر از ۰٫۰۵ است: اختلاف میانگین میان VKITTI (Virtual KITTI) و DrivingStereo برابر ۰٫۰۳۹، میان NYUv2 (NYU Depth Dataset V2) و DrivingStereo برابر ۰٫۱۰۱ و میان NYUv2 و DIODE (Dense Indoor and Outdoor DEpth) برابر ۰٫۴۵۰ است. این دیتاست‌ها در نوع صحنه، گستره عمق و حسگر عمق مرجع هم با هم فرق دارند؛ پس این آزمون به‌تنهایی نشان نمی‌دهد که تفاوت فقط از دوربین است و نقش خود دوربین را آزمون‌های حساسیت می‌سنجند. بخش دوم می‌پرسد آیا مقیاس مطلق مدل پایه به دامنه‌ای غیر از دامنه آموزش منتقل می‌شود؛ پاسخ منفی است. نسخه مطلق منتشرشده، که با Hypersim آموزش دیده است، در NYUv2 به AbsRel (Absolute Relative Error) برابر ۰٫۲۰۷ می‌رسد؛ یعنی عمق هر پیکسل به‌طور میانگین حدود ۲۱ درصد خطا دارد. در Cityscapes و دو حسگر Kinect از SUN RGB-D نیز این مقدار بین ۰٫۱۹۶ و ۰٫۲۴۶ است. این پاسخ فرضیه اول را تأیید می‌کند. سوال دوم می‌پرسد آیا ارزیابی نسبی (relative evaluation)، که مقیاس و جابه‌جایی (scale and shift) را برای هر تصویر جداگانه تراز می‌کند، سهم دوربین را پنهان می‌کند؛ پاسخ مثبت است. در نمودار، هر نقطه یک مجموعه آزمون است و محور افقی درصد کاهش AbsRel مدل پیشنهادی نسبت به مدل کنترل را نشان می‌دهد. در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی با هر دو اندازه انکودر در هر هشت مجموعه آزمون خطای کمتری دارد: با ViT-L (Vision Transformer Large) بین ۱۱ تا ۵۰ درصد و با ViT-S (Vision Transformer Small) بین ۱ تا ۳۹ درصد، و برای هر دو اندازه این تفاوت در هفت مجموعه از هشت مجموعه معنادار است. در ارزیابی نسبی، همین مقایسه تقریباً فاصله‌ای نشان نمی‌دهد: با ViT-L حداکثر ۰٫۰۰۰۶ AbsRel، یعنی ۱٫۴ درصد، و با ViT-S تفاوت‌ها تا حدود ۳ درصد و در هر دو جهت است. علت این است که تراز هر تصویر دقیقاً همان مقیاس مطلقی را حذف می‌کند که ماتریس کالیبراسیون دوربین (camera calibration matrix) در اختیار مدل می‌گذارد؛ پس سهم دوربین باید با ارزیابی مطلق سنجیده شود. نزدیک‌بودن دو مدل در ارزیابی نسبی همچنین نشان می‌دهد که بهبود عمق مطلق بدون کاهش دقت نسبی به‌دست آمده است، که با فرضیه سوم سازگار است. سوال سوم هم دو بخش دارد و پاسخ هر دو مثبت است. بخش نخست می‌پرسد آیا ورودی صریح ماتریس کالیبراسیون دوربین خطای مطلق را نسبت به مدل کنترل هم‌داده کاهش می‌دهد. در مطالعه کنترل‌شده NYUv2 با پیکربندی لرزش کانونی (focal jitter)، AbsRel مدل پیشنهادی ۰٫۰۸۳۴ و مدل کنترل ۰٫۱۰۶۵ است، یعنی حدود ۲۲ درصد کاهش؛ پس از آموزش چندمجموعه‌ای (multi-domain training) نیز مدل پیشنهادی در هر هشت مجموعه آزمون و با هر دو اندازه انکودر خطای کمتری دارد. بخش دوم می‌پرسد آیا مقیاس خروجی در برابر تغییر فاصله کانونی (focal length) پایدارتر می‌شود. در آزمون پیمایش فاصله کانونی (focal-length sweep)، تصویر ثابت می‌ماند و فقط فاصله کانونی ورودی در ضرایب ۰٫۶ تا ۱٫۶ ضرب می‌شود؛ طبق مدل دوربین روزنه‌ای (pinhole camera model)، تصویری یکسان با فاصله کانونی ۱٫۶ برابر فقط با صحنه‌ای ۱٫۶ برابر دورتر سازگار است. شیب عمق خروجی مدل پیشنهادی نسبت به فاصله کانونی، در مقیاس لگاریتمی، ۰٫۹۷ با انحراف معیار ۰٫۰۳ روی ۲۰ تصویر است و به مقدار ایده‌آل ۱ بسیار نزدیک است؛ شیب مدل کنترل صفر است، چون این مدل اصلاً ماتریس کالیبراسیون دوربین را دریافت نمی‌کند و این صفر از ساختار آن می‌آید، نه از اندازه‌گیری. افزون بر این، نسبت مقیاس هر تصویر در مدل پیشنهادی به ۱ نزدیک‌تر و کم‌پراکنده‌تر است: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳ و دامنه میان‌چارکی (interquartile range) ۰٫۰۹۴ در برابر ۰٫۱۲۰ برای مدل کنترل. این پاسخ فرضیه دوم را تأیید می‌کند؛ بنابراین هر سه فرضیه تأیید می‌شوند.</aside><aside class="notes-sum">1. سوال اول، بخش نخست: بله؛ تفاوت SiLog در هر ۳ مقایسه معنادار (p &lt; 0.05)
-- اختلاف میانگین: ۰٫۰۳۹، ۰٫۱۰۱، ۰٫۴۵۰
-2. سوال اول، بخش دوم: خیر؛ نسخه مطلق منتشرشده در NYUv2 AbsRel برابر ۰٫۲۰۷ (حدود ۲۱٪ خطا)
-3. سوال دوم: بله؛ مطلق در ۸ از ۸ بهتر، نسبی تقریباً برابر
-- ViT-L: مطلق ۱۱ تا ۵۰٪، نسبی حداکثر ۱٫۴٪
-- ViT-S: مطلق ۱ تا ۳۹٪، نسبی تا ۳٪ در دو جهت
-4. سوال سوم، بخش نخست: بله؛ AbsRel ۰٫۰۸۳۴ در برابر ۰٫۱۰۶۵ (۲۲٪ کمتر)
-5. سوال سوم، بخش دوم: بله؛ شیب پیمایش فاصله کانونی ۰٫۹۷ (ایده‌آل ۱، کنترل ۰)
-- نسبت مقیاس: میانه ۱٫۰۱۵ در برابر ۱٫۰۴۳
-! تفاوت دیتاست‌ها فقط از دوربین نیست؛ نقش دوربین را آزمون حساسیت می‌سنجد</aside>
+  <aside class="notes" data-key="s35">پاسخ سه سوال تحقیق به این شرح است. پاسخ سوال نخست مثبت است: خطای مدل پایه بین مجموعه‌داده‌ها تفاوت دارد و این تفاوت در هر سه مقایسه معنادار است (p &lt; 0.05)؛ مقیاس مطلق آن خارج از دامنه آموزش منتقل نمی‌شود؛ نسخه منتشرشده مدل پایه در NYUv2 (NYU Depth Dataset V2) به AbsRel (Absolute Relative Error) برابر با ۰٫۲۰۷ می‌رسد، یعنی عمق هر پیکسل به‌طور میانگین حدود ۲۱٪ خطا دارد. بنابراین، فرضیه اول تأیید می‌شود. پاسخ سوال دوم نیز مثبت است: در ارزیابی نسبی (relative evaluation)، مدل پیشنهادی و مدل کنترل به هم نزدیک‌اند، اما در ارزیابی مطلق (absolute evaluation)، مدل پیشنهادی در هر هشت مجموعه آزمون و با هر دو اندازه انکودر، به‌روشنی بهتر است. با ViT-L (Vision Transformer Large)، خطای مطلق ۱۱ تا ۵۰٪ کمتر از مدل کنترل است، در حالی که در ارزیابی نسبی اختلاف دو مدل حداکثر ۱٫۴٪ است و مدل پیشنهادی در هیچ‌یک از هشت مجموعه آزمون بدتر نیست. بنابراین، سهم دوربین باید با ارزیابی مطلق سنجیده شود و این بهبود مطلق بدون از دست دادن دقت نسبی به‌دست می‌آید؛ در نتیجه، فرضیه سوم تأیید می‌شود. پاسخ سوال سوم هم مثبت است: استفاده صریح از ماتریس کالیبراسیون دوربین (camera calibration matrix) خطای مطلق را در مطالعه کنترل‌شده از ۰٫۱۰۶۵ به ۰٫۰۸۳۴ کاهش می‌دهد و مقیاس خروجی از فاصله کانونی (focal length) با شیب ۰٫۹۷ پیروی می‌کند؛ یعنی با ضرب فاصله کانونی ورودی در یک ضریب، عمق خروجی تقریباً در همان ضریب ضرب می‌شود. شیب ایده‌آل ۱ است و شیب مدل کنترل ۰ است، چون این مدل هرگز ماتریس کالیبراسیون دوربین را دریافت نمی‌کند. این پاسخ فرضیه دوم را تأیید می‌کند؛ در نتیجه، هر سه فرضیه تأیید می‌شوند.</aside><aside class="notes-sum">- سوال اول: مثبت؛ تفاوت خطای مدل پایه در هر سه مقایسه معنادار (p &lt; 0.05)
+- نسخه مطلق منتشرشده در NYUv2: AbsRel برابر ۰٫۲۰۷؛ حدود ۲۱٪ خطا
+- سوال دوم: مثبت؛ با ViT-L خطای مطلق ۱۱ تا ۵۰٪ کمتر از مدل کنترل در هر هشت مجموعه آزمون
+- ارزیابی نسبی: اختلاف حداکثر ۱٫۴٪؛ مدل پیشنهادی در هیچ مجموعه‌ای بدتر نیست
+- سوال سوم: مثبت؛ خطا از ۰٫۱۰۶۵ به ۰٫۰۸۳۴
+- شیب عمق خروجی نسبت به فاصله کانونی: ۰٫۹۷؛ ایده‌آل ۱، مدل کنترل ۰
+! هر سه فرضیه تأیید شدند</aside>
 </section>
 
 <!-- ============ 36 · contributions ============ -->
@@ -1592,7 +1507,7 @@
       </div>
     </div>
   </div>
-  <aside class="notes" data-key="b6">این دو اسلاید پشتیبان همه فرمول‌های پایان‌نامه را یک‌جا نشان می‌دهند و فقط برای پرسش و پاسخ هستند. معیارها: هر معیار ابتدا برای هر تصویر روی پیکسل‌های معتبر (valid pixels) محاسبه می‌شود و سپس میانگین ساده روی تصاویر گرفته می‌شود؛ یعنی هر تصویر یک وزن دارد، نه هر پیکسل. بنابراین RMSE (Root Mean Squared Error) یک مجموعه، میانگین RMSE تصاویر است، نه RMSE همه پیکسل‌ها با هم، و هر مجموعه آزمون جداگانه گزارش می‌شود. تعریف و کاربرد سه معیار اصلی در اسلاید ۲۸ «سه معیار، چهار مجموعه آزمون» آمده است. RMSE همیشه بزرگ‌تر یا برابر میانگین خطای مطلق (mean absolute error, MAE) است، چون به خطاهای بزرگ وزن بیشتری می‌دهد؛ RMSE برابر ۱۰ متر یعنی خطای معمول هر پیکسل حدود ۱۰ متر است، با وزن بیشتر برای خطاهای بزرگ، نه اینکه هر پیکسل دقیقاً ۱۰ متر خطا داشته باشد. MAE در پایان‌نامه گزارش نشده است. نسبت مقیاس (scale ratio) در اسلایدهای ۳۳ و ۳۴ به کار رفته است. تراز (alignment): برای مدل نسبی، مقیاس و جابه‌جایی $s^*$ و $t^*$ برای هر تصویر جداگانه با کمترین مربعات (least squares) در فضای عمق معکوس (inverse depth) به‌دست می‌آیند؛ حل بسته (closed form) است و تکرار ندارد و برای کل مجموعه ثابت نیست. همین تراز در ارزیابی نسبی (اسلاید ۲۲) و درون هزینه SSI (Scale and Shift Invariant loss) به کار می‌رود؛ در ارزیابی، پیش‌بینی ترازشده سپس به عمق برگردانده و به بازه ارزیابی محدود می‌شود. هزینه تغییرناپذیر نسبت به مقیاس و جابه‌جایی (scale- and shift-invariant loss, SSI): نام دیگر آن هزینه تغییرناپذیر آفین (affine-invariant loss) است، چون $s\,\hat d+t$ یک تبدیل آفین است؛ عمق نسبی آفین‌ـ‌تغییرناپذیر (affine-invariant depth) یعنی عمق تا یک مقیاس و جابه‌جایی نامعلوم. $\mathcal L_{\mathrm{pixel}}$ همان MAE روی پیش‌بینی ترازشده است. $\mathcal L_{\mathrm{grad}}$ تغییر عمق بین پیکسل‌های همسایه را در چهار گام ۱، ۲، ۴ و ۸ پیکسل و در دو جهت افقی و عمودی با مرجع مقایسه می‌کند؛ به همین دلیل لبه‌ها و شیب‌های محلی تیز می‌مانند، چون هزینه پیکسلی به‌تنهایی نقشه‌های تار را کم جریمه می‌کند. با $\alpha=0.5$ دو جزء وزن یکسان دارند. SiLog (Scale-Invariant Logarithmic loss): ضرب کل پیش‌بینی در یک عدد ثابت، همه $e_i$ را به یک اندازه جابه‌جا می‌کند. با $\lambda=1$ هزینه فقط واریانس $e$ است و به مقیاس حساس نیست؛ نام «تغییرناپذیر نسبت به مقیاس» از همین تعریف اصلی آمده است. ما $\lambda=0.5$ را به کار بردیم، پس نیمی از خطای مقیاس کلی جریمه می‌شود و مدل مقیاس متری را یاد می‌گیرد. مثال: عمق مرجع ۲، ۴ و ۸ متر. پیش‌بینی A برابر ۴، ۸ و ۱۶ متر است؛ شکل درست است، ولی همه پیکسل‌ها دو برابر دورترند، یعنی فقط خطای مقیاس وجود دارد. پیش‌بینی B برابر ۲، ۸ و ۴ متر است؛ مقیاس درست است، ولی دو پیکسل جابه‌جا هستند، یعنی فقط خطای شکل وجود دارد. با $\lambda=0$ هزینه A برابر ۰٫۶۹ و B برابر ۰٫۵۷ است؛ با $\lambda=0.5$، A برابر ۰٫۴۹ و B همان ۰٫۵۷ است؛ با $\lambda=1$، A صفر و B همان ۰٫۵۷ است. پس λ یک پیچ تنظیم است: خطای شکل همیشه به‌طور کامل جریمه می‌شود و λ فقط وزن خطای مقیاس کلی را کاهش می‌دهد. چرا SiLog برای مدل مطلق: یک، با $\lambda=0.5$ خطای مقیاس همچنان جریمه می‌شود، پس متر یاد گرفته می‌شود؛ دو، مقیاس کلی سخت‌ترین و مبهم‌ترین بخش در یک تصویر است (ابهام مقیاس)، و کاهش وزن آن نمی‌گذارد آموزش فقط صرف همین یک عدد شود و ساختار صحنه نیز به‌خوبی یاد گرفته می‌شود؛ سه، فضای لگاریتمی خطا را نسبی می‌کند، یعنی ۱۰ درصد خطا در ۲ متر و در ۵۰ متر هزینه یکسان دارد و پیکسل‌های دور هزینه را پر نمی‌کنند. نام «تغییرناپذیر نسبت به مقیاس» از نسخه اصلی با $\lambda=1$ باقی مانده است؛ نسخه ما فقط تا نیمه تغییرناپذیر است. در پایان‌نامه $e_i$ با نام $d_i$ آمده است؛ اینجا $e$ نوشته شده تا با عمق معکوس $d_i$ اشتباه نشود. هزینه‌ها در اسلاید ۱۹ «برنامه آموزش در یک نگاه» و پشتیبان ۳ آمده‌اند.</aside><aside class="notes-sum">1. معیارها: ابتدا هر تصویر، سپس میانگین ساده روی تصاویر (هر تصویر یک وزن)
+  <aside class="notes" data-key="b6">این دو اسلاید پشتیبان همه فرمول‌های پایان‌نامه را یک‌جا نشان می‌دهند و فقط برای پرسش و پاسخ هستند. معیارها: هر معیار ابتدا برای هر تصویر روی پیکسل‌های معتبر (valid pixels) محاسبه می‌شود و سپس میانگین ساده روی تصاویر گرفته می‌شود؛ یعنی هر تصویر یک وزن دارد، نه هر پیکسل. بنابراین RMSE (Root Mean Squared Error) یک مجموعه، میانگین RMSE تصاویر است، نه RMSE همه پیکسل‌ها با هم، و هر مجموعه آزمون جداگانه گزارش می‌شود. تعریف و کاربرد سه معیار اصلی در اسلاید ۲۷ «سه معیار، چهار مجموعه آزمون» آمده است. RMSE همیشه بزرگ‌تر یا برابر میانگین خطای مطلق (mean absolute error, MAE) است، چون به خطاهای بزرگ وزن بیشتری می‌دهد؛ RMSE برابر ۱۰ متر یعنی خطای معمول هر پیکسل حدود ۱۰ متر است، با وزن بیشتر برای خطاهای بزرگ، نه اینکه هر پیکسل دقیقاً ۱۰ متر خطا داشته باشد. MAE در پایان‌نامه گزارش نشده است. نسبت مقیاس (scale ratio) در اسلایدهای ۲۱ و ۳۱ به کار رفته است. تراز (alignment): برای مدل نسبی، مقیاس و جابه‌جایی $s^*$ و $t^*$ برای هر تصویر جداگانه با کمترین مربعات (least squares) در فضای عمق معکوس (inverse depth) به‌دست می‌آیند؛ حل بسته (closed form) است و تکرار ندارد و برای کل مجموعه ثابت نیست. همین تراز در ارزیابی نسبی (اسلاید ۲۲) و درون هزینه SSI (Scale and Shift Invariant loss) به کار می‌رود؛ در ارزیابی، پیش‌بینی ترازشده سپس به عمق برگردانده و به بازه ارزیابی محدود می‌شود. هزینه تغییرناپذیر نسبت به مقیاس و جابه‌جایی (scale- and shift-invariant loss, SSI): نام دیگر آن هزینه تغییرناپذیر آفین (affine-invariant loss) است، چون $s\,\hat d+t$ یک تبدیل آفین است؛ عمق نسبی آفین‌ـ‌تغییرناپذیر (affine-invariant depth) یعنی عمق تا یک مقیاس و جابه‌جایی نامعلوم. $\mathcal L_{\mathrm{pixel}}$ همان MAE روی پیش‌بینی ترازشده است. $\mathcal L_{\mathrm{grad}}$ تغییر عمق بین پیکسل‌های همسایه را در چهار گام ۱، ۲، ۴ و ۸ پیکسل و در دو جهت افقی و عمودی با مرجع مقایسه می‌کند؛ به همین دلیل لبه‌ها و شیب‌های محلی تیز می‌مانند، چون هزینه پیکسلی به‌تنهایی نقشه‌های تار را کم جریمه می‌کند. با $\alpha=0.5$ دو جزء وزن یکسان دارند. SiLog (Scale-Invariant Logarithmic loss): ضرب کل پیش‌بینی در یک عدد ثابت، همه $e_i$ را به یک اندازه جابه‌جا می‌کند. با $\lambda=1$ هزینه فقط واریانس $e$ است و به مقیاس حساس نیست؛ نام «تغییرناپذیر نسبت به مقیاس» از همین تعریف اصلی آمده است. ما $\lambda=0.5$ را به کار بردیم، پس نیمی از خطای مقیاس کلی جریمه می‌شود و مدل مقیاس متری را یاد می‌گیرد. مثال: عمق مرجع ۲، ۴ و ۸ متر. پیش‌بینی A برابر ۴، ۸ و ۱۶ متر است؛ شکل درست است، ولی همه پیکسل‌ها دو برابر دورترند، یعنی فقط خطای مقیاس وجود دارد. پیش‌بینی B برابر ۲، ۸ و ۴ متر است؛ مقیاس درست است، ولی دو پیکسل جابه‌جا هستند، یعنی فقط خطای شکل وجود دارد. با $\lambda=0$ هزینه A برابر ۰٫۶۹ و B برابر ۰٫۵۷ است؛ با $\lambda=0.5$، A برابر ۰٫۴۹ و B همان ۰٫۵۷ است؛ با $\lambda=1$، A صفر و B همان ۰٫۵۷ است. پس λ یک پیچ تنظیم است: خطای شکل همیشه به‌طور کامل جریمه می‌شود و λ فقط وزن خطای مقیاس کلی را کاهش می‌دهد. چرا SiLog برای مدل مطلق: یک، با $\lambda=0.5$ خطای مقیاس همچنان جریمه می‌شود، پس متر یاد گرفته می‌شود؛ دو، مقیاس کلی سخت‌ترین و مبهم‌ترین بخش در یک تصویر است (ابهام مقیاس)، و کاهش وزن آن نمی‌گذارد آموزش فقط صرف همین یک عدد شود و ساختار صحنه نیز به‌خوبی یاد گرفته می‌شود؛ سه، فضای لگاریتمی خطا را نسبی می‌کند، یعنی ۱۰ درصد خطا در ۲ متر و در ۵۰ متر هزینه یکسان دارد و پیکسل‌های دور هزینه را پر نمی‌کنند. نام «تغییرناپذیر نسبت به مقیاس» از نسخه اصلی با $\lambda=1$ باقی مانده است؛ نسخه ما فقط تا نیمه تغییرناپذیر است. در پایان‌نامه $e_i$ با نام $d_i$ آمده است؛ اینجا $e$ نوشته شده تا با عمق معکوس $d_i$ اشتباه نشود. هزینه‌ها در اسلاید ۲۰ «برنامه آموزش در یک نگاه» و پشتیبان ۳ آمده‌اند.</aside><aside class="notes-sum">1. معیارها: ابتدا هر تصویر، سپس میانگین ساده روی تصاویر (هر تصویر یک وزن)
 - RMSE مجموعه = میانگین RMSE تصاویر؛ RMSE ≥ MAE
 - تراز: $s^*, t^*$ برای هر تصویر جدا، کمترین مربعات، حل بسته، در عمق معکوس
 - SSI = affine-invariant ($s\,\hat d+t$ تبدیل آفین است)
@@ -1634,12 +1549,12 @@
       </div>
     </div>
   </div>
-  <aside class="notes" data-key="b7">این اسلاید فرمول‌های دوربین و آموزش را یک‌جا دارد. تصویرسازی (projection) و ماتریس کالیبراسیون (calibration matrix) در اسلاید ۶ «مدل سوراخ‌سوزنی» آمده‌اند؛ $f_x$ و $f_y$ فاصله کانونی (focal length) برحسب پیکسل هستند. ابهام مقیاس (scale ambiguity) در اسلاید ۵ توضیح داده شده است: جسمی که $k$ برابر بزرگ‌تر باشد و در فاصله $k$ برابر قرار گیرد، همان اندازه را در تصویر دارد؛ پس از یک تصویر به‌تنهایی نمی‌توان مقدار برحسب متر را دانست و با ثابت ماندن تصویر، عمق با فاصله کانونی متناسب است ($Z\propto f$)، که مدل ما در اسلاید ۲۴ «خوانش فاصله کانونی» آن را نشان می‌دهد. مساله در اسلاید ۱۲ از $f_\theta(I)$ به $f_\theta(I,K)$ تغییر می‌کند. در فرمول توجه (attention)، $K_{\mathrm{att}}$ ماتریس کلید (key) است و با ماتریس کالیبراسیون ارتباطی ندارد. میدان دید (field of view) و توصیف‌گر نه‌بعدی دوربین (camera descriptor) در اسلاید ۱۳ آمده‌اند؛ مقادیر به ابعاد تصویر نرمال شده‌اند تا به وضوح تصویر وابسته نباشند. توکن دوربین (اسلاید ۱۵) با گیت $g$ ضرب می‌شود که از صفر شروع می‌شود؛ پس در آغاز آموزش، مدل دقیقاً همان مدل پایه است. زوم‌ـ‌برش (اسلاید ۱۸): پس از برش و تغییر اندازه، ماتریس کالیبراسیون به همان نسبت به‌روزرسانی می‌شود تا با تصویر جدید سازگار بماند. لرزش کانونی (focal jitter): یک $\alpha$ تصادفی هم فاصله کانونی و هم عمق مرجع را ضرب می‌کند و پیکسل‌ها تغییر نمی‌کنند؛ این $\alpha$ با $\alpha$ هزینه SSI (Scale and Shift Invariant loss) متفاوت است. نرخ یادگیری با کاهش چندجمله‌ای (polynomial decay) در اسلاید ۱۹ آمده است. فرمول‌های پیش‌پردازش تصویر، تعبیه وصله‌ها و رمزگشای DPT (Dense Prediction Transformer) در فصل‌های ۲ و ۳ پایان‌نامه آمده‌اند و اینجا تکرار نشده‌اند.</aside><aside class="notes-sum">- تصویرسازی و $K$: اسلاید ۶؛ $f_x=f/p_x$
+  <aside class="notes" data-key="b7">این اسلاید فرمول‌های دوربین و آموزش را یک‌جا دارد. تصویرسازی (projection) و ماتریس کالیبراسیون (calibration matrix) در اسلاید ۶ «مدل سوراخ‌سوزنی» آمده‌اند؛ $f_x$ و $f_y$ فاصله کانونی (focal length) برحسب پیکسل هستند. ابهام مقیاس (scale ambiguity) در اسلاید ۵ توضیح داده شده است: جسمی که $k$ برابر بزرگ‌تر باشد و در فاصله $k$ برابر قرار گیرد، همان اندازه را در تصویر دارد؛ پس از یک تصویر به‌تنهایی نمی‌توان مقدار برحسب متر را دانست و با ثابت ماندن تصویر، عمق با فاصله کانونی متناسب است ($Z\propto f$)، که مدل ما در اسلاید ۲۴ «خوانش فاصله کانونی» آن را نشان می‌دهد. مساله در اسلاید ۱۲ از $f_\theta(I)$ به $f_\theta(I,K)$ تغییر می‌کند. در فرمول توجه (attention)، $K_{\mathrm{att}}$ ماتریس کلید (key) است و با ماتریس کالیبراسیون ارتباطی ندارد. میدان دید (field of view) و توصیف‌گر نه‌بعدی دوربین (camera descriptor) در اسلاید ۱۳ آمده‌اند؛ مقادیر به ابعاد تصویر نرمال شده‌اند تا به وضوح تصویر وابسته نباشند. توکن دوربین (اسلاید ۱۵) با گیت $g$ ضرب می‌شود که از صفر شروع می‌شود؛ پس در آغاز آموزش، مدل دقیقاً همان مدل پایه است. زوم‌ـ‌برش (اسلاید ۱۷): پس از برش و تغییر اندازه، ماتریس کالیبراسیون به همان نسبت به‌روزرسانی می‌شود تا با تصویر جدید سازگار بماند. لرزش کانونی (focal jitter، اسلاید ۱۸): یک $\alpha$ تصادفی هم فاصله کانونی و هم عمق مرجع را ضرب می‌کند و پیکسل‌ها تغییر نمی‌کنند؛ این $\alpha$ با $\alpha$ هزینه SSI (Scale and Shift Invariant loss) متفاوت است. نرخ یادگیری با کاهش چندجمله‌ای (polynomial decay) در اسلاید ۲۰ آمده است. فرمول‌های پیش‌پردازش تصویر، تعبیه وصله‌ها و رمزگشای DPT (Dense Prediction Transformer) در فصل‌های ۲ و ۳ پایان‌نامه آمده‌اند و اینجا تکرار نشده‌اند.</aside><aside class="notes-sum">- تصویرسازی و $K$: اسلاید ۶؛ $f_x=f/p_x$
 - ابهام مقیاس: اسلاید ۵؛ $Z\propto f$: اسلاید ۲۴
 - $f_\theta(I)\to f_\theta(I,K)$: اسلاید ۱۲
 - میدان دید و توصیف‌گر نه‌بعدی: اسلاید ۱۳؛ نرمال‌شده با ابعاد تصویر
 - گیت با $g_0=0$ ⇒ آغاز آموزش = مدل پایه (اسلاید ۱۵)
-- زوم‌ـ‌برش و لرزش کانونی: اسلاید ۱۸
+- زوم‌ـ‌برش و لرزش کانونی: اسلایدهای ۱۷ و ۱۸
 ! $K_{\mathrm{att}}$ در توجه = ماتریس کلید، نه کالیبراسیون؛ $\alpha$ لرزش ≠ $\alpha$ هزینه SSI</aside>
 </section>
 
@@ -2012,7 +1927,7 @@
 <div id="overview"><ol></ol></div>
 <div id="help">کلیدهای پیکان: بعدی و قبلی؛ P: نمای ارائه‌دهنده؛ F: تمام‌صفحه؛ O: مرور</div>
 
-<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "داده و آموزش", "مسیر مدل نهایی", "مدل نهایی و نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "penOn": "کنترل با قلم روشن شد", "penOff": "کنترل با قلم خاموش شد", "penNext": "قلم: بعدی", "penPrev": "قلم: قبلی", "editFail": "ذخیره نشد", "editNeedsServer": "برای ویرایش، ارائه را با serve.py باز کنید", "closeLabel": "بستن", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید", "stale": "صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید"}}</script>
+<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "مجموعه‌داده", "آموزش", "نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "penOn": "کنترل با قلم روشن شد", "penOff": "کنترل با قلم خاموش شد", "penNext": "قلم: بعدی", "penPrev": "قلم: قبلی", "editFail": "ذخیره نشد", "editNeedsServer": "برای ویرایش، ارائه را با serve.py باز کنید", "closeLabel": "بستن", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید", "stale": "صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید"}}</script>
 <script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/js/deck.js"></script>
 </body>

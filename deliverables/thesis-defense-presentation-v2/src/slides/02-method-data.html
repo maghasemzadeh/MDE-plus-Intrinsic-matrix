@@ -180,23 +180,6 @@
   <aside class="notes">{{s14.notes}}</aside>
 </section>
 
-<!-- ============ 15 · paired design ============ -->
-<section class="slide s-pair" data-part="3" data-title="{{s15.title}}">
-  <header class="slide-head"><h2>{{s15.title}}</h2></header>
-  <div class="slide-body">
-    <div class="arms">
-      <div class="arm p auto rise"><h3>{{g.proposed_l}}</h3><span class="chip solid">{{s15.a_in}}</span></div>
-      <div class="shared">
-        <span class="shared-l auto rise">{{s15.shared_label}}</span>
-        <ul><li class="auto rise">{{s15.sh1}}</li><li class="auto rise">{{s15.sh2}}</li><li class="auto rise">{{s15.sh3}}</li><li class="auto rise">{{s15.sh4}}</li><li class="auto rise">{{s15.sh5}}</li><li class="auto rise">{{s15.sh6}}</li></ul>
-      </div>
-      <div class="arm c auto rise"><h3>{{g.control_l}}</h3><span class="chip">{{s15.b_in}}</span></div>
-    </div>
-    <div class="goal only auto rise"><span class="goal-t">{{s15.diff}}</span></div>
-  </div>
-  <aside class="notes">{{s15.notes}}</aside>
-</section>
-
 <!-- ============ 16 · datasets ============ -->
 <section class="slide s-data" data-part="4" data-title="{{s16.title}}">
   <header class="slide-head"><h2>{{s16.title}}</h2></header>
@@ -232,38 +215,91 @@
   <aside class="notes">{{s16.notes}}</aside>
 </section>
 
-<!-- ============ 17 · camera-aware augmentation ============ -->
-<section class="slide s-aug" data-part="4" data-title="{{s17.title}}">
-  <header class="slide-head"><h2>{{s17.title}}</h2></header>
+<!-- ============ 17 · camera-aware augmentation (1): zoom-crop ============ -->
+<!-- the drawn window is half the frame (zoom 2, the upper end of the final model's range): 63° becomes about 34° -->
+<section class="slide s-zoom" data-part="4" data-title="{{s17.title}}">
+  <header class="slide-head"><h2>{{s17.title}}</h2><div class="sub">{{s17.sub}}</div></header>
   <div class="slide-body">
-    <div class="cols c2 top">
-      <div class="panel line aug">
-        <h3>{{s17.a_title}}</h3>
-        <div class="zc">
-          <div class="zc-src"><span class="zc-win"></span><em>{{s17.win}}</em></div>
-          <div class="pair-arrow" aria-hidden="true"></div>
-          <div class="zc-out"><em>{{s17.net}}</em></div>
+    <div class="zflow">
+      <figure class="zcard">
+        <figcaption>{{s17.src}}</figcaption>
+        <div class="zimg src"><span class="zwin"><em>{{s17.win}}</em></span></div>
+        <div class="zcam">
+          <svg class="wedge" viewBox="0 -12 92 104" aria-hidden="true"><path d="M10 40 L69.7 3.4 A70 70 0 0 1 69.7 76.6 Z"/></svg>
+          <div class="zfov"><span>{{s17.fov}}</span><b class="ltr">63°</b></div>
+          <span class="tex zk" data-tex="K=(f,\,c)"></span>
         </div>
-        <div class="eq xs"><span class="tex block" data-tex="f' = f\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\qquad c_x' = (c_x - x_0)\,\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span></div>
-        <ul class="pts s"><li>{{s17.a1}}</li><li>{{s17.a2}}</li><li>{{s17.a3}}</li></ul>
+      </figure>
+      <div class="zmid frag" data-f="1">
+        <span class="zstep">{{s17.step}}</span>
+        <div class="zarrow" aria-hidden="true"></div>
+        <span class="tex zs" data-tex="s=\dfrac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span>
       </div>
-      <div class="panel line aug frag rise" data-f="1">
-        <h3>{{s17.b_title}}</h3>
-        <div class="fj">
-          <div class="fj-c"><span class="tex" data-tex="(f,\;Z)"></span><div class="fj-img"></div></div>
-          <div class="fj-eq" aria-hidden="true">=</div>
-          <div class="fj-c"><span class="tex" data-tex="(\alpha f,\;\alpha Z)"></span><div class="fj-img"></div></div>
+      <figure class="zcard out frag rise" data-f="1">
+        <figcaption>{{s17.net}}</figcaption>
+        <div class="zimg crop"></div>
+        <div class="zcam">
+          <svg class="wedge" viewBox="0 -12 92 104" aria-hidden="true"><path d="M10 40 L76.9 19.5 A70 70 0 0 1 76.9 60.5 Z"/></svg>
+          <div class="zfov"><span>{{s17.fov}}</span><b class="ltr">34°</b></div>
+          <span class="tex zk" data-tex="K'=(f',\,c')"></span>
         </div>
-        <div class="eq xs"><span class="tex block" data-tex="\alpha \sim \exp\!\big(\mathcal{U}(-\ln m,\; +\ln m)\big),\qquad m = 1.6"></span></div>
-        <ul class="pts s"><li>{{s17.b1}}</li><li>{{s17.b2}}</li><li>{{s17.b3}}</li></ul>
-      </div>
+      </figure>
+    </div>
+    <div class="zfoot frag rise" data-f="2">
+      <div class="eq box zeq"><span class="tex" data-tex="f' = s\,f,\qquad c_x' = s\,(c_x - x_0),\qquad c_y' = s\,(c_y - y_0)"></span></div>
+      <div class="chips zfacts"><span class="chip">{{s17.a1}}</span><span class="chip solid">{{s17.a3}}</span></div>
     </div>
   </div>
   <aside class="notes">{{s17.notes}}</aside>
 </section>
 
+<!-- ============ 17b · camera-aware augmentation (2): focal jitter ============ -->
+<section class="slide s-jit" data-part="4" data-title="{{s17b.title}}">
+  <header class="slide-head"><h2>{{s17b.title}}</h2><div class="sub">{{s17b.sub}}</div></header>
+  <div class="slide-body">
+    <div class="cols jcols">
+      <div class="jpair">
+        <figure class="jcard">
+          <figcaption>{{s17b.orig}}</figcaption>
+          <div class="jimg"><i class="pin a"><span class="tex" data-tex="Z_1"></span></i><i class="pin b"><span class="tex" data-tex="Z_2"></span></i></div>
+          <div class="jtags"><span class="jtag"><em>{{s17b.focal}}</em><span class="tex" data-tex="f"></span></span><span class="jtag"><em>{{s17b.depth}}</em><span class="tex" data-tex="Z"></span></span></div>
+        </figure>
+        <div class="jeq frag" data-f="1"><b aria-hidden="true">=</b><span>{{s17b.same}}</span></div>
+        <figure class="jcard jit frag rise" data-f="1">
+          <figcaption>{{s17b.jit}}</figcaption>
+          <div class="jimg"><i class="pin a"><span class="tex" data-tex="\alpha Z_1"></span></i><i class="pin b"><span class="tex" data-tex="\alpha Z_2"></span></i></div>
+          <div class="jtags"><span class="jtag"><em>{{s17b.focal}}</em><span class="tex" data-tex="\alpha f"></span></span><span class="jtag"><em>{{s17b.depth}}</em><span class="tex" data-tex="\alpha Z"></span></span></div>
+        </figure>
+      </div>
+      <div class="stack jside">
+        <div class="eq box jalpha frag rise" data-f="1"><span class="tex block" data-tex="\alpha \sim \exp\!\big(\mathcal{U}(-\ln m,\; +\ln m)\big),\quad m = 1.6"></span><span class="jrange">{{s17b.range}}</span></div>
+        <div class="jout c frag rise" data-f="2"><i class="sw control"></i><div><h5>{{g.control_l}}</h5><p>{{s17b.ctrl}}</p></div></div>
+        <div class="jout p frag rise" data-f="3"><i class="sw proposed"></i><div><h5>{{g.proposed_l}}</h5><p>{{s17b.prop}}</p></div></div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s17b.notes}}</aside>
+</section>
+
+<!-- ============ 15 · paired design ============ -->
+<section class="slide s-pair" data-part="5" data-title="{{s15.title}}">
+  <header class="slide-head"><h2>{{s15.title}}</h2></header>
+  <div class="slide-body">
+    <div class="arms">
+      <div class="arm p auto rise"><h3>{{g.proposed_l}}</h3><span class="chip solid">{{s15.a_in}}</span></div>
+      <div class="shared">
+        <span class="shared-l auto rise">{{s15.shared_label}}</span>
+        <ul><li class="auto rise">{{s15.sh1}}</li><li class="auto rise">{{s15.sh2}}</li><li class="auto rise">{{s15.sh3}}</li><li class="auto rise">{{s15.sh4}}</li><li class="auto rise">{{s15.sh5}}</li><li class="auto rise">{{s15.sh6}}</li></ul>
+      </div>
+      <div class="arm c auto rise"><h3>{{g.control_l}}</h3><span class="chip">{{s15.b_in}}</span></div>
+    </div>
+    <div class="goal only auto rise"><span class="goal-t">{{s15.diff}}</span></div>
+  </div>
+  <aside class="notes">{{s15.notes}}</aside>
+</section>
+
 <!-- ============ 18 · training recipe ============ -->
-<section class="slide s-recipe" data-part="4" data-title="{{s18.title}}">
+<section class="slide s-recipe" data-part="5" data-title="{{s18.title}}">
   <header class="slide-head"><h2>{{s18.title}}</h2><div class="sub">{{s18.sub}}</div></header>
   <div class="slide-body">
     <dl class="kv">

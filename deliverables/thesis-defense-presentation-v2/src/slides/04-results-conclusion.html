@@ -61,78 +61,50 @@
   <aside class="notes">{{s32.notes}}</aside>
 </section>
 
-<!-- ============ 33 · scale accuracy, image by image ============ -->
-<section class="slide s-wins" data-autostep data-part="6" data-title="{{s33.title}}">
-  <header class="slide-head"><h2>{{s33.title}}</h2></header>
-  <div class="slide-body">
-    <div class="wins">
-      <div class="wins-h"><span>{{s33.wins}}</span><span class="muted">{{s33.of}}</span></div>
-      <div class="wbar ltr">
-        <div class="seg p" style="--w:77.5%"><b>1205</b><span>{{g.proposed}}</span></div>
-        <div class="seg c" style="--w:12.2%"><b>189</b><span>{{g.control}}</span></div>
-        <div class="seg b" style="--w:10.3%"><b>160</b><span>{{g.published}}</span></div>
-      </div>
-    </div>
-    <div class="cols c2 top wins-low">
-      <div class="frag rise" data-f="1">
-        <h4 class="h4">{{s33.perset}}</h4>
-        <div class="pset ltr">
-          <span>NYUv2</span><div><i style="width:76.6%"></i></div><b>501 / 654</b>
-          <span>Kinect v1</span><div><i style="width:61%"></i></div><b>122 / 200</b>
-          <span>Kinect v2</span><div><i style="width:72.5%"></i></div><b>145 / 200</b>
-          <span>Cityscapes</span><div><i style="width:87.4%"></i></div><b>437 / 500</b>
-        </div>
-      </div>
-      <div class="frag rise" data-f="2">
-        <h4 class="h4">{{s33.ratio}}</h4>
-        <div class="ltr">
-        <svg class="dia ratio" viewBox="0 0 900 300" role="img">
-          <g class="rgrid"><line x1="60" y1="20" x2="60" y2="222"/><line x1="380" y1="20" x2="380" y2="222"/><line x1="540" y1="20" x2="540" y2="222"/><line x1="700" y1="20" x2="700" y2="222"/></g>
-          <line x1="220" y1="6" x2="220" y2="226" stroke="#0b1f4b" stroke-width="3" stroke-dasharray="7 6"/>
-          <g class="rtick"><text x="60" y="256">0.9</text><text x="220" y="256" class="b">1.0</text><text x="380" y="256">1.1</text><text x="540" y="256">1.2</text><text x="700" y="256">1.3</text></g>
-          <text x="220" y="292" text-anchor="middle" class="d-lab small" direction="rtl">{{s33.ideal}}</text>
-          <rect x="116" y="38" width="232" height="34" rx="17" fill="#184f95"/><text x="362" y="63" class="rv">0.935 – 1.080</text>
-          <rect x="364" y="104" width="256" height="34" rx="17" fill="#c9621f"/><text x="634" y="129" class="rv">1.090 – 1.250</text>
-          <rect x="453.6" y="170" width="155.2" height="34" rx="17" fill="#2a9d8f"/><text x="623" y="195" class="rv">1.146 – 1.243</text>
-        </svg>
-        </div>
-        <div class="legend sm"><span class="k"><i class="sw proposed"></i>{{g.proposed}}</span><span class="k"><i class="sw control"></i>{{g.control}}</span><span class="k"><i class="sw published"></i>{{g.published}}</span></div>
-      </div>
-    </div>
-  </div>
-  <aside class="notes">{{s33.notes}}</aside>
-</section>
-
-<!-- ============ 34 · encoder size and model type: K helps absolute models, not relative ones ============ -->
-<!-- bars: AbsRel reduction of the proposed model vs its control (%), same scale in both panels; data = backup 2 / thesis tab:md_encoder_protocol -->
+<!-- ============ 34 · K helps absolute models, not relative ones (evidence for research question 2) ============ -->
+<!-- one panel per model type, same x scale in both; bars = AbsRel reduction of the proposed model vs its control (%), light = ViT-S, dark = ViT-L;
+     data = backup 2 / thesis tab:md_encoder_protocol; the big numbers are the means of the eight bars of each encoder -->
 <section class="slide s-encoder" data-autostep data-part="6" data-title="{{s34.title}}">
   <header class="slide-head"><h2>{{s34.title}}</h2><div class="sub">{{s34.sub}}</div></header>
   <div class="slide-body">
-    <div class="enc-grid">
-      <div class="enc-panel">
-        <div class="enc-h"><b class="ltr">ViT-S</b><span>{{s34.small}}</span></div>
+    <div class="kx-grid">
+      <div class="kx-panel abs">
+        <div class="kx-h">
+          <div class="kx-t"><b>{{s34.abs_t}}</b><span>{{s34.abs_e}}</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">{{s34.mean}}</span>
+            <div class="kx-stat s"><span class="v">۱۸٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۲۸٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
+        </div>
         <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
-         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
          "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-proposed)","hero":true,"values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
-                   {"color":"var(--c-ideal)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]}]}
+         "series":[{"color":"var(--c-vits)","values":[20.1,19.0,10.7,38.9,23.2,1.0,13.5,21.3],"sig":[1,1,1,1,1,0,1,1]},
+                   {"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]}]}
         </script></div>
       </div>
-      <div class="enc-panel">
-        <div class="enc-h"><b class="ltr">ViT-L</b><span>{{s34.large}}</span></div>
+      <div class="kx-panel rel frag rise" data-f="1">
+        <div class="kx-h">
+          <div class="kx-t"><b>{{s34.rel_t}}</b><span>{{s34.rel_e}}</span></div>
+          <div class="kx-stats">
+            <span class="kx-sl">{{s34.mean}}</span>
+            <div class="kx-stat s"><span class="v">۰٫۳٪</span><span class="l ltr">ViT-S</span></div>
+            <div class="kx-stat l"><span class="v">۰٫۷٪</span><span class="l ltr">ViT-L</span></div>
+          </div>
+        </div>
         <div class="chart" data-chart="hbars"><script type="application/json">
-        {"min":-12,"max":55,"rowH":46,"barH":17,"gap":3,"mb":86,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
-         "bands":[{"from":-3,"to":3,"label":"±3%","f":1}],
+        {"min":-9,"max":58,"rowH":48,"barH":17,"gap":6,"mt":34,"mb":80,"ticks":[0,10,20,30,40,50],"xlabel":"{{s34.x}}",
+         "bands":[{"from":-3.2,"to":3.2,"label":"±3%","f":1}],
          "rows":[{"label":"NYUv2"},{"label":"Cityscapes"},{"label":"KITTI"},{"label":"Kinect v1"},{"label":"Kinect v2"},{"label":"RealSense"},{"label":"Xtion"},{"label":"DIODE"}],
-         "series":[{"color":"var(--c-proposed)","hero":true,"values":[34.4,19.8,10.9,46.2,50.3,26.2,18.6,14.6],"sig":[1,1,1,1,1,1,1,0]},
-                   {"color":"var(--c-ideal)","f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
+         "series":[{"color":"var(--c-vits)","f":1,"values":[2.2,0.4,3.2,0.7,-2.2,-2.7,0.0,0.5],"sig":[1,0,1,0,1,1,0,1]},
+                   {"color":"var(--c-proposed)","hero":true,"f":1,"values":[0.2,0.6,0.2,1.0,1.4,1.2,0.4,0.2],"sig":[0,1,0,1,1,1,1,0]}]}
         </script></div>
       </div>
     </div>
-    <div class="enc-foot">
-      <div class="enc-msg abs"><i class="sw proposed"></i><div><h5>{{s34.abs}}</h5><p>{{s34.abs_msg}}</p></div></div>
-      <div class="enc-msg rel frag rise" data-f="1"><i class="sw ideal"></i><div><h5>{{s34.rel}}</h5><p>{{s34.rel_msg}}</p></div></div>
+    <div class="kx-foot">
+      <div class="legend sm"><span class="k"><i class="sw vits"></i><span class="ltr">ViT-S</span></span><span class="k"><i class="sw proposed"></i><span class="ltr">ViT-L</span></span></div>
+      <span class="chip solid frag" data-f="2">{{s34.answer}}</span>
       <div class="enc-sig">{{s34.sig}} <span class="ltr">p &lt; 0.01</span></div>
     </div>
   </div>
@@ -140,84 +112,13 @@
 </section>
 
 <!-- ============ 35 · answers to the research questions ============ -->
-<section class="slide s-answers" data-autostep data-part="7" data-title="{{s35.title}}">
+<section class="slide s-answers" data-part="7" data-title="{{s35.title}}">
   <header class="slide-head"><h2>{{s35.title}}</h2></header>
   <div class="slide-body">
-    <div class="rq3">
-      <!-- question 1: base model across datasets -->
-      <article class="rq frag rise" data-f="1">
-        <p class="rq-q"><span class="rq-n">{{s35.n1}}</span>{{s35.q1}}</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e1a}}</p>
-          <div class="rq-bars ltr">
-            <span>VKITTI · DrivingStereo</span><div><i style="width:8.7%"></i></div><b>0.039</b>
-            <span>NYUv2 · DrivingStereo</span><div><i style="width:22.4%"></i></div><b>0.101</b>
-            <span>NYUv2 · DIODE</span><div><i style="width:100%"></i></div><b>0.450</b>
-          </div>
-          <p class="rq-cap">{{s35.e1a_cap}}</p>
-        </div>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v no">{{s35.no}}</span>{{s35.e1b}}</p>
-          <p class="rq-big"><b class="ltr">0.207</b><span>{{s35.e1b_cap}}</span></p>
-        </div>
-      </article>
-      <!-- question 2: relative evaluation hides the camera's contribution -->
-      <article class="rq frag rise" data-f="2">
-        <p class="rq-q"><span class="rq-n">{{s35.n2}}</span>{{s35.q2}}</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e2}}</p>
-          <div class="ltr">
-          <svg class="dia rq-dots" viewBox="0 0 540 330" role="img">
-            <g class="axisg"><line x1="54.5" y1="34" x2="54.5" y2="250"/><line x1="123.6" y1="34" x2="123.6" y2="250"/><line x1="192.7" y1="34" x2="192.7" y2="250"/><line x1="261.8" y1="34" x2="261.8" y2="250"/><line x1="330.9" y1="34" x2="330.9" y2="250"/><line x1="400" y1="34" x2="400" y2="250"/></g>
-            <line x1="54.5" y1="30" x2="54.5" y2="252" stroke="#0b1f4b" stroke-width="2.5"/>
-            <text x="532" y="28" class="grp">ViT-L</text>
-            <text x="532" y="68" class="d-lab small" direction="rtl" text-anchor="start">{{s35.abs}}</text>
-            <text x="532" y="110" class="d-lab small" direction="rtl" text-anchor="start">{{s35.rel}}</text>
-            <text x="532" y="152" class="grp">ViT-S</text>
-            <text x="532" y="192" class="d-lab small" direction="rtl" text-anchor="start">{{s35.abs}}</text>
-            <text x="532" y="234" class="d-lab small" direction="rtl" text-anchor="start">{{s35.rel}}</text>
-            <g class="dots abs" transform="translate(0,61)"><circle cx="292.2" r="9"/><circle cx="191.3" r="9"/><circle cx="129.9" r="9"/><circle cx="373.7" r="9"/><circle cx="402.1" r="9"/><circle cx="235.6" r="9"/><circle cx="183.1" r="9"/><circle cx="155.4" r="9"/></g>
-            <g class="dots rel" transform="translate(0,103)"><circle cx="55.9" r="9"/><circle cx="58.6" r="9"/><circle cx="55.9" r="9"/><circle cx="61.4" r="9"/><circle cx="64.2" r="9"/><circle cx="62.8" r="9"/><circle cx="57.3" r="9"/><circle cx="55.9" r="9"/></g>
-            <g class="dots abs" transform="translate(0,185)"><circle cx="193.4" r="9"/><circle cx="185.8" r="9"/><circle cx="128.4" r="9"/><circle cx="323.3" r="9"/><circle cx="214.8" r="9"/><circle cx="61.4" r="9"/><circle cx="147.8" r="9"/><circle cx="201.7" r="9"/></g>
-            <g class="dots rel" transform="translate(0,227)"><circle cx="69.7" r="9"/><circle cx="57.3" r="9"/><circle cx="76.6" r="9"/><circle cx="59.3" r="9"/><circle cx="39.3" r="9"/><circle cx="35.9" r="9"/><circle cx="54.5" r="9"/><circle cx="58.0" r="9"/></g>
-            <g class="tick"><text x="54.5" y="280">0</text><text x="123.6" y="280">10</text><text x="192.7" y="280">20</text><text x="261.8" y="280">30</text><text x="330.9" y="280">40</text><text x="400" y="280">50%</text></g>
-            <text x="227" y="318" text-anchor="middle" class="d-lab small" direction="rtl">{{s35.e2_axis}}</text>
-          </svg>
-          </div>
-          <p class="rq-cap">{{s35.e2_cap}}</p>
-        </div>
-      </article>
-      <!-- question 3: explicit K lowers absolute error and makes scale follow focal length -->
-      <article class="rq frag rise" data-f="3">
-        <p class="rq-q"><span class="rq-n">{{s35.n3}}</span>{{s35.q3}}</p>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e3a}}</p>
-          <div class="rq-bars two ltr">
-            <span class="p">{{g.proposed}}</span><div><i style="width:78.3%"></i></div><b>0.083</b>
-            <span class="c">{{g.control}}</span><div><i class="c" style="width:100%"></i></div><b>0.107</b>
-          </div>
-        </div>
-        <div class="rq-ev">
-          <p class="rq-c"><span class="rq-v">{{s35.yes}}</span>{{s35.e3b}}</p>
-          <div class="ltr">
-          <svg class="dia rq-sweep" viewBox="0 -8 540 240" role="img">
-            <g class="axisg"><line x1="85.2" y1="14" x2="85.2" y2="172"/><line x1="207" y1="14" x2="207" y2="172"/><line x1="389.6" y1="14" x2="389.6" y2="172"/><line x1="76" y1="163.2" x2="398" y2="163.2"/><line x1="76" y1="109" x2="398" y2="109"/><line x1="76" y1="27.6" x2="398" y2="27.6"/></g>
-            <line x1="85.2" y1="163.2" x2="389.6" y2="27.6" stroke="#76819a" stroke-width="3" stroke-dasharray="8 7"/>
-            <line x1="85.2" y1="109" x2="389.6" y2="109" stroke="#c9621f" stroke-width="4"/>
-            <polyline points="85.2,160 146.1,136.8 207,109 283,73.6 389.6,27.6" fill="none" stroke="#184f95" stroke-width="4.5"/>
-            <g fill="#184f95"><circle cx="85.2" cy="160" r="7.5"/><circle cx="146.1" cy="136.8" r="7.5"/><circle cx="207" cy="109" r="7.5"/><circle cx="283" cy="73.6" r="7.5"/><circle cx="389.6" cy="27.6" r="7.5"/></g>
-            <text x="404" y="27" class="sl p">0.97</text><text x="536" y="27" class="sn p" direction="rtl">{{s35.lp}}</text>
-            <text x="404" y="62" class="sl i">1</text><text x="536" y="62" class="sn i" direction="rtl">{{s35.ideal}}</text>
-            <text x="404" y="116" class="sl c">0</text><text x="536" y="116" class="sn c" direction="rtl">{{s35.lc}}</text>
-            <g class="tick"><text x="85.2" y="196">0.6×</text><text x="207" y="196">1×</text><text x="389.6" y="196">1.6×</text></g>
-            <g class="tick y"><text x="66" y="166">0.6×</text><text x="66" y="116">1×</text><text x="66" y="35">1.6×</text></g>
-            <text x="237" y="228" text-anchor="middle" class="d-lab small" direction="rtl">{{s35.e3b_axis}}</text>
-            <text x="84" y="12" text-anchor="end" class="ytitle" direction="rtl">{{s35.e3b_yaxis}} ↑</text>
-          </svg>
-          </div>
-          <p class="rq-cap">{{s35.e3b_cap}}</p>
-        </div>
-      </article>
+    <div class="answers">
+      <div class="ans frag rise" data-f="1"><span class="ans-h">{{s35.h1}}</span><div class="ans-b"><h4>{{s35.t1}}</h4><p>{{s35.e1}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+      <div class="ans frag rise" data-f="2"><span class="ans-h">{{s35.h2}}</span><div class="ans-b"><h4>{{s35.t2}}</h4><p>{{s35.e2}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
+      <div class="ans frag rise" data-f="3"><span class="ans-h">{{s35.h3}}</span><div class="ans-b"><h4>{{s35.t3}}</h4><p>{{s35.e3}}</p></div><span class="ans-v"><i>✓</i>{{s35.verdict}}</span></div>
     </div>
   </div>
   <aside class="notes">{{s35.notes}}</aside>

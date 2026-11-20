@@ -2,7 +2,7 @@
 
 **This is the main defense deck.** All slide and presenter-note updates go here. The other decks under `deliverables/` are left untouched.
 
-Offline HTML/JS slide deck for the master's thesis defense. 39 main slides + 8 backup slides, Persian, right-to-left, white and dark navy.
+Offline HTML/JS slide deck for the master's thesis defense. 39 main slides + 9 backup slides, Persian, right-to-left, white and dark navy.
 
 ## Presenting
 
@@ -49,6 +49,8 @@ The phone opens a presenter view laid out for the right hand. From top to bottom
 
 After the deck files change, reload the laptop page as well as the phone page. If the laptop page is still an older version, the phone shows «صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید».
 
+**S Pen as a clicker (optional, not yet confirmed on the phone).** The pen button at the top of the phone view turns pen mode on; the choice is remembered, and after a reload it starts on the first tap. A web page cannot read the S Pen button directly, so the page listens for what an Air action can turn a press into: media keys (single press = play/pause, double press = next track; a silent sound loop runs so the phone sends them to this page), the browser's Back and Forward, and ordinary keys such as Page Down. The first of each pair moves to the next step, the second goes back, and a green label names what arrived (`قلم: بعدی · back`, `· pause`, ...). On the phone, check Settings → Advanced features → S Pen → Air actions, and under the browser's app actions set single press and double press so that the label shows next for one press and previous for two. While pen mode is on, the phone's own Back gesture also means next instead of leaving the page.
+
 A dot at the top shows the link. If the audience window is closed, or the server can no longer be reached, a yellow or red banner appears and the buttons dim. Reloading the phone page always picks up the current slide.
 
 - The phone and the laptop must be on the same network. University Wi-Fi often blocks devices from talking to each other: if the phone cannot open the page, turn on the phone's hotspot, connect the laptop to it, and restart `serve.py` so it prints the new address.
@@ -64,12 +66,13 @@ A dot at the top shows the link. If the audience window is closed, or the server
 - Styles are in `assets/css/` (`deck.css` engine and shared components, `slides.css` per-slide layout); the engine is `assets/js/deck.js`.
 - A `<video data-play="N">` is started by step N of its slide and is paused and rewound when the slide is entered.
 - A `<video data-ambient>` plays by itself, without sound and in a loop, whenever its slide is shown in the audience window, and pauses when the slide is left. The video keys and the presenter's video panel ignore it; the presenter window shows its poster image. The title slide uses this for `assets/video/depth-demo-title.mp4`.
-- An element with class `auto` (plus `rise` for the upward slide) enters without a key press when its slide opens, in document order; `--auto-gap` (default 230ms) and `--auto-start` (default 320ms) on the slide set the pacing. Class `frag` with `data-f="N"` stays the key-press step.
+- An element with class `auto` (plus `rise` for the upward slide) enters without a key press when its slide opens, in document order; `--auto-gap` (default 450ms, so each item finishes its 420ms entrance before the next starts, like a key-press step) and `--auto-start` (default 320ms) on the slide set the pacing. Class `frag` with `data-f="N"` stays the key-press step.
 - In the presenter notes, the English equivalent of a technical term follows its first mention on each slide in parentheses, for example `ابهام مقیاس (scale ambiguity)`; the presenter window shows these in a lighter colour and keeps each on one line. Terms follow the thesis glossary (`thesis/tex/words.tex`).
 - Abbreviations in the notes are spelled out in full at their first mention on each slide, for example `DPT (Dense Prediction Transformer)`; inside a parenthesis the form is `(Full Name, ABBR 2017)`. The English spans in the presenter window wrap as a block, so long names stay readable.
 - Formulas in the notes are written as `$...$` (KaTeX syntax) inside the text in `content/fa.json`. The presenter window typesets them left-to-right; short ones stay in the line, long ones (over 26 characters) get a centred line of their own. Metric definitions (AbsRel, RMSE, δ₁) are in the notes of the «سه معیار، چهار مجموعه آزمون» slide and backup 3; the scale-and-shift alignment is in the notes of «ارزیابی نسبی و مطلق؛ سهم دوربین». Backup slides 6 and 7 are formula sheets for questions: every formula of the thesis (metrics incl. SqRel/log10/MAE, per-image alignment closed form, SSI pixel and gradient terms, SiLog and its variance form; camera model, descriptor, gate token, zoom-crop, focal jitter, lr schedule, attention), with notes saying where each one is used. In b6 the SiLog log-difference is written $e_i$ (thesis: $d_i$) to avoid clashing with inverse depth $d_i$.
 - Slides 8 and 9 are the era timeline (keys `s8.*` and `s8b.*`): four era cards each, one click per card. The pictures `assets/img/tl-1..7.jpg` are crops of figures from the cited papers (Photo Pop-up, Make3D, Eigen et al., Monodepth, MiDaS, Depth Anything, Metric3D); `tl-8.jpg` is our own NYUv2 result. The story and data of each era are in the notes, not on the slide.
 - The last backup slide (keys `b8.*`) is «Depth Anything 3: معماری و ایده‌های اصلی»: a flow diagram of DA3 (single plain transformer, optional camera token, Dual-DPT head giving depth and ray maps), four focus phrases and a size/speed table taken from the DA3 paper (arXiv 2511.10647). The full explanation (architecture, depth-ray target, teacher-student training, results, ablations, differences from this work) is in its notes. It is not shown in the talk.
+- Backup 9 (keys `b9.*`) is «منحنی آموزش مدل نهایی»: per-epoch mean validation AbsRel (epochs 1–12) and mean training loss (epochs 2–12; epoch 1 in the footnote) of the final ViT-L multi-domain pair, proposed vs control. The two charts are static SVG generated from `~/curves/curves.json` (parsed from lingotube `logs/md1-P.log` / `md1-C.log`); the notes say plainly that the late flattening coincides with the learning rate reaching about zero. Slide 19's notes point to it.
 - After any change run `python3 build.py`, which regenerates `index.html` and reports missing or unused text keys.
 
 ## Sources

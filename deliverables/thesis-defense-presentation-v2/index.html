@@ -718,7 +718,7 @@
       <div class="auto rise"><dt>مجموعه‌های آموزش</dt><dd class="ltr">NYUv2, KITTI, Virtual KITTI 2, Cityscapes</dd></div>
     </dl>
   </div>
-  <aside class="notes" data-key="s18">دستورالعمل آموزش در یک نگاه ارائه شده است. از نقطه وارسی (checkpoint) نسخه نسبی منتشرشده Depth Anything V2 با ViT-L (Vision Transformer Large) شروع می‌کنیم، انکودر DINOv2 (self-DIstillation with NO labels version 2) را فریز نگه می‌داریم و دیکودر DPT (Dense Prediction Transformer) و انکودر دوربین (camera encoder) را با هزینه SiLog (Scale-Invariant Logarithmic loss) و λ برابر ۰٫۵ آموزش می‌دهیم: $\mathcal L_{\mathrm{SiLog}}=\sqrt{\dfrac1N\sum_i d_i^2-\dfrac{\lambda}{N^2}\Big(\sum_i d_i\Big)^2},\quad d_i=\ln D_i-\ln\hat D_i$. با λ برابر ۱، هزینه کاملاً نسبت به مقیاس تغییرناپذیر است؛ با λ برابر ۰٫۵، بخشی از خطای مقیاس سراسری همچنان جریمه می‌شود و مدل به مقیاس مطلق حساس می‌ماند. بهینه‌ساز (optimizer) AdamW (Adam with decoupled Weight decay) است؛ نرخ یادگیری (learning rate) پایه ۵×۱۰⁻⁶ است و برای دیکودر و انکودر دوربین ۱۰ برابر می‌شود، با کاهش چندجمله‌ای توان ۰٫۹، بدون گرم‌سازی (warm-up)، برش گرادیان (gradient clipping) ۱٫۰ و اندازه دسته (batch size) ۴. نرخ یادگیری در گام t از T گام برابر است با $\mathrm{lr}_t=\mathrm{lr}_0\Big(1-\dfrac{t}{T}\Big)^{0.9}$. در هر دوره دقیقاً ۱۵۰۰ نمونه از هر چهار مجموعه‌داده انتخاب می‌شود تا هیچ مجموعه‌ای غالب نشود؛ ۱۲ دوره برابر با ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است. زمان آموزش برای هر اندازه انکودر به این صورت است. در هر دو اندازه، تعداد دوره‌ها (epochs) برابر ۱۲ و تعداد گام‌های هر دوره ۱۵۰۰ است. وقتی فقط یک آموزش روی یک RTX 4090 اجرا شود، سرعت اندازه‌گیری‌شده برای ViT-S حدود ۱۳٫۵ گام بر ثانیه است؛ یعنی هر دوره حدود ۲ دقیقه و کل ۱۲ دوره (۱۸۰۰۰ گام) حدود ۲۲ دقیقه طول می‌کشد. برای ViT-L، سرعت حدود ۷ گام بر ثانیه است؛ یعنی هر دوره حدود ۳٫۶ دقیقه و کل ۱۲ دوره حدود ۴۳ دقیقه طول می‌کشد. این زمان‌ها فقط گام‌های آموزش را شامل می‌شوند و اعتبارسنجی و ذخیره نقطه وارسی (checkpoint) در آن‌ها لحاظ نشده است. اجراهای واقعی کندتر بودند، زیرا چند آموزش هم‌زمان روی همان GPU اجرا می‌شد: اجرای نهایی ViT-L حدود ۲ ساعت و ۵۰ دقیقه و اجرای ViT-S حدود ۲۸ دقیقه طول کشید. ViT-B و ViT-G در این پایان‌نامه آموزش داده نشده‌اند. نقطه وارسی با کمترین میانگین AbsRel (Absolute Relative Error) روی ۵۰ تصویر اعتبارسنجی از هر دامنه انتخاب می‌شود و هیچ تصویر آزمونی در این انتخاب استفاده نمی‌شود. همه آموزش‌ها با یک RTX 4090 انجام شده‌اند. در این اسلاید، آنچه می‌بینیم اجرای اصلی و نهایی آموزش چندمجموعه‌ای برای ساخت مدل نهایی است؛ ما از نقطه شروع Depth Anything V2 ViT-L استفاده کردیم و در هر دوره (epoch) از هر یک از چهار مجموعه‌داده NYUv2، KITTI، Virtual KITTI 2 و Cityscapes، تعداد ۱۵۰۰ نمونه برداشتیم؛ بنابراین در هر دوره ۶۰۰۰ نمونه، در ۱۲ دوره ۷۲۰۰۰ نمونه و با اندازه دسته (batch size) ۴، تعداد ۱۸۰۰۰ گام بهینه‌سازی داشتیم. آموزش با برش تصادفی ۵۱۸×۵۱۸، افزونه‌سازی زوم‌ـ‌برش در بازه ۱ تا ۲، لرزش کانونی با m برابر ۱٫۶ و دقت ترکیبی bfloat16 انجام شد. همچنین یک زوج مدل با ViT-S و یک زوج مدل نسبی با همین دستور چندمجموعه‌ای آموزش دیدند، با این تفاوت که مدل‌های نسبی لرزش کانونی نداشتند. نکته مهم این است که ۱۲ دوره در اینجا به معنای آموزش کمتر از اجراهای ۴۰ دوره‌ای قبلی نیست، چون یک دوره در مطالعه نهایی ۶۰۰۰ نمونه دارد، در حالی که یک دوره از مطالعه NYUv2 فقط ۶۳۶ نمونه دارد؛ در نتیجه ۱۲ دوره نهایی برابر ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است، در برابر حدود ۲۵۴۴۰ نمونه و حدود ۶۳۶۰ گام در ۴۰ دوره قبلی، یعنی حدود ۲٫۸ برابر آموزش بیشتر. در داده اعتبارسنجی، شامل ۵۰ تصویر از هر مجموعه‌داده آموزشی و بدون تصویر آزمون، میانگین AbsRel مدل پیشنهادی ViT-L از ۰٫۲۰۲ در دوره اول به ۰٫۱۶۰، ۰٫۱۲۲، ۰٫۱۱۱ و سپس ۰٫۱۱۹، ۰٫۱۲۰، ۰٫۱۱۶، ۰٫۱۰۸، ۰٫۱۰۶، ۰٫۱۰۳، ۰٫۱۰۱ و ۰٫۱۰۰ رسید؛ بیشترین بهبود در چهار دوره نخست بود و بین دوره‌های ۱۱ و ۱۲ فقط ۰٫۰۰۰۴ کاهش داشت، در حالی که نرخ یادگیری تا پایان دوره ۱۲ به‌صورت چندجمله‌ای تقریباً به صفر رسید. بهترین مقدار مدل کنترل حدود ۰٫۱۲۴ بود. برای مقایسه، مطالعات کنترل‌شده قبلی فقط با NYUv2 و ۶۳۶ تصویر آموزشی انجام شدند: پروتکل نسبی با ViT-S و ViT-L، سپس نسبی با افزونه‌سازی زوم‌ـ‌برش، مطلق با زوم‌ـ‌برش و مطلق با لرزش کانونی، که سه اجرای آخر با ViT-L بودند؛ همه ۴۰ دوره و با دقت ۳۲بیتی اجرا شدند. فصل ۵ نیز آموزش ۱۲ دوره‌ای با انکودر فریزشده را محدودیت و آموزش طولانی‌تر را کار آینده معرفی می‌کند.</aside><aside class="notes-sum">1. شروع از checkpoint نسبی Depth Anything V2، ViT-L
+  <aside class="notes" data-key="s18">دستورالعمل آموزش در یک نگاه ارائه شده است. از نقطه وارسی (checkpoint) نسخه نسبی منتشرشده Depth Anything V2 با ViT-L (Vision Transformer Large) شروع می‌کنیم، انکودر DINOv2 (self-DIstillation with NO labels version 2) را فریز نگه می‌داریم و دیکودر DPT (Dense Prediction Transformer) و انکودر دوربین (camera encoder) را با هزینه SiLog (Scale-Invariant Logarithmic loss) و λ برابر ۰٫۵ آموزش می‌دهیم: $\mathcal L_{\mathrm{SiLog}}=\sqrt{\dfrac1N\sum_i d_i^2-\dfrac{\lambda}{N^2}\Big(\sum_i d_i\Big)^2},\quad d_i=\ln D_i-\ln\hat D_i$. با λ برابر ۱، هزینه کاملاً نسبت به مقیاس تغییرناپذیر است؛ با λ برابر ۰٫۵، بخشی از خطای مقیاس سراسری همچنان جریمه می‌شود و مدل به مقیاس مطلق حساس می‌ماند. بهینه‌ساز (optimizer) AdamW (Adam with decoupled Weight decay) است؛ نرخ یادگیری (learning rate) پایه ۵×۱۰⁻⁶ است و برای دیکودر و انکودر دوربین ۱۰ برابر می‌شود، با کاهش چندجمله‌ای توان ۰٫۹، بدون گرم‌سازی (warm-up)، برش گرادیان (gradient clipping) ۱٫۰ و اندازه دسته (batch size) ۴. نرخ یادگیری در گام t از T گام برابر است با $\mathrm{lr}_t=\mathrm{lr}_0\Big(1-\dfrac{t}{T}\Big)^{0.9}$. در هر دوره دقیقاً ۱۵۰۰ نمونه از هر چهار مجموعه‌داده انتخاب می‌شود تا هیچ مجموعه‌ای غالب نشود؛ ۱۲ دوره برابر با ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است. زمان آموزش برای هر اندازه انکودر به این صورت است. در هر دو اندازه، تعداد دوره‌ها (epochs) برابر ۱۲ و تعداد گام‌های هر دوره ۱۵۰۰ است. وقتی فقط یک آموزش روی یک RTX 4090 اجرا شود، سرعت اندازه‌گیری‌شده برای ViT-S حدود ۱۳٫۵ گام بر ثانیه است؛ یعنی هر دوره حدود ۲ دقیقه و کل ۱۲ دوره (۱۸۰۰۰ گام) حدود ۲۲ دقیقه طول می‌کشد. برای ViT-L، سرعت حدود ۷ گام بر ثانیه است؛ یعنی هر دوره حدود ۳٫۶ دقیقه و کل ۱۲ دوره حدود ۴۳ دقیقه طول می‌کشد. این زمان‌ها فقط گام‌های آموزش را شامل می‌شوند و اعتبارسنجی و ذخیره نقطه وارسی (checkpoint) در آن‌ها لحاظ نشده است. اجراهای واقعی کندتر بودند، زیرا چند آموزش هم‌زمان روی همان GPU اجرا می‌شد: اجرای نهایی ViT-L حدود ۲ ساعت و ۵۰ دقیقه و اجرای ViT-S حدود ۲۸ دقیقه طول کشید. ViT-B و ViT-G در این پایان‌نامه آموزش داده نشده‌اند. نقطه وارسی با کمترین میانگین AbsRel (Absolute Relative Error) روی ۵۰ تصویر اعتبارسنجی از هر دامنه انتخاب می‌شود و هیچ تصویر آزمونی در این انتخاب استفاده نمی‌شود. همه آموزش‌ها با یک RTX 4090 انجام شده‌اند. در این اسلاید، آنچه می‌بینیم اجرای اصلی و نهایی آموزش چندمجموعه‌ای برای ساخت مدل نهایی است؛ ما از نقطه شروع Depth Anything V2 ViT-L استفاده کردیم و در هر دوره (epoch) از هر یک از چهار مجموعه‌داده NYUv2، KITTI، Virtual KITTI 2 و Cityscapes، تعداد ۱۵۰۰ نمونه برداشتیم؛ بنابراین در هر دوره ۶۰۰۰ نمونه، در ۱۲ دوره ۷۲۰۰۰ نمونه و با اندازه دسته (batch size) ۴، تعداد ۱۸۰۰۰ گام بهینه‌سازی داشتیم. آموزش با برش تصادفی ۵۱۸×۵۱۸، افزونه‌سازی زوم‌ـ‌برش در بازه ۱ تا ۲، لرزش کانونی با m برابر ۱٫۶ و دقت ترکیبی bfloat16 انجام شد. همچنین یک زوج مدل با ViT-S و یک زوج مدل نسبی با همین دستور چندمجموعه‌ای آموزش دیدند، با این تفاوت که مدل‌های نسبی لرزش کانونی نداشتند. نکته مهم این است که ۱۲ دوره در اینجا به معنای آموزش کمتر از اجراهای ۴۰ دوره‌ای قبلی نیست، چون یک دوره در مطالعه نهایی ۶۰۰۰ نمونه دارد، در حالی که یک دوره از مطالعه NYUv2 فقط ۶۳۶ نمونه دارد؛ در نتیجه ۱۲ دوره نهایی برابر ۷۲۰۰۰ نمونه و ۱۸۰۰۰ گام است، در برابر حدود ۲۵۴۴۰ نمونه و حدود ۶۳۶۰ گام در ۴۰ دوره قبلی، یعنی حدود ۲٫۸ برابر آموزش بیشتر. در داده اعتبارسنجی، شامل ۵۰ تصویر از هر مجموعه‌داده آموزشی و بدون تصویر آزمون، میانگین AbsRel مدل پیشنهادی ViT-L از ۰٫۲۰۲ در دوره اول به ۰٫۱۶۰، ۰٫۱۲۲، ۰٫۱۱۱ و سپس ۰٫۱۱۹، ۰٫۱۲۰، ۰٫۱۱۶، ۰٫۱۰۸، ۰٫۱۰۶، ۰٫۱۰۳، ۰٫۱۰۱ و ۰٫۱۰۰ رسید؛ بیشترین بهبود در چهار دوره نخست بود و بین دوره‌های ۱۱ و ۱۲ فقط ۰٫۰۰۰۴ کاهش داشت، در حالی که نرخ یادگیری تا پایان دوره ۱۲ به‌صورت چندجمله‌ای تقریباً به صفر رسید. بهترین مقدار مدل کنترل حدود ۰٫۱۲۴ بود. برای مقایسه، مطالعات کنترل‌شده قبلی فقط با NYUv2 و ۶۳۶ تصویر آموزشی انجام شدند: پروتکل نسبی با ViT-S و ViT-L، سپس نسبی با افزونه‌سازی زوم‌ـ‌برش، مطلق با زوم‌ـ‌برش و مطلق با لرزش کانونی، که سه اجرای آخر با ViT-L بودند؛ همه ۴۰ دوره و با دقت ۳۲بیتی اجرا شدند. فصل ۵ نیز آموزش ۱۲ دوره‌ای با انکودر فریزشده را محدودیت و آموزش طولانی‌تر را کار آینده معرفی می‌کند. برای منحنی‌های کامل خطای اعتبارسنجی و هزینه آموزش هر دو مدل، به اسلاید پشتیبان «منحنی آموزش مدل نهایی» مراجعه کنید.</aside><aside class="notes-sum">1. شروع از checkpoint نسبی Depth Anything V2، ViT-L
 2. فریز DINOv2؛ آموزش DPT و انکودر دوربین
 3. SiLog با λ برابر ۰٫۵؛ AdamW و نرخ پایه ۵×۱۰⁻⁶
 4. ضریب دیکودر و انکودر دوربین: ۱۰؛ batch size: ۴
@@ -739,10 +739,10 @@
   <header class="slide-head"><h2>چهار فاز مسیر آزمایش‌ها</h2></header>
   <div class="slide-body">
     <div class="phases">
-      <div class="ph frag rise" data-f="1"><span class="ph-n">فاز ۱</span><h4>ممیزی و نقطه شروع</h4><i></i><p>زنجیره ارزیابی تأییدشده و نقاط وارسی سالم</p></div>
-      <div class="ph frag rise" data-f="2"><span class="ph-n">فاز ۲</span><h4>اصلاح آموزش و ارزیابی</h4><i></i><p>ارزیابی مطلق بدون تراز</p></div>
-      <div class="ph frag rise" data-f="3"><span class="ph-n">فاز ۳</span><h4>آزمون استفاده واقعی از K</h4><i></i><p>شواهد علّی، نه صرفاً همبستگی</p></div>
-      <div class="ph last frag rise" data-f="4"><span class="ph-n">فاز ۴</span><h4>تعمیم</h4><i></i><p>چند دوربین و هشت مجموعه آزمون</p></div>
+      <div class="ph auto rise"><span class="ph-n">فاز ۱</span><h4>ممیزی و نقطه شروع</h4><i></i><p>زنجیره ارزیابی تأییدشده و نقاط وارسی سالم</p></div>
+      <div class="ph frag rise" data-f="1"><span class="ph-n">فاز ۲</span><h4>اصلاح آموزش و ارزیابی</h4><i></i><p>ارزیابی مطلق بدون تراز</p></div>
+      <div class="ph frag rise" data-f="2"><span class="ph-n">فاز ۳</span><h4>آزمون استفاده واقعی از K</h4><i></i><p>شواهد علّی، نه صرفاً همبستگی</p></div>
+      <div class="ph last frag rise" data-f="3"><span class="ph-n">فاز ۴</span><h4>تعمیم</h4><i></i><p>چند دوربین و هشت مجموعه آزمون</p></div>
     </div>
   </div>
   <aside class="notes" data-key="s19">مسیر رسیدن به مدل نهایی هشت گام داشت که در چهار فاز خلاصه می‌شود. در فاز نخست، نقاط وارسی (checkpoints) را ممیزی کردیم، زنجیره ارزیابی را با بازتولید مقاله مرجع تأیید کردیم و نشان دادیم که مقیاس مطلق مدل پایه در مجموعه‌داده‌های مختلف پایدار نیست. در فاز دوم دریافتیم که تراز هر تصویر در ارزیابی نسبی (relative evaluation) اطلاعات مقیاس را حذف می‌کند؛ بنابراین سهم دوربین باید با ارزیابی مطلق (absolute evaluation) و بدون تراز سنجیده شود. در فاز سوم، افزونه‌سازی لرزش کانونی (focal-jitter augmentation) باعث شد مدل واقعاً از ماتریس کالیبراسیون (calibration matrix) استفاده کند و آزمون پیمایش فاصله کانونی (focal-length sweep) و آزمون حذف و تحریف ماتریس کالیبراسیون (calibration-matrix knockout and perturbation) این موضوع را تأیید کردند. در فاز چهارم، همین دستورالعمل برای آموزش چندمجموعه‌ای (multi-domain training) با دوربین‌های متفاوت به کار رفت.</aside><aside class="notes-sum">1. ممیزی checkpoint و بازتولید زنجیره ارزیابی
@@ -1625,6 +1625,153 @@
 ! تک‌تصویری DA3: K به شبکه نمی‌رسد؛ مقیاس متری = فاصله کانونی × خروجی ÷ ۳۰۰</aside>
 </section>
 
+<!-- ============ backup 9 · training curves of the final model ============ -->
+<section class="slide backup s-b9" data-title="منحنی آموزش مدل نهایی">
+  <header class="slide-head"><h2>منحنی آموزش مدل نهایی</h2><div class="sub">اجرای اصلی ViT-L، ۱۲ دوره × ۱۵۰۰ گام، مدل پیشنهادی در برابر مدل کنترل، بذر تصادفی ۴۲</div></header>
+  <div class="slide-body">
+    <div class="legend"><span class="k"><i class="sw proposed"></i>مدل پیشنهادی</span><span class="k"><i class="sw control"></i>مدل کنترل</span></div>
+    <div class="cols c2 top">
+      <div>
+        <h4 class="h4">میانگین AbsRel اعتبارسنجی در هر دوره، ۵۰ تصویر برای هر دامنه</h4>
+        <div class="chart">
+<svg viewBox="0 0 820 470" role="img">
+<g class="grid">
+<line x1="112" x2="690" y1="345.5" y2="345.5"/>
+<line x1="112" x2="690" y1="264.1" y2="264.1"/>
+<line x1="112" x2="690" y1="182.7" y2="182.7"/>
+<line x1="112" x2="690" y1="101.4" y2="101.4"/>
+<line x1="112" x2="690" y1="20.0" y2="20.0"/>
+</g>
+<text class="tick" x="98" y="353.5" text-anchor="end">0.10</text>
+<text class="tick" x="98" y="272.1" text-anchor="end">0.15</text>
+<text class="tick" x="98" y="190.7" text-anchor="end">0.20</text>
+<text class="tick" x="98" y="109.4" text-anchor="end">0.25</text>
+<text class="tick" x="98" y="28.0" text-anchor="end">0.30</text>
+<text class="tick" x="112.0" y="414" text-anchor="middle">1</text>
+<text class="tick" x="164.5" y="414" text-anchor="middle">2</text>
+<text class="tick" x="217.1" y="414" text-anchor="middle">3</text>
+<text class="tick" x="269.6" y="414" text-anchor="middle">4</text>
+<text class="tick" x="322.2" y="414" text-anchor="middle">5</text>
+<text class="tick" x="374.7" y="414" text-anchor="middle">6</text>
+<text class="tick" x="427.3" y="414" text-anchor="middle">7</text>
+<text class="tick" x="479.8" y="414" text-anchor="middle">8</text>
+<text class="tick" x="532.4" y="414" text-anchor="middle">9</text>
+<text class="tick" x="584.9" y="414" text-anchor="middle">10</text>
+<text class="tick" x="637.5" y="414" text-anchor="middle">11</text>
+<text class="tick" x="690.0" y="414" text-anchor="middle">12</text>
+<g class="axis"><line x1="112" x2="690" y1="378" y2="378"/></g>
+<text class="ylab" x="401" y="456" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext">دوره</text>
+<text class="ylab" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext" transform="translate(30,199) rotate(-90)">خطای AbsRel اعتبارسنجی</text>
+<g class="ln-g"><path class="ln" d="M112.0,179.1L164.5,248.6L217.1,309.8L269.6,328.0L322.2,313.9L374.7,313.1L427.3,320.2L479.8,333.1L532.4,335.7L584.9,341.2L637.5,344.2L690.0,344.8" stroke="var(--c-proposed)"/>
+<circle class="dot" cx="112.0" cy="179.1" r="8" fill="var(--c-proposed)"><title>proposed · epoch 1: 0.2022</title></circle>
+<circle class="dot" cx="164.5" cy="248.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 2: 0.1595</title></circle>
+<circle class="dot" cx="217.1" cy="309.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 3: 0.1219</title></circle>
+<circle class="dot" cx="269.6" cy="328.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 4: 0.1107</title></circle>
+<circle class="dot" cx="322.2" cy="313.9" r="8" fill="var(--c-proposed)"><title>proposed · epoch 5: 0.1194</title></circle>
+<circle class="dot" cx="374.7" cy="313.1" r="8" fill="var(--c-proposed)"><title>proposed · epoch 6: 0.1199</title></circle>
+<circle class="dot" cx="427.3" cy="320.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 7: 0.1155</title></circle>
+<circle class="dot" cx="479.8" cy="333.1" r="8" fill="var(--c-proposed)"><title>proposed · epoch 8: 0.1076</title></circle>
+<circle class="dot" cx="532.4" cy="335.7" r="8" fill="var(--c-proposed)"><title>proposed · epoch 9: 0.1060</title></circle>
+<circle class="dot" cx="584.9" cy="341.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 10: 0.1026</title></circle>
+<circle class="dot" cx="637.5" cy="344.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 11: 0.1008</title></circle>
+<circle class="dot" cx="690.0" cy="344.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 12: 0.1004</title></circle>
+</g>
+<g class="ln-g"><path class="ln" d="M112.0,123.5L164.5,195.4L217.1,31.1L269.6,290.0L322.2,283.9L374.7,282.3L427.3,222.3L479.8,284.3L532.4,288.3L584.9,228.9L637.5,306.9L690.0,299.9" stroke="var(--c-control)"/>
+<circle class="dot" cx="112.0" cy="123.5" r="8" fill="var(--c-control)"><title>control · epoch 1: 0.2364</title></circle>
+<circle class="dot" cx="164.5" cy="195.4" r="8" fill="var(--c-control)"><title>control · epoch 2: 0.1922</title></circle>
+<circle class="dot" cx="217.1" cy="31.1" r="8" fill="var(--c-control)"><title>control · epoch 3: 0.2932</title></circle>
+<circle class="dot" cx="269.6" cy="290.0" r="8" fill="var(--c-control)"><title>control · epoch 4: 0.1341</title></circle>
+<circle class="dot" cx="322.2" cy="283.9" r="8" fill="var(--c-control)"><title>control · epoch 5: 0.1378</title></circle>
+<circle class="dot" cx="374.7" cy="282.3" r="8" fill="var(--c-control)"><title>control · epoch 6: 0.1388</title></circle>
+<circle class="dot" cx="427.3" cy="222.3" r="8" fill="var(--c-control)"><title>control · epoch 7: 0.1757</title></circle>
+<circle class="dot" cx="479.8" cy="284.3" r="8" fill="var(--c-control)"><title>control · epoch 8: 0.1376</title></circle>
+<circle class="dot" cx="532.4" cy="288.3" r="8" fill="var(--c-control)"><title>control · epoch 9: 0.1351</title></circle>
+<circle class="dot" cx="584.9" cy="228.9" r="8" fill="var(--c-control)"><title>control · epoch 10: 0.1716</title></circle>
+<circle class="dot" cx="637.5" cy="306.9" r="8" fill="var(--c-control)"><title>control · epoch 11: 0.1237</title></circle>
+<circle class="dot" cx="690.0" cy="299.9" r="8" fill="var(--c-control)"><title>control · epoch 12: 0.1280</title></circle>
+</g>
+<text class="val end-proposed" x="706" y="352.8" text-anchor="start">0.1004</text>
+<text class="val end-control" x="706" y="307.9" text-anchor="start">0.1280</text>
+</svg>
+        </div>
+      </div>
+      <div>
+        <h4 class="h4">میانگین هزینه آموزش در هر دوره، دوره‌های ۲ تا ۱۲</h4>
+        <div class="chart">
+<svg viewBox="0 0 820 470" role="img">
+<g class="grid">
+<line x1="112" x2="690" y1="352.4" y2="352.4"/>
+<line x1="112" x2="690" y1="288.5" y2="288.5"/>
+<line x1="112" x2="690" y1="224.6" y2="224.6"/>
+<line x1="112" x2="690" y1="160.6" y2="160.6"/>
+<line x1="112" x2="690" y1="96.7" y2="96.7"/>
+<line x1="112" x2="690" y1="32.8" y2="32.8"/>
+</g>
+<text class="tick" x="98" y="360.4" text-anchor="end">0.10</text>
+<text class="tick" x="98" y="296.5" text-anchor="end">0.15</text>
+<text class="tick" x="98" y="232.6" text-anchor="end">0.20</text>
+<text class="tick" x="98" y="168.6" text-anchor="end">0.25</text>
+<text class="tick" x="98" y="104.7" text-anchor="end">0.30</text>
+<text class="tick" x="98" y="40.8" text-anchor="end">0.35</text>
+<text class="tick" x="112.0" y="414" text-anchor="middle">2</text>
+<text class="tick" x="169.8" y="414" text-anchor="middle">3</text>
+<text class="tick" x="227.6" y="414" text-anchor="middle">4</text>
+<text class="tick" x="285.4" y="414" text-anchor="middle">5</text>
+<text class="tick" x="343.2" y="414" text-anchor="middle">6</text>
+<text class="tick" x="401.0" y="414" text-anchor="middle">7</text>
+<text class="tick" x="458.8" y="414" text-anchor="middle">8</text>
+<text class="tick" x="516.6" y="414" text-anchor="middle">9</text>
+<text class="tick" x="574.4" y="414" text-anchor="middle">10</text>
+<text class="tick" x="632.2" y="414" text-anchor="middle">11</text>
+<text class="tick" x="690.0" y="414" text-anchor="middle">12</text>
+<g class="axis"><line x1="112" x2="690" y1="378" y2="378"/></g>
+<text class="ylab" x="401" y="456" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext">دوره</text>
+<text class="ylab" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext" transform="translate(30,199) rotate(-90)">هزینه SiLog آموزش</text>
+<g class="ln-g"><path class="ln" d="M112.0,245.5L169.8,251.3L227.6,282.3L285.4,277.6L343.2,266.8L401.0,326.8L458.8,324.0L516.6,286.3L574.4,325.1L632.2,333.6L690.0,346.9" stroke="var(--c-proposed)"/>
+<circle class="dot" cx="112.0" cy="245.5" r="8" fill="var(--c-proposed)"><title>proposed · epoch 2: 0.184</title></circle>
+<circle class="dot" cx="169.8" cy="251.3" r="8" fill="var(--c-proposed)"><title>proposed · epoch 3: 0.179</title></circle>
+<circle class="dot" cx="227.6" cy="282.3" r="8" fill="var(--c-proposed)"><title>proposed · epoch 4: 0.155</title></circle>
+<circle class="dot" cx="285.4" cy="277.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 5: 0.159</title></circle>
+<circle class="dot" cx="343.2" cy="266.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 6: 0.167</title></circle>
+<circle class="dot" cx="401.0" cy="326.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 7: 0.120</title></circle>
+<circle class="dot" cx="458.8" cy="324.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 8: 0.122</title></circle>
+<circle class="dot" cx="516.6" cy="286.3" r="8" fill="var(--c-proposed)"><title>proposed · epoch 9: 0.152</title></circle>
+<circle class="dot" cx="574.4" cy="325.1" r="8" fill="var(--c-proposed)"><title>proposed · epoch 10: 0.121</title></circle>
+<circle class="dot" cx="632.2" cy="333.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 11: 0.115</title></circle>
+<circle class="dot" cx="690.0" cy="346.9" r="8" fill="var(--c-proposed)"><title>proposed · epoch 12: 0.104</title></circle>
+</g>
+<g class="ln-g"><path class="ln" d="M112.0,86.6L169.8,91.9L227.6,43.9L285.4,152.2L343.2,93.0L401.0,110.2L458.8,107.5L516.6,101.9L574.4,81.1L632.2,134.3L690.0,184.2" stroke="var(--c-control)"/>
+<circle class="dot" cx="112.0" cy="86.6" r="8" fill="var(--c-control)"><title>control · epoch 2: 0.308</title></circle>
+<circle class="dot" cx="169.8" cy="91.9" r="8" fill="var(--c-control)"><title>control · epoch 3: 0.304</title></circle>
+<circle class="dot" cx="227.6" cy="43.9" r="8" fill="var(--c-control)"><title>control · epoch 4: 0.341</title></circle>
+<circle class="dot" cx="285.4" cy="152.2" r="8" fill="var(--c-control)"><title>control · epoch 5: 0.257</title></circle>
+<circle class="dot" cx="343.2" cy="93.0" r="8" fill="var(--c-control)"><title>control · epoch 6: 0.303</title></circle>
+<circle class="dot" cx="401.0" cy="110.2" r="8" fill="var(--c-control)"><title>control · epoch 7: 0.289</title></circle>
+<circle class="dot" cx="458.8" cy="107.5" r="8" fill="var(--c-control)"><title>control · epoch 8: 0.292</title></circle>
+<circle class="dot" cx="516.6" cy="101.9" r="8" fill="var(--c-control)"><title>control · epoch 9: 0.296</title></circle>
+<circle class="dot" cx="574.4" cy="81.1" r="8" fill="var(--c-control)"><title>control · epoch 10: 0.312</title></circle>
+<circle class="dot" cx="632.2" cy="134.3" r="8" fill="var(--c-control)"><title>control · epoch 11: 0.271</title></circle>
+<circle class="dot" cx="690.0" cy="184.2" r="8" fill="var(--c-control)"><title>control · epoch 12: 0.232</title></circle>
+</g>
+<text class="val end-proposed" x="706" y="354.9" text-anchor="start">0.104</text>
+<text class="val end-control" x="706" y="192.2" text-anchor="start">0.232</text>
+</svg>
+        </div>
+        <p class="fnote">مقادیر دوره ۱ خارج از مقیاس‌اند: پیشنهادی ۰٫۸۱۳ و کنترل ۱٫۰۶۴؛ هر نقطه میانگین ۱۵ مقدار تک‌دسته‌ای است که هر ۱۰۰ گام ثبت شده‌اند.</p>
+      </div>
+    </div>
+    <p class="lr-line">نرخ یادگیری: کاهش چندجمله‌ای از <span class="ltr"><span class="tex" data-tex="5\times10^{-5}"></span></span> (نرخ مؤثر دیکودر و انکودر دوربین) تا نزدیک صفر در پایان دوره ۱۲</p>
+  </div>
+  <aside class="notes" data-key="b9">این اسلاید پشتیبان منحنی‌های آموزش اجرای اصلی آموزش چندمجموعه‌ای (multi-domain training) را نشان می‌دهد که مدل نهایی از آن به دست آمد: انکودر ViT-L (Vision Transformer Large)، ۱۲ دوره (epoch)، هر دوره ۱۵۰۰ گام (step)، اندازه دسته (batch size) ۴ و بذر تصادفی (random seed) ۴۲ برای هر دو مدل. مدل پیشنهادی ماتریس کالیبراسیون (calibration matrix) دوربین، K، را می‌گیرد و مدل کنترل همان دستور آموزش را بدون K دارد. نمودار راست میانگین خطای اعتبارسنجی (validation error) با معیار AbsRel (Absolute Relative Error) را در پایان هر دوره نشان می‌دهد. مجموعه اعتبارسنجی ۵۰ تصویر از هر یک از چهار دامنه NYUv2، KITTI، Virtual KITTI 2 و Cityscapes دارد، در مجموع ۲۰۰ تصویر، و هیچ تصویر آزمونی در آن نیست؛ مقدار رسم‌شده میانگین چهار دامنه است. نمودار چپ میانگین هزینه آموزش (training loss)، یعنی SiLog (Scale-Invariant Logarithmic loss)، را برای دوره‌های ۲ تا ۱۲ نشان می‌دهد. هر نقطه میانگین ۱۵ مقدار تک‌دسته‌ای است که هر ۱۰۰ گام ثبت شده‌اند، پس منحنی پرنوسان است. مقدار دوره ۱ بسیار بزرگ‌تر است، ۰٫۸۱۳ برای مدل پیشنهادی و ۱٫۰۶۴ برای مدل کنترل، و در پانوشت آمده است. هزینه آموزش و خطای اعتبارسنجی هر دو کاهش می‌یابند و در هر دوره، هر دو مقدار مدل پیشنهادی از مدل کنترل کمتر است. بیشترین بهبود در چهار دوره نخست است: AbsRel مدل پیشنهادی از ۰٫۲۰۲۲ به ۰٫۱۱۰۷ می‌رسد؛ در هشت دوره بعد فقط از ۰٫۱۱۰۷ به ۰٫۱۰۰۴ کم می‌شود و بین دوره‌های ۱۱ و ۱۲ فقط ۰٫۰۰۰۴ کاهش دارد. منحنی مدل کنترل پرنوسان‌تر است و در دوره‌های ۳، ۷ و ۱۰ به ۰٫۲۹۳۲، ۰٫۱۷۵۷ و ۰٫۱۷۱۶ می‌پرد. نقطه وارسی (checkpoint) با کمترین میانگین AbsRel اعتبارسنجی نگه داشته شد: برای مدل پیشنهادی دوره ۱۲ با ۰٫۱۰۰۴ و برای مدل کنترل دوره ۱۱ با ۰٫۱۲۳۷. نرخ یادگیری (learning rate) دیکودر و انکودر دوربین (camera encoder) با کاهش چندجمله‌ای (polynomial decay) با توان ۰٫۹ و بدون گرم‌سازی (warm-up) از ۵×۱۰⁻⁵ شروع می‌شود، در آغاز دوره ۱۱ حدود ۱×۱۰⁻⁵ است و در پایان دوره ۱۲ تقریباً به صفر می‌رسد. باید صریح گفت که تخت‌شدن منحنی‌ها در دوره‌های پایانی هم‌زمان با نزدیک‌شدن نرخ یادگیری به صفر است، زیرا این زمان‌بندی به طول ۱۲ دوره گره خورده است. منحنی‌ای که به سبب کوچک‌شدن گام‌ها تخت می‌شود با منحنی‌ای که به سبب همگرایی (convergence) تخت می‌شود یکسان دیده می‌شود؛ بنابراین این منحنی‌ها به‌تنهایی رسیدن به فلات را ثابت نمی‌کنند و خطای مدل پیشنهادی در دوره ۱۲ هنوز اندکی کاهش داشت. برای تصمیم درباره این مساله، اجرای طولانی‌تری لازم است که زمان‌بندی نرخ یادگیری در آن روی دوره‌های بیشتر کشیده شود.</aside><aside class="notes-sum">1. راست: AbsRel اعتبارسنجی، ۵۰ تصویر از هر دامنه، بدون تصویر آزمون
+2. چپ: هزینه SiLog آموزش، دوره‌های ۲ تا ۱۲؛ دوره ۱ در پانوشت
+- هر دو منحنی پایین می‌آیند؛ پیشنهادی در همه دوره‌ها پایین‌تر از کنترل
+- پیشنهادی تا دوره ۴: ۰٫۲۰۲۲ به ۰٫۱۱۰۷؛ سپس فقط تا ۰٫۱۰۰۴
+- دوره ۱۱ به ۱۲: فقط ۰٫۰۰۰۴ بهبود
+- کنترل پرنوسان؛ checkpoint: پیشنهادی دوره ۱۲، کنترل دوره ۱۱ (۰٫۱۲۳۷)
+- نرخ یادگیری: ۵×۱۰⁻⁵ تا نزدیک صفر در پایان دوره ۱۲
+! تخت‌شدن پایانی هم‌زمان با نرخ یادگیری نزدیک صفر است؛ فلات اثبات نمی‌شود</aside>
+</section>
+
     <div id="chrome">
       <nav id="partnav"></nav>
       <div id="footer">
@@ -1640,7 +1787,7 @@
   <div class="bar">
     <span class="where"><b id="pv-count"></b><span id="pv-part"></span></span>
     <span id="pv-conn" class="conn"></span>
-    <span class="timer"><span class="tl">زمان سپری‌شده: </span><span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">بازنشانی</button><button id="pv-fs" type="button" aria-label="تمام‌صفحه" title="تمام‌صفحه"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></span>
+    <span class="timer"><span class="tl">زمان سپری‌شده: </span><span class="clock" id="pv-clock">00:00</span> <button id="pv-reset">بازنشانی</button><button id="pv-pen" type="button" aria-pressed="false" aria-label="کنترل با قلم" title="کنترل با قلم"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 20l1.2-4.6L16.6 4a2 2 0 0 1 2.8 0l.6.6a2 2 0 0 1 0 2.8L8.6 18.8 4 20z"/><path d="M14.5 6.1l3.4 3.4"/></svg></button><button id="pv-fs" type="button" aria-label="تمام‌صفحه" title="تمام‌صفحه"><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5"/></svg></button></span>
   </div>
   <div class="previews">
     <div class="pv cur"><label>اسلاید جاری</label><iframe title="current" tabindex="-1"></iframe></div>
@@ -1665,13 +1812,14 @@
     <div id="pv-notes"></div>
     <textarea id="pv-editor" dir="rtl" spellcheck="false" hidden></textarea>
   </div>
+  <div id="pv-pentoast"></div>
   <div class="hint">کلیدهای پیکان: بعدی و قبلی؛ P: نمای ارائه‌دهنده؛ F: تمام‌صفحه؛ O: مرور</div>
 </div>
 
 <div id="overview"><ol></ol></div>
 <div id="help">کلیدهای پیکان: بعدی و قبلی؛ P: نمای ارائه‌دهنده؛ F: تمام‌صفحه؛ O: مرور</div>
 
-<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "داده و آموزش", "مسیر مدل نهایی", "مدل نهایی و نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "editFail": "ذخیره نشد", "editNeedsServer": "برای ویرایش، ارائه را با serve.py باز کنید", "closeLabel": "بستن", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید", "stale": "صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید"}}</script>
+<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "داده و آموزش", "مسیر مدل نهایی", "مدل نهایی و نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "penOn": "کنترل با قلم روشن شد", "penOff": "کنترل با قلم خاموش شد", "penNext": "قلم: بعدی", "penPrev": "قلم: قبلی", "editFail": "ذخیره نشد", "editNeedsServer": "برای ویرایش، ارائه را با serve.py باز کنید", "closeLabel": "بستن", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید", "stale": "صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید"}}</script>
 <script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/js/deck.js"></script>
 </body>

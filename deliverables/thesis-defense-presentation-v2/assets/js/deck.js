@@ -700,6 +700,72 @@
     }
     if (noSleep.paused) { var p = noSleep.play(); if (p && p.catch) p.catch(function () {}); }
   }
+  /* ---------------- S Pen button as a clicker (phone view, optional) ----------------
+     A web page cannot read the S Pen button itself. Air actions turn a press into something the phone does, and we listen for
+     every form that can reach a page:
+       - media keys (Air actions "Media": single press = play/pause, double press = next track) through the Media Session API,
+         which needs a sound to be "playing", so a silent loop runs while pen mode is on;
+       - browser Back / Forward (the usual actions for a browser app), caught by keeping the page in the middle of three
+         history entries and stepping back to the middle after each move;
+       - ordinary keys (Page Down / arrows), already handled by onKey.
+     First kind of press -> next, second kind -> previous. A toast names what arrived, so the Air actions can be set to match. */
+  function initPen(buzz) {
+    var btn = $('#pv-pen'), toast = $('#pv-pentoast'), on = false, armed = false, audio = null, last = 0, tt = null, skipPop = 0;
+    try { on = localStorage.getItem('deck-pen') === '1'; } catch (e) {}
+    var say = function (t) { toast.textContent = t; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('show'); }, 1400); };
+    var act = function (dir, via) {
+      if (!on) return;
+      var now = Date.now(); if (now - last < 180) return; last = now;   /* play and pause can both fire for one press */
+      buzz(); command({ cmd: dir });
+      say((dir === 'next' ? CFG.penNext : CFG.penPrev) + ' · ' + via);
+    };
+    var silentUrl = function () {   /* 20 s of silence, 8-bit mono WAV */
+      var rate = 8000, n = rate * 20, b = new Uint8Array(44 + n), v = new DataView(b.buffer), w = function (o, s) { for (var i = 0; i < s.length; i++) b[o + i] = s.charCodeAt(i); };
+      w(0, 'RIFF'); v.setUint32(4, 36 + n, true); w(8, 'WAVEfmt '); v.setUint32(16, 16, true); v.setUint16(20, 1, true); v.setUint16(22, 1, true);
+      v.setUint32(24, rate, true); v.setUint32(28, rate, true); v.setUint16(32, 1, true); v.setUint16(34, 8, true); w(36, 'data'); v.setUint32(40, n, true);
+      b.fill(128, 44);
+      return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+    };
+    var arm = function () {   /* needs a tap: sound and history entries made without one are ignored by the browser */
+      if (!on) return;
+      if (!audio) { audio = new Audio(silentUrl()); audio.loop = true; }
+      var p = audio.play(); if (p && p.catch) p.catch(function () {});
+      if ('mediaSession' in navigator) {
+        var ms = navigator.mediaSession, keep = function () { ms.playbackState = 'playing'; if (audio.paused) { var q = audio.play(); if (q && q.catch) q.catch(function () {}); } };
+        try { ms.metadata = new MediaMetadata({ title: document.title, artist: 'S Pen' }); } catch (e) {}
+        var set = function (name, dir) { try { ms.setActionHandler(name, function () { keep(); act(dir, name); }); } catch (e) {} };
+        set('play', 'next'); set('pause', 'next'); set('stop', 'next'); set('nexttrack', 'prev'); set('previoustrack', 'prev');
+        set('seekforward', 'next'); set('seekbackward', 'prev');
+        ms.playbackState = 'playing';
+      }
+      if (!armed) {
+        armed = true;
+        try {
+          history.replaceState({ pen: 0 }, ''); history.pushState({ pen: 1 }, ''); history.pushState({ pen: 2 }, '');
+          skipPop++; history.go(-1);
+        } catch (e) {}
+      }
+    };
+    window.addEventListener('popstate', function (e) {
+      var s = e.state && e.state.pen;
+      if (s === undefined || s === null) return;
+      if (skipPop > 0 && s === 1) { skipPop--; return; }   /* our own step back to the middle entry */
+      if (s === 0) { skipPop++; history.go(1); act('next', 'back'); }
+      else if (s === 2) { skipPop++; history.go(-1); act('prev', 'forward'); }
+    });
+    var show = function () { btn.setAttribute('aria-pressed', on ? 'true' : 'false'); };
+    btn.addEventListener('click', function () {
+      on = !on; show();
+      try { localStorage.setItem('deck-pen', on ? '1' : '0'); } catch (e) {}
+      if (on) arm(); else if (audio) audio.pause();
+      toast.textContent = on ? CFG.penOn : CFG.penOff; toast.classList.add('show'); clearTimeout(tt); tt = setTimeout(function () { toast.classList.remove('show'); }, 2600);
+      btn.blur();
+    });
+    show();
+    if (on) document.addEventListener('click', arm, { once: true });
+    document.addEventListener('visibilitychange', function () { if (on && armed && document.visibilityState === 'visible' && audio && audio.paused) { var p = audio.play(); if (p && p.catch) p.catch(function () {}); } });
+  }
+
   function initRemote() {
     var buzz = function () { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} };
     var tap = function (id, fn) {
@@ -724,6 +790,8 @@
     $$('#presenter [data-fsz]').forEach(function (b) {
       b.addEventListener('click', function () { setSize(size + (+b.getAttribute('data-fsz'))); b.blur(); });
     });
+    initPen(buzz);
+
     var cl = document.createElement('button');
     cl.type = 'button'; cl.className = 'ovclose'; cl.textContent = CFG.closeLabel;
     cl.addEventListener('click', function () { toggleOverview(false); });

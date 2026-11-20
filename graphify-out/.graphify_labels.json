@@ -271,6 +271,9 @@
   "269": ".get_item_output_dir",
   "270": "run_descriptor_ablation.sh",
   "271": ".infer_image",
+  "272": ".__init__",
   "273": "build.py",
-  "274": ".forward"
+  "274": ".forward",
+  "276": "Cr",
+  "277": "Nr"
 }

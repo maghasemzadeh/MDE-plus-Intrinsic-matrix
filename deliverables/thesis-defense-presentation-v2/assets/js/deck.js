@@ -383,6 +383,23 @@
     if (MODE === 'presenter' && window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'deck-cmd', c: c }, '*'); return; }
     if (c.cmd === 'next') next(); else if (c.cmd === 'prev') prev(); else if (c.cmd === 'goto') show(c.i, c.step || 0, c.i >= state.i ? 1 : -1);
     else if (c.cmd === 'video') videoCmd(c);
+    else if (c.cmd === 'pointer') showLaser(c);
+  }
+  /* pointer from the phone: x and y are fractions of the slide; `n` orders the messages, so a late one cannot pull the dot back */
+  var laser = null, laserN = 0, laserT = null;
+  function showLaser(c) {
+    if (MODE !== 'main') return;
+    if (!laser) { laser = document.createElement('div'); laser.id = 'laser'; stage.appendChild(laser); }
+    if (c.n && c.n < laserN && laserN - c.n < 1000) return;
+    laserN = c.n || 0;
+    clearTimeout(laserT);
+    if (c.off) { laser.classList.remove('on'); return; }
+    var fresh = !laser.classList.contains('on');   /* a new touch appears in place instead of gliding over from the last one */
+    if (fresh) laser.style.transition = 'none';
+    laser.style.transform = 'translate(' + (c.x * 1920).toFixed(1) + 'px,' + (c.y * 1080).toFixed(1) + 'px)';
+    if (fresh) { void laser.offsetWidth; laser.style.transition = ''; }
+    laser.classList.add('on');
+    laserT = setTimeout(function () { laser.classList.remove('on'); }, 4000);   /* a lost "finger up" must not leave the dot behind */
   }
   window.addEventListener('message', function (ev) { onMsg(ev.data || {}, ev.source); });
   function onMsg(d, source) {
@@ -587,7 +604,7 @@
     var tap = function (id, fn) {
       $(id).addEventListener('click', function (e) { e.preventDefault(); buzz(); keepAwake(); fn(); this.blur(); });
     };
-    tap('#pv-next', function () { command({ cmd: 'next' }); });
+    tap('#presenter .pv.next', function () { command({ cmd: 'next' }); });
     tap('#pv-prev', function () { command({ cmd: 'prev' }); });
     tap('#pv-list', function () { toggleOverview(); });
     tap('#pv-fs', function () {
@@ -606,6 +623,33 @@
     $$('#presenter [data-fsz]').forEach(function (b) {
       b.addEventListener('click', function () { setSize(size + (+b.getAttribute('data-fsz'))); b.blur(); });
     });
+    /* pointer: touch and drag on the current-slide picture. Only the newest position is sent, and never two requests at once */
+    var pad = $('#presenter .pv.cur'), dot = document.createElement('i'), seq = 0, busy = false, pending = null;
+    dot.id = 'pv-dot'; pad.appendChild(dot);
+    var flush = function () {
+      if (busy || !pending) return;
+      var c = pending; pending = null; busy = true;
+      var done = function () { busy = false; flush(); };
+      fetch(api('cmd'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ c: c }) }).then(done, done);
+    };
+    var point = function (e, off) {
+      var r = pad.getBoundingClientRect();
+      var x = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), y = Math.max(0, Math.min(1, (e.clientY - r.top) / r.height));
+      if (!off) dot.style.transform = 'translate(' + (x * r.width) + 'px,' + (y * r.height) + 'px)';
+      dot.classList.toggle('on', !off);
+      pending = off ? { cmd: 'pointer', off: true, n: ++seq } : { cmd: 'pointer', x: +x.toFixed(4), y: +y.toFixed(4), n: ++seq };
+      flush();
+    };
+    var down = false;
+    pad.addEventListener('pointerdown', function (e) { down = true; try { pad.setPointerCapture(e.pointerId); } catch (x) {} keepAwake(); point(e); e.preventDefault(); });
+    pad.addEventListener('pointermove', function (e) { if (down) { point(e); e.preventDefault(); } });
+    ['pointerup', 'pointercancel'].forEach(function (t) { pad.addEventListener(t, function (e) { if (down) { down = false; point(e, true); } }); });
+    pad.addEventListener('contextmenu', function (e) { e.preventDefault(); });
+
+    var cl = document.createElement('button');
+    cl.type = 'button'; cl.className = 'ovclose'; cl.textContent = CFG.closeLabel;
+    cl.addEventListener('click', function () { toggleOverview(false); });
+    $('#overview').appendChild(cl);
     document.addEventListener('click', keepAwake, { once: true });
     setConn('bad');
   }

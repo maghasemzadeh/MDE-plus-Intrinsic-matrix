@@ -41,7 +41,11 @@
       <button data-v="fwd" tabindex="-1">{{ui.v_fwd}} <kbd>L</kbd></button>
       <button data-v="mute" tabindex="-1"><span class="if-muted">{{ui.v_unmute}}</span><span class="if-sound">{{ui.v_mute}}</span> <kbd>M</kbd></button>
     </div>
-    <div class="pv next"><label>{{ui.next}}</label><iframe title="next" tabindex="-1"></iframe><div class="ncap"><small>{{ui.next}}</small><b id="pv-ntitle"></b></div></div>
+    <div class="pv next"><label>{{ui.next}}</label><iframe title="next" tabindex="-1"></iframe><div class="ncap"><span class="go">{{ui.nextbtn}}<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><b id="pv-ntitle"></b></div></div>
+    <nav id="pv-remote">
+      <button id="pv-prev" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>{{ui.prev}}</button>
+      <button id="pv-list" type="button"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h14"/></svg>{{ui.slides}}</button>
+    </nav>
   </div>
   <div class="notesbox">
     <div class="nb-head"><h4>{{ui.notes}}</h4><span class="nb-tools"><span class="fsz" role="group" aria-label="{{ui.font}}"><button type="button" data-fsz="-1" aria-label="−">A−</button><button type="button" data-fsz="1" aria-label="+">A+</button></span><button id="pv-sum" type="button" tabindex="-1" aria-pressed="false"><i></i>{{ui.sum}}</button></span></div>
@@ -49,11 +53,6 @@
     <div id="pv-notes"></div>
   </div>
   <div class="hint">{{ui.help}}</div>
-  <nav id="pv-remote">
-    <button id="pv-prev" type="button"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>{{ui.prev}}</button>
-    <button id="pv-list" type="button" aria-label="{{ui.slides}}"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h14"/></svg><span>{{ui.slides}}</span></button>
-    <button id="pv-next" type="button">{{ui.nextbtn}}<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  </nav>
 </div>
 
 <div id="overview"><ol></ol></div>

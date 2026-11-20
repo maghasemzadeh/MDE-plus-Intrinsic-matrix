@@ -14,7 +14,7 @@ fa = json.loads((ROOT / "content" / "fa.json").read_text(encoding="utf8"))
 
 parts = [fa[f"part.{i}"] for i in range(1, 8)]
 config = {"parts": parts, "backupLabel": fa["b.label"], "partLabel": fa["ui.part"], "of": "از",
-          "endLabel": fa["ui.end"], "sameSlide": fa["ui.same_slide"], "closeLabel": fa["ui.close"],
+          "endLabel": fa["ui.end"], "sameSlide": fa["ui.same_slide"], "editFail": fa["ui.edit_fail"], "editNeedsServer": fa["ui.edit_server"], "closeLabel": fa["ui.close"],
           "conn": {k: fa["ui.conn_" + k] for k in ("ok", "nomain", "bad", "denied", "stale")}}
 
 slides = "".join(p.read_text(encoding="utf8") for p in sorted((ROOT / "src" / "slides").glob("*.html")))
@@ -22,7 +22,8 @@ html = (ROOT / "src" / "shell.html").read_text(encoding="utf8").replace("<!--SLI
 html = html.replace("{{CONFIG}}", json.dumps(config, ensure_ascii=False))
 # a slide whose notes have a quick-glance summary (key <slide>.sum) also carries it, for the presenter's summary switch
 html = re.sub(r'<aside class="notes">\{\{([A-Za-z0-9_]+)\.notes\}\}</aside>',
-              lambda m: m.group(0) + (f'<aside class="notes-sum">{{{{{m.group(1)}.sum}}}}</aside>' if f"{m.group(1)}.sum" in fa else ""),
+              lambda m: f'<aside class="notes" data-key="{m.group(1)}">{{{{{m.group(1)}.notes}}}}</aside>'
+              + (f'<aside class="notes-sum">{{{{{m.group(1)}.sum}}}}</aside>' if f"{m.group(1)}.sum" in fa else ""),
               html)
 template = html
 

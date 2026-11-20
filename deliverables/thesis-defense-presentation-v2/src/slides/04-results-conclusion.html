@@ -479,3 +479,144 @@
   </div>
   <aside class="notes">{{b8.notes}}</aside>
 </section>
+
+<!-- ============ backup 9 · training curves of the final model ============ -->
+<section class="slide backup s-b9" data-title="{{b9.title}}">
+  <header class="slide-head"><h2>{{b9.title}}</h2><div class="sub">{{b9.sub}}</div></header>
+  <div class="slide-body">
+    <div class="legend"><span class="k"><i class="sw proposed"></i>{{g.proposed_l}}</span><span class="k"><i class="sw control"></i>{{g.control_l}}</span></div>
+    <div class="cols c2 top">
+      <div>
+        <h4 class="h4">{{b9.a}}</h4>
+        <div class="chart">
+<svg viewBox="0 0 820 560" role="img">
+<g class="grid">
+<line x1="112" x2="670" y1="424.0" y2="424.0"/>
+<line x1="112" x2="670" y1="324.0" y2="324.0"/>
+<line x1="112" x2="670" y1="224.0" y2="224.0"/>
+<line x1="112" x2="670" y1="124.0" y2="124.0"/>
+<line x1="112" x2="670" y1="24.0" y2="24.0"/>
+</g>
+<text class="tick" x="98" y="432.0" text-anchor="end">0.10</text>
+<text class="tick" x="98" y="332.0" text-anchor="end">0.15</text>
+<text class="tick" x="98" y="232.0" text-anchor="end">0.20</text>
+<text class="tick" x="98" y="132.0" text-anchor="end">0.25</text>
+<text class="tick" x="98" y="32.0" text-anchor="end">0.30</text>
+<text class="tick" x="112.0" y="500" text-anchor="middle">1</text>
+<text class="tick" x="162.7" y="500" text-anchor="middle">2</text>
+<text class="tick" x="213.5" y="500" text-anchor="middle">3</text>
+<text class="tick" x="264.2" y="500" text-anchor="middle">4</text>
+<text class="tick" x="314.9" y="500" text-anchor="middle">5</text>
+<text class="tick" x="365.6" y="500" text-anchor="middle">6</text>
+<text class="tick" x="416.4" y="500" text-anchor="middle">7</text>
+<text class="tick" x="467.1" y="500" text-anchor="middle">8</text>
+<text class="tick" x="517.8" y="500" text-anchor="middle">9</text>
+<text class="tick" x="568.5" y="500" text-anchor="middle">10</text>
+<text class="tick" x="619.3" y="500" text-anchor="middle">11</text>
+<text class="tick" x="670.0" y="500" text-anchor="middle">12</text>
+<g class="axis"><line x1="112" x2="670" y1="464" y2="464"/></g>
+<text class="ylab" x="391" y="546" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext">{{b9.x}}</text>
+<text class="ylab" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext" transform="translate(30,244) rotate(-90)">{{b9.ya}}</text>
+<g class="ln-g"><path class="ln" d="M112.0,219.6L162.7,305.0L213.5,380.2L264.2,402.6L314.9,385.2L365.6,384.2L416.4,393.0L467.1,408.8L517.8,412.0L568.5,418.8L619.3,422.4L670.0,423.2" stroke="var(--c-proposed)"/>
+<circle class="dot" cx="112.0" cy="219.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 1: 0.2022</title></circle>
+<circle class="dot" cx="162.7" cy="305.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 2: 0.1595</title></circle>
+<circle class="dot" cx="213.5" cy="380.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 3: 0.1219</title></circle>
+<circle class="dot" cx="264.2" cy="402.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 4: 0.1107</title></circle>
+<circle class="dot" cx="314.9" cy="385.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 5: 0.1194</title></circle>
+<circle class="dot" cx="365.6" cy="384.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 6: 0.1199</title></circle>
+<circle class="dot" cx="416.4" cy="393.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 7: 0.1155</title></circle>
+<circle class="dot" cx="467.1" cy="408.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 8: 0.1076</title></circle>
+<circle class="dot" cx="517.8" cy="412.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 9: 0.1060</title></circle>
+<circle class="dot" cx="568.5" cy="418.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 10: 0.1026</title></circle>
+<circle class="dot" cx="619.3" cy="422.4" r="8" fill="var(--c-proposed)"><title>proposed · epoch 11: 0.1008</title></circle>
+<circle class="dot" cx="670.0" cy="423.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 12: 0.1004</title></circle>
+</g>
+<g class="ln-g"><path class="ln" d="M112.0,151.2L162.7,239.6L213.5,37.6L264.2,355.8L314.9,348.4L365.6,346.4L416.4,272.6L467.1,348.8L517.8,353.8L568.5,280.8L619.3,376.6L670.0,368.0" stroke="var(--c-control)"/>
+<circle class="dot" cx="112.0" cy="151.2" r="8" fill="var(--c-control)"><title>control · epoch 1: 0.2364</title></circle>
+<circle class="dot" cx="162.7" cy="239.6" r="8" fill="var(--c-control)"><title>control · epoch 2: 0.1922</title></circle>
+<circle class="dot" cx="213.5" cy="37.6" r="8" fill="var(--c-control)"><title>control · epoch 3: 0.2932</title></circle>
+<circle class="dot" cx="264.2" cy="355.8" r="8" fill="var(--c-control)"><title>control · epoch 4: 0.1341</title></circle>
+<circle class="dot" cx="314.9" cy="348.4" r="8" fill="var(--c-control)"><title>control · epoch 5: 0.1378</title></circle>
+<circle class="dot" cx="365.6" cy="346.4" r="8" fill="var(--c-control)"><title>control · epoch 6: 0.1388</title></circle>
+<circle class="dot" cx="416.4" cy="272.6" r="8" fill="var(--c-control)"><title>control · epoch 7: 0.1757</title></circle>
+<circle class="dot" cx="467.1" cy="348.8" r="8" fill="var(--c-control)"><title>control · epoch 8: 0.1376</title></circle>
+<circle class="dot" cx="517.8" cy="353.8" r="8" fill="var(--c-control)"><title>control · epoch 9: 0.1351</title></circle>
+<circle class="dot" cx="568.5" cy="280.8" r="8" fill="var(--c-control)"><title>control · epoch 10: 0.1716</title></circle>
+<circle class="dot" cx="619.3" cy="376.6" r="8" fill="var(--c-control)"><title>control · epoch 11: 0.1237</title></circle>
+<circle class="dot" cx="670.0" cy="368.0" r="8" fill="var(--c-control)"><title>control · epoch 12: 0.1280</title></circle>
+</g>
+<text class="val end-proposed" x="686" y="431.2" text-anchor="start">0.1004</text>
+<text class="val end-control" x="686" y="376.0" text-anchor="start">0.1280</text>
+</svg>
+        </div>
+      </div>
+      <div>
+        <h4 class="h4">{{b9.b}}</h4>
+        <div class="chart">
+<svg viewBox="0 0 820 560" role="img">
+<g class="grid">
+<line x1="112" x2="670" y1="432.6" y2="432.6"/>
+<line x1="112" x2="670" y1="354.0" y2="354.0"/>
+<line x1="112" x2="670" y1="275.4" y2="275.4"/>
+<line x1="112" x2="670" y1="196.9" y2="196.9"/>
+<line x1="112" x2="670" y1="118.3" y2="118.3"/>
+<line x1="112" x2="670" y1="39.7" y2="39.7"/>
+</g>
+<text class="tick" x="98" y="440.6" text-anchor="end">0.10</text>
+<text class="tick" x="98" y="362.0" text-anchor="end">0.15</text>
+<text class="tick" x="98" y="283.4" text-anchor="end">0.20</text>
+<text class="tick" x="98" y="204.9" text-anchor="end">0.25</text>
+<text class="tick" x="98" y="126.3" text-anchor="end">0.30</text>
+<text class="tick" x="98" y="47.7" text-anchor="end">0.35</text>
+<text class="tick" x="112.0" y="500" text-anchor="middle">1</text>
+<text class="tick" x="162.7" y="500" text-anchor="middle">2</text>
+<text class="tick" x="213.5" y="500" text-anchor="middle">3</text>
+<text class="tick" x="264.2" y="500" text-anchor="middle">4</text>
+<text class="tick" x="314.9" y="500" text-anchor="middle">5</text>
+<text class="tick" x="365.6" y="500" text-anchor="middle">6</text>
+<text class="tick" x="416.4" y="500" text-anchor="middle">7</text>
+<text class="tick" x="467.1" y="500" text-anchor="middle">8</text>
+<text class="tick" x="517.8" y="500" text-anchor="middle">9</text>
+<text class="tick" x="568.5" y="500" text-anchor="middle">10</text>
+<text class="tick" x="619.3" y="500" text-anchor="middle">11</text>
+<text class="tick" x="670.0" y="500" text-anchor="middle">12</text>
+<g class="axis"><line x1="112" x2="670" y1="464" y2="464"/></g>
+<text class="ylab" x="391" y="546" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext">{{b9.x}}</text>
+<text class="ylab" text-anchor="middle" direction="rtl" style="unicode-bidi:plaintext" transform="translate(30,244) rotate(-90)">{{b9.yb}}</text>
+<g class="ln-g"><path class="ln" d="M162.7,301.2L213.5,308.2L264.2,346.4L314.9,340.6L365.6,327.3L416.4,401.0L467.1,397.6L517.8,351.3L568.5,398.9L619.3,409.4L670.0,425.8" stroke="var(--c-proposed)"/>
+<circle class="dot" cx="162.7" cy="301.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 2: 0.184</title></circle>
+<circle class="dot" cx="213.5" cy="308.2" r="8" fill="var(--c-proposed)"><title>proposed · epoch 3: 0.179</title></circle>
+<circle class="dot" cx="264.2" cy="346.4" r="8" fill="var(--c-proposed)"><title>proposed · epoch 4: 0.155</title></circle>
+<circle class="dot" cx="314.9" cy="340.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 5: 0.159</title></circle>
+<circle class="dot" cx="365.6" cy="327.3" r="8" fill="var(--c-proposed)"><title>proposed · epoch 6: 0.167</title></circle>
+<circle class="dot" cx="416.4" cy="401.0" r="8" fill="var(--c-proposed)"><title>proposed · epoch 7: 0.120</title></circle>
+<circle class="dot" cx="467.1" cy="397.6" r="8" fill="var(--c-proposed)"><title>proposed · epoch 8: 0.122</title></circle>
+<circle class="dot" cx="517.8" cy="351.3" r="8" fill="var(--c-proposed)"><title>proposed · epoch 9: 0.152</title></circle>
+<circle class="dot" cx="568.5" cy="398.9" r="8" fill="var(--c-proposed)"><title>proposed · epoch 10: 0.121</title></circle>
+<circle class="dot" cx="619.3" cy="409.4" r="8" fill="var(--c-proposed)"><title>proposed · epoch 11: 0.115</title></circle>
+<circle class="dot" cx="670.0" cy="425.8" r="8" fill="var(--c-proposed)"><title>proposed · epoch 12: 0.104</title></circle>
+</g>
+<g class="ln-g"><path class="ln" d="M162.7,105.8L213.5,112.3L264.2,53.3L314.9,186.5L365.6,113.7L416.4,134.8L467.1,131.5L517.8,124.7L568.5,99.1L619.3,164.5L670.0,225.8" stroke="var(--c-control)"/>
+<circle class="dot" cx="162.7" cy="105.8" r="8" fill="var(--c-control)"><title>control · epoch 2: 0.308</title></circle>
+<circle class="dot" cx="213.5" cy="112.3" r="8" fill="var(--c-control)"><title>control · epoch 3: 0.304</title></circle>
+<circle class="dot" cx="264.2" cy="53.3" r="8" fill="var(--c-control)"><title>control · epoch 4: 0.341</title></circle>
+<circle class="dot" cx="314.9" cy="186.5" r="8" fill="var(--c-control)"><title>control · epoch 5: 0.257</title></circle>
+<circle class="dot" cx="365.6" cy="113.7" r="8" fill="var(--c-control)"><title>control · epoch 6: 0.303</title></circle>
+<circle class="dot" cx="416.4" cy="134.8" r="8" fill="var(--c-control)"><title>control · epoch 7: 0.289</title></circle>
+<circle class="dot" cx="467.1" cy="131.5" r="8" fill="var(--c-control)"><title>control · epoch 8: 0.292</title></circle>
+<circle class="dot" cx="517.8" cy="124.7" r="8" fill="var(--c-control)"><title>control · epoch 9: 0.296</title></circle>
+<circle class="dot" cx="568.5" cy="99.1" r="8" fill="var(--c-control)"><title>control · epoch 10: 0.312</title></circle>
+<circle class="dot" cx="619.3" cy="164.5" r="8" fill="var(--c-control)"><title>control · epoch 11: 0.271</title></circle>
+<circle class="dot" cx="670.0" cy="225.8" r="8" fill="var(--c-control)"><title>control · epoch 12: 0.232</title></circle>
+</g>
+<text class="val end-proposed" x="686" y="433.8" text-anchor="start">0.104</text>
+<text class="val end-control" x="686" y="233.8" text-anchor="start">0.232</text>
+</svg>
+        </div>
+        <p class="fnote">{{b9.fn}}</p>
+      </div>
+    </div>
+    <p class="lr-line">{{b9.lr}}</p>
+  </div>
+  <aside class="notes">{{b9.notes}}</aside>
+</section>

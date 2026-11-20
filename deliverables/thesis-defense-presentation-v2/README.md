@@ -57,6 +57,8 @@ A dot at the top shows the link. If the audience window is closed, or the server
 
 ## Editing
 
+- Notes can be edited by hand in the laptop presenter window when the deck is opened through `serve.py` (`http://localhost:8000/`, then P). **ویرایش** opens the stored text of the view that is showing: the full notes, or with the **خلاصه** switch on, the summary lines. **ذخیره** (or Ctrl+Enter) writes it to `content/fa.json` and rebuilds `index.html`; **انصراف** (or Esc) discards it. The text is stored and displayed exactly as before: formulas stay `$...$`, and summary lines keep their `1. ` / `- ` / `! ` markers. An open phone view updates at once. The phone cannot edit, and a deck opened as a file (no server) shows the button disabled.
+
 - All Persian text (slide phrases and presenter notes) is in `content/fa.json`, keyed by slide (`s25.title`, `s25.notes`, ...). The quick-glance summary of a slide's notes is `s25.sum`: one item per line, `1. ` numbered, `- ` bullet, `! ` caveat.
 - Slide markup is in `src/slides/*.html`; the page shell is `src/shell.html`.
 - Styles are in `assets/css/` (`deck.css` engine and shared components, `slides.css` per-slide layout); the engine is `assets/js/deck.js`.

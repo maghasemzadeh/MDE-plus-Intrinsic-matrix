@@ -18,8 +18,10 @@ import json
 import mimetypes
 import os
 import queue
+import re
 import secrets
 import socket
+import subprocess
 import sys
 import threading
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
@@ -341,6 +343,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(404, {"error": "not found"})
         if not self._authorised(qs):
             return self._json(403, {"error": "bad token"})
+        if url.path == "/api/notes" and not self._local():
+            return self._json(403, {"error": "notes can only be edited on the laptop"})
         try:
             n = int(self.headers.get("Content-Length") or 0)
             msg = json.loads(self.rfile.read(n) or b"{}")
@@ -355,6 +359,11 @@ class Handler(BaseHTTPRequestHandler):
             HUB.send("video", msg, "remote")
         elif url.path == "/api/cmd":      # phone -> audience window(s)
             HUB.send("cmd", msg, "main")
+        elif url.path == "/api/notes":    # laptop presenter window -> content/fa.json
+            err = save_note(msg)
+            if err:
+                return self._json(400, {"error": err})
+            HUB.send("notes", {"key": msg["key"], "kind": msg["kind"], "text": msg["text"]}, "remote")
         else:
             return self._json(404, {"error": "not found"})
         self._json(200, {"ok": True})
@@ -490,6 +499,40 @@ p{{color:#9fb0cf;margin:0;font-size:16px}}a{{color:#ffd479}}</style></head><body
         self.send_header("Cache-Control", "no-store")
         self.end_headers()
         self.wfile.write(body)
+
+
+NOTES_LOCK = threading.Lock()
+
+
+def save_note(msg):
+    """Write one slide's notes (or summary) into content/fa.json and rebuild index.html. Returns an error text or None."""
+    key, kind, text = msg.get("key"), msg.get("kind"), msg.get("text")
+    if not isinstance(key, str) or not re.fullmatch(r"[A-Za-z0-9_]+", key) or kind not in ("notes", "sum") or not isinstance(text, str):
+        return "bad request"
+    path = ROOT / "content" / "fa.json"
+    with NOTES_LOCK:
+        old = path.read_text(encoding="utf8")
+        fa = json.loads(old)
+        if f"{key}.notes" not in fa:
+            return "unknown slide"
+        text = text.replace("\r\n", "\n").replace("\r", "\n").strip()
+        if kind == "sum" and not text:
+            fa.pop(f"{key}.sum", None)
+        else:
+            fa[f"{key}.{kind}"] = text
+        new = json.dumps(fa, ensure_ascii=False, indent=1)   # the file's own layout: indent 1, no final newline
+        if new == old:
+            return None
+        tmp = path.with_suffix(".json.tmp")
+        tmp.write_text(new, encoding="utf8")
+        os.replace(tmp, path)
+        r = subprocess.run([sys.executable, str(ROOT / "build.py")], cwd=str(ROOT), capture_output=True, text=True)
+        if r.returncode != 0:
+            path.write_text(old, encoding="utf8")
+            subprocess.run([sys.executable, str(ROOT / "build.py")], cwd=str(ROOT), capture_output=True, text=True)
+            return "build failed: " + (r.stderr or r.stdout).strip()[-200:]
+        print(f"  notes saved: {key}.{kind}")
+    return None
 
 
 def lan_ips():

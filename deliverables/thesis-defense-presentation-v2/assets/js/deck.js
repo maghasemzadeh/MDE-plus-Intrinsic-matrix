@@ -411,6 +411,7 @@
     else if (d.type === 'deck-key' && MODE === 'presenter') onKey({ key: d.key, code: d.code, preventDefault: function () {} });
     else if (d.type === 'deck-video' && MODE === 'presenter') { lastVideo = d.video || null; updateVideoPanel(); if (frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage(d, '*'); }
     else if (d.type === 'deck-video' && MODE === 'embed') mirrorVideo(d.video);
+    else if (d.type === 'deck-notes') { setNoteText(d.key, d.kind, d.text); if (MODE === 'presenter') renderNotes(slides[state.i]); }
   }
 
   /* ---------------- link through serve.py ---------------- */
@@ -434,6 +435,7 @@
       if (REMOTE) { server.stale = d.v !== DECK_V; setConn(server.mains > 0 ? 'ok' : 'nomain'); }
     });
     es.addEventListener('video', function (e) { var d = JSON.parse(e.data); d.type = 'deck-video'; onMsg(d); });
+    es.addEventListener('notes', function (e) { var d = JSON.parse(e.data); d.type = 'deck-notes'; onMsg(d); });
     es.addEventListener('status', function (e) { server.mains = JSON.parse(e.data).mains; setConn(server.mains > 0 ? 'ok' : 'nomain'); });
   }
   function setConn(st) {
@@ -525,9 +527,63 @@
       } else { list = null; box.appendChild(inline(el('p', w ? 'warn' : ''), w ? w[1] : line)); }
     });
   }
+  /* ---------------- editing notes (laptop presenter window only) ----------------
+     The editor shows the stored text exactly as it is in content/fa.json: the full notes, or with the summary switch on the
+     summary lines ("1. " numbered, "- " bullet, "! " caveat). Saving goes through serve.py, which writes fa.json and rebuilds
+     index.html; the way notes are displayed does not change. */
+  var edit = null;
+  function setNoteText(key, kind, text) {
+    var full = $('aside.notes[data-key="' + key + '"]');
+    if (!full) return;
+    if (kind === 'notes') { full.textContent = text; return; }
+    var sum = full.nextElementSibling && full.nextElementSibling.classList.contains('notes-sum') ? full.nextElementSibling : null;
+    if (!text.trim()) { if (sum) sum.remove(); return; }
+    if (!sum) { sum = document.createElement('aside'); sum.className = 'notes-sum'; full.parentNode.insertBefore(sum, full.nextSibling); }
+    sum.textContent = text;
+  }
+  function edMsg(t, ok) { var m = $('#pv-edmsg'); m.textContent = t || ''; m.className = ok ? 'ok' : ''; }
+  function closeEditor() {
+    edit = null;
+    $('#presenter').classList.remove('editing'); $('#pv-editor').hidden = true;
+    renderNotes(slides[state.i]);
+  }
+  function initEditor() {
+    var btn = $('#pv-edit'), ta = $('#pv-editor');
+    if (REMOTE) return;
+    if (!SERVED) { btn.disabled = true; btn.title = CFG.editNeedsServer; return; }
+    btn.addEventListener('click', function () {
+      var s = slides[state.i], full = $('.notes', s), key = full && full.getAttribute('data-key');
+      if (!key) return;
+      var sum = $('.notes-sum', s), kind = sumOn ? 'sum' : 'notes';
+      edit = { key: key, kind: kind };
+      ta.value = kind === 'sum' ? (sum ? sum.textContent : '') : full.textContent;
+      edMsg('');
+      $('#presenter').classList.add('editing'); ta.hidden = false; ta.focus();
+    });
+    $('#pv-cancel').addEventListener('click', closeEditor);
+    var save = function () {
+      if (!edit) return;
+      var e = edit, text = ta.value.replace(/\r\n?/g, '\n').trim();
+      fetch(api('notes'), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ key: e.key, kind: e.kind, text: text }) })
+        .then(function (r) { return r.json().then(function (j) { if (!r.ok || !j.ok) throw new Error(j.error || r.status); }); })
+        .then(function () {
+          setNoteText(e.key, e.kind, text);
+          if (window.opener && !window.opener.closed) window.opener.postMessage({ type: 'deck-notes', key: e.key, kind: e.kind, text: text }, '*');
+          closeEditor(); edMsg('✓', true); setTimeout(function () { edMsg(''); }, 2500);
+        })
+        .catch(function (err) { edMsg(CFG.editFail + ' (' + (err && err.message || '') + ')'); });
+    };
+    $('#pv-save').addEventListener('click', save);
+    ta.addEventListener('keydown', function (ev) {
+      if (ev.key === 'Escape') { ev.preventDefault(); closeEditor(); }
+      else if (ev.key === 'Enter' && (ev.ctrlKey || ev.metaKey)) { ev.preventDefault(); save(); }
+    });
+  }
+
   var sumOn = false;
   try { sumOn = localStorage.getItem('deck-notes-sum') === '1'; } catch (e) {}
   function renderNotes(s) {
+    if (edit) return;   /* an open editor keeps its text; the notes are drawn again when it closes */
     var box = $('#pv-notes'), full = $('.notes', s), sum = $('.notes-sum', s);
     box.textContent = '';
     var useSum = sumOn && sum && sum.textContent.trim();
@@ -584,6 +640,7 @@
     seek.addEventListener('change', function () { seeking = false; seek.blur(); });
     if (window.opener) window.opener.postMessage({ type: 'deck-hello' }, '*');
     if (REMOTE) initRemote();
+    initEditor();
     initPointerPad();
     updatePresenter();
   }
@@ -678,6 +735,7 @@
   /* ---------------- input ---------------- */
   /* the deck reads right to left, so the left arrow is 'next' and the right arrow is 'previous' */
   function onKey(e) {
+    if (e.target && e.target.tagName === 'TEXTAREA') return;   /* typing in the notes editor must not move the slides */
     if (e.ctrlKey || e.metaKey || e.altKey) return;
     var k = e.key;
     if (e.code && /^Key[A-Z]$/.test(e.code)) k = e.code.charAt(3).toLowerCase(); /* letter keys by position, so they also work with the Persian layout active */

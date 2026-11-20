@@ -320,6 +320,23 @@ body.presenter #presenter {
 #pv-notes.sum p.warn { margin-top: 6px; padding: 10px 14px; border-inline-start: 4px solid #ffd479; background: #1a2338; border-radius: 6px; color: #fff; }
 #presenter .hint { grid-column: 1 / -1; font-size: 15px; color: #7285a8; text-align: center; }
 
+/* ---------- editing notes in the laptop presenter window (saved to content/fa.json through serve.py) ---------- */
+#presenter .nb-tools { display: inline-flex; align-items: center; gap: 10px; }
+#presenter .ed-tools { display: inline-flex; align-items: center; gap: 8px; }
+body.remote #presenter .ed-tools { display: none; }
+#pv-save, #pv-cancel { display: none; }
+#presenter.editing #pv-save, #presenter.editing #pv-cancel { display: inline-block; }
+#presenter.editing #pv-edit, #presenter.editing #pv-notes, #presenter.editing #pv-sum { display: none; }
+#pv-save { background: #184f95 !important; border-color: #2a6cc0 !important; color: #fff !important; font-weight: 700; }
+#pv-edit:disabled { opacity: .45; cursor: not-allowed; }
+#pv-edmsg { font-size: 15px; color: #ffd479; }
+#pv-edmsg.ok { color: #7fe0b0; }
+#pv-editor { width: 100%; box-sizing: border-box; min-height: 420px; height: calc(100% - 110px); resize: vertical; font: 400 20px/1.9 "Vazirmatn", sans-serif;
+  background: #0c1220; color: #e8edf7; border: 1px solid #2a6cc0; border-radius: 10px; padding: 14px 16px; outline: none; }
+#pv-editor[hidden] { display: none; }
+#presenter .notesbox:has(#pv-editor:not([hidden])) { display: flex; flex-direction: column; }
+#presenter .notesbox:has(#pv-editor:not([hidden])) #pv-editor { flex: 1 1 auto; height: auto; }
+
 /* ---------- pointer: a touch on the phone's current-slide picture shows this dot on the audience screen ---------- */
 #laser { position: absolute; left: 0; top: 0; width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; z-index: 90; pointer-events: none;
   background: radial-gradient(circle, #fff 0 14%, #ff2d2d 30% 52%, rgba(255, 45, 45, .35) 70%, rgba(255, 45, 45, 0) 100%);

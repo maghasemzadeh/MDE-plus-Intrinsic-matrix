@@ -363,3 +363,119 @@
   </div>
   <aside class="notes">{{b5.notes}}</aside>
 </section>
+
+<!-- ============ backup 6 · all formulas (1): metrics, alignment, losses ============ -->
+<section class="slide backup s-fx s-b6" data-title="{{b6.title}}">
+  <header class="slide-head"><h2>{{b6.title}}</h2><div class="sub">{{b6.sub}}</div></header>
+  <div class="slide-body">
+    <div class="cols c2 top">
+      <div class="panel line">
+        <h3>{{b6.h_metrics}}</h3>
+        <div class="fx">
+          <span class="fl">{{b6.l1}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{AbsRel}=\frac{1}{N}\sum_i\frac{|D_i-\hat D_i|}{D_i}"></span></div>
+          <span class="fl">{{b6.l1b}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{SqRel}=\frac{1}{N}\sum_i\frac{(D_i-\hat D_i)^2}{D_i}"></span></div>
+          <span class="fl">{{b6.l2}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{RMSE}=\sqrt{\frac{1}{N}\sum_i(D_i-\hat D_i)^2}"></span></div>
+          <span class="fl">{{b6.l2b}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{MAE}=\frac{1}{N}\sum_i|D_i-\hat D_i|\;\le\;\mathrm{RMSE}"></span></div>
+          <span class="fl">{{b6.l3}}</span><div class="eq"><span class="tex block" data-tex="\delta_k=\frac{1}{N}\Big|\Big\{i:\max\!\Big(\frac{\hat D_i}{D_i},\frac{D_i}{\hat D_i}\Big)\lt 1.25^k\Big\}\Big|,\quad k=1,2,3"></span></div>
+          <span class="fl">{{b6.l4}}</span><div class="eq"><span class="tex block" data-tex="\log_{10}=\frac{1}{N}\sum_i\big|\log_{10}D_i-\log_{10}\hat D_i\big|"></span></div>
+          <span class="fl">{{b6.l5}}</span><div class="eq"><span class="tex block" data-tex="r_i=\frac{\hat D_i}{D_i},\qquad \rho=\frac{\mathrm{median}(\hat D)}{\mathrm{median}(D)}"></span></div>
+          <span class="fl">{{b6.l6}}</span><div class="eq"><span class="tex block" data-tex="\overline{M}=\frac{1}{|S|}\sum_{n\in S}M(n)"></span></div>
+        </div>
+      </div>
+      <div class="panel line">
+        <h3>{{b6.h_losses}}</h3>
+        <div class="fx">
+          <span class="fl">{{b6.r1}}</span><div class="eq"><span class="tex block" data-tex="d_i=\frac{1}{\max(D_i,\,d_{\min})}"></span></div>
+          <span class="fl">{{b6.r2}}</span><div class="eq"><span class="tex block" data-tex="(s^*,t^*)=\arg\min_{s,t}\sum_i\big(s\,\hat d_i+t-d_i\big)^2"></span></div>
+          <span class="fl">{{b6.r3}}</span><div class="eq"><span class="tex block" data-tex="s^*=\frac{\sum_i(\hat d_i-\bar{\hat d})(d_i-\bar d)}{\sum_i(\hat d_i-\bar{\hat d})^2},\qquad t^*=\bar d-s^*\,\bar{\hat d}"></span></div>
+          <span class="fl fl2">{{b6.r4}}<span class="ltr fl-en">affine-invariant</span></span><div class="eq"><span class="tex block" data-tex="\mathcal{L}_{\mathrm{SSI}}=(1-\alpha)\,\mathcal{L}_{\mathrm{pixel}}+\alpha\,\mathcal{L}_{\mathrm{grad}},\quad \mathcal{L}_{\mathrm{pixel}}=\frac{1}{N}\sum_i\big|s^*\hat d_i+t^*-d_i\big|"></span></div>
+          <span class="fl">{{b6.r5}}</span><div class="eq"><span class="tex block" data-tex="\mathcal{L}_{\mathrm{grad}}=\frac{1}{8}\sum_{k=0}^{3}\sum_{\partial\in\{\partial_x,\partial_y\}}\mathrm{mean}\,\big|\partial^{(2^k)}(s^*\hat d+t^*)-\partial^{(2^k)}d\big|"></span></div>
+          <span class="fl">{{b6.r6}}</span><div class="eq"><span class="tex block" data-tex="\mathcal{L}_{\mathrm{SiLog}}=\sqrt{\frac{1}{N}\sum_i e_i^2-\frac{\lambda}{N^2}\Big(\sum_i e_i\Big)^2},\quad e_i=\ln D_i-\ln\hat D_i"></span></div>
+          <span class="fl">{{b6.r7}}</span><div class="eq"><span class="tex block" data-tex="\mathcal{L}_{\mathrm{SiLog}}=\sqrt{\mathrm{Var}(e)+(1-\lambda)\,\bar e^{\,2}},\qquad \lambda=0.5"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{b6.notes}}</aside>
+</section>
+
+<!-- ============ backup 7 · all formulas (2): camera, descriptor, data, training ============ -->
+<section class="slide backup s-fx s-b7" data-title="{{b7.title}}">
+  <header class="slide-head"><h2>{{b7.title}}</h2><div class="sub">{{b7.sub}}</div></header>
+  <div class="slide-body">
+    <div class="cols c2 top">
+      <div class="panel line">
+        <h3>{{b7.h_cam}}</h3>
+        <div class="fx">
+          <span class="fl">{{b7.l1}}</span><div class="eq"><span class="tex block" data-tex="s\begin{bmatrix}u\\v\\1\end{bmatrix}=K\,[R\mid\mathbf t]\begin{bmatrix}X\\Y\\Z\\1\end{bmatrix}"></span></div>
+          <span class="fl">{{b7.l2}}</span><div class="eq"><span class="tex block" data-tex="K=\begin{bmatrix}f_x&0&c_x\\0&f_y&c_y\\0&0&1\end{bmatrix},\qquad f_x=\frac{f}{p_x},\ \ f_y=\frac{f}{p_y}"></span></div>
+          <span class="fl">{{b7.l3}}</span><div class="eq"><span class="tex block" data-tex="u=f_x\frac{X}{Z}+c_x,\qquad v=f_y\frac{Y}{Z}+c_y"></span></div>
+          <span class="fl">{{b7.l4}}</span><div class="eq"><span class="tex block" data-tex="h=\frac{f\,H}{Z}=\frac{f\,(kH)}{kZ}\qquad\Rightarrow\qquad Z\propto f"></span></div>
+          <span class="fl">{{b7.l5}}</span><div class="eq"><span class="tex block" data-tex="D=f_\theta(I)\quad\longrightarrow\quad D=f_\theta(I,\,K)"></span></div>
+          <span class="fl">{{b7.l6}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{Attn}(Q,K_{\mathrm{att}},V)=\mathrm{softmax}\!\Big(\frac{QK_{\mathrm{att}}^{\mathsf T}}{\sqrt{d_k}}\Big)V"></span></div>
+        </div>
+      </div>
+      <div class="panel line">
+        <h3>{{b7.h_desc}}</h3>
+        <div class="fx">
+          <span class="fl">{{b7.r1}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{fov}_w=2\arctan\frac{W}{2f_x},\qquad \mathrm{fov}_h=2\arctan\frac{H}{2f_y}"></span></div>
+          <span class="fl">{{b7.r2}}</span><div class="eq"><span class="tex block" data-tex="\mathbf d_{\mathrm{cam}}=\Big[\tfrac{f_x}{W},\tfrac{f_y}{H},\tfrac{c_x}{W},\tfrac{c_y}{H},\tfrac{\mathrm{fov}_h}{\pi},\tfrac{\mathrm{fov}_w}{\pi},\tfrac{W}{H},\tfrac{f_x+f_y}{2\max(H,W)},\tfrac{HW}{1920\cdot1080}\Big]"></span></div>
+          <span class="fl">{{b7.r3}}</span><div class="eq"><span class="tex block" data-tex="\mathbf t_{\mathrm{cam}}=g\cdot E(\mathbf d_{\mathrm{cam}}),\qquad g_0=0"></span></div>
+          <span class="fl">{{b7.r4}}</span><div class="eq"><span class="tex block" data-tex="f_x'=f_x\frac{W_{\mathrm{net}}}{w_{\mathrm{win}}},\qquad c_x'=(c_x-x_0)\frac{W_{\mathrm{net}}}{w_{\mathrm{win}}}"></span></div>
+          <span class="fl">{{b7.r5}}</span><div class="eq"><span class="tex block" data-tex="\alpha\sim\exp\!\big(\mathcal U(-\ln m,\,\ln m)\big),\ m=1.6:\quad f\mapsto\alpha f,\ \ Z\mapsto\alpha Z"></span></div>
+          <span class="fl">{{b7.r6}}</span><div class="eq"><span class="tex block" data-tex="\mathrm{lr}_t=\mathrm{lr}_0\Big(1-\frac{t}{T}\Big)^{0.9}"></span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{b7.notes}}</aside>
+</section>
+
+<!-- ============ backup 8 · Depth Anything 3 ============ -->
+<section class="slide backup s-b8" data-title="{{b8.title}}">
+  <header class="slide-head"><h2>{{b8.title}}</h2><div class="sub">{{b8.sub}}</div></header>
+  <div class="slide-body">
+    <div class="flow">
+      <div class="ins">
+        <div class="box soft">{{b8.in}}</div>
+        <div class="box soft dash">{{b8.cam}}</div>
+      </div>
+      <div class="arr"></div>
+      <div class="box bb">
+        <b>{{b8.bb}}</b>
+        <span class="band">{{b8.bb1}}</span>
+        <span class="band alt">{{b8.bb2}}</span>
+      </div>
+      <div class="arr"></div>
+      <div class="box head"><b class="ltr">Dual-DPT</b><small>{{b8.head_s}}</small></div>
+      <div class="arr"></div>
+      <div class="outs">
+        <div class="box fill">{{b8.o1}}</div>
+        <div class="box fill">{{b8.o2}}</div>
+      </div>
+    </div>
+    <div class="cols c2 top low">
+      <div class="panel line">
+        <h3>{{b8.focus}}</h3>
+        <p class="phrase s">{{b8.f1}}</p>
+        <p class="phrase s">{{b8.f2}}</p>
+        <p class="phrase s">{{b8.f3}}</p>
+        <p class="phrase s">{{b8.f4}}</p>
+      </div>
+      <div>
+        <h4 class="h4">{{b8.sizes}}</h4>
+        <table class="tbl compact full">
+          <thead><tr><th class="name ltr-cell">DA3</th><th>{{b8.c_par}}</th><th>{{b8.c_fps}}</th></tr></thead>
+          <tbody>
+            <tr><td class="name ltr-cell">Small</td><td class="n">0.03B</td><td class="n">160.5</td></tr>
+            <tr><td class="name ltr-cell">Base</td><td class="n">0.11B</td><td class="n">126.5</td></tr>
+            <tr><td class="name ltr-cell">Large</td><td class="n">0.36B</td><td class="n">78.4</td></tr>
+            <tr><td class="name ltr-cell">Giant</td><td class="n">1.10B</td><td class="n">37.6</td></tr>
+          </tbody>
+        </table>
+        <p class="fnote">{{b8.fn}}</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{b8.notes}}</aside>
+</section>

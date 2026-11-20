@@ -53,9 +53,18 @@ class ZoeDepth:
 
     @torch.no_grad()
     def __call__(self, rgb, K):
-        inp = self.proc(images=rgb, return_tensors='pt').to(self.device)
+        # Official ZoeDepth configs resize to a fixed img_size without padding:
+        # [384, 512] for NYU-like 4:3 images, [384, 768] for KITTI-like wide ones.
+        # The transformers default (reflect padding + keep_aspect_ratio) is NOT
+        # removed correctly in post-processing (transformers 5.23): NYU AbsRel
+        # 0.134 with it vs 0.071 without (paper 0.077).
+        h, w = rgb.shape[:2]
+        size = {'height': 384, 'width': 768 if w / h >= 1.7 else 512}
+        inp = self.proc(images=rgb, return_tensors='pt', do_pad=False,
+                        keep_aspect_ratio=False, size=size).to(self.device)
         out = self.model(**inp)
-        post = self.proc.post_process_depth_estimation(out, source_sizes=[rgb.shape[:2]])
+        post = self.proc.post_process_depth_estimation(out, source_sizes=[rgb.shape[:2]],
+                                                       do_remove_padding=False)
         return post[0]['predicted_depth'].float().cpu().numpy()
 
 

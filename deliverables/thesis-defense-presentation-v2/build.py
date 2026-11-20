@@ -13,11 +13,18 @@ ROOT = Path(__file__).resolve().parent
 fa = json.loads((ROOT / "content" / "fa.json").read_text(encoding="utf8"))
 
 parts = [fa[f"part.{i}"] for i in range(1, 8)]
-config = {"parts": parts, "backupLabel": fa["b.label"], "partLabel": fa["ui.part"], "of": "از"}
+config = {"parts": parts, "backupLabel": fa["b.label"], "partLabel": fa["ui.part"], "of": "از",
+          "endLabel": fa["ui.end"], "sameSlide": fa["ui.same_slide"],
+          "conn": {k: fa["ui.conn_" + k] for k in ("ok", "nomain", "bad", "denied")}}
 
 slides = "".join(p.read_text(encoding="utf8") for p in sorted((ROOT / "src" / "slides").glob("*.html")))
 html = (ROOT / "src" / "shell.html").read_text(encoding="utf8").replace("<!--SLIDES-->", slides)
 html = html.replace("{{CONFIG}}", json.dumps(config, ensure_ascii=False))
+# a slide whose notes have a quick-glance summary (key <slide>.sum) also carries it, for the presenter's summary switch
+html = re.sub(r'<aside class="notes">\{\{([A-Za-z0-9_]+)\.notes\}\}</aside>',
+              lambda m: m.group(0) + (f'<aside class="notes-sum">{{{{{m.group(1)}.sum}}}}</aside>' if f"{m.group(1)}.sum" in fa else ""),
+              html)
+template = html
 
 missing = set()
 
@@ -37,7 +44,7 @@ if missing:
 (ROOT / "index.html").write_text(html, encoding="utf8")
 n_main = len(re.findall(r'<section class="slide(?![^"]*backup)', html))
 n_backup = len(re.findall(r'<section class="slide[^"]*backup', html))
-unused = sorted(k for k in fa if "{{" + k + "}}" not in slides and not k.startswith(("part.", "ui.", "meta.", "b.label")))
+unused = sorted(k for k in fa if "{{" + k + "}}" not in template and not k.startswith(("part.", "ui.", "meta.", "b.label")))
 print(f"index.html written: {n_main} main slides + {n_backup} backup slides")
 if unused:
     print("unused content keys:", ", ".join(unused))

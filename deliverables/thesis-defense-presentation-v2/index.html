@@ -1626,7 +1626,11 @@
       <button data-v="fwd" tabindex="-1">۵ ثانیه جلو <kbd>L</kbd></button>
       <button data-v="mute" tabindex="-1"><span class="if-muted">روشن‌کردن صدا</span><span class="if-sound">قطع صدا</span> <kbd>M</kbd></button>
     </div>
-    <div class="pv next"><label>اسلاید بعدی</label><iframe title="next" tabindex="-1"></iframe><div class="ncap"><small>اسلاید بعدی</small><b id="pv-ntitle"></b></div></div>
+    <div class="pv next"><label>اسلاید بعدی</label><iframe title="next" tabindex="-1"></iframe><div class="ncap"><span class="go">بعدی<svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></span><b id="pv-ntitle"></b></div></div>
+    <nav id="pv-remote">
+      <button id="pv-prev" type="button"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>قبلی</button>
+      <button id="pv-list" type="button"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h14"/></svg>فهرست</button>
+    </nav>
   </div>
   <div class="notesbox">
     <div class="nb-head"><h4>یادداشت ارائه‌دهنده</h4><span class="nb-tools"><span class="fsz" role="group" aria-label="اندازهٔ متن"><button type="button" data-fsz="-1" aria-label="−">A−</button><button type="button" data-fsz="1" aria-label="+">A+</button></span><button id="pv-sum" type="button" tabindex="-1" aria-pressed="false"><i></i>خلاصه</button></span></div>
@@ -1634,17 +1638,12 @@
     <div id="pv-notes"></div>
   </div>
   <div class="hint">کلیدهای پیکان: بعدی و قبلی؛ P: نمای ارائه‌دهنده؛ F: تمام‌صفحه؛ O: مرور</div>
-  <nav id="pv-remote">
-    <button id="pv-prev" type="button"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>قبلی</button>
-    <button id="pv-list" type="button" aria-label="فهرست"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round"><path d="M5 6h14M5 12h14M5 18h14"/></svg><span>فهرست</span></button>
-    <button id="pv-next" type="button">بعدی<svg viewBox="0 0 24 24" width="30" height="30" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
-  </nav>
 </div>
 
 <div id="overview"><ol></ol></div>
 <div id="help">کلیدهای پیکان: بعدی و قبلی؛ P: نمای ارائه‌دهنده؛ F: تمام‌صفحه؛ O: مرور</div>
 
-<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "داده و آموزش", "مسیر مدل نهایی", "مدل نهایی و نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید"}}</script>
+<script type="application/json" id="deck-config">{"parts": ["مساله و انگیزه", "پیشینه و شکاف پژوهشی", "روش پیشنهادی", "داده و آموزش", "مسیر مدل نهایی", "مدل نهایی و نتایج", "جمع‌بندی"], "backupLabel": "پشتیبان", "partLabel": "بخش", "of": "از", "endLabel": "پایان اسلایدها", "sameSlide": "گام بعدیِ همین اسلاید", "closeLabel": "بستن", "conn": {"ok": "متصل", "nomain": "پنجرهٔ اصلی باز نیست", "bad": "قطع ارتباط با سرور", "denied": "پیوند نامعتبر؛ کد QR را دوباره اسکن کنید"}}</script>
 <script src="assets/vendor/katex/katex.min.js"></script>
 <script src="assets/js/deck.js"></script>
 </body>

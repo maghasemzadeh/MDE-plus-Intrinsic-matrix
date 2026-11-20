@@ -258,8 +258,14 @@
   "256": ".__init__",
   "257": ".get_model_info",
   "258": "DropPath",
+  "259": ".get_default_intrinsic",
+  "260": "load_model",
+  "261": "NormalizeImage",
+  "262": ".__init__",
   "263": "TestPFMReading",
+  "264": "LayerScale",
   "265": ".load_from_checkpoint",
+  "266": "DepthAnythingV2",
   "267": "Thesis defense deck (v2)",
   "268": "summarize_descabl.py",
   "269": ".get_item_output_dir",
@@ -267,5 +273,9 @@
   "271": ".infer_image",
   "272": ".infer_image",
   "273": "build.py",
-  "276": ".forward"
+  "274": "Resize",
+  "275": "VKITTIReader",
+  "276": ".forward",
+  "277": ".get_item_output_dir",
+  "278": "depth_visualizer.py"
 }

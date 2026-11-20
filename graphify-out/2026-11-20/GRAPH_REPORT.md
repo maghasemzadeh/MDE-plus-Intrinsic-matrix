@@ -1,12 +1,12 @@
 # Graph Report - MDE-plus-Intrinsic-matrix  (2026-11-20)
 
 ## Corpus Check
-- 282 files · ~3,499,442 words
+- 282 files · ~3,500,861 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3444 nodes · 5342 edges · 263 communities (199 shown, 64 thin omitted)
-- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 405 edges (avg confidence: 0.64)
+- 3453 nodes · 5378 edges · 269 communities (205 shown, 64 thin omitted)
+- Extraction: 92% EXTRACTED · 8% INFERRED · 0% AMBIGUOUS · INFERRED: 408 edges (avg confidence: 0.64)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
@@ -197,10 +197,12 @@
 - [[_COMMUNITY_recompute_section_4_4_2_historical_from_fresh.py|recompute_section_4_4_2_historical_from_fresh.py]]
 - [[_COMMUNITY_Review passes|Review passes]]
 - [[_COMMUNITY_پاسخ‌های کوتاه به پرسش‌های محتمل|پاسخ‌های کوتاه به پرسش‌های محتمل]]
+- [[_COMMUNITY_ResidualConvUnit|ResidualConvUnit]]
 - [[_COMMUNITY_NormalizeImage|NormalizeImage]]
 - [[_COMMUNITY_Persian Writing (XeLaTeX  xepersian)|Persian Writing (XeLaTeX / xepersian)]]
 - [[_COMMUNITY_TestSignificanceDetermination|TestSignificanceDetermination]]
 - [[_COMMUNITY_NormalizeImage|NormalizeImage]]
+- [[_COMMUNITY_PatchEmbed|PatchEmbed]]
 - [[_COMMUNITY_ResidualConvUnit|ResidualConvUnit]]
 - [[_COMMUNITY_build_metric_paper_comparison.py|build_metric_paper_comparison.py]]
 - [[_COMMUNITY_validate_section_4_4_2.py|validate_section_4_4_2.py]]
@@ -238,22 +240,27 @@
 - [[_COMMUNITY_basic-validation|basic-validation.md]]
 - [[_COMMUNITY_build.sh|build.sh]]
 - [[_COMMUNITY_.load_gt_depth|.load_gt_depth]]
+- [[_COMMUNITY_ResidualConvUnit|ResidualConvUnit]]
 - [[_COMMUNITY_PatchEmbed|PatchEmbed]]
 - [[_COMMUNITY_LayerScale|LayerScale]]
 - [[_COMMUNITY_TestTTest|TestTTest]]
 - [[_COMMUNITY_DepthAnythingV2|DepthAnythingV2]]
+- [[_COMMUNITY_Resize|Resize]]
 - [[_COMMUNITY_Resize|Resize]]
 - [[_COMMUNITY_LayerScale|LayerScale]]
 - [[_COMMUNITY_TestSignificanceDetermination|TestSignificanceDetermination]]
 - [[_COMMUNITY_make_qualitative_md.py|make_qualitative_md.py]]
 - [[_COMMUNITY_Resize|Resize]]
 - [[_COMMUNITY_load_model|load_model]]
+- [[_COMMUNITY_.load_from_checkpoint|.load_from_checkpoint]]
+- [[_COMMUNITY_find_checkpoint|find_checkpoint]]
 - [[_COMMUNITY_LayerScale|LayerScale]]
 - [[_COMMUNITY_.get_item_output_dir|.get_item_output_dir]]
 - [[_COMMUNITY_run_relative_multidomain.sh|run_relative_multidomain.sh]]
 - [[_COMMUNITY_DropPath|DropPath]]
 - [[_COMMUNITY_table-new|table-new.md]]
 - [[_COMMUNITY_.__init__|.__init__]]
+- [[_COMMUNITY_.get_model_info|.get_model_info]]
 - [[_COMMUNITY_DropPath|DropPath]]
 - [[_COMMUNITY_TestPFMReading|TestPFMReading]]
 - [[_COMMUNITY_.load_from_checkpoint|.load_from_checkpoint]]
@@ -262,7 +269,6 @@
 - [[_COMMUNITY_run_descriptor_ablation.sh|run_descriptor_ablation.sh]]
 - [[_COMMUNITY_.infer_image|.infer_image]]
 - [[_COMMUNITY_.infer_image|.infer_image]]
-- [[_COMMUNITY_.get_item_output_dir|.get_item_output_dir]]
 - [[_COMMUNITY_.forward|.forward]]
 
 ## God Nodes (most connected - your core abstractions)
@@ -278,16 +284,16 @@
 10. `handler()` - 32 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Training Datasets: NYU + VKITTI + DIODE` --references--> `DIODEDataset`  [INFERRED]
-  correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → datasets/diode.py
-- `Training Datasets: NYU + VKITTI + DIODE` --references--> `VKITTIDataset`  [INFERRED]
-  correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → datasets/vkitti.py
 - `Camera Intrinsics Conditioning` --conceptually_related_to--> `DepthAnythingV2RevisedWrapper`  [INFERRED]
   correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → models/depth_anything_v2_revised.py
+- `Training Datasets: NYU + VKITTI + DIODE` --references--> `DIODEDataset`  [INFERRED]
+  correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → datasets/diode.py
 - `Training Datasets: NYU + VKITTI + DIODE` --references--> `NYUDataset`  [INFERRED]
   correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → datasets/nyu.py
 - `DepthAnythingV2-Revised Basic ViT-S Model (with intrinsics)` --references--> `DepthAnythingV2RevisedWrapper`  [INFERRED]
   correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → models/depth_anything_v2_revised.py
+- `Training Datasets: NYU + VKITTI + DIODE` --references--> `VKITTIDataset`  [INFERRED]
+  correctness_check/depth_revised_basic_vits_nyu_vkitti_diode_intr.png → datasets/vkitti.py
 
 ## Import Cycles
 - None detected.
@@ -296,7 +302,7 @@
 - **Intrinsics-Aware Metric Depth Estimation Pipeline** — thesis_main_proposed_intrinsics_conditioned_model, thesis_main_camera_intrinsic_matrix, thesis_main_depth_anything_v2_base_model, thesis_main_dinov2_backbone, thesis_main_knowledge_distillation [EXTRACTED 1.00]
 - **Mixed Indoor/Outdoor Training Dataset Composition** — thesis_main_vkitti_dataset, thesis_main_nyuv2_dataset, thesis_main_diode_dataset, thesis_main_proposed_intrinsics_conditioned_model [EXTRACTED 1.00]
 
-## Communities (263 total, 64 thin omitted)
+## Communities (269 total, 64 thin omitted)
 
 ### Community 0 - "Evaluation Dataset Framework"
 Cohesion: 0.07
@@ -311,8 +317,8 @@ Cohesion: 0.07
 Nodes (20): KITTIDataset, ndarray, Get default KITTI dataset path., Find all KITTI image pairs based on the split., Load items from a DA2-paper-style filelist.          File format (one entry per, Find items from depth_selection/val_selection_cropped/., Find items from depth_selection/test_depth_prediction_anonymous/., Find items from depth_selection/test_depth_completion_anonymous/. (+12 more)
 
 ### Community 3 - "Model Wrapper Interface"
-Cohesion: 0.10
-Nodes (17): depth_from_disparity(), _load_depth_array(), ndarray, Load depth array from either compressed (.npz) or uncompressed (.npy) format., Load Middlebury disparity and convert to depth in meters., Read a .pfm disparity file., Convert disparity map to depth in mm., read_pfm() (+9 more)
+Cohesion: 0.08
+Nodes (21): NYUDataset, ndarray, Find all NYU Depth V2 image pairs.          By default uses the standard Eigen 6, Load image from the cached data.                  Args:             item: Datase, Load NYU Depth V2 depth map from cached data.                  The depth values, Get output subdirectory name., Load camera intrinsic matrix for a NYU Depth V2 image.                  NYU Dept, Get default NYU Depth V2 intrinsic matrix.                  NYU Depth V2 camera (+13 more)
 
 ### Community 4 - "Thesis Citations & Concepts"
 Cohesion: 0.08
@@ -323,8 +329,8 @@ Cohesion: 0.18
 Nodes (22): slice, aggregate_metrics(), compute_per_camera_metrics(), compute_stats(), inspect_scene(), list_scene_folders(), _load_array_from_path(), load_scene() (+14 more)
 
 ### Community 7 - "DIODE Dataset & Revised Model Check"
-Cohesion: 0.04
-Nodes (60): Camera Intrinsics Conditioning, Model Correctness Check (Qualitative Depth Sanity Check), DepthAnythingV2-Revised Basic ViT-S Model (with intrinsics), Depth Map Visualization (Revised Basic ViT-S, NYU+VKITTI+DIODE, Intrinsics), Predicted Range 0.00-15.73 m Exceeds Shared Display Scale 0-11.1 m, Training Datasets: NYU + VKITTI + DIODE, NYUDataset, ndarray (+52 more)
+Cohesion: 0.05
+Nodes (40): DatasetConfig, Configuration for dataset processing.          Attributes:         dataset_path:, Initialize DIODE dataset.                  Args:             config: Dataset con, Initialize Middlebury dataset.                  Args:             config: Datase, DepthAnythingV2RevisedWrapper, ndarray, Wrapper for Depth Anything V2 (revised) models.     Supports camera intrinsics a, Load the Depth Anything V2 (revised) model. (+32 more)
 
 ### Community 8 - "NYU Dataset Loader"
 Cohesion: 0.04
@@ -347,16 +353,16 @@ Cohesion: 0.07
 Nodes (28): 0. Read this first — current repository state (re-verified 2026-07-10, after commit `88a48a3`), 1. One-paragraph project summary, 2026-07-10 re-verification pass (post `88a48a3`), 2.10 K-knockout: withholding or corrupting K causally degrades accuracy, 2.11 Cross-cutting design/methodology notes (for chapter 3's implementation-lessons subsection), 2.1 Starting point: audit of ~20 existing checkpoints, 2.2 Two traps that made every earlier "the intrinsics model wins" claim invalid, 2.3 The pivot: use the protocol under which "better" is actually provable (+20 more)
 
 ### Community 13 - "Visualization Utilities"
-Cohesion: 0.07
-Nodes (63): activeVideo(), applyFrags(), barPath(), broadcast(), broadcastVideo(), buildChrome(), buildOverview(), chartBars() (+55 more)
+Cohesion: 0.11
+Nodes (48): activeVideo(), api(), applyFrags(), barPath(), broadcast(), broadcastVideo(), buildChrome(), buildOverview() (+40 more)
 
 ### Community 14 - "Scale Factor Tests"
 Cohesion: 0.11
 Nodes (12): MockNonMetricModel, Tests for scale factor calculation (for non-metric models)., Mock non-metric model for testing., Test scale factor with large depth values., Test scale factor calculation for non-metric models., Test automatic scale factor calculation using median., Test using user-provided scale factor., Test scale factor calculation with NaN values. (+4 more)
 
 ### Community 15 - "Middlebury Dataset Class"
-Cohesion: 0.11
-Nodes (12): main(), AdaHessian Optimizer     Lifted from https://github.com/BIGBALLON/distribuuuu/bl, setup_distributed(), SiLogLoss, eval_depth(), init_log(), Hypersim, hypersim_distance_to_depth() (+4 more)
+Cohesion: 0.07
+Nodes (18): main(), AdaHessian Optimizer     Lifted from https://github.com/BIGBALLON/distribuuuu/bl, setup_distributed(), SiLogLoss, eval_depth(), init_log(), Hypersim, hypersim_distance_to_depth() (+10 more)
 
 ### Community 16 - "Checkpoint Loading & Inference"
 Cohesion: 0.04
@@ -367,28 +373,28 @@ Cohesion: 0.10
 Nodes (11): Tests for error calculation and valid mask computation., Test error calculation functions., Test error calculation with large depth values., Test that error is always positive (absolute value)., Test basic error calculation |pred - gt|., Test error calculation with NaN values., Test that zero values are excluded from error calculation., Test error calculation with perfect match. (+3 more)
 
 ### Community 18 - "Checkpoint Comparison Tools"
-Cohesion: 0.13
-Nodes (15): Base model wrapper interface for depth estimation models., find_checkpoint(), Depth Anything 3 model wrapper., Find checkpoint for Depth Anything 3 model.          DA3 uses model directories, find_checkpoint(), Depth Anything V2 (original) model wrapper., Find checkpoint for Depth Anything V2 (original) model.          Args:         m, find_checkpoint() (+7 more)
+Cohesion: 0.14
+Nodes (13): Base model wrapper interface for depth estimation models., find_checkpoint(), Depth Anything 3 model wrapper., Find checkpoint for Depth Anything 3 model.          DA3 uses model directories, Depth Anything V2 (original) model wrapper., find_checkpoint(), Any, Depth Anything V2 (revised) model wrapper. (+5 more)
 
 ### Community 19 - "Bootstrap Metrics & Integration Tests"
-Cohesion: 0.08
-Nodes (16): KITTI, apply_min_size(), Crop, NormalizeImage, PrepareForNet, Normlize image by given mean and std., Prepare sample for usage as network input., Crop sample for batch-wise training. Image is of shape CxHxW (+8 more)
+Cohesion: 0.09
+Nodes (15): apply_min_size(), Crop, NormalizeImage, PrepareForNet, Normlize image by given mean and std., Prepare sample for usage as network input., Crop sample for batch-wise training. Image is of shape CxHxW, Resize sample to given size (width, height). (+7 more)
 
 ### Community 20 - "Cityscapes Dataset Loader"
 Cohesion: 0.06
 Nodes (31): candidates_sha256, candidate_rank, ids, indices, margin, population, created, candidate_rank (+23 more)
 
 ### Community 21 - "Model Comparison Script"
-Cohesion: 0.15
-Nodes (10): get_model(), ModelRegistry, BaseDepthModel, Get a model class from the global registry.          Args:         name: Model n, Initialize empty registry., Register a model class.                  Args:             name: Unique name for, Get a model class by name.                  Args:             name: Model name o, List all registered model names.                  Returns:             List of m (+2 more)
+Cohesion: 0.14
+Nodes (12): get_model(), ModelRegistry, BaseDepthModel, Get a model class from the global registry.          Args:         name: Model n, Initialize empty registry., Register a model class.                  Args:             name: Unique name for, Get a model class by name.                  Args:             name: Model name o, List all registered model names.                  Returns:             List of m (+4 more)
 
 ### Community 22 - "DA2-Revised Model Wrapper"
 Cohesion: 0.09
 Nodes (22): ids, indices, population, created, ids, indices, population, per_set (+14 more)
 
 ### Community 23 - "DA2 Baseline Wrapper"
-Cohesion: 0.23
-Nodes (10): Model registry and factory for Depth Anything V2 models. Provides a unified inte, Register built-in models. Called automatically on first import., _register_builtin_models(), has_model(), list_models(), Model registry for managing and loading different depth estimation models., List all registered model names in the global registry.          Returns:, Check if a model is registered in the global registry.          Args:         na (+2 more)
+Cohesion: 0.11
+Nodes (20): compare_datasets(), main(), Unified command-line interface for depth estimation evaluation and comparison., Compare two datasets using t-test and other statistics.          Args:         m, evaluate_per_image_metrics(), print_evaluation_results(), Evaluate depth metrics per image and perform statistical comparison for Middlebu, Print evaluation results in a clear format. (+12 more)
 
 ### Community 24 - "Middlebury Training Dataset"
 Cohesion: 0.09
@@ -403,20 +409,20 @@ Cohesion: 0.10
 Nodes (14): __getattr__(), KITTITrainingDataset, ndarray, VKITTI2 dataset for depth estimation training.          Reads from split files i, Initialize VKITTI2 training dataset.                  Args:             filelist, KITTI dataset for depth estimation training/validation.          Supports two mo, Initialize KITTI training dataset.                  Args:             filelist_o, Scan KITTI directory structure for image/depth pairs. (+6 more)
 
 ### Community 27 - "Depth-Anything-3 Wrapper"
-Cohesion: 0.19
-Nodes (7): ndarray, Load intrinsic matrix from VKITTI intrinsic.txt file.                  Args:, Load VKITTI depth map and convert from cm to meters., Load camera intrinsic matrix for a VKITTI image.                  VKITTI stores, Get default VKITTI intrinsic matrix.                  VKITTI uses virtual camera, Get camera intrinsic matrix scaled to a specific image size.                  Ar, Find all VKITTI image pairs.
+Cohesion: 0.09
+Nodes (18): Camera Intrinsics Conditioning, Model Correctness Check (Qualitative Depth Sanity Check), DepthAnythingV2-Revised Basic ViT-S Model (with intrinsics), Depth Map Visualization (Revised Basic ViT-S, NYU+VKITTI+DIODE, Intrinsics), Predicted Range 0.00-15.73 m Exceeds Shared Display Scale 0-11.1 m, Training Datasets: NYU + VKITTI + DIODE, ndarray, Load intrinsic matrix from VKITTI intrinsic.txt file.                  Args: (+10 more)
 
 ### Community 28 - "Bootstrap CI Tests"
 Cohesion: 0.15
 Nodes (11): bootstrap_confidence_interval(), Compute bootstrap confidence interval for mean difference.          Args:, Tests for statistical tests (t-test, bootstrap CI)., Test bootstrap CI with empty array., Test bootstrap CI with all NaN values., Test bootstrap CI with different confidence levels., Test that bootstrap CI contains the mean., Test that bootstrap CI is reproducible with same seed. (+3 more)
 
 ### Community 29 - "T-Test Tests"
-Cohesion: 0.06
-Nodes (22): ConvBlock, DepthAnythingV2, DPTHead, _make_fusion_block(), FeatureFusionBlock, _make_scratch(), Forward pass.          Returns:             tensor: output, Residual convolution module. (+14 more)
+Cohesion: 0.07
+Nodes (17): ConvBlock, DepthAnythingV2, DPTHead, _make_fusion_block(), FeatureFusionBlock, _make_scratch(), Forward pass.          Returns:             tensor: output, Feature fusion block. (+9 more)
 
 ### Community 30 - "Calibration Parsing"
-Cohesion: 0.25
-Nodes (10): get_device(), Get the best available device for PyTorch operations.          Args:         dev, load_basic_model(), load_metric_model(), load_model(), BaseDepthModel, Model loading utilities for Depth Anything V2. Provides a unified interface for, Load basic Depth Anything V2 model (with scale ambiguity).     Backward compatib (+2 more)
+Cohesion: 0.20
+Nodes (23): arguments(), article_silog(), artifact_for(), bootstrap_ci(), compare_fresh(), Comparison, construct_datasets(), DatasetSpec (+15 more)
 
 ### Community 31 - "VKITTI2 Training Dataset"
 Cohesion: 0.12
@@ -424,7 +430,7 @@ Nodes (11): RankingLoss, Compute scale-shift invariant loss.          Args:     
 
 ### Community 32 - "Significance Determination Tests"
 Cohesion: 0.08
-Nodes (17): Dataset, DIODETrainingDataset, MiddleburyTrainingDataset, DIODE dataset for depth estimation training.          Reads from the DIODE datas, Find all valid image/depth pairs in the dataset., Middlebury stereo dataset for depth estimation training.      Loads from the Mid, Hypersim, hypersim_distance_to_depth() (+9 more)
+Nodes (16): Dataset, MiddleburyTrainingDataset, Wrapper that catches load errors in __getitem__ and returns a fallback sample in, Args:             dataset: The underlying dataset to wrap.             max_retri, Middlebury stereo dataset for depth estimation training.      Loads from the Mid, RobustDataset, Hypersim, hypersim_distance_to_depth() (+8 more)
 
 ### Community 33 - "Training Script"
 Cohesion: 0.07
@@ -439,16 +445,16 @@ Cohesion: 0.32
 Nodes (7): create_vkitti_file_list(), load_intrinsic_matrix(), main(), ndarray, Main function with command-line interface., Load intrinsic matrix from VKITTI intrinsic.txt file.          Args:         int, Create a file list for VKITTI dataset.          Args:         vkitti_root: Root
 
 ### Community 37 - "NYU Training Dataset"
-Cohesion: 0.08
-Nodes (17): BaseDepthModel, Any, Module, ndarray, Base interface for depth estimation models. All depth models should inherit from, Run inference on a single image.         Must be implemented by subclasses., Run inference on a batch of images.         Default implementation processes ima, Base class for all depth estimation models.     Provides a common interface for (+9 more)
+Cohesion: 0.09
+Nodes (15): BaseDepthModel, Any, Module, ndarray, Run inference on a single image.         Must be implemented by subclasses., Run inference on a batch of images.         Default implementation processes ima, Base class for all depth estimation models.     Provides a common interface for, Get information about the model.                  Returns:             Dictionar (+7 more)
 
 ### Community 38 - "DIODE Training Dataset"
 Cohesion: 0.04
-Nodes (60): compare_datasets(), main(), Unified command-line interface for depth estimation evaluation and comparison., Compare two datasets using t-test and other statistics.          Args:         m, compare_model_metrics(), key_from_display_name(), main(), Compare two depth estimation models on a dataset.  This script evaluates two mod (+52 more)
+Nodes (48): checkpoint_output_slug(), compare_model_metrics(), display_name_for_comparison(), find_model_by_name(), key_from_display_name(), main(), Compare two depth estimation models on a dataset.  This script evaluates two mod, Compare metrics from two models using statistical tests.          Args: (+40 more)
 
 ### Community 39 - "Robust Training Dataset"
-Cohesion: 0.09
-Nodes (15): ABC, BaseDepthModel, Any, Module, Base interface for depth estimation models. All depth models should inherit from, Base class for all depth estimation models.     Provides a common interface for, Get information about the model.                  Returns:             Dictionar, Check if model outputs metric depth (in meters) or relative depth. (+7 more)
+Cohesion: 0.11
+Nodes (19): ABC, get_model_config(), any, Common configuration and utility functions for Depth Anything V2. This module pr, Get model configuration for a given encoder type.          Args:         encoder, BaseDepthModel, Base interface for depth estimation models. All depth models should inherit from, Base class for all depth estimation models.     Provides a common interface for (+11 more)
 
 ### Community 40 - "Data Consistency Tests"
 Cohesion: 0.39
@@ -475,8 +481,8 @@ Cohesion: 0.10
 Nodes (18): Architecture Overview, Checkpoint and Model Notes, Common Commands, Core Packages, Dataset Preparation, Dataset-Specific Evaluation Notes, Dependencies, graphify (+10 more)
 
 ### Community 46 - "Dataset Path Init"
-Cohesion: 0.15
-Nodes (9): DepthAnythingV2MetricModel, Module, ndarray, Forward pass through the model., Run inference on a single image.                  Args:             image: Input, Metric Depth Anything V2 model wrapper.     This model outputs metric depth in m, Initialize metric Depth Anything V2 model.                  Args:             en, Build the metric Depth Anything V2 model. (+1 more)
+Cohesion: 0.13
+Nodes (11): DepthAnythingV2MetricModel, Module, ndarray, Forward pass through the model., Run inference on a single image.                  Args:             image: Input, Metric Depth Anything V2 model wrapper.     This model outputs metric depth in m, Initialize metric Depth Anything V2 model.                  Args:             en, Build the metric Depth Anything V2 model. (+3 more)
 
 ### Community 47 - "Dataset Output Dirs"
 Cohesion: 0.18
@@ -495,20 +501,20 @@ Cohesion: 0.67
 Nodes (3): Systematic K-Matrix Sensitivity Analysis, Metric Stability Across Cameras and Datasets, RMSE Sensitivity to Camera Parameters
 
 ### Community 52 - "Dataset Intrinsics Flag"
-Cohesion: 0.12
-Nodes (12): apply_min_size(), Crop, NormalizeImage, PrepareForNet, Normlize image by given mean and std., Prepare sample for usage as network input., Crop sample for batch-wise training. Image is of shape CxHxW, Resize sample to given size (width, height). (+4 more)
+Cohesion: 0.10
+Nodes (13): apply_min_size(), Crop, NormalizeImage, PrepareForNet, Normlize image by given mean and std., Prepare sample for usage as network input., Crop sample for batch-wise training. Image is of shape CxHxW, Resize sample to given size (width, height). (+5 more)
 
 ### Community 53 - "Dataset Cache Flag"
 Cohesion: 0.04
 Nodes (46): 01. Title, 02. Roadmap, 03. The Scale-Ambiguity Problem, 04. Related Work Landscape, 05. The Research Gap, 06. Research Questions, 07. Section II — Method, 08. Pinhole Model & the Intrinsic Matrix (+38 more)
 
 ### Community 54 - "DrivingStereo Default Path"
-Cohesion: 0.15
-Nodes (9): make_2tuple(), PatchEmbed, Tensor, 2D image to patch embedding: (B,C,H,W) -> (B,N,D)      Args:         img_size: I, Module, Tensor, SwiGLUFFN, SwiGLUFFNFused (+1 more)
+Cohesion: 0.13
+Nodes (10): BlockChunk, Mlp, Module, Tensor, Module, Tensor, SwiGLUFFN, SwiGLUFFNFused (+2 more)
 
 ### Community 55 - "VKITTI Output Subdir"
-Cohesion: 0.10
-Nodes (16): get_model_config(), any, Get model configuration for a given encoder type.          Args:         encoder, DepthAnythingV2, Forward pass through the model.                  Args:             x: Input imag, Run inference on a single image.                  Args:             raw_image: I, DepthAnythingV2MetricModel, Module (+8 more)
+Cohesion: 0.15
+Nodes (9): DepthAnythingV2MetricModel, Module, ndarray, Load checkpoint weights., Metric Depth Anything V2 model wrapper.     This model outputs metric depth in m, Forward pass through the model., Run inference on a single image.                  Args:             image: Input, Initialize metric Depth Anything V2 model.                  Args:             en (+1 more)
 
 ### Community 56 - "VKITTI Default Path"
 Cohesion: 0.17
@@ -563,12 +569,12 @@ Cohesion: 0.14
 Nodes (13): Direct copy (uncommitted/quick changes), Error handling, Git sync (default), GPU jobs on lingotube, Quick reference: common project commands, Server facts, Step 0 — Check server capacity (always do this first), Step 1 — Understand the task (+5 more)
 
 ### Community 85 - "block.py"
-Cohesion: 0.18
-Nodes (12): add_residual(), drop_add_residual_stochastic_depth(), drop_add_residual_stochastic_depth_list(), get_attn_bias_and_cat(), get_branges_scales(), NestedTensorBlock, Any, Tensor (+4 more)
-
-### Community 86 - "block.py"
 Cohesion: 0.24
 Nodes (10): add_residual(), drop_add_residual_stochastic_depth(), drop_add_residual_stochastic_depth_list(), get_attn_bias_and_cat(), get_branges_scales(), NestedTensorBlock, Any, Tensor (+2 more)
+
+### Community 86 - "block.py"
+Cohesion: 0.18
+Nodes (12): add_residual(), drop_add_residual_stochastic_depth(), drop_add_residual_stochastic_depth_list(), get_attn_bias_and_cat(), get_branges_scales(), NestedTensorBlock, Any, Tensor (+4 more)
 
 ### Community 87 - "DepthAnythingV2BasicModel"
 Cohesion: 0.15
@@ -591,12 +597,12 @@ Cohesion: 0.15
 Nodes (12): Basic Training (without camera intrinsics):, Dataset Structure, File List Example, Important Notes, Options:, Step 1: Prepare the Dataset, Step 2: Prepare Validation Set (Optional), Step 3: Train the Model (+4 more)
 
 ### Community 92 - "GenericDatasetWithIntrinsics"
-Cohesion: 0.28
-Nodes (9): get_device(), Get the best available device for PyTorch operations.          Args:         dev, load_basic_model(), load_metric_model(), load_model(), BaseDepthModel, Load basic Depth Anything V2 model (with scale ambiguity).     Backward compatib, Load metric Depth Anything V2 model (returns depth in meters, no scale ambiguity (+1 more)
+Cohesion: 0.25
+Nodes (10): get_device(), Get the best available device for PyTorch operations.          Args:         dev, load_basic_model(), load_metric_model(), load_model(), BaseDepthModel, Model loading utilities for Depth Anything V2. Provides a unified interface for, Load basic Depth Anything V2 model (with scale ambiguity).     Backward compatib (+2 more)
 
 ### Community 93 - "depth_anything_v2_basic.py"
 Cohesion: 0.14
-Nodes (16): build_multidomain(), spec: 'nyu:4000,kitti:4000,...' (domain:samples-per-epoch).     Returns (trainse, Wrapper that catches load errors in __getitem__ and returns a fallback sample in, Args:             dataset: The underlying dataset to wrap.             max_retri, RobustDataset, canonical_scale(), detect_encoder_from_checkpoint(), generate_run_name() (+8 more)
+Nodes (16): build_multidomain(), spec: 'nyu:4000,kitti:4000,...' (domain:samples-per-epoch).     Returns (trainse, DIODETrainingDataset, DIODE dataset for depth estimation training.          Reads from the DIODE datas, Find all valid image/depth pairs in the dataset., canonical_scale(), detect_encoder_from_checkpoint(), generate_run_name() (+8 more)
 
 ### Community 94 - "load_model"
 Cohesion: 0.09
@@ -609,6 +615,10 @@ Nodes (16): collect(), depth_scale(), draw_depth_figure(), draw_error_figure(), 
 ### Community 98 - "Usage"
 Cohesion: 0.20
 Nodes (9): Citation, Depth Anything V2 for Metric Depth Estimation, Pre-trained Models, Prepraration, Project 2D images to point clouds:, Reproduce training, Running script on images, Usage (+1 more)
+
+### Community 99 - "DinoVisionTransformer"
+Cohesion: 0.23
+Nodes (6): DinoVisionTransformer, init_weights_vit_timm(), named_apply(), Module, Tensor, ViT weight initialization, original timm impl (for reproducibility)
 
 ### Community 101 - "__init__.py"
 Cohesion: 0.07
@@ -647,8 +657,8 @@ Cohesion: 0.22
 Nodes (8): Adding New Models, Benefits, Depth Anything V2 Models, Loading Models, Model Registry, Structure, Usage, Using Models
 
 ### Community 110 - ".__init__"
-Cohesion: 0.14
-Nodes (10): CameraEncoder, intrinsics_to_encoding(), Camera encoder module for processing camera intrinsics into tokens. Adapted from, Create a transformer block., Convert camera intrinsics to a compact encoding.          Args:         intrinsi, Process camera intrinsics into tokens.                  Args:             intrin, Camera encoder that processes camera intrinsics into tokens compatible with DINO, Mlp (+2 more)
+Cohesion: 0.33
+Nodes (4): intrinsics_to_encoding(), Camera encoder module for processing camera intrinsics into tokens. Adapted from, Convert camera intrinsics to a compact encoding.          Args:         intrinsi, Process camera intrinsics into tokens.                  Args:             intrin
 
 ### Community 111 - "Quick Start: Training with Camera Intrinsics"
 Cohesion: 0.22
@@ -659,24 +669,24 @@ Cohesion: 0.22
 Nodes (8): ✅ All Issues Fixed, Important Notes, Monitor Training, Or Use the Shell Script, Test Setup First (Optional), Training Command, Troubleshooting, VKITTI Training - Quick Start Guide
 
 ### Community 113 - "PatchEmbed"
-Cohesion: 0.33
-Nodes (5): get_model_config(), any, Common configuration and utility functions for Depth Anything V2. This module pr, Get model configuration for a given encoder type.          Args:         encoder, Depth Anything V2 Metric Model (metric depth in meters). Wrapper around the metr
+Cohesion: 0.16
+Nodes (9): get_model_config(), any, Get model configuration for a given encoder type.          Args:         encoder, DepthAnythingV2, Forward pass through the model.                  Args:             x: Input imag, Run inference on a single image.                  Args:             raw_image: I, Base interface for depth estimation models. All depth models should inherit from, Depth Anything V2 Basic Model (with scale ambiguity). Wrapper around the basic D (+1 more)
 
 ### Community 114 - "ResidualConvUnit"
-Cohesion: 0.04
-Nodes (32): DatasetItem, ndarray, Represents a single item in a dataset.          Attributes:         item_id: Uni, Get list of camera IDs for an item (for multi-camera datasets)., Load camera intrinsic matrix for a dataset item.                  This method sh, Load RGB image from file or cache.                  For non-cached datasets, thi, Find all items in the dataset.                  Returns:             List of Dat, Load ground truth depth map from file.                  Args:             gt_pat (+24 more)
+Cohesion: 0.05
+Nodes (36): BaseDataset, DatasetItem, ndarray, Base dataset interface for depth estimation evaluation., Get subdirectory name for output (e.g., 'cityscapes', 'drivingstereo', 'middlebu, Get output directory for a specific item.                  Args:             bas, Represents a single item in a dataset.          Attributes:         item_id: Uni, Whether this dataset supports multiple cameras per item (e.g., stereo pairs). (+28 more)
 
 ### Community 115 - "PatchEmbed"
 Cohesion: 0.29
 Nodes (4): make_2tuple(), PatchEmbed, Tensor, 2D image to patch embedding: (B,C,H,W) -> (B,N,D)      Args:         img_size: I
 
 ### Community 116 - "dpt.py"
-Cohesion: 0.40
-Nodes (5): compute_scale_and_shift(), eval_depth(), eval_depth_scale_aligned(), Compute optimal scale and shift to align prediction to target using least square, Evaluate depth with scale-shift alignment for basic (non-metric) models.      Fi
+Cohesion: 0.29
+Nodes (11): DepthAnythingV2, device, get_device(), load_model_from_checkpoint(), main(), ndarray, Script to load and use trained checkpoint for inference.  This script demonstrat, Run inference on a single image.          Args:         model: Loaded model (+3 more)
 
 ### Community 117 - "DropPath"
-Cohesion: 0.09
-Nodes (33): Source package for depth estimation evaluation. Contains core processing, utilit, get_output_paths(), Path utilities for organizing output files., Get output paths for a scene/model/camera combination.          Args:         sc, ProcessingPipeline, ndarray, Unified processing pipeline for depth estimation evaluation., Unified pipeline for processing datasets with depth estimation models. (+25 more)
+Cohesion: 0.11
+Nodes (28): _add_scale_overlay(), ndarray, Add a text overlay showing scale (0 - max_depth m) and this image's actual range, Save depth visualizations and the input image with sample pixels marked by numbe, save_visualizations(), Source package for depth estimation evaluation. Contains core processing, utilit, ndarray, Unified processing pipeline for depth estimation evaluation. (+20 more)
 
 ### Community 118 - "DropPath"
 Cohesion: 0.29
@@ -715,8 +725,8 @@ Cohesion: 0.33
 Nodes (5): compare cityscapes and drivingstereo:, compare two models, prepare vkitti2 dataset on revised model, prepare vkitti dataset, train on the vkitti2 dataset
 
 ### Community 129 - "DropPath"
-Cohesion: 0.29
-Nodes (4): Module, drop_path(), DropPath, Drop paths (Stochastic Depth) per sample (when applied in main path of residual
+Cohesion: 0.40
+Nodes (3): drop_path(), DropPath, Drop paths (Stochastic Depth) per sample (when applied in main path of residual
 
 ### Community 130 - ".load_from_checkpoint"
 Cohesion: 0.10
@@ -751,16 +761,16 @@ Cohesion: 0.60
 Nodes (4): bootstrap_ci(), load(), main(), Paired per-image statistics between two evaluate_paper.py output JSONs.  Matches
 
 ### Community 166 - "Reader"
-Cohesion: 0.10
-Nodes (8): DIODEReader, NYUReader, DIODE val (1024x768, FARO laser scanner), indoor or outdoor subset.     K = 886., Base reader: `records` + `load(i) -> (rgb uint8 HxWx3, depth f32 HxW, K)`., SUN RGB-D raw depth, one sensor group per reader (zero-shot indoor):     kv2 (Ki, NYU Depth V2 labeled set (640x480, Kinect v1).      split 'train'/'val': the 795, Reader, SUNRGBDReader
+Cohesion: 0.11
+Nodes (8): DIODEReader, Virtual KITTI 2 (synthetic, 1242x375). True K from textgt intrinsic.txt     (con, DIODE val (1024x768, FARO laser scanner), indoor or outdoor subset.     K = 886., Base reader: `records` + `load(i) -> (rgb uint8 HxWx3, depth f32 HxW, K)`., SUN RGB-D raw depth, one sensor group per reader (zero-shot indoor):     kv2 (Ki, Reader, SUNRGBDReader, VKITTIReader
 
 ### Community 167 - "dpt.py"
 Cohesion: 0.14
 Nodes (9): DepthAnything3Wrapper, Any, ndarray, Initialize Depth Anything 3 wrapper.                  Args:             model_co, Load the Depth Anything 3 model., Run inference on a single image.                  Note: DA3's API is designed fo, Whether this model outputs metric depth., Get the checkpoint/model directory path used by this model. (+1 more)
 
 ### Community 168 - ".get_item_output_dir"
-Cohesion: 0.12
-Nodes (12): ConvBlock, DPTHead, _make_fusion_block(), FeatureFusionBlock, _make_scratch(), Forward pass.          Returns:             tensor: output, Residual convolution module., Init.          Args:             features (int): number of features (+4 more)
+Cohesion: 0.16
+Nodes (10): CameraEncoder, Create a transformer block., Camera encoder that processes camera intrinsics into tokens compatible with DINO, ConvBlock, DPTHead, _make_fusion_block(), FeatureFusionBlock, _make_scratch() (+2 more)
 
 ### Community 169 - "build_fluent_guide.py"
 Cohesion: 0.39
@@ -802,6 +812,10 @@ Nodes (11): 1. Server access, 2. Background: the four findings, 3. Checks to run
 Cohesion: 0.09
 Nodes (21): Academic and professional editing, Ask the user after every update, Change isolation and concurrent edits, Change-tracking markup (mandatory for every thesis edit), Codex pass for Persian prose edits (mandatory), Colour code, Commit and push, Figures and diagrams (+13 more)
 
+### Community 181 - "DIODEReader"
+Cohesion: 0.29
+Nodes (5): Residual convolution module., Init.          Args:             features (int): number of features, Forward pass.          Args:             x (tensor): input          Returns:, Init.                  Args:             features (int): number of features, ResidualConvUnit
+
 ### Community 182 - "Data Visualization (Python)"
 Cohesion: 0.20
 Nodes (9): Accessibility checklist, Chart selection, Data Visualization (Python), Design principles, Model comparison bar chart, Model × dataset heatmap, Reporting, Setup and style (+1 more)
@@ -826,6 +840,10 @@ Nodes (8): 1. Contribution and novelty, 2. Rigor and evidence, 3. Structure and 
 Cohesion: 0.22
 Nodes (9): آیا focal-jitter دادهٔ غیرواقعی می‌سازد؟, آیا مدل معادلهٔ pinhole را یاد گرفته است؟, آیا نتایج چند seed دارید؟, وضعیت جدول cross-dataset چیست؟, پاسخ‌های کوتاه به پرسش‌های محتمل, چرا K را در ورودی مدل می‌دهید؟, چرا در basic اثر K کوچک یا نامعناست؟, چرا فقط NYU را برای مطالعهٔ کنترل‌شده انتخاب کردید؟ (+1 more)
 
+### Community 188 - "ResidualConvUnit"
+Cohesion: 0.29
+Nodes (5): Residual convolution module., Init.          Args:             features (int): number of features, Forward pass.          Args:             x (tensor): input          Returns:, Init.                  Args:             features (int): number of features, ResidualConvUnit
+
 ### Community 189 - "NormalizeImage"
 Cohesion: 0.23
 Nodes (7): c(), handler(), Hr(), m, Or(), qt(), Yt()
@@ -841,6 +859,10 @@ Nodes (20): Model registry and factory for Depth Anything V2 models. Provides a 
 ### Community 192 - "NormalizeImage"
 Cohesion: 0.22
 Nodes (8): C1 — Say "camera-induced scale ambiguity", not "scale ambiguity", wherever K is said to resolve or measure it, Leave unchanged (checked, correct as written), Must change (the sentence claims K or the proposed model resolves or measures the ambiguity), Post-defense corrections, Should change (the ambiguity meant is the one created by changing the focal length), When applying, Why, Wording to use
+
+### Community 193 - "PatchEmbed"
+Cohesion: 0.29
+Nodes (4): make_2tuple(), PatchEmbed, Tensor, 2D image to patch embedding: (B,C,H,W) -> (B,N,D)      Args:         img_size: I
 
 ### Community 194 - "ResidualConvUnit"
 Cohesion: 0.29
@@ -958,13 +980,17 @@ Nodes (3): drive_name(), main(), Path
 Cohesion: 0.25
 Nodes (7): Codex pass (mandatory), Core requirements, Minimal editing workflow, Output, Paragraph editor, Persian prose style, Review markup
 
+### Community 236 - "ResidualConvUnit"
+Cohesion: 0.29
+Nodes (5): Residual convolution module., Init.          Args:             features (int): number of features, Forward pass.          Args:             x (tensor): input          Returns:, Init.                  Args:             features (int): number of features, ResidualConvUnit
+
 ### Community 237 - "PatchEmbed"
 Cohesion: 0.29
 Nodes (4): make_2tuple(), PatchEmbed, Tensor, 2D image to patch embedding: (B,C,H,W) -> (B,N,D)      Args:         img_size: I
 
 ### Community 238 - "LayerScale"
-Cohesion: 0.22
-Nodes (7): parse_calib(), Find all Middlebury scenes., Parse calibration txt file to get f0,f1,cx0,cy0,cx1,cy1,doffs,baseline.     Hand, Test calibration file parsing., Test parsing a basic calibration file., Test parsing calibration with multiline matrix., TestCalibrationParsing
+Cohesion: 0.33
+Nodes (3): Module, LayerScale, Tensor
 
 ### Community 239 - "TestTTest"
 Cohesion: 0.25
@@ -974,9 +1000,9 @@ Nodes (7): align_inverse_depth(), depth_metrics(), _Items, load_model(), main(),
 Cohesion: 0.29
 Nodes (4): make_2tuple(), PatchEmbed, Tensor, 2D image to patch embedding: (B,C,H,W) -> (B,N,D)      Args:         img_size: I
 
-### Community 243 - "LayerScale"
-Cohesion: 0.25
-Nodes (6): BlockChunk, init_weights_vit_timm(), named_apply(), Module, ViT weight initialization, original timm impl (for reproducibility), Args:             img_size (int, tuple): input image size             patch_size
+### Community 242 - "Resize"
+Cohesion: 0.38
+Nodes (3): Init.          Args:             width (int): desired output width             h, Resize sample to given size (width, height)., Resize
 
 ### Community 244 - "TestSignificanceDetermination"
 Cohesion: 0.20
@@ -987,24 +1013,28 @@ Cohesion: 0.80
 Nodes (4): cmd_dump_inputs(), cmd_lock(), digest(), main()
 
 ### Community 246 - "Resize"
-Cohesion: 0.05
-Nodes (31): DepthAnythingV2, device, get_device(), load_model_from_checkpoint(), main(), ndarray, Script to load and use trained checkpoint for inference.  This script demonstrat, Run inference on a single image.          Args:         model: Loaded model (+23 more)
+Cohesion: 0.11
+Nodes (12): ConvBlock, DepthAnythingV2, DPTHead, _make_fusion_block(), FeatureFusionBlock, _make_scratch(), Forward pass.          Returns:             tensor: output, Feature fusion block. (+4 more)
 
 ### Community 247 - "load_model"
-Cohesion: 0.23
-Nodes (6): on_submit(), predict_depth(), Model loading utilities for Depth Anything V2. Provides a unified interface for, on_submit(), predict_depth(), Common configuration and utility functions for Depth Anything V2. This module pr
+Cohesion: 0.14
+Nodes (15): on_submit(), predict_depth(), on_submit(), predict_depth(), get_device(), Common configuration and utility functions for Depth Anything V2. This module pr, Get the best available device for PyTorch operations.          Args:         dev, load_basic_model() (+7 more)
 
-### Community 250 - "LayerScale"
+### Community 248 - ".load_from_checkpoint"
 Cohesion: 0.33
-Nodes (3): Module, LayerScale, Tensor
+Nodes (3): Load model weights from checkpoint.         Must be implemented by subclasses., Load model from checkpoint and move to device.                  Args:, Move model to device and update underlying model.
+
+### Community 249 - "find_checkpoint"
+Cohesion: 0.40
+Nodes (4): find_checkpoint(), Any, Initialize Depth Anything V2 wrapper.                  Args:             model_c, Find checkpoint for Depth Anything V2 (original) model.          Args:         m
 
 ### Community 251 - ".get_item_output_dir"
-Cohesion: 0.05
-Nodes (46): checkpoint_output_slug(), display_name_for_comparison(), find_model_by_name(), Return a folder-safe name from the checkpoint path so different checkpoints, Return a display name for use in comparison output (JSON, console).     When com, Create model wrapper by name.      Supported model names:     - da2: DepthAnythi, _add_scale_overlay(), main() (+38 more)
+Cohesion: 0.04
+Nodes (53): depth_from_disparity(), _load_depth_array(), parse_calib(), ndarray, Middlebury dataset implementation., Load depth array from either compressed (.npz) or uncompressed (.npy) format., Find all Middlebury scenes., Load Middlebury disparity and convert to depth in meters. (+45 more)
 
 ### Community 254 - "DropPath"
-Cohesion: 0.40
-Nodes (3): drop_path(), DropPath, Drop paths (Stochastic Depth) per sample (when applied in main path of residual
+Cohesion: 0.29
+Nodes (4): Module, drop_path(), DropPath, Drop paths (Stochastic Depth) per sample (when applied in main path of residual
 
 ### Community 256 - ".__init__"
 Cohesion: 0.14
@@ -1015,8 +1045,8 @@ Cohesion: 0.33
 Nodes (3): Module, LayerScale, Tensor
 
 ### Community 267 - "Thesis defense deck (v2)"
-Cohesion: 0.40
-Nodes (4): Editing, Presenting, Sources, Thesis defense deck (v2)
+Cohesion: 0.33
+Nodes (5): Editing, Presenting, Presenting from the phone, Sources, Thesis defense deck (v2)
 
 ### Community 268 - "summarize_descabl.py"
 Cohesion: 0.50
@@ -1027,8 +1057,8 @@ Cohesion: 0.67
 Nodes (3): ev(), FS, run_descriptor_ablation.sh script
 
 ### Community 271 - ".infer_image"
-Cohesion: 0.12
-Nodes (10): DepthAnythingV2Wrapper, Any, ndarray, Wrapper for Depth Anything V2 (original) models., Initialize Depth Anything V2 wrapper.                  Args:             model_c, Load the Depth Anything V2 model., Run inference on a single image., Whether this model outputs metric depth. (+2 more)
+Cohesion: 0.15
+Nodes (8): DepthAnythingV2Wrapper, ndarray, Wrapper for Depth Anything V2 (original) models., Load the Depth Anything V2 model., Run inference on a single image., Whether this model outputs metric depth., Original DA2 basic (pretrained) outputs affine-invariant inverse depth (paper Se, Get the checkpoint path used by this model.
 
 ### Community 272 - ".infer_image"
 Cohesion: 0.40
@@ -1039,19 +1069,19 @@ Cohesion: 0.33
 Nodes (4): intrinsics_to_encoding(), Camera encoder module for processing camera intrinsics into tokens. Adapted from, Convert camera intrinsics to a compact encoding.          Args:         intrinsi, Process camera intrinsics into tokens.                  Args:             intrin
 
 ## Knowledge Gaps
-- **766 isolated node(s):** `figcheck.sh script`, `PATH`, `dist_train.sh script`, `dist_train.sh script`, `build.sh script` (+761 more)
+- **767 isolated node(s):** `figcheck.sh script`, `PATH`, `dist_train.sh script`, `dist_train.sh script`, `build.sh script` (+762 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **64 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `NYUDataset` connect `DIODE Dataset & Revised Model Check` to `Significance Determination Tests`, `Reader`, `DIODE Training Dataset`, `.get_model_info`, `DomainBalancedSampler`, `tqdm`, `Visualization Utilities`, `MultiDomainTrainSet`, `ResidualConvUnit`, `depth_anything_v2_basic.py`, `DIODEReader`, `PatchEmbed`, `Cityscapes Training Dataset`, `KITTI Training Dataset`, `.get_item_output_dir`, `Resize`, `load_model`?**
-  _High betweenness centrality (0.090) - this node is a cross-community bridge._
+- **Why does `NYUDataset` connect `Model Wrapper Interface` to `DIODE Dataset & Revised Model Check`, `.get_model_info`, `DA2 Baseline Wrapper`, `Cityscapes Training Dataset`, `KITTI Training Dataset`, `Depth-Anything-3 Wrapper`, `Calibration Parsing`, `Significance Determination Tests`, `DIODE Training Dataset`, `Reader`, `MultiDomainTrainSet`, `DomainBalancedSampler`, `tqdm`, `depth_anything_v2_basic.py`, `load_model`, `ResidualConvUnit`, `LayerScale`, `PatchEmbed`, `Resize`?**
+  _High betweenness centrality (0.085) - this node is a cross-community bridge._
 - **Why does `K` connect `__init__.py` to `Evaluation Dataset Framework`, `.get_model_info`, `object`, `MultiDomainTrainSet`, `TestTTest`, `Middlebury Training Dataset`, `load_model`?**
-  _High betweenness centrality (0.055) - this node is a cross-community bridge._
-- **Why does `NYUTrainingDataset` connect `load_model` to `Significance Determination Tests`, `DIODE Training Dataset`, `DIODE Dataset & Revised Model Check`, `KITTI Training Dataset`, `depth_anything_v2_basic.py`?**
-  _High betweenness centrality (0.052) - this node is a cross-community bridge._
+  _High betweenness centrality (0.062) - this node is a cross-community bridge._
+- **Why does `NYUTrainingDataset` connect `load_model` to `Significance Determination Tests`, `Model Wrapper Interface`, `ResidualConvUnit`, `KITTI Training Dataset`, `depth_anything_v2_basic.py`?**
+  _High betweenness centrality (0.056) - this node is a cross-community bridge._
 - **Are the 13 inferred relationships involving `DatasetItem` (e.g. with `CityscapesDataset` and `DIODEDataset`) actually correct?**
   _`DatasetItem` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **Are the 24 inferred relationships involving `NYUDataset` (e.g. with `Training Datasets: NYU + VKITTI + DIODE` and `CityscapesReader`) actually correct?**
@@ -1059,4 +1089,4 @@ _Questions this graph is uniquely positioned to answer:_
 - **Are the 13 inferred relationships involving `DatasetConfig` (e.g. with `CityscapesDataset` and `DIODEDataset`) actually correct?**
   _`DatasetConfig` has 13 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `figcheck.sh script`, `PATH`, `Unified command-line interface for depth estimation evaluation and comparison.` to the rest of the system?**
-  _1398 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _1399 weakly-connected nodes found - possible documentation gaps or missing edges._

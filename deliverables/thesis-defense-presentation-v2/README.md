@@ -21,6 +21,8 @@ Open `index.html` in Chrome or Edge (double-click; no internet or server needed)
 | H | show the key hints |
 | K / J / L / R / M | video: play or pause / back 5 s / forward 5 s / from the start / sound on or off |
 
+Pointer: in the presenter window, hold the left mouse button on the current-slide picture and move; a red dot follows at the same place on the audience screen and disappears on release. The phone view does the same with a finger.
+
 Presenter window: press **P** in the audience window (allow pop-ups for the file if the browser asks), drag the new window to the laptop screen and keep the audience window full screen on the projector. Either window can drive the deck; they stay in sync. The top bar of the presenter window shows the slide counter together with the current part number and name. The timer starts on the first slide change.
 
 The **خلاصه** switch above the presenter notes shows a short cue-card version of each slide's notes (numbered steps, bullets, key numbers, and a highlighted caveat line). It changes only when clicked: slide changes never reset it, and the choice is remembered when the presenter window is reopened. With the switch off, the full notes are shown in short paragraphs. In both views numbers are highlighted.
@@ -45,6 +47,8 @@ Only the Python standard library is used. The server prints three things:
 
 The phone opens a presenter view laid out for the right hand. From top to bottom: the bar (slide counter, part, timer, full screen), the notes (with the **خلاصه** switch and A−/A+ text size, remembered on the phone), the current slide, and at the bottom right the picture of what comes next. That picture is the **بعدی** button: tap anywhere on it to move on. To its left are **قبلی** and **فهرست** (the slide list; tap a title to jump, or «بستن» to close it). Touching the current-slide picture, and dragging on it, shows a red pointer dot at the same place on the audience screen; it disappears when the finger is lifted. On the video slide the video panel appears between the two slides. With the phone on its side the notes are on the left and the slides and buttons on the right. The page keeps the screen awake after the first tap. The keyboard on the laptop and the laptop presenter window (P) still work, and every view stays in sync.
 
+After the deck files change, reload the laptop page as well as the phone page. If the laptop page is still an older version, the phone shows «صفحهٔ لپ‌تاپ قدیمی است؛ آن را دوباره بارگذاری کنید».
+
 A dot at the top shows the link. If the audience window is closed, or the server can no longer be reached, a yellow or red banner appears and the buttons dim. Reloading the phone page always picks up the current slide.
 
 - The phone and the laptop must be on the same network. University Wi-Fi often blocks devices from talking to each other: if the phone cannot open the page, turn on the phone's hotspot, connect the laptop to it, and restart `serve.py` so it prints the new address.
@@ -52,6 +56,8 @@ A dot at the top shows the link. If the audience window is closed, or the server
 - The token in the link changes each time the server starts, so scan again after a restart. `--token abc` keeps it fixed. Anyone on the network can view the slides, but only someone with the link can control them.
 
 ## Editing
+
+- Notes can be edited by hand in the laptop presenter window when the deck is opened through `serve.py` (`http://localhost:8000/`, then P). **ویرایش** opens the stored text of the view that is showing: the full notes, or with the **خلاصه** switch on, the summary lines. **ذخیره** (or Ctrl+Enter) writes it to `content/fa.json` and rebuilds `index.html`; **انصراف** (or Esc) discards it. The text is stored and displayed exactly as before: formulas stay `$...$`, and summary lines keep their `1. ` / `- ` / `! ` markers. An open phone view updates at once. The phone cannot edit, and a deck opened as a file (no server) shows the button disabled.
 
 - All Persian text (slide phrases and presenter notes) is in `content/fa.json`, keyed by slide (`s25.title`, `s25.notes`, ...). The quick-glance summary of a slide's notes is `s25.sum`: one item per line, `1. ` numbered, `- ` bullet, `! ` caveat.
 - Slide markup is in `src/slides/*.html`; the page shell is `src/shell.html`.

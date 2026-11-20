@@ -486,3 +486,24 @@ table.heat { font-size: 30px; } table.heat td { padding: 13px 16px; } table.heat
 .s-b8 .panel h3 { font-size: 32px; margin-bottom: 10px; }
 .s-b8 table.full td { font-size: 24px; padding: 8px 12px; } .s-b8 table.full th { font-size: 24px; padding: 8px 12px; }
 .s-b8 .fnote { margin: 10px 0 0; font-size: 21px; color: var(--ink-3); }
+
+/* slide 14: the decoder starts as the plain Depth Anything V2 decoder (blue) and turns orange (trainable) with the camera lane */
+.s-arch svg .frag.morph { opacity: 1; transition: fill 600ms var(--ease), stroke 600ms var(--ease); }
+.s-arch svg .dec-poly { fill: #eef5fc; stroke: #184f95; }
+.s-arch svg .dec-poly.on { fill: #fdf3ea; stroke: #c9621f; }
+
+/* slide 16: the single message box, centred */
+.s-pair .goal.only { justify-content: center; }
+.s-pair .goal.only .goal-t { font-size: 40px; font-weight: 800; }
+
+/* slide 17: totals row */
+.s-data table.tbl tr.total-row td { border-top: 3px solid var(--navy-900); font-weight: 800; color: var(--navy-900); background: var(--sky-50); }
+
+/* backup 9: training curves of the final model */
+.s-b9 .slide-head { margin-bottom: 10px; } .s-b9 .slide-head .sub { font-size: 24px; }
+.s-b9 .legend { justify-content: center; margin-bottom: 14px; }
+.s-b9 .cols.c2 { height: auto; gap: 48px; }
+.s-b9 .h4 { margin-bottom: 4px; font-size: 28px; }
+.s-b9 .chart .dot { stroke-width: 2.5; }
+.s-b9 .fnote { margin: 4px 0 0; font-size: 21px; color: var(--ink-3); }
+.s-b9 .lr-line { margin: 18px 0 0; padding-top: 12px; border-top: 2px solid var(--line-soft); font-size: 24px; color: var(--ink-2); text-align: center; }

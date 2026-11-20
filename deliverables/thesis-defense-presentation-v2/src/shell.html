@@ -48,9 +48,10 @@
     </nav>
   </div>
   <div class="notesbox">
-    <div class="nb-head"><h4>{{ui.notes}}</h4><span class="nb-tools"><span class="fsz" role="group" aria-label="{{ui.font}}"><button type="button" data-fsz="-1" aria-label="−">A−</button><button type="button" data-fsz="1" aria-label="+">A+</button></span><button id="pv-sum" type="button" tabindex="-1" aria-pressed="false"><i></i>{{ui.sum}}</button></span></div>
+    <div class="nb-head"><h4>{{ui.notes}}</h4><span class="nb-tools"><span class="ed-tools"><span id="pv-edmsg"></span><button id="pv-cancel" type="button" tabindex="-1">{{ui.cancel}}</button><button id="pv-save" type="button" tabindex="-1">{{ui.save}}</button><button id="pv-edit" type="button" tabindex="-1">{{ui.edit}}</button></span><span class="fsz" role="group" aria-label="{{ui.font}}"><button type="button" data-fsz="-1" aria-label="−">A−</button><button type="button" data-fsz="1" aria-label="+">A+</button></span><button id="pv-sum" type="button" tabindex="-1" aria-pressed="false"><i></i>{{ui.sum}}</button></span></div>
     <h3 id="pv-title"></h3>
     <div id="pv-notes"></div>
+    <textarea id="pv-editor" dir="rtl" spellcheck="false" hidden></textarea>
   </div>
   <div class="hint">{{ui.help}}</div>
 </div>

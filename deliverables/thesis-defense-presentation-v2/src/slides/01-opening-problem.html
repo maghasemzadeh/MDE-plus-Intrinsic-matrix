@@ -72,11 +72,8 @@
         <figure class="fig"><div class="imgframe"><img src="assets/img/intro-depth.jpg" alt=""></div><figcaption>{{s4.depth_label}}</figcaption></figure>
       </div>
       <div class="stack">
-        <div class="qa frag rise" data-f="1"><span class="qa-l">{{s4.rel_label}}</span><span class="qa-q">{{s4.rel_q}}</span></div>
-        <div class="qa hero frag rise" data-f="2"><span class="qa-l">{{s4.abs_label}}</span><span class="qa-q">{{s4.abs_q}}</span></div>
-        <div class="chips frag rise" data-f="3">
-          <span class="chip">{{s4.chip1}}</span><span class="chip">{{s4.chip2}}</span><span class="chip">{{s4.chip3}}</span>
-        </div>
+        <div class="qa auto rise"><span class="qa-l">{{s4.rel_label}}</span><span class="qa-q">{{s4.rel_q}}</span></div>
+        <div class="qa recolor auto rise frag" data-f="1"><span class="qa-l">{{s4.abs_label}}</span><span class="qa-q">{{s4.abs_q}}</span></div>
       </div>
     </div>
   </div>
@@ -210,16 +207,67 @@
 <section class="slide s-timeline" data-part="2" data-title="{{s8.title}}">
   <header class="slide-head"><h2>{{s8.title}}</h2></header>
   <div class="slide-body">
-    <div class="tl">
-      <div class="tl-n frag rise" data-f="1"><span class="yr">2005 – 2014</span><i></i><h4>{{s8.e1}}</h4><p class="ex ltr">Make3D, Eigen et al.</p><p class="ds">{{s8.e1d}}</p></div>
-      <div class="tl-n frag rise" data-f="2"><span class="yr">2017 – 2019</span><i></i><h4>{{s8.e2}}</h4><p class="ex ltr">Monodepth, Zhou et al., Monodepth2</p><p class="ds">{{s8.e2d}}</p></div>
-      <div class="tl-n frag rise" data-f="3"><span class="yr">2019 – 2021</span><i></i><h4>{{s8.e3}}</h4><p class="ex ltr">MiDaS, DPT</p><p class="ds">{{s8.e3d}}</p></div>
-      <div class="tl-n frag rise" data-f="4"><span class="yr">2024</span><i></i><h4>{{s8.e4}}</h4><p class="ex ltr">Depth Anything, Depth Anything V2</p><p class="ds">{{s8.e4d}}</p></div>
-      <div class="tl-n frag rise" data-f="5"><span class="yr">2019 – 2025</span><i></i><h4>{{s8.e5}}</h4><p class="ex ltr">CAM-Convs, ZoeDepth, Metric3D, UniDepth, Depth Pro</p><p class="ds">{{s8.e5d}}</p></div>
-      <div class="tl-n me frag rise" data-f="6"><span class="yr">{{meta.date}}</span><i></i><h4>{{s8.e6}}</h4><p class="ds">{{s8.e6d}}</p></div>
+    <div class="eras">
+      <div class="era frag rise" data-f="1">
+        <div class="era-img"><img src="assets/img/tl-1.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2005</span></div>
+        <h4>{{s8.e1}}</h4>
+        <p class="ex ltr">Automatic Photo Pop-up</p>
+      </div>
+      <div class="era frag rise" data-f="2">
+        <div class="era-img"><img src="assets/img/tl-2.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2005 – 2009</span></div>
+        <h4>{{s8.e2}}</h4>
+        <p class="ex ltr">Make3D</p>
+      </div>
+      <div class="era frag rise" data-f="3">
+        <div class="era-img"><img src="assets/img/tl-3.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2014</span></div>
+        <h4>{{s8.e3}}</h4>
+        <p class="ex ltr">Eigen et al.</p>
+      </div>
+      <div class="era frag rise" data-f="4">
+        <div class="era-img"><img src="assets/img/tl-4.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2016 – 2019</span></div>
+        <h4>{{s8.e4}}</h4>
+        <p class="ex ltr">Monodepth, SfMLearner, Monodepth2</p>
+      </div>
     </div>
   </div>
   <aside class="notes">{{s8.notes}}</aside>
+</section>
+
+<section class="slide s-timeline" data-part="2" data-title="{{s8b.title}}">
+  <header class="slide-head"><h2>{{s8b.title}}</h2></header>
+  <div class="slide-body">
+    <div class="eras">
+      <div class="era frag rise" data-f="1">
+        <div class="era-img"><img src="assets/img/tl-5.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2019 – 2021</span></div>
+        <h4>{{s8b.e5}}</h4>
+        <p class="ex ltr">MiDaS, DPT</p>
+      </div>
+      <div class="era frag rise" data-f="2">
+        <div class="era-img"><img src="assets/img/tl-6.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2024</span></div>
+        <h4>{{s8b.e6}}</h4>
+        <p class="ex ltr">Depth Anything, Depth Anything V2</p>
+      </div>
+      <div class="era frag rise" data-f="3">
+        <div class="era-img"><img src="assets/img/tl-7.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">2019 – 2025</span></div>
+        <h4>{{s8b.e7}}</h4>
+        <p class="ex ltr">CAM-Convs, Metric3D, UniDepth, Depth Pro</p>
+      </div>
+      <div class="era me frag rise" data-f="4">
+        <div class="era-img"><img src="assets/img/tl-8.jpg" alt=""></div>
+        <div class="era-ax"><i></i><span class="yr">{{meta.date}}</span></div>
+        <h4>{{s8b.e8}}</h4>
+        <p class="ex ltr">Depth Anything V2 + K</p>
+      </div>
+    </div>
+  </div>
+  <aside class="notes">{{s8b.notes}}</aside>
 </section>
 
 <!-- ============ 9 · base model ============ -->
@@ -229,18 +277,21 @@
     <div class="cols c64 top">
       <div class="stack">
         <figure class="fig"><div class="imgframe"><img src="assets/img/da2-teaser.jpg" alt=""></div><figcaption>{{s9.src}}</figcaption></figure>
-        <div class="flow frag rise" data-f="1">
-          <div class="box soft">{{s9.in}}</div><div class="arr"></div>
-          <div class="box">{{s9.enc}}<small class="ltr">ViT-S / B / L / G</small></div><div class="arr"></div>
-          <div class="box">{{s9.dec}}</div><div class="arr"></div>
-          <div class="box soft">{{s9.out}}</div>
+        <div class="flow">
+          <div class="box soft auto rise">{{s9.in}}</div><div class="arr auto rise"></div>
+          <div class="box auto rise">{{s9.enc}}<small class="ltr">ViT-S / B / L / G</small></div><div class="arr auto rise"></div>
+          <div class="box auto rise">{{s9.dec}}</div><div class="arr auto rise"></div>
+          <div class="outs">
+            <div class="box soft auto rise">{{s9.out}}</div>
+            <div class="box fill auto rise">{{s9.abs}}</div>
+          </div>
         </div>
       </div>
       <div class="stack stats">
-        <div class="stat frag rise" data-f="2"><span class="v m">۵۹۵ هزار</span><span class="l">{{s9.st1}}</span></div>
-        <div class="stat frag rise" data-f="2"><span class="v m">۶۲ میلیون</span><span class="l">{{s9.st2}}</span></div>
-        <div class="stat frag rise" data-f="2"><span class="v s">۲۵ میلیون تا ۱٫۳ میلیارد</span><span class="l">{{s9.st3}}</span></div>
-        <div class="frag rise" data-f="3"><span class="chip warn">{{s9.limit}}</span></div>
+        <div class="stat auto rise"><span class="v m">۵۹۵ هزار</span><span class="l">{{s9.st1}}</span></div>
+        <div class="stat auto rise"><span class="v m">۶۲ میلیون</span><span class="l">{{s9.st2}}</span></div>
+        <div class="stat auto rise"><span class="v s">۲۵ میلیون تا ۱٫۳ میلیارد</span><span class="l">{{s9.st3}}</span></div>
+        <div class="auto rise"><span class="chip warn">{{s9.limit}}</span></div>
       </div>
     </div>
   </div>

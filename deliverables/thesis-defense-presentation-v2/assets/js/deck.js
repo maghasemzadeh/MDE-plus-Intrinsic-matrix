@@ -1,11 +1,20 @@
 /* Thesis defense deck engine — no dependencies except KaTeX (bundled, optional).
-   Modes:  (default) audience view   ?presenter=1 presenter view   ?embed=1 preview frame */
+   Modes:  (default) audience view   ?presenter=1 presenter view   ?embed=1 preview frame
+           ?remote=1 phone presenter view, driven through serve.py (see README) */
 (function () {
   'use strict';
 
   var qs = new URLSearchParams(location.search);
-  var MODE = qs.has('presenter') ? 'presenter' : (qs.has('embed') ? 'embed' : 'main');
+  var REMOTE = qs.has('remote');
+  var MODE = (qs.has('presenter') || REMOTE) ? 'presenter' : (qs.has('embed') ? 'embed' : 'main');
   document.body.classList.add(MODE);
+  if (REMOTE) document.body.classList.add('remote');
+  /* served by serve.py: the audience window and the phone talk through the server (POST up, Server-Sent Events down) */
+  var SERVED = /^https?:$/.test(location.protocol), TOKEN = qs.get('k') || '';
+  function api(path) { return '/api/' + path + (TOKEN ? '?k=' + encodeURIComponent(TOKEN) : ''); }
+  function post(path, body) {
+    try { fetch(api(path), { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body), keepalive: true }).catch(function () {}); } catch (e) {}
+  }
 
   var $ = function (s, r) { return (r || document).querySelector(s); };
   var $$ = function (s, r) { return Array.prototype.slice.call((r || document).querySelectorAll(s)); };
@@ -348,6 +357,8 @@
     var open = force === undefined ? !o.classList.contains('open') : force;
     o.classList.toggle('open', open);
     $$('li[data-i]', o).forEach(function (li) { li.classList.toggle('cur', +li.getAttribute('data-i') === state.i); });
+    var cur = $('li.cur', o);
+    if (open && cur && cur.scrollIntoView) cur.scrollIntoView({ block: 'center' });
   }
 
   /* ---------------- sync between windows ---------------- */
@@ -355,25 +366,67 @@
   function broadcast() {
     var msg = { type: 'deck-state', i: state.i, step: state.step, video: videoState() };
     if (MODE === 'main' && presenterWin && !presenterWin.closed) presenterWin.postMessage(msg, '*');
+    if (MODE === 'main' && server.on) post('state', { i: state.i, step: state.step, video: msg.video });
     if (MODE === 'presenter') updatePresenter();
   }
-  function broadcastVideo() {
+  var vidTimer = null, vidLast = 0;
+  function broadcastVideo(ev) {
     if (MODE === 'main' && presenterWin && !presenterWin.closed) presenterWin.postMessage({ type: 'deck-video', video: videoState() }, '*');
+    if (MODE !== 'main' || !server.on) return;
+    /* timeupdate fires several times a second: send at most two a second to the phone, other events at once */
+    var send = function () { vidTimer = null; vidLast = Date.now(); post('video', { video: videoState() }); };
+    if (ev && ev.type === 'timeupdate') { if (!vidTimer) vidTimer = setTimeout(send, Math.max(0, 500 - (Date.now() - vidLast))); }
+    else { clearTimeout(vidTimer); send(); }
   }
   function command(c) {
+    if (REMOTE) { post('cmd', { c: c }); return; }
     if (MODE === 'presenter' && window.opener && !window.opener.closed) { window.opener.postMessage({ type: 'deck-cmd', c: c }, '*'); return; }
     if (c.cmd === 'next') next(); else if (c.cmd === 'prev') prev(); else if (c.cmd === 'goto') show(c.i, c.step || 0, c.i >= state.i ? 1 : -1);
     else if (c.cmd === 'video') videoCmd(c);
   }
-  window.addEventListener('message', function (ev) {
-    var d = ev.data || {};
+  window.addEventListener('message', function (ev) { onMsg(ev.data || {}, ev.source); });
+  function onMsg(d, source) {
     if (d.type === 'deck-state') { if (MODE === 'presenter') lastVideo = d.video || null; show(d.i, d.step, d.i >= state.i ? 1 : -1, MODE !== 'presenter'); if (MODE === 'presenter') updatePresenter(); }
     else if (d.type === 'deck-cmd' && MODE === 'main') command(d.c);
-    else if (d.type === 'deck-hello' && MODE === 'main') { presenterWin = ev.source; broadcast(); }
+    else if (d.type === 'deck-hello' && MODE === 'main') { presenterWin = source; broadcast(); }
     else if (d.type === 'deck-ready' && MODE === 'presenter') updatePresenter();
     else if (d.type === 'deck-key' && MODE === 'presenter') onKey({ key: d.key, code: d.code, preventDefault: function () {} });
     else if (d.type === 'deck-video' && MODE === 'presenter') { lastVideo = d.video || null; updateVideoPanel(); if (frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage(d, '*'); }
     else if (d.type === 'deck-video' && MODE === 'embed') mirrorVideo(d.video);
+  }
+
+  /* ---------------- link through serve.py ---------------- */
+  var server = { on: false, es: null, mains: -1 };
+  function connectServer() {
+    if (!SERVED || (MODE !== 'main' && !REMOTE)) return;
+    fetch(api('ping'), { cache: 'no-store' }).then(function (r) { return r.status === 403 ? { denied: true } : r.ok ? r.json() : null; }).then(function (j) {
+      if (j && j.denied) { setConn('denied'); return; }
+      if (!j || !j.deck) return;   /* a plain static server: stay a local deck */
+      server.on = true; openEvents();
+    }).catch(function () { setConn('bad'); setTimeout(connectServer, 3000); });
+  }
+  function openEvents() {
+    if (server.es) server.es.close();
+    var es = server.es = new EventSource(api('events') + (TOKEN ? '&' : '?') + 'role=' + (REMOTE ? 'remote' : 'main'));
+    es.onopen = function () { if (MODE === 'main') broadcast(); };
+    es.onerror = function () { setConn('bad'); };
+    es.addEventListener('cmd', function (e) { if (MODE === 'main') command(JSON.parse(e.data).c); });
+    es.addEventListener('state', function (e) { var d = JSON.parse(e.data); d.type = 'deck-state'; onMsg(d); });
+    es.addEventListener('video', function (e) { var d = JSON.parse(e.data); d.type = 'deck-video'; onMsg(d); });
+    es.addEventListener('status', function (e) { server.mains = JSON.parse(e.data).mains; setConn(server.mains > 0 ? 'ok' : 'nomain'); });
+  }
+  function setConn(st) {
+    var c = $('#pv-conn');
+    if (!REMOTE || !c) return;
+    c.className = 'conn ' + st;
+    c.textContent = CFG.conn[st] || '';
+    document.body.classList.toggle('offline', st !== 'ok');
+  }
+  /* a phone that slept may have lost the stream; reconnect when the page is shown again */
+  document.addEventListener('visibilitychange', function () {
+    if (document.visibilityState !== 'visible' || !SERVED) return;
+    if (server.on && (!server.es || server.es.readyState === 2)) openEvents();
+    if (REMOTE) { lock = null; keepAwake(); }
   });
 
   /* ---------------- presenter view ---------------- */
@@ -391,10 +444,28 @@
   /* notes are plain text. Inline: an English term in parentheses stays on one line in a lighter colour, and
      Persian-digit numbers are highlighted. Full notes are broken into short paragraphs; a summary (one item
      per line: "1. " numbered, "- " bullet, "! " caveat) is rendered as lists. */
-  var EN_RE = /(\([A-Za-z][A-Za-z0-9 \-]*\))/, NUM_RE = /([\u2212+\-]?[\u06F0-\u06F9][\u06F0-\u06F9\u066B\u066C]*(?:%|\u066A)?)/;
+  var EN_RE = /(\([A-Za-z0-9][A-Za-z0-9 \-,]*\))/, NUM_RE = /([\u2212+\-]?[\u06F0-\u06F9][\u06F0-\u06F9\u066B\u066C]*(?:%|\u066A)?)/;
   /* a Latin name such as DA3-Metric or Depth Anything 3 is kept whole and isolated, so the RTL line cannot split it */
   var LAT_RE = /([A-Za-z][A-Za-z0-9\-.\/×]*(?: [A-Za-z0-9][A-Za-z0-9\-.\/×]*)*)/;
+  /* $...$ in notes is typeset with KaTeX as an isolated left-to-right formula, so it cannot be scrambled by the RTL line */
+  var TEX_RE = /(\$[^$]+\$)/;
   function inline(el, text) {
+    var afterBlock = false;
+    text.split(TEX_RE).forEach(function (seg, k) {
+      if (!seg) return;
+      if (afterBlock && !(k % 2)) { seg = seg.replace(/^\s*[\u061B\u060C.:]\s*/, ''); afterBlock = false; if (!seg) return; }
+      if (k % 2) {
+        var f = document.createElement('span'); f.className = 'fx'; f.dir = 'ltr';
+        var src = seg.slice(1, -1), big = src.length > 26;   /* long formulas get a centred line of their own */
+        if (big) { f.className += ' blk'; afterBlock = true; }
+        if (window.katex) { try { window.katex.render(src, f, { displayMode: big, throwOnError: false, strict: false }); } catch (e) { f.textContent = src; } }
+        else f.textContent = src;
+        el.appendChild(f);
+      } else inlineText(el, seg);
+    });
+    return el;
+  }
+  function inlineText(el, text) {
     text.split(EN_RE).forEach(function (part, n) {
       if (!part) return;
       if (n % 2) { var sp = document.createElement('span'); sp.className = 'en'; sp.dir = 'ltr'; sp.textContent = part; el.appendChild(sp); return; }
@@ -455,6 +526,8 @@
     var nx = state.step < steps[state.i] ? { i: state.i, step: state.step + 1 } : { i: Math.min(slides.length - 1, state.i + 1), step: 0 };
     if (frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage({ type: 'deck-state', i: state.i, step: state.step }, '*');
     if (frames[1] && frames[1].contentWindow) frames[1].contentWindow.postMessage({ type: 'deck-state', i: nx.i, step: nx.step }, '*');
+    var nt = $('#pv-ntitle');
+    if (nt) nt.textContent = (nx.i === state.i && nx.step === state.step) ? CFG.endLabel : nx.i === state.i ? CFG.sameSlide : (slides[nx.i].getAttribute('data-title') || '');
     updateVideoPanel();
     if (lastVideo && frames[0] && frames[0].contentWindow) frames[0].contentWindow.postMessage({ type: 'deck-video', video: lastVideo }, '*');
     if (t0 === null && (state.i > 0 || state.step > 0)) t0 = Date.now();
@@ -488,7 +561,53 @@
     seek.addEventListener('input', function () { seeking = true; if (lastVideo && lastVideo.d) command({ cmd: 'video', act: 'seek', t: seek.value / 1000 * lastVideo.d }); });
     seek.addEventListener('change', function () { seeking = false; seek.blur(); });
     if (window.opener) window.opener.postMessage({ type: 'deck-hello' }, '*');
+    if (REMOTE) initRemote();
     updatePresenter();
+  }
+
+  /* ---------------- phone presenter (remote) ---------------- */
+  var lock = null, noSleep = null;
+  function keepAwake() {
+    /* Wake Lock needs a secure page; on a plain http LAN address a tiny silent looping video keeps the screen on instead */
+    if (navigator.wakeLock && window.isSecureContext) {
+      if (!lock) { lock = true; navigator.wakeLock.request('screen').then(function (l) { lock = l; l.addEventListener('release', function () { lock = null; }); }).catch(function () { lock = null; }); }
+      return;
+    }
+    if (!noSleep) {
+      noSleep = document.createElement('video');
+      noSleep.setAttribute('playsinline', ''); noSleep.setAttribute('muted', ''); noSleep.muted = true; noSleep.loop = true;
+      noSleep.src = 'assets/video/depth-demo-title.mp4';
+      noSleep.className = 'nosleep';
+      document.body.appendChild(noSleep);
+    }
+    if (noSleep.paused) { var p = noSleep.play(); if (p && p.catch) p.catch(function () {}); }
+  }
+  function initRemote() {
+    var buzz = function () { try { if (navigator.vibrate) navigator.vibrate(12); } catch (e) {} };
+    var tap = function (id, fn) {
+      $(id).addEventListener('click', function (e) { e.preventDefault(); buzz(); keepAwake(); fn(); this.blur(); });
+    };
+    tap('#pv-next', function () { command({ cmd: 'next' }); });
+    tap('#pv-prev', function () { command({ cmd: 'prev' }); });
+    tap('#pv-list', function () { toggleOverview(); });
+    tap('#pv-fs', function () {
+      var d = document.documentElement;
+      if (!document.fullscreenElement) { if (d.requestFullscreen) d.requestFullscreen().catch(function () {}); }
+      else document.exitFullscreen();
+    });
+    var size = 17;
+    try { size = +localStorage.getItem('deck-remote-font') || 17; } catch (e) {}
+    var setSize = function (v) {
+      size = Math.max(13, Math.min(28, v));
+      document.documentElement.style.setProperty('--nf', size + 'px');
+      try { localStorage.setItem('deck-remote-font', size); } catch (e) {}
+    };
+    setSize(size);
+    $$('#presenter [data-fsz]').forEach(function (b) {
+      b.addEventListener('click', function () { setSize(size + (+b.getAttribute('data-fsz'))); b.blur(); });
+    });
+    document.addEventListener('click', keepAwake, { once: true });
+    setConn('bad');
   }
 
   /* ---------------- input ---------------- */
@@ -541,5 +660,6 @@
     document.addEventListener('keydown', onKey);
     if (MODE === 'presenter') initPresenter(); else flashHelp(4500);
   }
+  connectServer();
   window.__deck = { show: show, state: state, steps: steps, count: slides.length };
 })();

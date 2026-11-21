@@ -649,3 +649,124 @@
   </div>
   <aside class="notes">{{b13.notes}}</aside>
 </section>
+
+<!-- ============ backup 14 (last) · inside the camera encoder ============ -->
+<section class="slide backup s-b14" data-title="{{b14.title}}">
+  <header class="slide-head"><h2>{{b14.title}}</h2><div class="sub">{{b14.sub}}</div></header>
+  <div class="slide-body">
+    <div class="ltr">
+    <svg class="dia camin" viewBox="0 0 1680 650" role="img">
+      <defs>
+        <marker id="ce-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#0b1f4b"/></marker>
+      </defs>
+
+      <!-- zoom fan from the block stack to the detail panel -->
+      <polygon points="592,178 772,178 1640,286 40,286" fill="#fdf3ea" opacity=".6"/>
+      <g stroke="#c9621f" stroke-width="2" stroke-dasharray="8 8" fill="none"><line x1="772" y1="178" x2="1640" y2="286"/><line x1="592" y1="178" x2="40" y2="286"/></g>
+
+      <!-- row 1 · modules in execution order, right to left (cam_enc.py) -->
+      <g fill="#eef0f3" stroke="#5b6b82" stroke-width="2">
+        <rect x="1512" y="118" width="14" height="48"/><rect x="1528" y="118" width="14" height="48"/><rect x="1544" y="118" width="14" height="48"/><rect x="1560" y="118" width="14" height="48"/><rect x="1576" y="118" width="14" height="48"/><rect x="1592" y="118" width="14" height="48"/><rect x="1608" y="118" width="14" height="48"/><rect x="1624" y="118" width="14" height="48"/><rect x="1640" y="118" width="14" height="48"/>
+      </g>
+      <text x="1583" y="208" text-anchor="middle" class="d-lab small" direction="rtl">{{s13.desc}}</text>
+      <line x1="1506" y1="142" x2="1478" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect x="992" y="62" width="480" height="126" rx="14" fill="#fdf3ea" stroke="#c9621f" stroke-width="3"/>
+      <text x="1232" y="94" text-anchor="middle" class="d-box" direction="rtl">{{b14.mlp}}</text>
+      <rect class="bx" x="1320" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="1390" y="137">Linear</text><text class="dm" x="1390" y="162">9 → 512</text>
+      <line x1="1316" y1="142" x2="1286" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1184" y="110" width="96" height="64" rx="8"/>
+      <text class="m" x="1232" y="150">GELU</text>
+      <line x1="1180" y1="142" x2="1150" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1004" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="1074" y="137">Linear</text><text class="dm" x="1074" y="162">512 → 1024</text>
+      <line x1="986" y1="142" x2="958" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="812" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="882" y="150">LayerNorm</text>
+      <line x1="808" y1="142" x2="784" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="604" y="102" width="174" height="64" rx="8"/><rect class="bx" x="598" y="106" width="174" height="64" rx="8"/>
+      <rect class="bx" x="592" y="110" width="174" height="64" rx="8" style="stroke-width:3.5"/>
+      <text class="m" x="679" y="137" direction="rtl">{{b14.blocks1}}</text><text class="m" x="679" y="163" direction="rtl">{{b14.blocks2}}</text>
+      <line x1="588" y1="142" x2="558" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="412" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="482" y="150">LayerNorm</text>
+      <line x1="408" y1="142" x2="378" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="288" y="110" width="84" height="64" rx="8" style="stroke-width:3.5"/>
+      <text x="330" y="151" text-anchor="middle" class="d-sym small" fill="#c9621f">× g</text>
+      <text x="330" y="94" text-anchor="middle" class="d-lab small" direction="rtl">{{b14.gate}}</text>
+      <line x1="284" y1="142" x2="254" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect x="204" y="120" width="44" height="44" rx="6" fill="#fff" stroke="#c9621f" stroke-width="3.5"/>
+      <text x="226" y="94" text-anchor="middle" class="d-lab small" direction="rtl">{{s13.camtok}}</text>
+      <text class="dm" x="226" y="204">1 × 1024</text>
+      <line x1="200" y1="142" x2="172" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="152" cy="142" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M143 142 H161 M152 133 V151" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="134" y1="142" x2="102" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect x="24" y="122" width="72" height="40" rx="6" fill="#0b1f4b"/>
+      <text x="60" y="149" text-anchor="middle" class="d-badge" style="font-size:18px">CLS</text>
+      <text class="dm" x="60" y="204">DINOv2</text>
+
+      <!-- row 2 · inside one transformer block -->
+      <rect x="40" y="286" width="1600" height="340" rx="16" fill="#fdf3ea" stroke="#c9621f" stroke-width="3"/>
+      <text x="1616" y="330" text-anchor="start" class="d-box" direction="rtl">{{b14.inblock}}</text>
+
+      <!-- residual paths -->
+      <g fill="none" stroke="#0b1f4b" stroke-width="3">
+        <path d="M1604 470 V384 H1015 V451" marker-end="url(#ce-ah)"/>
+        <path d="M972 470 V384 H101 V451" marker-end="url(#ce-ah)"/>
+      </g>
+      <circle cx="1604" cy="470" r="6" fill="#0b1f4b"/><circle cx="972" cy="470" r="6" fill="#0b1f4b"/>
+      <text x="1310" y="372" text-anchor="middle" class="d-lab small navy" direction="rtl">{{b14.skip}}</text>
+      <text x="536" y="372" text-anchor="middle" class="d-lab small navy" direction="rtl">{{b14.skip}}</text>
+
+      <line x1="1628" y1="470" x2="1578" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1442" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="1507" y="478">LayerNorm</text>
+      <line x1="1438" y1="470" x2="1414" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1228" y="428" width="180" height="84" rx="8"/>
+      <text class="m" x="1318" y="463">Self-Attention</text><text class="dm" x="1318" y="492">16 heads</text>
+      <line x1="1224" y1="470" x2="1200" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1064" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="1129" y="463">LayerScale</text><text class="dm" x="1129" y="492">× γ<tspan dy="6" font-size="15">1</tspan></text>
+      <line x1="1060" y1="470" x2="1036" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="1015" cy="470" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M1006 470 H1024 M1015 461 V479" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="1000" y1="470" x2="936" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="800" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="865" y="478">LayerNorm</text>
+      <line x1="796" y1="470" x2="772" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="616" y="428" width="150" height="84" rx="8"/>
+      <text class="m" x="691" y="463">Linear</text><text class="dm" x="691" y="492">1024 → 4096</text>
+      <line x1="612" y1="470" x2="588" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="498" y="428" width="84" height="84" rx="8"/>
+      <text class="m" x="540" y="478">GELU</text>
+      <line x1="494" y1="470" x2="470" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="314" y="428" width="150" height="84" rx="8"/>
+      <text class="m" x="389" y="463">Linear</text><text class="dm" x="389" y="492">4096 → 1024</text>
+      <line x1="310" y1="470" x2="286" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="150" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="215" y="463">LayerScale</text><text class="dm" x="215" y="492">× γ<tspan dy="6" font-size="15">2</tspan></text>
+      <line x1="146" y1="470" x2="122" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="101" cy="470" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M92 470 H110 M101 461 V479" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="86" y1="470" x2="54" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <!-- the two residual branches -->
+      <g fill="none" stroke="#5b6b82" stroke-width="2.5">
+        <path d="M1572 532 V542 H1064 V532"/><path d="M930 532 V542 H150 V532"/>
+      </g>
+      <text x="1318" y="584" text-anchor="middle" class="d-lab" direction="rtl">{{b14.br1}}</text>
+      <text x="540" y="584" text-anchor="middle" class="d-lab" direction="rtl">{{b14.br2}}</text>
+    </svg>
+    </div>
+    <div class="chips"><span class="chip solid">{{b14.c1}}</span><span class="chip">{{b14.c2}}</span><span class="chip">{{b14.c3}}</span><span class="chip">{{b14.c4}}</span></div>
+  </div>
+  <aside class="notes">{{b14.notes}}</aside>
+</section>

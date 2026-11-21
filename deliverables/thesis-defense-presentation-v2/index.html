@@ -541,7 +541,7 @@
     </div>
     <div class="legend arch-leg"><span class="k"><i class="sw fz"></i>فریزشده</span><span class="k"><i class="sw tr"></i>آموزش‌پذیر</span></div>
   </div>
-  <aside class="notes" data-key="s13">این معماری مدل پیشنهادی ماست. تصویر را به وصله‌های (patches) ۱۴ در ۱۴ تقسیم می‌کنیم و وصله‌ها را به توکن‌های تصویر (image tokens) تبدیل می‌کنیم. هم‌زمان، توصیف‌گر (descriptor) ۹بعدی دوربین از انکودر دوربین (camera encoder) عبور می‌کند. لایه‌های این انکودر به‌ترتیب این‌ها هستند: لایه خطی (Linear) از ۹ به نصف بعد انکودر، تابع فعال‌سازی GELU (Gaussian Error Linear Unit)، لایه خطی دوم تا رسیدن به بعد کامل انکودر، لایه نرمال‌سازی (LayerNorm)، چهار بلوک ترنسفورمر، لایه نرمال‌سازی دوم و در پایان ضرب در گیت یادگیری‌پذیر $g$. خروجی این بخش یک توکن دوربین (camera token) با همان بعد انکودر است. این بعد برای ViT-L (Vision Transformer Large) برابر ۱۰۲۴ و برای ViT-S (Vision Transformer Small) برابر ۳۸۴ است. توکن دوربین توکن تازه‌ای به دنباله اضافه نمی‌کند. این توکن پیش از نخستین بلوک انکودر DINOv2 (self-DIstillation with NO labels version 2)، با توکن کلاس (CLS, classification token) خود DINOv2 جمع می‌شود: $\mathbf x_{\mathrm{cls}}\leftarrow\mathbf x_{\mathrm{cls}}+\mathbf t_{\mathrm{cam}}$. خود توکن کلاس بخشی از DINOv2 است، فریز می‌ماند و آموزش نمی‌بیند. فقط مقدار ورودی آن با این جمع تغییر می‌کند و در نتیجه خروجی شبکه هم تغییر می‌کند. سپس همه توکن‌های تصویر از راه خودتوجهی (self-attention) هندسه دوربین را دریافت می‌کنند. در شکل، رنگ نارنجی فقط اجزای آموزش‌پذیر را نشان می‌دهد: انکودر دوربین، همراه با گیت، و دیکودر DPT. توکن کلاس سرمه‌ای و فریزشده است. انکودر DINOv2 فریز می‌ماند و انکودر دوربین و دیکودر DPT (Dense Prediction Transformer) آموزش داده می‌شوند. چون تصویر به وصله‌ها توکن‌سازی می‌شود و پارامترهای دوربین نرمال می‌شوند، مدل با هر اندازه تصویر کار می‌کند. برای نمونه، ورودی ۵۱۸ در ۶۸۶، برابر ۱۸۱۳ توکن تصویر تولید می‌کند. تعداد بلوک‌های ترنسفورمر (transformer block) انکودر DINOv2 در ViT-S برابر ۱۲ و در ViT-L برابر ۲۴ است. بنابراین توکن دوربین که از نخستین لایه وارد می‌شود، در ViT-S از ۱۲ بلوک و در ViT-L از ۲۴ بلوک عبور می‌کند. خود انکودر دوربین در همه اندازه‌ها چهار بلوک ترنسفورمر دارد. تعداد سرهای توجه (attention head) آن هم با انکودر اصلی برابر است: ۶ سر برای ViT-S و ۱۶ سر برای ViT-L. چرا انکودر فریزشده باز هم به دوربین پاسخ می‌دهد؟ هیچ پارامتری از DINOv2 آموزش نمی‌بیند و وزن‌ها ثابت می‌مانند. اما ورودی عوض می‌شود، و یک تابع ثابت برای ورودی متفاوت خروجی متفاوتی می‌دهد؛ مانند $f(x)=x^2$ که $f(3)\neq f(5)$. فریز یعنی وزن‌ها تغییر نمی‌کنند، نه این‌که خروجی ثابت بماند. گام ۱، اندازه و محل ورود: هر وصله ۱۴ در ۱۴ پیکسلی با تعبیه وصله (patch embedding) به یک بردار $D$بعدی تبدیل می‌شود. توکن دوربین هم دقیقاً یک بردار $D$بعدی است: $\mathbf t_{\mathrm{cam}}\in\mathbb R^{D}$ با $D=1024$ برای ViT-L و $D=384$ برای ViT-S. اندازه آن با اندازه هر توکن برابر است، نه با تعداد پیکسل‌های وصله. ابتدای دنباله ورودی DINOv2 یک توکن کلاس (CLS, classification token) قرار دارد. این توکن برداری یادگرفته‌شده و ثابت است که به هیچ بخشی از تصویر تعلق ندارد و در پیش‌آموزش (pre-training)، نقش خلاصه سراسری تصویر را گرفته است. در کد، توکن دوربین روی همین توکن جمع می‌شود و طول دنباله تغییر نمی‌کند: $\mathbf x_{\mathrm{cls}}\leftarrow\mathbf x_{\mathrm{cls}}+\mathbf t_{\mathrm{cam}}$. گام ۲، توجه با وزن‌های ثابت: در هر بلوک، هر توکن با ماتریس‌های ثابت سه بردار پرسش، کلید و مقدار (query, key, value) می‌سازد: $\mathbf q_i=W_Q\mathbf x_i$، $\mathbf k_i=W_K\mathbf x_i$ و $\mathbf v_i=W_V\mathbf x_i$. خروجی هر وصله ترکیبی وزن‌دار از مقدار همه توکن‌هاست: $\mathbf o_i=\sum_j a_{ij}\,\mathbf v_j$ با وزن توجه $a_{ij}=\mathrm{softmax}_j\big(\mathbf q_i\cdot\mathbf k_j/\sqrt d\big)$. پس هر وصله بخشی از مقدار توکن کلاس را دریافت می‌کند. گام ۳، اثر دوربین: چون ورودی توکن کلاس تغییر کرده است، $\mathbf v_{\mathrm{cls}}=W_V\mathbf x_{\mathrm{cls}}+W_V\mathbf t_{\mathrm{cam}}$؛ بنابراین جمله $a_{i,\mathrm{cls}}\,W_V\mathbf t_{\mathrm{cam}}$ به خروجی هر وصله افزوده می‌شود. کلید $\mathbf k_{\mathrm{cls}}$ هم تغییر می‌کند و خود وزن $a_{i,\mathrm{cls}}$ را تغییر می‌دهد. این اثر از لایه اول شروع می‌شود و از هر ۲۴ بلوک ViT-L عبور می‌کند. دیکودر DPT توکن کلاس را مستقیم نمی‌خواند. این دیکودر فقط ویژگی‌های وصله‌ها را از چهار بلوک میانی می‌گیرد. بنابراین اطلاعات دوربین فقط از راه توجه به آن می‌رسد. گام ۴، یادگیری: گرادیان (gradient) هزینه از میان بلوک‌های فریزشده عبور می‌کند و به انکودر دوربین می‌رسد. وزن‌های DINOv2 به‌روز نمی‌شوند، اما مسیر عبور گرادیان باز است. انکودر دوربین یاد می‌گیرد چه برداری روی توکن کلاس بگذارد تا همین شبکه ثابت ویژگی‌های مفید بسازد. دیکودر هم یاد می‌گیرد این تغییرها را به مقیاس عمق ترجمه کند. این ایده مشابه تنظیم با پرامپت (prompt tuning) در مدل‌های زبانی فریزشده است. پارامترهای آموزش‌پذیر عبارت‌اند از انکودر دوربین، یعنی MLP دولایه $\mathbb R^{9}\to\mathbb R^{D/2}\to\mathbb R^{D}$ با GELU (Gaussian Error Linear Unit)، چهار بلوک ترنسفورمر، دو لایه نرمال‌سازی (LayerNorm) و گیت عددی $g$، به‌علاوه کل دیکودر DPT. پارامترهای فریزشده شامل همه DINOv2 هستند؛ یعنی تعبیه وصله، تعبیه مکانی (positional embedding)، خود توکن کلاس، و $W_Q$، $W_K$، $W_V$ و MLPهای همه بلوک‌ها. هزینه فریز این است که انکودر الگوی توجه تازه‌ای یاد نمی‌گیرد و دوربین فقط از مسیرهایی که این ماتریس‌های ثابت اجازه می‌دهند به وصله‌ها می‌رسد. با این حال، شیب خوانش فاصله کانونی پس از لرزش کانونی (focal jitter) از ۰٫۰۶ به ۰٫۹۷ رسید. پس این مسیر برای استفاده از K کافی است.</aside><aside class="notes-sum">- تصویر به وصله‌های ۱۴ در ۱۴ و توکن‌های تصویر تبدیل می‌شود
+  <aside class="notes" data-key="s13">این معماری مدل پیشنهادی ماست. تصویر را به وصله‌های (patches) ۱۴ در ۱۴ تقسیم می‌کنیم و وصله‌ها را به توکن‌های تصویر (image tokens) تبدیل می‌کنیم. هم‌زمان، توصیف‌گر (descriptor) ۹بعدی دوربین از انکودر دوربین (camera encoder) عبور می‌کند. لایه‌های این انکودر به‌ترتیب این‌ها هستند: لایه خطی (Linear) از ۹ به نصف بعد انکودر، تابع فعال‌سازی GELU (Gaussian Error Linear Unit)، لایه خطی دوم تا رسیدن به بعد کامل انکودر، لایه نرمال‌سازی (LayerNorm)، چهار بلوک ترنسفورمر، لایه نرمال‌سازی دوم و در پایان ضرب در گیت یادگیری‌پذیر $g$. خروجی این بخش یک توکن دوربین (camera token) با همان بعد انکودر است. این بعد برای ViT-L (Vision Transformer Large) برابر ۱۰۲۴ و برای ViT-S (Vision Transformer Small) برابر ۳۸۴ است. توکن دوربین توکن تازه‌ای به دنباله اضافه نمی‌کند. این توکن پیش از نخستین بلوک انکودر DINOv2 (self-DIstillation with NO labels version 2)، با توکن کلاس (CLS, classification token) خود DINOv2 جمع می‌شود: $\mathbf x_{\mathrm{cls}}\leftarrow\mathbf x_{\mathrm{cls}}+\mathbf t_{\mathrm{cam}}$. خود توکن کلاس بخشی از DINOv2 است، فریز می‌ماند و آموزش نمی‌بیند. فقط مقدار ورودی آن با این جمع تغییر می‌کند و در نتیجه خروجی شبکه هم تغییر می‌کند. سپس همه توکن‌های تصویر از راه خودتوجهی (self-attention) هندسه دوربین را دریافت می‌کنند. در شکل، رنگ نارنجی فقط اجزای آموزش‌پذیر را نشان می‌دهد: انکودر دوربین، همراه با گیت، و دیکودر DPT. توکن کلاس سرمه‌ای و فریزشده است. انکودر DINOv2 فریز می‌ماند و انکودر دوربین و دیکودر DPT (Dense Prediction Transformer) آموزش داده می‌شوند. چون تصویر به وصله‌ها توکن‌سازی می‌شود و پارامترهای دوربین نرمال می‌شوند، مدل با هر اندازه تصویر کار می‌کند. برای نمونه، ورودی ۵۱۸ در ۶۸۶، برابر ۱۸۱۳ توکن تصویر تولید می‌کند. تعداد بلوک‌های ترنسفورمر (transformer block) انکودر DINOv2 در ViT-S برابر ۱۲ و در ViT-L برابر ۲۴ است. بنابراین توکن دوربین که از نخستین لایه وارد می‌شود، در ViT-S از ۱۲ بلوک و در ViT-L از ۲۴ بلوک عبور می‌کند. خود انکودر دوربین در همه اندازه‌ها چهار بلوک ترنسفورمر دارد. تعداد سرهای توجه (attention head) آن هم با انکودر اصلی برابر است: ۶ سر برای ViT-S و ۱۶ سر برای ViT-L. چرا انکودر فریزشده باز هم به دوربین پاسخ می‌دهد؟ هیچ پارامتری از DINOv2 آموزش نمی‌بیند و وزن‌ها ثابت می‌مانند. اما ورودی عوض می‌شود، و یک تابع ثابت برای ورودی متفاوت خروجی متفاوتی می‌دهد؛ مانند $f(x)=x^2$ که $f(3)\neq f(5)$. فریز یعنی وزن‌ها تغییر نمی‌کنند، نه این‌که خروجی ثابت بماند. گام ۱، اندازه و محل ورود: هر وصله ۱۴ در ۱۴ پیکسلی با تعبیه وصله (patch embedding) به یک بردار $D$بعدی تبدیل می‌شود. توکن دوربین هم دقیقاً یک بردار $D$بعدی است: $\mathbf t_{\mathrm{cam}}\in\mathbb R^{D}$ با $D=1024$ برای ViT-L و $D=384$ برای ViT-S. اندازه آن با اندازه هر توکن برابر است، نه با تعداد پیکسل‌های وصله. ابتدای دنباله ورودی DINOv2 یک توکن کلاس (CLS, classification token) قرار دارد. این توکن برداری یادگرفته‌شده و ثابت است که به هیچ بخشی از تصویر تعلق ندارد و در پیش‌آموزش (pre-training)، نقش خلاصه سراسری تصویر را گرفته است. در کد، توکن دوربین روی همین توکن جمع می‌شود و طول دنباله تغییر نمی‌کند: $\mathbf x_{\mathrm{cls}}\leftarrow\mathbf x_{\mathrm{cls}}+\mathbf t_{\mathrm{cam}}$. گام ۲، توجه با وزن‌های ثابت: در هر بلوک، هر توکن با ماتریس‌های ثابت سه بردار پرسش، کلید و مقدار (query, key, value) می‌سازد: $\mathbf q_i=W_Q\mathbf x_i$، $\mathbf k_i=W_K\mathbf x_i$ و $\mathbf v_i=W_V\mathbf x_i$. خروجی هر وصله ترکیبی وزن‌دار از مقدار همه توکن‌هاست: $\mathbf o_i=\sum_j a_{ij}\,\mathbf v_j$ با وزن توجه $a_{ij}=\mathrm{softmax}_j\big(\mathbf q_i\cdot\mathbf k_j/\sqrt d\big)$. پس هر وصله بخشی از مقدار توکن کلاس را دریافت می‌کند. گام ۳، اثر دوربین: چون ورودی توکن کلاس تغییر کرده است، $\mathbf v_{\mathrm{cls}}=W_V\mathbf x_{\mathrm{cls}}+W_V\mathbf t_{\mathrm{cam}}$؛ بنابراین جمله $a_{i,\mathrm{cls}}\,W_V\mathbf t_{\mathrm{cam}}$ به خروجی هر وصله افزوده می‌شود. کلید $\mathbf k_{\mathrm{cls}}$ هم تغییر می‌کند و خود وزن $a_{i,\mathrm{cls}}$ را تغییر می‌دهد. این اثر از لایه اول شروع می‌شود و از هر ۲۴ بلوک ViT-L عبور می‌کند. دیکودر DPT توکن کلاس را مستقیم نمی‌خواند. این دیکودر فقط ویژگی‌های وصله‌ها را از چهار بلوک میانی می‌گیرد. بنابراین اطلاعات دوربین فقط از راه توجه به آن می‌رسد. گام ۴، یادگیری: گرادیان (gradient) هزینه از میان بلوک‌های فریزشده عبور می‌کند و به انکودر دوربین می‌رسد. وزن‌های DINOv2 به‌روز نمی‌شوند، اما مسیر عبور گرادیان باز است. انکودر دوربین یاد می‌گیرد چه برداری روی توکن کلاس بگذارد تا همین شبکه ثابت ویژگی‌های مفید بسازد. دیکودر هم یاد می‌گیرد این تغییرها را به مقیاس عمق ترجمه کند. این ایده مشابه تنظیم با پرامپت (prompt tuning) در مدل‌های زبانی فریزشده است. پارامترهای آموزش‌پذیر عبارت‌اند از انکودر دوربین، یعنی MLP دولایه $\mathbb R^{9}\to\mathbb R^{D/2}\to\mathbb R^{D}$ با GELU (Gaussian Error Linear Unit)، چهار بلوک ترنسفورمر، دو لایه نرمال‌سازی (LayerNorm) و گیت عددی $g$، به‌علاوه کل دیکودر DPT. پارامترهای فریزشده شامل همه DINOv2 هستند؛ یعنی تعبیه وصله، تعبیه مکانی (positional embedding)، خود توکن کلاس، و $W_Q$، $W_K$، $W_V$ و MLPهای همه بلوک‌ها. هزینه فریز این است که انکودر الگوی توجه تازه‌ای یاد نمی‌گیرد و دوربین فقط از مسیرهایی که این ماتریس‌های ثابت اجازه می‌دهند به وصله‌ها می‌رسد. با این حال، شیب خوانش فاصله کانونی پس از لرزش کانونی (focal jitter) از ۰٫۰۶ به ۰٫۹۷ رسید. پس این مسیر برای استفاده از K کافی است. جزئیات لایه‌های درون انکودر دوربین و درون هر بلوک آن در اسلاید پشتیبان «درون انکودر دوربین» آمده است.</aside><aside class="notes-sum">- تصویر به وصله‌های ۱۴ در ۱۴ و توکن‌های تصویر تبدیل می‌شود
 - انکودر دوربین: Linear → GELU → Linear → LayerNorm → ۴ بلوک ترنسفورمر → LayerNorm → × g
 - توکن دوربین با بعد ViT-L برابر ۱۰۲۴
 - توکن دوربین با توکن CLS جمع می‌شود، پیش از نخستین بلوک DINOv2؛ خودتوجهی همه توکن‌ها
@@ -553,7 +553,8 @@
 - سهم دوربین در هر وصله: $a_{i,\mathrm{cls}}\,W_V\mathbf t_{\mathrm{cam}}$
 - گرادیان از DINOv2 فریز عبور می‌کند؛ فقط انکودر دوربین، $g$ و DPT به‌روز می‌شوند
 ! فریز = وزن ثابت، نه خروجی ثابت؛ $f(3)\neq f(5)$
-! نارنجی = فقط آموزش‌پذیر؛ توکن CLS جزو DINOv2 و فریز است</aside>
+! نارنجی = فقط آموزش‌پذیر؛ توکن CLS جزو DINOv2 و فریز است
+- جزئیات لایه‌ها: اسلاید پشتیبان «درون انکودر دوربین» (آخرین اسلاید)</aside>
 </section>
 
 <!-- ============ 14 · learnable gate ============ -->
@@ -1873,6 +1874,138 @@
     </div>
   </div>
   <aside class="notes" data-key="b13">این اسلاید پشتیبان منابع مجموعه‌داده‌ها، بهینه‌ساز و آزمون آماری را فهرست می‌کند. این منابع شامل NYUv2، KITTI، Virtual KITTI 2، Cityscapes، SUN RGB-D و DIODE، بهینه‌ساز AdamW، و آزمون ویلکاکسون (Wilcoxon signed-rank test) هستند. آزمون ویلکاکسون برای سنجش معناداری تفاوت دو مدل به کار رفت.</aside><aside class="notes-sum">- شش مجموعه‌داده، AdamW و آزمون ویلکاکسون</aside>
+</section>
+
+<!-- ============ backup 14 (last) · inside the camera encoder ============ -->
+<section class="slide backup s-b14" data-title="درون انکودر دوربین">
+  <header class="slide-head"><h2>درون انکودر دوربین</h2><div class="sub">اسلاید پشتیبان؛ ماژول‌ها به‌ترتیب اجرا، با ابعاد انکودر ViT-L</div></header>
+  <div class="slide-body">
+    <div class="ltr">
+    <svg class="dia camin" viewBox="0 0 1680 650" role="img">
+      <defs>
+        <marker id="ce-ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10z" fill="#0b1f4b"/></marker>
+      </defs>
+
+      <!-- zoom fan from the block stack to the detail panel -->
+      <polygon points="592,178 772,178 1640,286 40,286" fill="#fdf3ea" opacity=".6"/>
+      <g stroke="#c9621f" stroke-width="2" stroke-dasharray="8 8" fill="none"><line x1="772" y1="178" x2="1640" y2="286"/><line x1="592" y1="178" x2="40" y2="286"/></g>
+
+      <!-- row 1 · modules in execution order, right to left (cam_enc.py) -->
+      <g fill="#eef0f3" stroke="#5b6b82" stroke-width="2">
+        <rect x="1512" y="118" width="14" height="48"/><rect x="1528" y="118" width="14" height="48"/><rect x="1544" y="118" width="14" height="48"/><rect x="1560" y="118" width="14" height="48"/><rect x="1576" y="118" width="14" height="48"/><rect x="1592" y="118" width="14" height="48"/><rect x="1608" y="118" width="14" height="48"/><rect x="1624" y="118" width="14" height="48"/><rect x="1640" y="118" width="14" height="48"/>
+      </g>
+      <text x="1583" y="208" text-anchor="middle" class="d-lab small" direction="rtl">توصیف‌گر ۹بعدی</text>
+      <line x1="1506" y1="142" x2="1478" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect x="992" y="62" width="480" height="126" rx="14" fill="#fdf3ea" stroke="#c9621f" stroke-width="3"/>
+      <text x="1232" y="94" text-anchor="middle" class="d-box" direction="rtl">شبکه MLP ورودی</text>
+      <rect class="bx" x="1320" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="1390" y="137">Linear</text><text class="dm" x="1390" y="162">9 → 512</text>
+      <line x1="1316" y1="142" x2="1286" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1184" y="110" width="96" height="64" rx="8"/>
+      <text class="m" x="1232" y="150">GELU</text>
+      <line x1="1180" y1="142" x2="1150" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1004" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="1074" y="137">Linear</text><text class="dm" x="1074" y="162">512 → 1024</text>
+      <line x1="986" y1="142" x2="958" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="812" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="882" y="150">LayerNorm</text>
+      <line x1="808" y1="142" x2="784" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="604" y="102" width="174" height="64" rx="8"/><rect class="bx" x="598" y="106" width="174" height="64" rx="8"/>
+      <rect class="bx" x="592" y="110" width="174" height="64" rx="8" style="stroke-width:3.5"/>
+      <text class="m" x="679" y="137" direction="rtl">۴ بلوک</text><text class="m" x="679" y="163" direction="rtl">ترنسفورمر</text>
+      <line x1="588" y1="142" x2="558" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="412" y="110" width="140" height="64" rx="8"/>
+      <text class="m" x="482" y="150">LayerNorm</text>
+      <line x1="408" y1="142" x2="378" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="288" y="110" width="84" height="64" rx="8" style="stroke-width:3.5"/>
+      <text x="330" y="151" text-anchor="middle" class="d-sym small" fill="#c9621f">× g</text>
+      <text x="330" y="94" text-anchor="middle" class="d-lab small" direction="rtl">گیت</text>
+      <line x1="284" y1="142" x2="254" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect x="204" y="120" width="44" height="44" rx="6" fill="#fff" stroke="#c9621f" stroke-width="3.5"/>
+      <text x="226" y="94" text-anchor="middle" class="d-lab small" direction="rtl">توکن دوربین</text>
+      <text class="dm" x="226" y="204">1 × 1024</text>
+      <line x1="200" y1="142" x2="172" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="152" cy="142" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M143 142 H161 M152 133 V151" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="134" y1="142" x2="102" y2="142" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect x="24" y="122" width="72" height="40" rx="6" fill="#0b1f4b"/>
+      <text x="60" y="149" text-anchor="middle" class="d-badge" style="font-size:18px">CLS</text>
+      <text class="dm" x="60" y="204">DINOv2</text>
+
+      <!-- row 2 · inside one transformer block -->
+      <rect x="40" y="286" width="1600" height="340" rx="16" fill="#fdf3ea" stroke="#c9621f" stroke-width="3"/>
+      <text x="1616" y="330" text-anchor="start" class="d-box" direction="rtl">درون هر بلوک ترنسفورمر</text>
+
+      <!-- residual paths -->
+      <g fill="none" stroke="#0b1f4b" stroke-width="3">
+        <path d="M1604 470 V384 H1015 V451" marker-end="url(#ce-ah)"/>
+        <path d="M972 470 V384 H101 V451" marker-end="url(#ce-ah)"/>
+      </g>
+      <circle cx="1604" cy="470" r="6" fill="#0b1f4b"/><circle cx="972" cy="470" r="6" fill="#0b1f4b"/>
+      <text x="1310" y="372" text-anchor="middle" class="d-lab small navy" direction="rtl">اتصال باقی‌مانده</text>
+      <text x="536" y="372" text-anchor="middle" class="d-lab small navy" direction="rtl">اتصال باقی‌مانده</text>
+
+      <line x1="1628" y1="470" x2="1578" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1442" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="1507" y="478">LayerNorm</text>
+      <line x1="1438" y1="470" x2="1414" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1228" y="428" width="180" height="84" rx="8"/>
+      <text class="m" x="1318" y="463">Self-Attention</text><text class="dm" x="1318" y="492">16 heads</text>
+      <line x1="1224" y1="470" x2="1200" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="1064" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="1129" y="463">LayerScale</text><text class="dm" x="1129" y="492">× γ<tspan dy="6" font-size="15">1</tspan></text>
+      <line x1="1060" y1="470" x2="1036" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="1015" cy="470" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M1006 470 H1024 M1015 461 V479" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="1000" y1="470" x2="936" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <rect class="bx" x="800" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="865" y="478">LayerNorm</text>
+      <line x1="796" y1="470" x2="772" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="616" y="428" width="150" height="84" rx="8"/>
+      <text class="m" x="691" y="463">Linear</text><text class="dm" x="691" y="492">1024 → 4096</text>
+      <line x1="612" y1="470" x2="588" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="498" y="428" width="84" height="84" rx="8"/>
+      <text class="m" x="540" y="478">GELU</text>
+      <line x1="494" y1="470" x2="470" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="314" y="428" width="150" height="84" rx="8"/>
+      <text class="m" x="389" y="463">Linear</text><text class="dm" x="389" y="492">4096 → 1024</text>
+      <line x1="310" y1="470" x2="286" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <rect class="bx" x="150" y="428" width="130" height="84" rx="8"/>
+      <text class="m" x="215" y="463">LayerScale</text><text class="dm" x="215" y="492">× γ<tspan dy="6" font-size="15">2</tspan></text>
+      <line x1="146" y1="470" x2="122" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+      <circle cx="101" cy="470" r="15" fill="#fff" stroke="#0b1f4b" stroke-width="3"/>
+      <path d="M92 470 H110 M101 461 V479" stroke="#0b1f4b" stroke-width="3"/>
+      <line x1="86" y1="470" x2="54" y2="470" class="d-arrow" marker-end="url(#ce-ah)"/>
+
+      <!-- the two residual branches -->
+      <g fill="none" stroke="#5b6b82" stroke-width="2.5">
+        <path d="M1572 532 V542 H1064 V532"/><path d="M930 532 V542 H150 V532"/>
+      </g>
+      <text x="1318" y="584" text-anchor="middle" class="d-lab" direction="rtl">شاخه توجه</text>
+      <text x="540" y="584" text-anchor="middle" class="d-lab" direction="rtl">شاخه MLP</text>
+    </svg>
+    </div>
+    <div class="chips"><span class="chip solid">حدود ۵۰٫۹ میلیون پارامتر آموزش‌پذیر</span><span class="chip">هر بلوک: حدود ۱۲٫۶ میلیون پارامتر</span><span class="chip">LayerScale با مقدار اولیه ۰٫۰۱</span><span class="chip">گیت با مقدار اولیه صفر</span></div>
+  </div>
+  <aside class="notes" data-key="b14">این اسلاید پشتیبان است و درون انکودر دوربین (camera encoder) را ماژول به ماژول نشان می‌دهد. در ارائه اصلی آن را نشان نمی‌دهیم و فقط اگر کمیته درباره ساختار این بخش بپرسد به آن مراجعه می‌کنیم. ابعاد روی شکل برای انکودر ViT-L (Vision Transformer Large) با بُعد توکن ۱۰۲۴ است؛ در ViT-S (Vision Transformer Small) همین ساختار با بُعد ۳۸۴ و ۶ سر توجه ساخته می‌شود. ردیف بالا ترتیب اجرا را از راست به چپ نشان می‌دهد. ورودی، توصیف‌گر (descriptor) نه‌بعدی دوربین است که در اسلاید «توصیف‌گر نه‌بعدی دوربین» معرفی شد و خودش هیچ وزن یادگرفتنی ندارد. ماژول اول، پرسپترون چندلایه (MLP, Multi-Layer Perceptron) ورودی است: یک لایه خطی (Linear) از ۹ به ۵۱۲، تابع فعال‌سازی GELU (Gaussian Error Linear Unit) و لایه خطی دوم از ۵۱۲ به ۱۰۲۴. کار آن بردن ۹ عدد دوربین به فضای تعبیه (embedding space) انکودر است، تا خروجی هم‌اندازه توکن‌های DINOv2 (self-DIstillation with NO labels version 2) شود. خروجی به شکل یک توکن تنها با ابعاد ۱ در ۱۰۲۴ درمی‌آید. ماژول دوم، لایه نرمال‌سازی (LayerNorm, Layer Normalization) است که مقیاس توکن را پیش از بلوک‌ها یکنواخت می‌کند. ماژول سوم، چهار بلوک ترنسفورمر (transformer block) است. این بلوک‌ها از همان کلاس بلوک‌های DINOv2 هستند، با ۱۶ سر توجه (attention head) و نسبت MLP برابر ۴. پنل پایین درون یکی از آن‌ها را نشان می‌دهد. هر بلوک دو شاخه دارد و خروجی هر شاخه از راه اتصال باقی‌مانده (residual connection) با ورودی همان شاخه جمع می‌شود: $\mathbf x\leftarrow\mathbf x+\boldsymbol\gamma_1\odot\mathrm{Attn}(\mathrm{LN}(\mathbf x))$ و سپس $\mathbf x\leftarrow\mathbf x+\boldsymbol\gamma_2\odot\mathrm{MLP}(\mathrm{LN}(\mathbf x))$. شاخه توجه شامل لایه نرمال‌سازی، خودتوجهی (self-attention) و مقیاس لایه (LayerScale) است. شاخه MLP شامل لایه نرمال‌سازی، لایه خطی ۱۰۲۴ به ۴۰۹۶، GELU، لایه خطی ۴۰۹۶ به ۱۰۲۴ و مقیاس لایه است. مقیاس لایه یک ضریب یادگرفتنی برای هر کانال است، یعنی بردار $\boldsymbol\gamma$ با ۱۰۲۴ مؤلفه، و مقدار اولیه آن ۰٫۰۱ است. پس هر بلوک در آغاز تقریباً نگاشت همانی (identity) است و سهم آن در طول آموزش بزرگ می‌شود. نکته‌ای برای پرسش احتمالی: دنباله ورودی این بلوک‌ها فقط یک توکن دارد. وزن توجه با softmax روی توکن‌های دنباله حساب می‌شود و با یک توکن، این وزن همیشه ۱ است. بنابراین خروجی خودتوجهی برابر $W_O W_V\,\mathbf x$ است، یعنی یک نگاشت خطی، و ماتریس‌های پرسش و کلید (query, key) در خروجی نقشی ندارند. در نتیجه هر بلوک در عمل مانند یک شبکه چندلایه با اتصال باقی‌مانده کار می‌کند و ظرفیت غیرخطی آن در شاخه MLP است. ماژول چهارم، لایه نرمال‌سازی دوم است. این لایه اندازه خروجی بلوک‌ها را ثابت نگه می‌دارد، پس بزرگی توکن دوربین را ماژول بعدی، یعنی گیت، تعیین می‌کند. ماژول پنجم، گیت یادگیری‌پذیر (learnable gate) است: یک عدد تنها، $g$، که در همه ۱۰۲۴ مؤلفه ضرب می‌شود و مقدار اولیه آن صفر است: $\mathbf t_{\mathrm{cam}}=g\cdot E(\mathbf d_{\mathrm{cam}})$. تابع سیگموید (sigmoid) ندارد، کران ندارد و می‌تواند منفی شود. در مدل نهایی مقدار آن حدود ۰٫۰۳۴− است. علامت آن معنایی ندارد، چون انکودر می‌تواند علامت را در خروجی خود جبران کند. مقدار خام گیت هم معیار استفاده از K نیست؛ معیار درست، شیب خوانش فاصله کانونی است. در پایان، توکن دوربین (camera token) پیش از نخستین بلوک DINOv2 با توکن کلاس (CLS, classification token) جمع می‌شود. شمار پارامترها با ViT-L: کل انکودر دوربین حدود ۵۰٫۹ میلیون پارامتر دارد. MLP ورودی حدود ۰٫۵۳ میلیون و هر بلوک حدود ۱۲٫۶ میلیون پارامتر دارد، که حدود ۴٫۲ میلیون آن در شاخه توجه و حدود ۸٫۴ میلیون آن در شاخه MLP است. با ViT-S کل انکودر دوربین حدود ۷٫۲ میلیون پارامتر دارد. این اعداد با اختلاف پارامترهای مدل ما و مدل پایه سازگارند: ۳۸۶٫۲ در برابر ۳۳۵٫۳ میلیون برای ViT-L. همه ماژول‌های نارنجی آموزش‌پذیرند و با همان نرخ یادگیری دیکودر DPT (Dense Prediction Transformer) آموزش می‌بینند. توکن کلاس سرمه‌ای است و مانند بقیه DINOv2 فریز می‌ماند.</aside><aside class="notes-sum">1. ردیف بالا: توصیف‌گر ۹بعدی → MLP ورودی → LayerNorm → ۴ بلوک → LayerNorm → × g → جمع با CLS
+2. پنل پایین: درون هر بلوک؛ شاخه توجه و شاخه MLP، هر دو با اتصال باقی‌مانده
+- MLP ورودی: Linear ۹ به ۵۱۲، GELU، Linear ۵۱۲ به ۱۰۲۴؛ خروجی یک توکن ۱ در ۱۰۲۴
+- بلوک‌ها از کلاس بلوک DINOv2؛ ۱۶ سر توجه؛ MLP با نسبت ۴
+- LayerScale: ضریب هر کانال، مقدار اولیه ۰٫۰۱؛ بلوک در آغاز تقریباً همانی
+- LayerNorm دوم اندازه را ثابت می‌کند؛ بزرگی توکن را گیت تعیین می‌کند
+- گیت: یک عدد، مقدار اولیه صفر، مدل نهایی حدود ۰٫۰۳۴−؛ علامت بی‌معناست
+- پارامترها با ViT-L: کل ۵۰٫۹ میلیون؛ MLP ورودی ۰٫۵۳؛ هر بلوک ۱۲٫۶ (توجه ۴٫۲، MLP ۸٫۴)
+- با ViT-S: کل ۷٫۲ میلیون
+- $\mathbf x\leftarrow\mathbf x+\boldsymbol\gamma_1\odot\mathrm{Attn}(\mathrm{LN}(\mathbf x))$؛ $\mathbf x\leftarrow\mathbf x+\boldsymbol\gamma_2\odot\mathrm{MLP}(\mathrm{LN}(\mathbf x))$
+! فقط یک توکن: وزن توجه همیشه ۱؛ خودتوجهی = نگاشت خطی $W_O W_V\mathbf x$؛ بلوک مانند شبکه چندلایه با اتصال باقی‌مانده
+! مقدار خام گیت معیار استفاده از K نیست؛ معیار، شیب خوانش فاصله کانونی است</aside>
 </section>
 
     <div id="chrome">

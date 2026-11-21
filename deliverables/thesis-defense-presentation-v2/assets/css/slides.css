@@ -566,3 +566,12 @@ ol.outline li b { font-size: 58px; }
 .q1-side .stat .l { font-size: 27px; }
 .q1-side .sig { padding-top: 16px; }
 .q1-ans { font-size: 26px; line-height: 1.5; border-radius: 18px; padding: 14px 24px; }
+
+/* backup 14 (last) · inside the camera encoder */
+.s-b14 .slide-head { margin-bottom: 14px; } .s-b14 .slide-head .sub { font-size: 24px; }
+.camin { width: 1640px !important; margin: 0 auto; }
+.camin .m { font-size: 22px; font-weight: 700; fill: var(--navy-900); text-anchor: middle; unicode-bidi: plaintext; }
+.camin .dm { font-size: 20px; font-weight: 500; fill: var(--ink-2); text-anchor: middle; }
+.camin .bx { fill: #fff; stroke: var(--c-control); stroke-width: 2.5; }
+.s-b14 .chips { justify-content: center; margin-top: 20px; }
+.s-b14 .chip { font-size: 25px; padding: 10px 22px; }

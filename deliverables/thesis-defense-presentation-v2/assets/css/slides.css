@@ -575,3 +575,7 @@ ol.outline li b { font-size: 58px; }
 .camin .bx { fill: #fff; stroke: var(--c-control); stroke-width: 2.5; }
 .s-b14 .chips { justify-content: center; margin-top: 20px; }
 .s-b14 .chip { font-size: 25px; padding: 10px 22px; }
+.s-b9 .chart .ln.thin { stroke-width: 3.5; }
+.s-b9 .chart .capv { font-size: 19px; }
+.s-b9 .fnote:empty { display: none; }
+.s-b9 .chart .dot { stroke-width: 1.5; }

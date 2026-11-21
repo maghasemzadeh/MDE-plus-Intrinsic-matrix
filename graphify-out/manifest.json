@@ -1840,8 +1840,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/content/fa.json": {
-    "mtime": 1795211038.3232782,
-    "ast_hash": "a28de03316e5fdeb65a41b1f58c227e9",
+    "mtime": 1795234587.0276077,
+    "ast_hash": "ff6458a6adcef18113d8a28fb9d2f2ea",
     "semantic_hash": ""
   },
   "tools/multidomain/run_descriptor_ablation.sh": {
@@ -1855,8 +1855,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/README.md": {
-    "mtime": 1795211130.8760757,
-    "ast_hash": "803793fc709ad95aa5091da2f26ecf50",
+    "mtime": 1795234609.7717972,
+    "ast_hash": "439dd43ff55de61828ae7c9e618f6eb5",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/fonts/Vazirmatn-OFL.txt": {
@@ -1865,8 +1865,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/index.html": {
-    "mtime": 1795211130.9040759,
-    "ast_hash": "4ad09af7f02276d9e69cc8d8567e710c",
+    "mtime": 1795234587.0556078,
+    "ast_hash": "bd63e83dcc802b98b4d2d96e80c3d6b2",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/shell.html": {
@@ -1875,8 +1875,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/01-opening-problem.html": {
-    "mtime": 1795189033.1673355,
-    "ast_hash": "fbc8bd97a5381e70c7f38a80df6352ba",
+    "mtime": 1795220573.8562343,
+    "ast_hash": "0c1ec233612c1da025181d626c7cde9b",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/02-method-data.html": {
@@ -1885,13 +1885,13 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/03-path-results.html": {
-    "mtime": 1795210353.549355,
-    "ast_hash": "12cdc033ac5d68fafa553b20fe3aa0b2",
+    "mtime": 1795211980.1989639,
+    "ast_hash": "6cdc68259774a9e35f595d8f6aaa90ed",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/src/slides/04-results-conclusion.html": {
-    "mtime": 1795211090.1197245,
-    "ast_hash": "5f55aa6043e3204da12d233306bfed58",
+    "mtime": 1795234587.0236075,
+    "ast_hash": "4f2713a1c86f3c224941ac52beca6704",
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/assets/img/cityscapes.jpg": {
@@ -2020,8 +2020,8 @@
     "semantic_hash": ""
   },
   "deliverables/thesis-defense-presentation-v2/serve.py": {
-    "mtime": 1795181746.974492,
-    "ast_hash": "dbcc9b12fbd2d3e753505d210d991d17",
+    "mtime": 1795220453.6552718,
+    "ast_hash": "9d520faa6b1e9309a138cd4dabcd6772",
     "semantic_hash": ""
   },
   "deliverables/presentation-astra/presentation.js": {

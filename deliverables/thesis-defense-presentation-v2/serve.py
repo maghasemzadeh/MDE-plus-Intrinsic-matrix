@@ -14,6 +14,7 @@ Static files are open to the network; the control API needs the token in the QR 
 """
 import argparse
 import email.utils
+import ipaddress
 import json
 import mimetypes
 import os
@@ -535,22 +536,69 @@ def save_note(msg):
     return None
 
 
+# Addresses the phone link must never use: the author's VPN adapters (the phone is not on the
+# VPN, so those links cannot open), Docker's bridge and self-assigned addresses.
+# --skip-ip adds more; --ip forces one address.
+SKIP_NETS = [ipaddress.ip_network(n) for n in (
+    "240.0.0.0/4",     # VPN tunnel (240.0.0.2); reserved range, never a real Wi-Fi address
+    "10.119.20.0/24",  # VPN (10.119.20.7)
+    "172.17.0.0/16",   # Docker
+    "169.254.0.0/16",  # no DHCP answer
+    "127.0.0.0/8",
+)]
+FORCED_IPS = []
+_IP_RE = r"(\d{1,3}(?:\.\d{1,3}){3})"
+
+
+def _usable(ip):
+    try:
+        addr = ipaddress.ip_address(ip)
+    except ValueError:
+        return False
+    return not addr.is_unspecified and not any(addr in n for n in SKIP_NETS)
+
+
+def _adapter_ips():
+    """Every IPv4 address of this machine, as the OS lists them."""
+    found = []
+    try:
+        found += socket.gethostbyname_ex(socket.gethostname())[2]
+    except OSError:
+        pass
+    if os.name == "nt":  # only the "IPv4 Address" lines: mask and gateway lines hold addresses too
+        cmds = [(["ipconfig"], r"IPv4[^:\n]*:\s*" + _IP_RE)]
+    else:
+        cmds = [(["ip", "-4", "-o", "addr"], r"\binet\s+" + _IP_RE),
+                (["ifconfig"], r"\binet\s+(?:addr:)?" + _IP_RE)]
+    for cmd, pat in cmds:
+        try:
+            out = subprocess.run(cmd, capture_output=True, timeout=4).stdout.decode("utf-8", "replace")
+        except (OSError, subprocess.SubprocessError):
+            continue
+        hits = re.findall(pat, out)
+        found += hits
+        if hits:
+            break
+    return found
+
+
+def _rank(ip):  # home Wi-Fi and phone hotspots first
+    return 0 if ip.startswith("192.168.") else 1 if ip.startswith("172.") else 2 if ip.startswith("10.") else 3
+
+
 def lan_ips():
-    ips = []
-    try:  # the address the default route uses (no packet is sent)
+    if FORCED_IPS:
+        return list(FORCED_IPS)
+    first = []
+    try:  # the address the default route uses (no packet is sent); with a VPN on it is the VPN's
         s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
         s.connect(("10.255.255.255", 1))
-        ips.append(s.getsockname()[0])
+        first.append(s.getsockname()[0])
         s.close()
     except OSError:
         pass
-    try:
-        for info in socket.getaddrinfo(socket.gethostname(), None, socket.AF_INET):
-            ip = info[4][0]
-            if ip not in ips and not ip.startswith("127.") and not ip.startswith("172.17."):
-                ips.append(ip)
-    except OSError:
-        pass
+    rest = sorted(dict.fromkeys(_adapter_ips()), key=_rank)
+    ips = [ip for ip in dict.fromkeys(first + rest) if _usable(ip)]
     return ips or ["127.0.0.1"]
 
 
@@ -568,7 +616,17 @@ def main():
     ap.add_argument("--port", type=int, default=8000)
     ap.add_argument("--host", default="0.0.0.0")
     ap.add_argument("--token", default=None, help="fixed access token for the phone link (default: random)")
+    ap.add_argument("--ip", action="append", default=[], metavar="ADDR",
+                    help="use exactly this laptop address in the phone link (repeatable)")
+    ap.add_argument("--skip-ip", action="append", default=[], metavar="ADDR_OR_NET",
+                    help="never use this address or network (e.g. 10.8.0.0/24) in the phone link; "
+                         "the VPN addresses 240.x.x.x and 10.119.20.x are always skipped")
     a = ap.parse_args()
+    try:
+        SKIP_NETS.extend(ipaddress.ip_network(n, strict=False) for n in a.skip_ip)
+        FORCED_IPS.extend(str(ipaddress.ip_address(i)) for i in a.ip)
+    except ValueError as e:
+        sys.exit(f"bad address: {e}")
     TOKEN = a.token or secrets.token_hex(8)  # 64 bits: cannot be guessed by trying links
 
     ThreadingHTTPServer.daemon_threads = True
@@ -580,6 +638,9 @@ def main():
     port = srv.server_address[1]
     ips = lan_ips()
     print()
+    if ips == ["127.0.0.1"]:
+        print("  WARNING: no Wi-Fi/LAN address found (VPN addresses are skipped). Connect the laptop to")
+        print("  the Wi-Fi or the phone's hotspot and restart, or pass --ip <address>.\n")
     print(f"  Audience window (this laptop, full screen on the projector):  http://localhost:{port}/")
     print(f"  QR code page for the phone (open on this laptop):           http://localhost:{port}/qr")
     for ip in ips:
